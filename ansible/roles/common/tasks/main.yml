@@ -2,58 +2,76 @@
 # tasks file for common
 - name: Initialise directory structure
   block:
-    - name: Make sure common directory is there
+    - name: Check common directories
       file:
-        path: "{{ common_dir }}"
+        path: "{{ item }}"
         state: directory
         mode: u=rwx,g=wrx,o=rx
         group: "{{ admin_group }}"
-    - name: Make sure common src is there
-      file:
-        path: "{{ common_dir }}/src"
-        state: directory
-        mode: u=rwx,g=wrx,o=rx
-        group: "{{ admin_group }}"
+      loop:
+        - "{{ common_dir }}"
+        - "{{ common_src }}"
+        - "{{ common_modules }}"
   tags:
     - always
+    - init
 
 - name: Install MPI
   block:
     - name: Install MPI {{ version_number }}
       block:
-        - name: Download MPI {{ version_number }}
-          get_url:
-            url: https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-{{ version_number }}.tar.bz2
-            dest: "{{ common_dir }}/src/openmpi-{{ version_number }}.tar.bz2"
-            checksum: sha256:1402feced8c3847b3ab8252165b90f7d1fa28c23b6b2ca4632b6e4971267fd03
-        - name: Unzip MPI {{ version_number }}
-          unarchive:
-            src: "{{ common_dir }}/src/openmpi-{{ version_number }}.tar.bz2"
-            dest: "/dev/shm/"
-            creates: "/dev/shm/openmpi-{{ version_number }}"
-        - name: Make MPI {{ version_number }} build directory
-          file:
-            path: "{{ build_dir }}"
-            state: directory
-        - name: Run MPI {{ version_number }} configure
-          command: "../configure --prefix={{ install_dir }}"
-          args:
-            chdir: "{{ build_dir }}"
-            creates: "{{ build_dir }}/Makefile"
-        - name: Build MPI {{ version_number }}
-          make:
-            chdir: "{{ build_dir }}"
-        - name: Install MPI {{ version_number }}
-          make:
-            chdir: "{{ build_dir }}"
-            target: install
+        - name: Download, compile and install MPI {{ version_number }}
+          block:
+          - name: Download MPI {{ version_number }}
+            get_url:
+              url: https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-{{ version_number }}.tar.bz2
+              dest: "{{ common_src }}/openmpi-{{ version_number }}.tar.bz2"
+              checksum: sha256:1402feced8c3847b3ab8252165b90f7d1fa28c23b6b2ca4632b6e4971267fd03
+          - name: Unzip MPI {{ version_number }}
+            unarchive:
+              src: "{{ common_src }}/openmpi-{{ version_number }}.tar.bz2"
+              dest: "/dev/shm/"
+              creates: "{{ unzipdir }}"
+          - name: Make MPI {{ version_number }} build directory
+            file:
+              path: "{{ build_dir }}"
+              state: directory
+          - name: Run MPI {{ version_number }} configure
+            command: "../configure --prefix={{ install_dir }}"
+            args:
+              chdir: "{{ build_dir }}"
+              creates: "{{ build_dir }}/Makefile"
+          - name: Build MPI {{ version_number }}
+            make:
+              chdir: "{{ build_dir }}"
+          - name: Install MPI {{ version_number }}
+            make:
+              chdir: "{{ build_dir }}"
+              target: install
+
+        - name: Install mpi {{ version_number }} module
+          block:
+          - name: Check module dir
+            file:
+              path: "{{ mpi_module_dir }}"
+              state: directory
+              mode: u=rwx,g=rwx,o=rx
+          - name: Install module file
+            template:
+              src: mpi.lua
+              dest: "{{ mpi_module_dir }}/{{ version_number }}.lua"
+          tags:
+            - module
+
       vars:
         version_number: "4.0.3"
         install_dir: "{{ mpi_dir }}/{{ version_number }}"
-        build_dir: "/dev/shm/openmpi-{{ version_number }}/build"
+        unzipdir: "/dev/shm/openmpi-{{ version_number }}"
+        build_dir: "{{ unzipdir }}/build"
       tags:
         - 4.0.3
   vars:
     mpi_dir: "{{ common_dir }}/mpi"
+    mpi_module_dir: "{{ common_modules }}/mpi"
   tags:
     - MPI
