@@ -1,0 +1,39 @@
+---
+# tasks file for all
+- name: Initialise directory structure
+  block:
+    - name: Check common directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: u=rwx,g=wrx,o=rx
+        group: "{{ admin_group }}"
+      loop:
+        - "{{ astro_dir }}"
+        - "{{ astro_src }}"
+        - "{{ astro_modules }}"
+        - "{{ bio_dir }}"
+        - "{{ bio_src }}"
+        - "{{ bio_modules }}"
+        - "{{ common_dir }}"
+        - "{{ common_src }}"
+        - "{{ common_modules }}"
+  tags:
+    - always
+    - init
+
+#     software_root: /software
+
+# astro_dir: '{{ software_root }}/astro'
+# astro_src: '{{ astro_dir }}/src'
+
+# bio_dir: '{{ software_root }}/bio'
+# bio_src: '{{ bio_dir }}/src'
+
+# common_dir: '{{ software_root }}/common'
+# common_src: "{{ common_dir }}/src"
+
+# modules_dir: /software/modules
+# astro_modules: "{{ modules_dir }}/astro"
+# bio_modules: "{{ modules_dir }}/bio"
+# common_modules: "{{ modules_dir }}/common"

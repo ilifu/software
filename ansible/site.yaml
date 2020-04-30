@@ -1,4 +1,7 @@
 ---
+- name: Import all playbook
+  import_playbook: all.yaml
+  become: no
 - name: Import Astro playbook
   import_playbook: astro.yaml
   become: no
