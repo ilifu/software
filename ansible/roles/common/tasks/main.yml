@@ -19,14 +19,41 @@
 
 - name: Install MPI
   block:
-    - name: Install MPI 4.0.3
+    - name: Install MPI {{ version_number }}
       block:
-        - name: Download MPI 4.0.3
+        - name: Download MPI {{ version_number }}
           get_url:
-            url: https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.3.tar.bz2
-            dest: "{{ common_dir }}/src }}"
+            url: https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-{{ version_number }}.tar.bz2
+            dest: "{{ common_dir }}/src/openmpi-{{ version_number }}.tar.bz2"
             checksum: sha256:1402feced8c3847b3ab8252165b90f7d1fa28c23b6b2ca4632b6e4971267fd03
+        - name: Unzip MPI {{ version_number }}
+          unarchive:
+            src: "{{ common_dir }}/src/openmpi-{{ version_number }}.tar.bz2"
+            dest: "/dev/shm/"
+            creates: "/dev/shm/openmpi-{{ version_number }}"
+        - name: Make MPI {{ version_number }} build directory
+          file:
+            path: "{{ build_dir }}"
+            state: directory
+        - name: Run MPI {{ version_number }} configure
+          command: "../configure --prefix={{ install_dir }}"
+          args:
+            chdir: "{{ build_dir }}"
+            creates: "{{ build_dir }}/Makefile"
+        - name: Build MPI {{ version_number }}
+          make:
+            chdir: "{{ build_dir }}"
+        - name: Install MPI {{ version_number }}
+          make:
+            chdir: "{{ build_dir }}"
+            target: install
+      vars:
+        version_number: "4.0.3"
+        install_dir: "{{ mpi_dir }}/{{ version_number }}"
+        build_dir: "/dev/shm/openmpi-{{ version_number }}/build"
       tags:
         - 4.0.3
+  vars:
+    mpi_dir: "{{ common_dir }}/mpi"
   tags:
     - MPI
