@@ -1,0 +1,14 @@
+---
+- name: Import Astro playbook
+  import_playbook: astro.yaml
+  become: no
+  tags: astro
+- name: Import Bio playbook
+  import_playbook: bio.yaml
+  become: no
+  tags: bio
+- name: Import Common playbook
+  import_playbook: common.yaml
+  become: no
+  tags: common
+

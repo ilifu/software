@@ -1,0 +1,32 @@
+---
+# tasks file for common
+- name: Initialise directory structure
+  block:
+    - name: Make sure common directory is there
+      file:
+        path: "{{ common_dir }}"
+        state: directory
+        mode: u=rwx,g=wrx,o=rx
+        group: "{{ admin_group }}"
+    - name: Make sure common src is there
+      file:
+        path: "{{ common_dir }}/src"
+        state: directory
+        mode: u=rwx,g=wrx,o=rx
+        group: "{{ admin_group }}"
+  tags:
+    - always
+
+- name: Install MPI
+  block:
+    - name: Install MPI 4.0.3
+      block:
+        - name: Download MPI 4.0.3
+          get_url:
+            url: https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.3.tar.bz2
+            dest: "{{ common_dir }}/src }}"
+            checksum: sha256:1402feced8c3847b3ab8252165b90f7d1fa28c23b6b2ca4632b6e4971267fd03
+      tags:
+        - 4.0.3
+  tags:
+    - MPI
