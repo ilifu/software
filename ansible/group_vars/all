@@ -1,9 +1,14 @@
 ---
 
 software_root: /software
+
 astro_dir: '{{ software_root }}/astro'
+
 bio_dir: '{{ software_root }}/bio'
+
 common_dir: '{{ software_root }}/common'
+common_src: "{{ common_dir }}/src"
+common_modules: "{{ common_dir }}/modules"
 
 admin_group: 'idia-admins'
 # admin_group: 'dane'
