@@ -6,7 +6,7 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: OpenMPI")
 whatis("Description: OpenMPI {{ version_number }}")
 
-local mpi_dir = {{ install_dir }}
+local mpi_dir = "{{ install_dir }}"
 local bin_dir = pathJoin(install_dir, "bin")
 local lib_dir = pathJoin(install_dir, "lib")
 local include_dir = pathJoin(install_dir, "include")
