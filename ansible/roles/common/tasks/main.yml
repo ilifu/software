@@ -22,7 +22,7 @@
               path: "{{ build_dir }}"
               state: directory
           - name: Run OpenMPI {{ version_number }} configure
-            command: "../configure --prefix={{ install_dir }}"
+            command: "../configure --prefix={{ install_dir }} --enable-static --enable-mpi-java --with-singularity"
             args:
               chdir: "{{ build_dir }}"
               creates: "{{ build_dir }}/Makefile"
