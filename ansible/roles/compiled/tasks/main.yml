@@ -1,3 +1,4 @@
 ---
 # tasks file for compiled
 - { include: openmpi.yaml }
+- { include: python.yaml }
