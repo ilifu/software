@@ -1,6 +1,3 @@
----
-# tasks file for common
-
 - name: Install OpenMPI
   block:
     - name: Install OpenMPI {{ version_number }}
