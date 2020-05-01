@@ -51,9 +51,10 @@
         unzipdir: "/dev/shm/openmpi-{{ version_number }}"
         build_dir: "{{ unzipdir }}/build"
       tags:
-        - 4.0.3
+        - openmpi4.0.3
   vars:
     mpi_dir: "{{ common_dir }}/openmpi"
     mpi_module_dir: "{{ common_modules }}/openmpi"
   tags:
+    - never
     - MPI

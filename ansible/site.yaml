@@ -1,17 +1,17 @@
 ---
 - name: Import all playbook
-  import_playbook: all.yaml
+  hosts: all
   become: no
-- name: Import Astro playbook
-  import_playbook: astro.yaml
+  roles:
+    - all
+- name: Import compiled playbook
   become: no
-  tags: astro
-- name: Import Bio playbook
-  import_playbook: bio.yaml
-  become: no
-  tags: bio
-- name: Import Common playbook
-  import_playbook: common.yaml
-  become: no
-  tags: common
+  hosts: all
+  roles:
+    - compiled
 
+- name: Import containers playbook
+  become: no
+  hosts: all
+  roles:
+    - containers
