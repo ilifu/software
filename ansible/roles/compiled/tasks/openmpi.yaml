@@ -42,8 +42,6 @@
             template:
               src: openmpi.lua
               dest: "{{ mpi_module_dir }}/{{ version_number }}.lua"
-          tags:
-            - module
 
       vars:
         version_number: "4.0.3"
