@@ -15,6 +15,8 @@ local pkgconfig_dir = pathJoin(mpi_dir, "lib/pkgconfig")
 
 prepend_path('PATH', bin_dir)
 prepend_path('LD_LIBRARY_PATH', lib_dir)
+prepend_path('LIBRARY_PATH', lib_dir)
 prepend_path('INCLUDE', include_dir)
+prepend_path('C_INCLUDE', include_dir)
 prepend_path('MANPATH', man_dir)
 prepend_path('PKG_CONFIG_PATH', pkgconfig_dir)
