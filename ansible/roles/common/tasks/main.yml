@@ -1,64 +1,49 @@
 ---
 # tasks file for common
-- name: Initialise directory structure
-  block:
-    - name: Check common directories
-      file:
-        path: "{{ item }}"
-        state: directory
-        mode: u=rwx,g=wrx,o=rx
-        group: "{{ admin_group }}"
-      loop:
-        - "{{ common_dir }}"
-        - "{{ common_src }}"
-        - "{{ common_modules }}"
-  tags:
-    - always
-    - init
 
-- name: Install MPI
+- name: Install OpenMPI
   block:
-    - name: Install MPI {{ version_number }}
+    - name: Install OpenMPI {{ version_number }}
       block:
-        - name: Download, compile and install MPI {{ version_number }}
+        - name: Download, compile and install OpenMPI {{ version_number }}
           block:
-          - name: Download MPI {{ version_number }}
+          - name: Download OpenMPI {{ version_number }}
             get_url:
               url: https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-{{ version_number }}.tar.bz2
               dest: "{{ common_src }}/openmpi-{{ version_number }}.tar.bz2"
               checksum: sha256:1402feced8c3847b3ab8252165b90f7d1fa28c23b6b2ca4632b6e4971267fd03
-          - name: Unzip MPI {{ version_number }}
+          - name: Unzip OpenMPI {{ version_number }}
             unarchive:
               src: "{{ common_src }}/openmpi-{{ version_number }}.tar.bz2"
               dest: "/dev/shm/"
               creates: "{{ unzipdir }}"
-          - name: Make MPI {{ version_number }} build directory
+          - name: Make OpenMPI {{ version_number }} build directory
             file:
               path: "{{ build_dir }}"
               state: directory
-          - name: Run MPI {{ version_number }} configure
+          - name: Run OpenMPI {{ version_number }} configure
             command: "../configure --prefix={{ install_dir }}"
             args:
               chdir: "{{ build_dir }}"
               creates: "{{ build_dir }}/Makefile"
-          - name: Build MPI {{ version_number }}
+          - name: Build OpenMPI {{ version_number }}
             make:
               chdir: "{{ build_dir }}"
-          - name: Install MPI {{ version_number }}
+          - name: Install OpenMPI {{ version_number }}
             make:
               chdir: "{{ build_dir }}"
               target: install
 
-        - name: Install mpi {{ version_number }} module
+        - name: Install OpenMPI {{ version_number }} module
           block:
           - name: Check module dir
             file:
               path: "{{ mpi_module_dir }}"
               state: directory
               mode: u=rwx,g=rwx,o=rx
-          - name: Install module file
+          - name: Install OpenMPI module file
             template:
-              src: mpi.lua
+              src: openmpi.lua
               dest: "{{ mpi_module_dir }}/{{ version_number }}.lua"
           tags:
             - module
@@ -71,7 +56,7 @@
       tags:
         - 4.0.3
   vars:
-    mpi_dir: "{{ common_dir }}/mpi"
-    mpi_module_dir: "{{ common_modules }}/mpi"
+    mpi_dir: "{{ common_dir }}/openmpi"
+    mpi_module_dir: "{{ common_modules }}/openmpi"
   tags:
     - MPI
