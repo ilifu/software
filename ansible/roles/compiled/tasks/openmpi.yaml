@@ -55,4 +55,4 @@
     mpi_module_dir: "{{ common_modules }}/openmpi"
   tags:
     - never
-    - MPI
+    - OpenMPI
