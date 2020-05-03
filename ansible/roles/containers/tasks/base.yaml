@@ -8,7 +8,7 @@
     - name: Copy recipe
       template:
         src: "{{ base_container_name }}.def"
-        dest: "{{ base_container_recipe }}.def"
+        dest: "{{ base_container_recipe }}"
     - name: Build container
       command: "/opt/singularity/bin/singularity build {{ base_container_image }} {{ base_container_recipe }}"
       args:
@@ -38,10 +38,10 @@
         - name: Copy recipe
           template:
             src: "{{ container_name }}.def"
-            dest: "{{ container_recipe }}.def"
+            dest: "{{ container_recipe }}"
         - name: Build container
           command: "/opt/singularity/bin/singularity build {{ container_image }} {{ container_recipe }}"
           args:
-            creates: "{{ base_container_image }}"
+            creates: "{{ container_image }}"
           become: yes
 
