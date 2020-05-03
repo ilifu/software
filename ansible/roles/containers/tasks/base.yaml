@@ -1,0 +1,23 @@
+- name: Create base ubuntu bionic container
+  vars:
+    - base_container_name: base-bionic
+    - base_container_recipe: "{{ common_container_recipe_dir }}/{{ base_container_name }}.def"
+    - base_container_image: "{{ common_container_dir }}/{{ base_container_name }}.sif"
+  tags: base-bionic
+  block:
+    - name: "Check for existance of {{ base_container_image }} container"
+      stat:
+        path: "{{ base_container_image }}"
+      register: base_container_exists
+    - name: Create container
+      when: base_container_exists.stat.exists == False
+      block:
+        - name: Copy recipe
+          template:
+            src: "{{ base_container_name }}.def"
+            dest: "{{ base_container_recipe }}.def"
+        - name: Build container
+          command: "/opt/singularity/bin/singularity build {{ base_container_image }} {{ base_container_recipe }}"
+          args:
+            creates: "{{ base_container_image }}"
+          become: yes
