@@ -24,19 +24,3 @@
   tags:
     - always
     - init
-
-#     software_root: /software
-
-# astro_dir: '{{ software_root }}/astro'
-# astro_src: '{{ astro_dir }}/src'
-
-# bio_dir: '{{ software_root }}/bio'
-# bio_src: '{{ bio_dir }}/src'
-
-# common_dir: '{{ software_root }}/common'
-# common_src: "{{ common_dir }}/src"
-
-# modules_dir: /software/modules
-# astro_modules: "{{ modules_dir }}/astro"
-# bio_modules: "{{ modules_dir }}/bio"
-# common_modules: "{{ modules_dir }}/common"
