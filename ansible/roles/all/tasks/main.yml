@@ -10,12 +10,15 @@
         group: "{{ admin_group }}"
       loop:
         - "{{ astro_dir }}"
+        - "{{ astro_container_dir }}"
         - "{{ astro_src }}"
         - "{{ astro_modules }}"
         - "{{ bio_dir }}"
+        - "{{ bio_container_dir }}"
         - "{{ bio_src }}"
         - "{{ bio_modules }}"
         - "{{ common_dir }}"
+        - "{{ common_container_dir }}"
         - "{{ common_src }}"
         - "{{ common_modules }}"
   tags:
