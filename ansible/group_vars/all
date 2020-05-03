@@ -2,16 +2,16 @@
 
 software_root: /software
 
-astro_dir: '{{ software_root }}/astro'
-astro_container_dir: '{{ astro_dir }}/containers'
-astro_src: '{{ astro_dir }}/src'
+astro_dir: "{{ software_root }}/astro"
+astro_container_dir: "{{ astro_dir }}/containers"
+astro_src: "{{ astro_dir }}/src"
 
-bio_dir: '{{ software_root }}/bio'
-bio_container_dir: '{{ bio_dir }}/containers'
-bio_src: '{{ bio_dir }}/src'
+bio_dir: "{{ software_root }}/bio"
+bio_container_dir: "{{ bio_dir }}/containers"
+bio_src: "{{ bio_dir }}/src"
 
-common_dir: '{{ software_root }}/common'
-common_container_dir: '{{ common_dir }}/containers'
+common_dir: "{{ software_root }}/common"
+common_container_dir: "{{ common_dir }}/containers"
 common_src: "{{ common_dir }}/src"
 
 
@@ -20,4 +20,4 @@ astro_modules: "{{ modules_dir }}/astro"
 bio_modules: "{{ modules_dir }}/bio"
 common_modules: "{{ modules_dir }}/common"
 
-admin_group: 'idia-admins'
+admin_group: "idia-admins"
