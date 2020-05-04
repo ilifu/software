@@ -55,5 +55,5 @@ Include: software-properties-common
   apt-get autoclean
 
 %test
-  grep "18.04" /etc/issue
+  grep -q "18.04" /etc/issue
   

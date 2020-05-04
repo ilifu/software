@@ -1,15 +1,15 @@
 - name: Create base ubuntu bionic container
   vars:
-    - base_container_name: base-bionic
+    - base_container_name: bionic
     - base_container_recipe: "{{ common_container_recipe_dir }}/{{ base_container_name }}.def"
     - base_container_image: "{{ common_container_dir }}/{{ base_container_name }}.sif"
-  tags: base-bionic
+  tags: bionic
   block:
-    - name: Copy recipe
+    - name: Copy recipe {{ base_container_recipe }}
       template:
         src: "{{ base_container_name }}.def"
         dest: "{{ base_container_recipe }}"
-    - name: Build container
+    - name: Build container {{ base_container_image }}
       command: "/opt/singularity/bin/singularity build {{ base_container_image }} {{ base_container_recipe }}"
       args:
         creates: "{{ base_container_image }}"
@@ -17,12 +17,12 @@
 
 - name: Create ubuntu bionic compile container
   vars:
-    - base_container_name: base-bionic
+    - base_container_name: bionic
     - base_container_image: "{{ common_container_dir }}/{{ base_container_name }}.sif"
-    - container_name: base-bionic-compile
+    - container_name: bionic-compile
     - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
     - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
-  tags: base-bionic-compile
+  tags: bionic-compile
   block:
     - name: "Check for existance of {{ base_container_image }} container"
       stat:
@@ -35,11 +35,11 @@
     - name: Create container
       when: base_container_exists.stat.exists == True
       block:
-        - name: Copy recipe
+        - name: Copy recipe  {{ container_recipe }}
           template:
             src: "{{ container_name }}.def"
             dest: "{{ container_recipe }}"
-        - name: Build container
+        - name: Build container {{ container_image }}
           command: "/opt/singularity/bin/singularity build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
