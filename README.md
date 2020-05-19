@@ -1,7 +1,7 @@
 # software
 This is a repository for scripts and recipes to install software on ilifu. The list of software managed here includes:
-* OpenMPI (version(s) 4.0.3)
-* python (version(s) 3.8.2)
+* OpenMPI
+* python
 
 ## Ansible installs
 These installations can be found in the `ansible` directory.
