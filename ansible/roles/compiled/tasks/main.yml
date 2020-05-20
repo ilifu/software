@@ -11,6 +11,7 @@
     pip_packages:
       - pip
       - pipenv
+      - ipython
   include_tasks:
     file: python.yaml
   loop: "{{ python_versions }}"
