@@ -1,70 +1,73 @@
-- name: Install Python
-  block:
-    - name: Install Python {{ version_number }}
-      block:
-        - name: Download, compile and install Python {{ version_number }}
-          block:
-          - name: Download Python {{ version_number }}
-            get_url:
-              url: https://www.python.org/ftp/python/{{ version_number }}/Python-{{ version_number }}.tar.xz
-              dest: "{{ common_src }}/Python-{{ version_number }}.tar.xz"
-              checksum: sha256:2646e7dc233362f59714c6193017bb2d6f7b38d6ab4a0cb5fbac5c36c4d845df
-          - name: Unzip Python {{ version_number }}
-            unarchive:
-              src: "{{ common_src }}/Python-{{ version_number }}.tar.xz"
-              dest: "/dev/shm/"
-              creates: "{{ unzipdir }}"
-          - name: Make Python {{ version_number }} build directory
-            file:
-              path: "{{ build_dir }}"
-              state: directory
-          - name: Run Python {{ version_number }} configure
-            command: "../configure --prefix={{ install_dir }} --enable-optimizations"
-            args:
-              chdir: "{{ build_dir }}"
-              creates: "{{ build_dir }}/Makefile"
-          - name: Build Python {{ version_number }}
-            make:
-              chdir: "{{ build_dir }}"
-              params:
-                PROFILE_TASK="-m test.regrtest --pgo test_array test_base64 test_binascii test_binhex test_binop test_c_locale_coercion test_csv test_json test_hashlib test_unicode test_codecs test_traceback test_decimal test_math test_compile test_threading test_time test_fstring test_re test_float test_class test_cmath test_complex test_iter test_struct test_slice test_set test_dict test_long test_bytes test_memoryview test_io test_pickle"
-          - name: Install Python {{ version_number }}
-            make:
-              chdir: "{{ build_dir }}"
-              target: install
-          - name: Setup python to python3 symlink
-            file:
-              src: "python3"
-              dest: "{{ install_dir }}/bin/python"
-              state: link
-          - name: Setup pip to pip3 symlink
-            file:
-              src: "pip3"
-              dest: "{{ install_dir }}/bin/pip"
-              state: link
-
-        - name: Install Python {{ version_number }} module
-          block:
-          - name: Check module dir
-            file:
-              path: "{{ python_module_dir }}"
-              state: directory
-              mode: u=rwx,g=rwx,o=rx
-          - name: Install Python module file
-            template:
-              src: python.lua
-              dest: "{{ python_module_dir }}/{{ version_number }}.lua"
-
-      vars:
-        version_number: "3.8.2"
-        install_dir: "{{ python_dir }}/{{ version_number }}"
-        unzipdir: "/dev/shm/Python-{{ version_number }}"
-        build_dir: "{{ unzipdir }}/build"
-      tags:
-        - python3.8.2
+---
+- name: Install Python {{ item.version_number }}
   vars:
     python_dir: "{{ common_dir }}/python"
     python_module_dir: "{{ common_modules }}/python"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ python_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/Python-{{ version_number }}"
+    build_dir: "{{ unzipdir }}/build"
+    python_url: "https://www.python.org/ftp/python/{{ version_number }}/Python-{{ version_number }}.tar.xz"
   tags:
     - never
-    - python
+    - python{{ item.version_number }}
+
+  block:
+    - name: Download, compile and install Python {{ version_number }}
+      block:
+      - name: Download Python {{ version_number }} from {{ python_url }}
+        get_url:
+          url: "{{ python_url }}"
+          dest: "{{ common_src }}/Python-{{ version_number }}.tar.xz"
+          checksum: "{{ checksum }}"
+      - name: Unzip Python {{ version_number }}
+        unarchive:
+          src: "{{ common_src }}/Python-{{ version_number }}.tar.xz"
+          dest: "/dev/shm/"
+          creates: "{{ unzipdir }}"
+      - name: Make Python {{ version_number }} build directory
+        file:
+          path: "{{ build_dir }}"
+          state: directory
+      - name: Run Python {{ version_number }} configure
+        command: "../configure --prefix={{ install_dir }} --enable-optimizations"
+        args:
+          chdir: "{{ build_dir }}"
+          creates: "{{ build_dir }}/Makefile"
+      - name: Build Python {{ version_number }}
+        make:
+          chdir: "{{ build_dir }}"
+          params:
+            PROFILE_TASK="-m test.regrtest --pgo test_array test_base64 test_binascii test_binhex test_binop test_c_locale_coercion test_csv test_json test_hashlib test_unicode test_codecs test_traceback test_decimal test_math test_compile test_threading test_time test_fstring test_re test_float test_class test_cmath test_complex test_iter test_struct test_slice test_set test_dict test_long test_bytes test_memoryview test_io test_pickle"
+        environment:
+          MAKEFLAGS: "-j {{ ansible_processor_count }}"
+      - name: Install Python {{ version_number }}
+        make:
+          chdir: "{{ build_dir }}"
+          target: install
+      - name: Setup python to python3 symlink
+        file:
+          src: "python3"
+          dest: "{{ install_dir }}/bin/python"
+          state: link
+      - name: Setup pip to pip3 symlink
+        file:
+          src: "pip3"
+          dest: "{{ install_dir }}/bin/pip"
+          state: link
+      - name: install / upgrade packages
+        command: "{{ install_dir }}/bin/pip install {{ item }}"
+        loop: "{{ pip_packages }}"
+
+    - name: Install Python {{ version_number }} module
+      block:
+      - name: Check module dir
+        file:
+          path: "{{ python_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install Python module file
+        template:
+          src: python.lua
+          dest: "{{ python_module_dir }}/{{ version_number }}.lua"
