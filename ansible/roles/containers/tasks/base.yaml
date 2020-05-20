@@ -24,7 +24,7 @@
     - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
   tags: bionic-compile
   block:
-    - name: "Check for existance of {{ base_container_image }} container"
+    - name: "Check for existence of {{ base_container_image }} container"
       stat:
         path: "{{ base_container_image }}"
       register: base_container_exists
