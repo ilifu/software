@@ -56,9 +56,11 @@
           src: "pip3"
           dest: "{{ install_dir }}/bin/pip"
           state: link
-      - name: install / upgrade packages
-        command: "{{ install_dir }}/bin/pip install {{ item }}"
+      - name: install / upgrade pip packages
+        command: "{{ install_dir }}/bin/pip install {{ package_name }}"
         loop: "{{ pip_packages }}"
+        loop_control:
+          loop_var: "package_name"
 
     - name: Install Python {{ version_number }} module
       block:
