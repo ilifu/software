@@ -61,7 +61,7 @@
       - name: Ensure pip is installed
         command: "{{ install_dir }}/bin/python -m  ensurepip"
       - name: install / upgrade pip packages
-        command: "{{ install_dir }}/bin/pip install {{ package_name }}"
+        command: "{{ install_dir }}/bin/pip install --upgrade {{ package_name }}"
         loop: "{{ pip_packages }}"
         loop_control:
           loop_var: "package_name"
