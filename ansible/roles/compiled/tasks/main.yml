@@ -1,6 +1,21 @@
 ---
 # tasks file for compiled
 # - { include: openmpi.yaml }
+
+- name: Install openjdks
+  vars:
+    - openjdk_versions:
+        - {
+          version_number: "14.0.1",
+          checksum: "sha256:22ce248e0bd69f23028625bede9d1b3080935b68d011eaaf9e241f84d6b9c4cc",
+          url: "https://download.java.net/java/GA/jdk14.0.1/664493ef4a6946b186ff29eb326336a2/7/GPL/openjdk-14.0.1_linux-x64_bin.tar.gz",
+        }
+  include_tasks:
+    file: openjdk.yaml
+  loop: "{{ openjdk_versions }}"
+  tags:
+    - always
+
 - name: Install openmpis
   vars:
     - openmpi_versions:

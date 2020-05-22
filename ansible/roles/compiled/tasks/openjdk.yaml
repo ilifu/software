@@ -1,0 +1,44 @@
+---
+- name: Install OpenJDK {{ item.version_number }}
+  vars:
+    java_dir: "{{ common_dir }}/java"
+    java_module_dir: "{{ common_modules }}/java"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ java_dir }}/jdk-{{ version_number }}"
+    unzipdir: "/dev/shm/openjdk-{{ version_number }}"
+    build_dir: "{{ unzipdir }}/build"
+  tags:
+    - never
+    - openjdk{{ item.version_number }}
+
+  block:
+    - name: Download and install OpenJDK {{ version_number }}
+      block:
+      - name: Download OpenJDK {{ version_number }} from {{ url }}
+        get_url:
+          url: "{{ url }}"
+          dest: "{{ common_src }}/openjdk-{{ version_number }}.tar.gz"
+          checksum: "{{ checksum }}"
+      - name: Ensure java dir exists
+        file:
+          path: "{{ java_dir }}"
+          state: directory
+      - name: Uncompress OpenJDK
+        unarchive:
+          src: "{{ common_src }}/openjdk-{{ version_number }}.tar.gz"
+          dest: "{{ java_dir }}"
+          creates: "{{ install_dir }}"
+
+    - name: Install OpenMPI {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ java_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install OpenMPI module file
+          template:
+            src: openjdk.lua
+            dest: "{{ java_module_dir }}/openjdk-{{ version_number }}.lua"
