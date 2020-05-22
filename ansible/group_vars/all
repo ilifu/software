@@ -18,7 +18,7 @@ common_container_recipe_dir: "{{ common_container_dir }}/recipes"
 common_src: "{{ common_dir }}/src"
 
 
-modules_dir: /software/modules
+modules_dir: "{{ software_root }}/modules"
 astro_modules: "{{ modules_dir }}/astro"
 bio_modules: "{{ modules_dir }}/bio"
 common_modules: "{{ modules_dir }}/common"
