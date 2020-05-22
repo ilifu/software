@@ -1,6 +1,24 @@
 ---
 # tasks file for compiled
 # - { include: openmpi.yaml }
+- name: Install openmpis
+  vars:
+    - openmpi_versions:
+        - {
+          version_number: "4.0.3",
+          checksum: "sha256:1402feced8c3847b3ab8252165b90f7d1fa28c23b6b2ca4632b6e4971267fd03",
+          url: "https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.3.tar.bz2",
+        }
+        - {
+          version_number: "3.1.6",
+          checksum: "sha1:bc4cd7fa0a7993d0ae05ead839e6056207e432d4",
+          url: "https://download.open-mpi.org/release/open-mpi/v3.1/openmpi-3.1.6.tar.bz2",
+        }
+  include_tasks:
+    file: openmpi.yaml
+  loop: "{{ openmpi_versions }}"
+  tags:
+    - always
 
 - name: Install pythons
   vars:

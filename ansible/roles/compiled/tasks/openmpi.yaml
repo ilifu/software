@@ -1,4 +1,16 @@
 - name: Install OpenMPI
+  vars:
+    mpi_dir: "{{ common_dir }}/openmpi"
+    mpi_module_dir: "{{ common_modules }}/openmpi"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ mpi_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/openmpi-{{ version_number }}"
+    build_dir: "{{ unzipdir }}/build"
+  tags:
+    - never
+    - openmpi{{ item.version_number }}
   block:
     - name: Install OpenMPI {{ version_number }}
       block:
@@ -6,9 +18,9 @@
           block:
           - name: Download OpenMPI {{ version_number }}
             get_url:
-              url: https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-{{ version_number }}.tar.bz2
+              url: "{{ url }}"
               dest: "{{ common_src }}/openmpi-{{ version_number }}.tar.bz2"
-              checksum: sha256:1402feced8c3847b3ab8252165b90f7d1fa28c23b6b2ca4632b6e4971267fd03
+              checksum: "{{ checksum }}"
           - name: Unzip OpenMPI {{ version_number }}
             unarchive:
               src: "{{ common_src }}/openmpi-{{ version_number }}.tar.bz2"
@@ -26,6 +38,8 @@
           - name: Build OpenMPI {{ version_number }}
             make:
               chdir: "{{ build_dir }}"
+            environment:
+              MAKEFLAGS: "-j {{ ansible_processor_count }}"
           - name: Install OpenMPI {{ version_number }}
             make:
               chdir: "{{ build_dir }}"
@@ -42,17 +56,3 @@
             template:
               src: openmpi.lua
               dest: "{{ mpi_module_dir }}/{{ version_number }}.lua"
-
-      vars:
-        version_number: "4.0.3"
-        install_dir: "{{ mpi_dir }}/{{ version_number }}"
-        unzipdir: "/dev/shm/openmpi-{{ version_number }}"
-        build_dir: "{{ unzipdir }}/build"
-      tags:
-        - openmpi4.0.3
-  vars:
-    mpi_dir: "{{ common_dir }}/openmpi"
-    mpi_module_dir: "{{ common_modules }}/openmpi"
-  tags:
-    - never
-    - OpenMPI
