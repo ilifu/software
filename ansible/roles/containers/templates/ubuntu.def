@@ -1,14 +1,14 @@
 Bootstrap: debootstrap
 MirrorURL: http://ftp.leg.uct.ac.za/ubuntu/
-OSVersion: bionic
+OSVersion: {{ item.version_name }}
 Include: software-properties-common
 
 %labels
   Maintainer Dane Kennedy
-  Version 0.2
+  Version 0.3
 
 %help
-  Base singularity definition file, to create base-ubuntu-bionic.sif, which can then be used for more specific containers
+  Base singularity definition file, to create {{ base_container_name }}.sif, which can then be used as a basis for more specific containers
 
 %environment
   export INSTALLER_PATH=/installer
@@ -48,12 +48,12 @@ Include: software-properties-common
     dpkg-reconfigure --frontend noninteractive tzdata
 
   # Create /users to bind home directories into the container.
-  mkdir -p /users /scratch /data
+  mkdir -p /users /scratch /data /software
 
   # Cleanup the container
   apt-get clean
   apt-get autoclean
 
 %test
-  grep -q "18.04" /etc/issue
+  grep -q "{{ item.version_number }}" /etc/issue
   

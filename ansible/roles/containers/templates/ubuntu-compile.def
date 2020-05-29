@@ -3,10 +3,10 @@ From: {{ base_container_image }}
 
 %labels
   Maintainer Dane Kennedy
-  Version 0.2
+  Version 0.3
 
 %help
-  Base singularity definition file, to create bionic-compile.sif, which can then be used for more specific containers that require compiling from source.
+  Base singularity definition file, to create {{ container_name }}.sif, which can then be used for more specific containers that require compiling from source.
 
 %environment
   export INSTALLER_PATH=/installer
@@ -39,7 +39,7 @@ From: {{ base_container_image }}
   apt-get update -y && apt-get dist-upgrade -y
 
   # Install common stuff
-    apt-get install -y \
+  apt-get install -y \
     autoconf \
     automake \
     bc \
@@ -68,20 +68,10 @@ From: {{ base_container_image }}
     python python-dev python3 python3-dev \
     sqlite3 libsqlite3-0 libsqlite3-dev \
 
-#   # install other tools
-#   # openmpi
-#   cd /installer
-#   tar -jxf openmpi-4.0.3.tar.bz2
-#   cd openmpi-4.0.3
-#   ./configure --enable-mpi-java --with-slurm --prefix=${SOFTWARE_PATH}
-#   make -j4
-# #  make check
-#   make install
-  
   ldconfig
 
   # Create /users to bind home directories into the container.
-  mkdir -p /users /scratch /data
+  mkdir -p /users /scratch /data /software
 
   # Cleanup the container
   apt-get clean
@@ -89,4 +79,4 @@ From: {{ base_container_image }}
   rm -rf ${INSTALLER_PATH}/*
 
 %test
-  grep "18.04" /etc/issue
+  grep "{{ item.version_number }}" /etc/issue

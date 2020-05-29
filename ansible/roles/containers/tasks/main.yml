@@ -1,3 +1,15 @@
 ---
 # tasks file for containers
-- { include: base.yaml }
+#- { include: base.yaml }
+
+- name: Create Ubuntu Base Containers
+  vars:
+    - ubuntu_versions:
+        - {
+            version_name: bionic,
+            version_number: 18.04,
+        }
+  include_tasks:
+    file: base.yaml
+  loop: "{{ ubuntu_versions }}"
+  tags: always

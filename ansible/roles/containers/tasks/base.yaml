@@ -1,13 +1,15 @@
-- name: Create base ubuntu bionic container
+- name: Create base ubuntu {{ item.version_name }} container
   vars:
-    - base_container_name: bionic
+    - base_container_name: "ubuntu-{{ item.version_name }}"
     - base_container_recipe: "{{ common_container_recipe_dir }}/{{ base_container_name }}.def"
     - base_container_image: "{{ common_container_dir }}/{{ base_container_name }}.sif"
-  tags: bionic
+  tags:
+    - "ubuntu-{{ item.version_name }}"
+    - never
   block:
     - name: Copy recipe {{ base_container_recipe }}
       template:
-        src: "{{ base_container_name }}.def"
+        src: "ubuntu.def"
         dest: "{{ base_container_recipe }}"
     - name: Build container {{ base_container_image }}
       command: "/opt/singularity/bin/singularity build {{ base_container_image }} {{ base_container_recipe }}"
@@ -15,14 +17,16 @@
         creates: "{{ base_container_image }}"
       become: yes
 
-- name: Create ubuntu bionic compile container
+- name: Create ubuntu {{ item.version_name }} compile container
   vars:
-    - base_container_name: bionic
+    - base_container_name: "ubuntu-{{ item.version_name }}"
     - base_container_image: "{{ common_container_dir }}/{{ base_container_name }}.sif"
-    - container_name: bionic-compile
+    - container_name: "ubuntu-{{ item.version_name }}-compile"
     - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
     - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
-  tags: bionic-compile
+  tags:
+    - "ubuntu-{{ item.version_name }}-compile"
+    - never
   block:
     - name: "Check for existence of {{ base_container_image }} container"
       stat:
@@ -37,7 +41,7 @@
       block:
         - name: Copy recipe  {{ container_recipe }}
           template:
-            src: "{{ container_name }}.def"
+            src: "ubuntu-compile.def"
             dest: "{{ container_recipe }}"
         - name: Build container {{ container_image }}
           command: "/opt/singularity/bin/singularity build {{ container_image }} {{ container_recipe }}"
