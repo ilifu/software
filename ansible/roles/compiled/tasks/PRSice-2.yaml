@@ -1,0 +1,44 @@
+- name: Install PRSice-2
+  vars:
+    prsice_dir: "{{ bio_dir }}/prsice-2"
+    prsice_module_dir: "{{ bio_modules }}/prsice-2"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ prsice_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/prsice-{{ version_number }}"
+    build_dir: "{{ unzipdir }}/build"
+  tags:
+    - never
+    - prsice{{ item.version_number }}
+  block:
+    - name: Install PRSice-2 {{ version_number }}
+      block:
+        - name: Download, compile and install PRSice-2 {{ version_number }}
+          block:
+          - name: Download PRSice-2 {{ version_number }}
+            get_url:
+              url: "{{ url }}"
+              dest: "{{ bio_src }}/PRSice-{{ version_number }}.zip"
+              checksum: "{{ checksum }}"
+          - name: Create PRSice-2 {{ version_number }} install dir
+            file:
+              path: "{{ install_dir }}"
+              state: directory
+          - name: Unzip PRSice-2 {{ version_number }}
+            unarchive:
+              src: "{{ bio_src }}/PRSice-{{ version_number }}.zip"
+              dest: "{{ install_dir }}"
+              creates: "{{ install_dir }}/PRSice_linux"
+
+    - name: Install PRSice-2 {{ version_number }} module
+      block:
+      - name: Check module dir
+        file:
+          path: "{{ prsice_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install PRSice {{ version_number }} module file
+        template:
+          src: prsice-2.lua
+          dest: "{{ prsice_module_dir }}/{{ version_number }}.lua"

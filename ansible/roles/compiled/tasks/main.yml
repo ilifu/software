@@ -50,3 +50,17 @@
   loop: "{{ python_versions }}"
   tags:
     - always
+
+- name: Install PRSices
+  vars:
+    - prsice_versions:
+        - {
+          version_number: "2.3.1d",
+          checksum: "sha256:ce76de7b00598a96d705765b4d7aaf240a275abb6f00918aebcab1f534bded54",
+          url: "https://github.com/choishingwan/PRSice/releases/download/2.3.1/PRSice_linux.231d.zip",
+        }
+  include_tasks:
+    file: PRSice-2.yaml
+  loop: "{{ prsice_versions }}"
+  tags:
+    - always
