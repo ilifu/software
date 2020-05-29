@@ -1,7 +1,5 @@
 ---
 # tasks file for containers
-#- { include: base.yaml }
-
 - name: Create Ubuntu Base Containers
   vars:
     - ubuntu_versions:
@@ -10,6 +8,6 @@
             version_number: 18.04,
         }
   include_tasks:
-    file: base.yaml
+    file: ubuntu.yaml
   loop: "{{ ubuntu_versions }}"
   tags: always
