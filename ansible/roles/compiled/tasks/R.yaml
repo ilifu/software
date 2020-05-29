@@ -47,15 +47,15 @@
               target: install
           - name: Install R packages {{ r_packages }}
             command: "{{ install_dir }}/bin/Rscript -e 'install.packages(c({{ r_packages }}), repos=\"http://cran.rstudio.com/\")'"
-#
-#    - name: Install OpenMPI {{ version_number }} module
-#      block:
-#      - name: Check module dir
-#        file:
-#          path: "{{ mpi_module_dir }}"
-#          state: directory
-#          mode: u=rwx,g=rwx,o=rx
-#      - name: Install OpenMPI module file
-#        template:
-#          src: openmpi.lua
-#          dest: "{{ mpi_module_dir }}/{{ version_number }}.lua"
+
+    - name: Install R {{ version_number }} module
+      block:
+      - name: Check module dir
+        file:
+          path: "{{ R_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install R {{ version_number }} module file
+        template:
+          src: R.lua
+          dest: "{{ R_module_dir }}/{{ version_number }}.lua"
