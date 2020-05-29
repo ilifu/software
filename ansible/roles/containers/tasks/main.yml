@@ -11,3 +11,17 @@
     file: ubuntu.yaml
   loop: "{{ ubuntu_versions }}"
   tags: always
+
+- name: Create RStudio Containers
+  vars:
+    - rstudio_versions:
+        - {
+            base_container_name: ubuntu-bionic-compile,
+            base_container_version_name: bionic,
+            r_version: 4.0.0,
+            rstudio_version: 1.3.959,
+        }
+  include_tasks:
+    file: RStudio.yaml
+  loop: "{{ rstudio_versions }}"
+  tags: always

@@ -1,12 +1,11 @@
-- name: Build RStudio Container
+- name: Create RStudio {{ item.version_name }} container
   vars:
-    - base_container_name: bionic
-    - base_container_image: "{{ common_container_dir }}/{{ base_container_name }}.sif"
-    - container_name: bionic-compile
+    - base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
+    - container_name: "RStudio{{ item.rstudio_version }}-R{{ item.r_version }}"
     - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
     - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
   tags:
-    - bionic-compile
+    - "RStudio{{ item.rstudio_version }}-R{{ item.r_version }}"
     - never
   block:
     - name: "Check for existence of {{ base_container_image }} container"
@@ -17,12 +16,12 @@
       fail:
         msg: "The container {{ base_container_image }} is missing."
       when: base_container_exists.stat.exists == False
-    - name: Create container
+    - name: Create RStudio {{ item.rstudio_version }} container
       when: base_container_exists.stat.exists == True
       block:
         - name: Copy recipe  {{ container_recipe }}
           template:
-            src: "{{ container_name }}.def"
+            src: "RStudio.def"
             dest: "{{ container_recipe }}"
         - name: Build container {{ container_image }}
           command: "/opt/singularity/bin/singularity build {{ container_image }} {{ container_recipe }}"
