@@ -64,3 +64,17 @@
   loop: "{{ prsice_versions }}"
   tags:
     - always
+
+- name: Install Rs
+  vars:
+    - R_versions:
+        - {
+          version_number: "4.0.0",
+          checksum: "sha256:06beb0291b569978484eb0dcb5d2339665ec745737bdfb4e873e7a5a75492940",
+          url: "https://cran.r-project.org/src/base/R-4/R-4.0.0.tar.gz",
+        }
+  include_tasks:
+    file: R.yaml
+  loop: "{{ R_versions }}"
+  tags:
+    - always
