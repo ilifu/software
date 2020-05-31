@@ -15,14 +15,18 @@ From: {{ base_container_image }}
 %apprun Rscript
   exec Rscript "${@}"
 
-%apprun rserver
+%apprun rstudio
   if [ -z "${RSTUDIO_PASSWORD}" ]; then
     export RSTUDIO_PASSWORD=$( tr -cd '[:alnum:]' < /dev/urandom | fold -w30 | head -n1 )
     echo "The environment variable RSTUDIO_PASSWORD was not set, so your password has been chosen for you. It's: ${RSTUDIO_PASSWORD}"
-    exit 1
   fi
   PORT=$( python -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()' )
+  HOST=$( /bin/hostname )
   echo "Running rserver on port ${PORT}"
+  echo "To connect to this server run this on your local machine:"
+  echo "    ssh -A ${USER}@${HOST} -o \"ProxyCommand=ssh ${USER}@slurm.ilifu.ac.za nc ${HOST} 22\" -L8081:localhost:${PORT}"
+  echo "then vist http://localhost:8081 in your browser and use the username \"${USER}\" to login with the password \"${RSTUDIO_PASSWORD}\""
+  echo "(You may need to choose a different port (other than 8081), so remember to change this in both the ssh and browser)"
   exec rserver --auth-none 0 --auth-pam-helper rstudio_auth --secure-cookie-key-file /tmp/rstudio-server-${USER}/secure-cookie.key --www-port ${PORT} "${@}"
 
 
@@ -30,15 +34,20 @@ From: {{ base_container_image }}
   if [ -z "${RSTUDIO_PASSWORD}" ]; then
     export RSTUDIO_PASSWORD=$( tr -cd '[:alnum:]' < /dev/urandom | fold -w30 | head -n1 )
     echo "The environment variable RSTUDIO_PASSWORD was not set, so your password has been chosen for you. It's: ${RSTUDIO_PASSWORD}"
-    exit 1
   fi
   PORT=$( python -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()' )
+  HOST=$( /bin/hostname )
   echo "Running rserver on port ${PORT}"
+  echo "To connect to this server run this on your local machine:"
+  echo "    ssh -A ${USER}@${HOST} -o \"ProxyCommand=ssh ${USER}@slurm.ilifu.ac.za nc ${HOST} 22\" -L8081:localhost:${PORT}"
+  echo "then vist http://localhost:8081 in your browser and use the username \"${USER}\" to login with the password \"${RSTUDIO_PASSWORD}\""
+  echo "(You may need to choose a different port (other than 8081), so remember to change this in both the ssh and browser)"
   exec rserver --auth-none 0 --auth-pam-helper rstudio_auth --secure-cookie-key-file /tmp/rstudio-server-${USER}/secure-cookie.key --www-port ${PORT} "${@}"
 
 %environment
   export R_VERSION={{ item.r_version }}
   export RSTUDIO_VERSION={{ item.rstudio_version }}
+  export PATH=/usr/lib/rstudio-server/bin:${PATH}
 
 # Thanks to nickjer for this! https://github.com/nickjer/singularity-rstudio/blob/master/Singularity.3.6.0
 %setup
@@ -51,11 +60,13 @@ From: {{ base_container_image }}
   # Create Installation Directories and export paths. This is needed as part of post.
   # %environment scriptlet does not define these paths during %post, only after.
   export R_VERSION={{ item.r_version }}
+  export RSTUDIO_VERSION={{ item.rstudio_version }}
   export DEBIAN_FRONTEND=noninteractive
 
   # Update apt
   apt-get update -y && apt-get dist-upgrade -y
   apt-get install -y \
+    apt-utils \
     dirmngr \
     git \
     texlive \
@@ -73,7 +84,7 @@ From: {{ base_container_image }}
     wget \
 
   # Add R repositories
-  echo "deb http://cran.r-project.org/bin/linux/ubuntu {{ item.base_container_version_name }}-cran35/" > /etc/apt/sources.list.d/r.list
+  echo "deb http://cran.r-project.org/bin/linux/ubuntu {{ item.base_container_version_name }}-cran40/" > /etc/apt/sources.list.d/r.list
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
   apt-get update
 
@@ -109,6 +120,11 @@ From: {{ base_container_image }}
   mkdir -p /library
   echo "R_LIBS_SITE=/library:\${R_LIBS_SITE}" >> /usr/lib/R/etc/Renviron.site
 
+  cd /tmp
+  wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb
+  gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb
+  rm rstudio-server-${RSTUDIO_VERSION}-amd64.deb
+
   # install a few basics
   Rscript -e 'install.packages(
     c(
@@ -126,92 +142,93 @@ From: {{ base_container_image }}
     ))'
   Rscript -e 'update.packages(ask=FALSE)'
 
-  cd /tmp
-  wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb
-  gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb
+  mkdir -p /var/run/rstudio-server
+  chmod ugo+w /var/run/rstudio-server
 
-  Rscript -e 'install.packages("BiocManager")'
-  Rscript -e 'BiocManager::install(ask=FALSE)'
-  Rscript -e 'BiocManager::install(c(
-    "dada2",
-    "phyloseq",
-    "CAMERA",
-    "DECIPHER",
-    "DEP",
-    "metagenomeSeq",
-    "vegan",
-    "ggplot2",
-    "dplyr",
-    "gridExtra",
-    "MSnbase",
-    "mzR",
-    "ncdf4",
-    "renozao/NMF@devel",
-    "shinydashboard",
-    "RNetCDF",
-    "xcms"
-    ), ask=FALSE, update=TRUE)
-  '
+#  Rscript -e 'install.packages("BiocManager")'
+#  Rscript -e 'BiocManager::install(ask=FALSE, update=TRUE)'
 
-  Rscript -e 'library(pacman);
-    pacman::p_load(
-      Rserve,
-      ellipse,
-      scatterplot3d,
-      Cairo,
-      randomForest,
-      caTools,
-      e1071,
-      som,
-      impute,
-      pcaMethods,
-      RJSONIO,
-      ROCR,
-      globaltest,
-      GlobalAncova,
-      Rgraphviz,
-      preprocessCore,
-      genefilter,
-      pheatmap,
-      SSPA,
-      sva,
-      Rcpp,
-      pROC,
-      data.table,
-      limma,
-      car,
-      fitdistrplus,
-      lars,
-      Hmisc,
-      magrittr,
-      methods,
-      xtable,
-      pls,
-      caret,
-      lattice,
-      igraph,
-      gplots,
-      KEGGgraph,
-      reshape,
-      RColorBrewer,
-      tibble,
-      siggenes,
-      plotly,
-      xcms,
-      CAMERA,
-      fgsea,
-      MSnbase,
-      BiocParallel,
-      metap,
-      reshape2,
-      scales
-    )
-  '
+#  Rscript -e 'BiocManager::install(c(
+#    "CAMERA",
+#    "dada2",
+#    "DECIPHER",
+#    "DEP",
+#    "dplyr",
+#    "ggplot2",
+#    "gridExtra",
+#    "metagenomeSeq",
+#    "MSnbase",
+#    "mzR",
+#    "ncdf4",
+#    "phyloseq",
 
-  Rscript -e '
-    library(devtools);
-    devtools::install_github("xia-lab/MetaboAnalystR", build = TRUE, build_opts = c("--no-resave-data", "--no-manual"))
-  '
+#    "RNetCDF",
+#    "shinydashboard",
+#    "vegan",
+#    "xcms"
+#    ), ask=FALSE, update=TRUE)
+#  '
+# "renozao/NMF@devel",  # Removed from above, seemed broken
+
+#  Rscript -e 'library(pacman);
+#    pacman::p_load(
+#     BiocParallel,
+#      Cairo,
+#      CAMERA,
+#      car,
+#      caret,
+#      caTools,
+#      data.table,
+#      e1071,
+#      ellipse,
+#      fgsea,
+#      fitdistrplus,
+#      genefilter,
+#      GlobalAncova,
+#      globaltest,
+#      gplots,
+#      Hmisc,
+#      igraph,
+#      impute,
+#      KEGGgraph,
+#      lars,
+#      lattice,
+#      limma,
+#      magrittr,
+#      metap,
+#      methods,
+#      MSnbase,
+#      pcaMethods,
+#      pheatmap,
+#      plotly,
+#      pls,
+#      preprocessCore,
+#      pROC,
+#      randomForest,
+#      RColorBrewer,
+#      Rcpp,
+#      reshape,
+#      reshape2,
+#      Rgraphviz,
+#      RJSONIO,
+#      ROCR,
+#      Rserve,
+#      scales,
+#      scatterplot3d,
+#      siggenes,
+#      som,
+#      SSPA,
+#      sva,
+#      tibble,
+#      xcms,
+#      xtable
+#    )
+#  '
+
+#  Rscript -e '
+#    library(devtools);
+#    devtools::install_github("xia-lab/MetaboAnalystR", build = TRUE, build_opts = c("--no-resave-data", "--no-manual"))
+#  '
 
   # Cleanup the container
   apt-get clean
@@ -219,4 +236,4 @@ From: {{ base_container_image }}
 
 %test
   R_VERSION={{ item.r_version }}
-  R --version | grep "${R_VERSION}"
+  R --version | grep -q "${R_VERSION}"
