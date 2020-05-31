@@ -144,6 +144,7 @@ From: {{ base_container_image }}
 
   mkdir -p /var/run/rstudio-server
   chmod ugo+w /var/run/rstudio-server
+  chmod +t /var/run/rstudio-server
 
 #  Rscript -e 'install.packages("BiocManager")'
 #  Rscript -e 'BiocManager::install(ask=FALSE, update=TRUE)'
