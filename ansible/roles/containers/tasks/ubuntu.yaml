@@ -12,7 +12,7 @@
         src: "ubuntu.def"
         dest: "{{ base_container_recipe }}"
     - name: Build container {{ base_container_image }}
-      command: "/opt/singularity/bin/singularity build {{ base_container_image }} {{ base_container_recipe }}"
+      command: "{{ singularity }} build {{ base_container_image }} {{ base_container_recipe }}"
       args:
         creates: "{{ base_container_image }}"
       become: yes
@@ -44,7 +44,7 @@
             src: "ubuntu-compile.def"
             dest: "{{ container_recipe }}"
         - name: Build container {{ container_image }}
-          command: "/opt/singularity/bin/singularity build {{ container_image }} {{ container_recipe }}"
+          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: yes

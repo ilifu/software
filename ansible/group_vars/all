@@ -24,3 +24,5 @@ bio_modules: "{{ modules_dir }}/bio"
 common_modules: "{{ modules_dir }}/common"
 
 admin_group: "idia-admins"
+
+singularity: "/opt/singularity/bin/singularity"
