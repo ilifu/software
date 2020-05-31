@@ -10,8 +10,6 @@
   include_tasks:
     file: ubuntu.yaml
   loop: "{{ ubuntu_versions }}"
-  environment:
-    SINGULARITY_TMPDIR: "/dev/shm"
   tags: always
 
 - name: Create RStudio Containers
@@ -32,6 +30,4 @@
   include_tasks:
     file: RStudio.yaml
   loop: "{{ rstudio_versions }}"
-  environment:
-    SINGULARITY_TMPDIR: "/dev/shm"
   tags: always

@@ -16,6 +16,8 @@
       args:
         creates: "{{ base_container_image }}"
       become: yes
+      environment:
+        SINGULARITY_TMPDIR: "/dev/shm"
 
 - name: Create ubuntu {{ item.version_name }} compile container
   vars:
@@ -48,4 +50,6 @@
           args:
             creates: "{{ container_image }}"
           become: yes
+          environment:
+            SINGULARITY_TMPDIR: "/dev/shm"
 
