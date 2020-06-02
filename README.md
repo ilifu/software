@@ -45,10 +45,20 @@ This is a reasonably typical ansible installation. Note that EVERYTHING is disab
 So to install, say openmpi 4.0.3, one would run the command: ```ansible-playbook site.yaml -t openmpi4.0.3```. Software to be installed needs to be explicitly tagged, otherwise it will be ignored. Note that installation of the specific software should also install the appropriate environment module (lmod) in `${software_root}/modules`.
 
 #### Available software
+##### Compiled Software
 | Software     | Version     | ansible tag       |
 |--------------|------------:|-------------------|
+| OpenJDK      | 14.0.1      | openjdk14.0.1     |
 | OpenMPI      | 4.0.3       | openmpi3.1.6      |
 | OpenMPI      | 4.0.3       | openmpi4.0.3      |
+| PLINK        | 2.00a2.3    | plink2.00a2.3     |
+| PRSice       | 2.3.1d      | prsice2.3.1d      |
 | Python       | 3.8.2       | python2.7.18      |
 | Python       | 3.8.2       | python3.8.2       |
-| Python       | 3.8.2       | python3.8.3       |
+| Python       | 3.8.3       | python3.8.3       |
+| R            | 4.0.0       | R4.0.0            |
+
+##### Containerised Software
+| Software     | Version         | ansible tag            |
+|--------------|----------------:|------------------------|
+| RStudio/R    | 1.2.5042/4.0.0  | RStudio1.2.5042-R4.0.0 |
