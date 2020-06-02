@@ -78,3 +78,16 @@
   loop: "{{ R_versions }}"
   tags:
     - always
+
+- name: Install PLINKs
+  vars:
+    - plink_versions:
+        - {
+          version_number: "2.00a2.3",
+          checksum: "3fa20a2058df542e928b11d715cc314c01d7c5961525b55fd17a088e6caa9cc9",
+        }
+  include_tasks:
+    file: plink-ng.yaml
+  loop: "{{ plink_versions }}"
+  tags:
+    - always
