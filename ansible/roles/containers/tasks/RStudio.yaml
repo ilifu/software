@@ -4,7 +4,7 @@
     - container_name: "RStudio{{ item.rstudio_version }}-R{{ item.r_version }}"
     - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
     - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
-    - R_module_dir: "{{ common_module_dir }}/R"
+    - R_module_dir: "{{ common_modules }}/R"
   tags:
     - "RStudio{{ item.rstudio_version }}-R{{ item.r_version }}"
     - never
@@ -36,10 +36,10 @@
       block:
         - name: Check module dir
           file:
-            path: "{{ common_modules }}"
+            path: "{{ R_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install OpenMPI module file
+        - name: Install RStudio module file
           template:
             src: RStudio.lua
-            dest: "{{ common_modules }}/{{ container_name}}.lua"
+            dest: "{{ R_module_dir }}/{{ container_name}}.lua"
