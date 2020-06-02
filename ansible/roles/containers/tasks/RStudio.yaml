@@ -4,6 +4,7 @@
     - container_name: "RStudio{{ item.rstudio_version }}-R{{ item.r_version }}"
     - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
     - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
+    - R_module_dir: "{{ common_module_dir }}/R"
   tags:
     - "RStudio{{ item.rstudio_version }}-R{{ item.r_version }}"
     - never
@@ -30,3 +31,15 @@
           become: yes
           environment:
             SINGULARITY_TMPDIR: "/dev/shm"
+
+    - name: Install RStudio {{ container_name }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ common_modules }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install OpenMPI module file
+          template:
+            src: RStudio.lua
+            dest: "{{ common_modules }}/{{ container_name}}.lua"

@@ -1,0 +1,50 @@
+- name: Create Population Genetics {{ item.version_number }} container
+  vars:
+    - base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
+    - version_number: "{{ item.version_number }}"
+    - container_name: "PopGen_{{ item.version_number }}"
+    - container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
+    - container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+    - arlecore: "{{ item.arlecore }}"
+    - beast: "{{ item.beast }}"
+  tags:
+    - "popgen{{ item.version_number }}"
+    - never
+  block:
+    - name: "Check for existence of {{ base_container_image }} container"
+      stat:
+        path: "{{ base_container_image }}"
+      register: base_container_exists
+    - name: "Missing {{ base_container_image }}"
+      fail:
+        msg: "The container {{ base_container_image }} is missing."
+      when: base_container_exists.stat.exists == False
+    - name: Create PopGen {{ version_number }} container
+      when: base_container_exists.stat.exists == True
+      block:
+        - name: Copy recipe  {{ container_recipe }}
+          template:
+            src: "PopGen.def"
+            dest: "{{ container_recipe }}"
+        - name: Download arlecore {{ arlecore.version }}
+          get_url:
+            url: "{{ arlecore.url }}"
+            dest: "{{ bio_src }}/arlsecore_linux.{{ arlecore.version }}.zip}"
+            checksum: "sha256:{{ arlecore.checksum }}"
+        - name: Download beast {{ beast.version }}
+          get_url:
+            url: "{{ beast.url }}"
+            dest: "{{ bio_src }}/BEASTv{{ beast.version }}.tgz"
+            checksum: "sha256:{{ beast.checksum }}"
+        - name: Build container {{ container_image }}
+          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          args:
+            creates: "{{ container_image }}"
+          become: yes
+          environment:
+            SINGULARITY_TMPDIR: "/dev/shm"
+
+
+#  Plink2+bcftools1.10.2+R3.5+ADMIXTURE
+#  or
+#  R3.5.1+Arlequin+BEASTv1.8

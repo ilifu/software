@@ -1,0 +1,119 @@
+Bootstrap: localimage
+From: {{ base_container_image }}
+
+%labels
+  Maintainer Dane Kennedy
+  PopGen {{ item.version_number }}
+
+%help
+  PopGen {{ item.version_number }} container containing the following software: R, arlcore {{ item.arlecore.version }}, beast {{ item.beast.version }}
+
+%apprun R
+  exec R "${@}"
+
+%apprun Rscript
+  exec Rscript "${@}"
+
+%apprun rstudio
+  if [ -z "${RSTUDIO_PASSWORD}" ]; then
+    export RSTUDIO_PASSWORD=$( tr -cd '[:alnum:]' < /dev/urandom | fold -w30 | head -n1 )
+    echo "The environment variable RSTUDIO_PASSWORD was not set, so your password has been chosen for you. It's: ${RSTUDIO_PASSWORD}"
+  fi
+  PORT=$( python -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()' )
+  HOST=$( /bin/hostname )
+  echo "Running rserver on port ${PORT}"
+  echo "To connect to this server run this on your local machine:"
+  echo "    ssh -A ${USER}@${HOST} -o \"ProxyCommand=ssh ${USER}@slurm.ilifu.ac.za nc ${HOST} 22\" -L8081:localhost:${PORT}"
+  echo "then vist http://localhost:8081 in your browser and use the username \"${USER}\" to login with the password \"${RSTUDIO_PASSWORD}\""
+  echo "(You may need to choose a different port (other than 8081), so remember to change this in both the ssh and browser)"
+  exec rserver --auth-none 0 --auth-pam-helper rstudio_auth --secure-cookie-key-file /tmp/rstudio-server-${USER}/secure-cookie.key --www-port ${PORT} "${@}"
+
+%apprun arlecore
+  exec arlecore3522_64bit "${@}"
+
+%apprun beast
+  exec beast "$@"
+
+%apprun beauti
+  exec beauti "$@"
+
+%apprun loganalyser
+  exec loganalyser "$@"
+
+%apprun logcombiner
+  exec logcombiner "$@"
+
+%apprun treeannotator
+  exec treeannotator "$@"
+
+%apprun treestat
+  exec treestat "$@"
+
+%runscript
+  if [ -z "${RSTUDIO_PASSWORD}" ]; then
+    export RSTUDIO_PASSWORD=$( tr -cd '[:alnum:]' < /dev/urandom | fold -w30 | head -n1 )
+    echo "The environment variable RSTUDIO_PASSWORD was not set, so your password has been chosen for you. It's: ${RSTUDIO_PASSWORD}"
+  fi
+  PORT=$( python -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()' )
+  HOST=$( /bin/hostname )
+  echo "Running rserver on port ${PORT}"
+  echo "To connect to this server run this on your local machine:"
+  echo "    ssh -A ${USER}@${HOST} -o \"ProxyCommand=ssh ${USER}@slurm.ilifu.ac.za nc ${HOST} 22\" -L8081:localhost:${PORT}"
+  echo "then vist http://localhost:8081 in your browser and use the username \"${USER}\" to login with the password \"${RSTUDIO_PASSWORD}\""
+  echo "(You may need to choose a different port (other than 8081), so remember to change this in both the ssh and browser)"
+  exec rserver --auth-none 0 --auth-pam-helper rstudio_auth --secure-cookie-key-file /tmp/rstudio-server-${USER}/secure-cookie.key --www-port ${PORT} "${@}"
+
+%environment
+  export PATH=/singularity_software/arlecore/arlecore_linux:/singularity_software/beast/BEASTv1.8.4/bin:/usr/lib/rstudio-server/bin:${PATH}
+  export INSTALL_DIR="/singularity_software"
+
+%files
+  {{ bio_src }}/arlsecore_linux.{{ arlecore.version }}.zip} /installer/arlecore_linux.zip
+  {{ bio_src }}/BEASTv{{ beast.version }}.tgz /installer/beast.tgz
+
+
+%post
+  # Create Installation Directories and export paths. This is needed as part of post.
+  # %environment scriptlet does not define these paths during %post, only after.
+  export DEBIAN_FRONTEND=noninteractive
+  export INSTALL_DIR="/singularity_software"
+
+#  apt install -qy curl
+
+#  mkdir -p /installer
+#  cd /installer
+
+#  # Download arlecore and beast in parallel
+#  echo "Downloading: {{ arlecore.url }}, {{ beast.url }}"
+#  curl -s {{ arlecore.url }} -o arlecore_linux.zip &
+#  wget --quiet {{ beast.url }} -O beast.tgz &
+
+#  wait  # wait for downloads to complete
+
+#  # create sha256 checksum file
+#  echo "{{ arlecore.checksum }} arlecore_linux.zip" >> downloads.checksums
+#  echo "{{ beast.checksum }} beast.tgz" >> downloads.checksums
+
+#  # Check md5sums:
+#  sha256sum --check downloads.checksums
+
+  cd /installer
+
+  # install arlecore
+  mkdir -p ${INSTALL_DIR}/arlecore
+  unzip -q arlecore_linux.zip -d ${INSTALL_DIR}/arlecore
+  chmod +x /singularity_software/arlecore/arlecore_linux/arlecore3522_64bit \
+           /singularity_software/arlecore/arlecore_linux/LaunchArlecore.sh
+
+  # install beast
+  mkdir -p ${INSTALL_DIR}/beast
+  tar -zxf beast.tgz -C ${INSTALL_DIR}/beast
+
+  # Cleanup the container
+  apt-get clean
+  apt-get autoclean
+  # rm -rf /installer
+
+# %test
+#   R_VERSION={# item.r_version #}
+#   R --version | grep -q "${R_VERSION}"
