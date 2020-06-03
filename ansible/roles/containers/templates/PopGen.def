@@ -49,6 +49,18 @@ From: {{ base_container_image }}
 %apprun treestat
   exec treestat "$@"
 
+
+
+# bcftools  color-chrs.pl  guess-ploidy.py  plot-roh.py  plot-vcfstats  run-roh.pl  vcfutils.pl
+# Singularity> pwd
+# /singularity_software/admixture/dist/admixture_linux-1.3.0
+# Singularity> ls
+# README.32.txt  admixture  admixture-manual.pdf  admixture32
+# Singularity> pwd
+# /singularity_software/plink2
+# Singularity> ls
+# plink2
+
 %runscript
   if [ -z "${RSTUDIO_PASSWORD}" ]; then
     export RSTUDIO_PASSWORD=$( tr -cd '[:alnum:]' < /dev/urandom | fold -w30 | head -n1 )
@@ -64,12 +76,22 @@ From: {{ base_container_image }}
   exec rserver --auth-none 0 --auth-pam-helper rstudio_auth --secure-cookie-key-file /tmp/rstudio-server-${USER}/secure-cookie.key --www-port ${PORT} "${@}"
 
 %environment
-  export PATH=/singularity_software/arlecore/arlecore_linux:/singularity_software/beast/BEASTv1.8.4/bin:/usr/lib/rstudio-server/bin:${PATH}
   export INSTALL_DIR="/singularity_software"
+  export PATH=/usr/lib/rstudio-server/bin:${PATH}
+  export PATH=${INSTALL_DIR}/arlecore/arlecore_linux:${INSTALL_DIR}/beast/BEASTv1.8.4/bin:${PATH}
+  export PATH=${INSTALL_DIR}/bcftools/bin:${PATH}
+  export PATH=${INSTALL_DIR}/admixture/dist/admixture_linux-{{ admixture.version }}:${PATH}
+  export PATH=${INSTALL_DIR}/plink2:${PATH}
+
+  export MANPATH=${INSTALL_DIR}/bcftools/share/man:${MANPATH}
+
 
 %files
-  {{ bio_src }}/arlsecore_linux.{{ arlecore.version }}.zip} /installer/arlecore_linux.zip
+  {{ bio_src }}/arlsecore_linux.{{ arlecore.version }}.zip /installer/arlecore_linux.zip
   {{ bio_src }}/BEASTv{{ beast.version }}.tgz /installer/beast.tgz
+  {{ bio_src }}/plink2_linux_x86_64.{{ plink2.version }}.zip /installer/plink2.zip
+  {{ bio_src }}/bcftools-{{ bcftools.version }}.tar.bz2 /installer/bcftools.tar.bz2
+  {{ bio_src }}/admixture-{{ admixture.version }}.tar.gz /installer/admixture.tar.gz
 
 
 %post
@@ -77,25 +99,6 @@ From: {{ base_container_image }}
   # %environment scriptlet does not define these paths during %post, only after.
   export DEBIAN_FRONTEND=noninteractive
   export INSTALL_DIR="/singularity_software"
-
-#  apt install -qy curl
-
-#  mkdir -p /installer
-#  cd /installer
-
-#  # Download arlecore and beast in parallel
-#  echo "Downloading: {{ arlecore.url }}, {{ beast.url }}"
-#  curl -s {{ arlecore.url }} -o arlecore_linux.zip &
-#  wget --quiet {{ beast.url }} -O beast.tgz &
-
-#  wait  # wait for downloads to complete
-
-#  # create sha256 checksum file
-#  echo "{{ arlecore.checksum }} arlecore_linux.zip" >> downloads.checksums
-#  echo "{{ beast.checksum }} beast.tgz" >> downloads.checksums
-
-#  # Check md5sums:
-#  sha256sum --check downloads.checksums
 
   cd /installer
 
@@ -108,6 +111,22 @@ From: {{ base_container_image }}
   # install beast
   mkdir -p ${INSTALL_DIR}/beast
   tar -zxf beast.tgz -C ${INSTALL_DIR}/beast
+
+  # install plink2
+  mkdir -p ${INSTALL_DIR}/plink2
+  unzip -q plink2.zip -d ${INSTALL_DIR}/plink2
+
+  # install bcftools
+  tar -jxf bcftools.tar.bz2
+  cd bcftools-{{ bcftools.version }}
+  ./configure --prefix=${INSTALL_DIR}/bcftools
+  make
+  make install
+  cd /installer
+
+  # install admixture
+  mkdir -p ${INSTALL_DIR}/admixture
+  tar -zxf admixture.tar.gz -C ${INSTALL_DIR}/admixture
 
   # Cleanup the container
   apt-get clean

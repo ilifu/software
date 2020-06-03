@@ -7,6 +7,9 @@
     - container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
     - arlecore: "{{ item.arlecore }}"
     - beast: "{{ item.beast }}"
+    - plink2: "{{ item.plink2 }}"
+    - bcftools: "{{ item.bcftools }}"
+    - admixture: "{{ item.admixture }}"
     - popgen_module_dir: "{{ bio_modules }}/popgen"
   tags:
     - "popgen{{ item.version_number }}"
@@ -30,13 +33,29 @@
         - name: Download arlecore {{ arlecore.version }}
           get_url:
             url: "{{ arlecore.url }}"
-            dest: "{{ bio_src }}/arlsecore_linux.{{ arlecore.version }}.zip}"
+            dest: "{{ bio_src }}/arlsecore_linux.{{ arlecore.version }}.zip"
             checksum: "sha256:{{ arlecore.checksum }}"
         - name: Download beast {{ beast.version }}
           get_url:
             url: "{{ beast.url }}"
             dest: "{{ bio_src }}/BEASTv{{ beast.version }}.tgz"
             checksum: "sha256:{{ beast.checksum }}"
+        - name: Download plink2 {{ plink2.version }}
+          get_url:
+            url: "{{ plink2.url }}"
+            dest: "{{ bio_src }}/plink2_linux_x86_64.{{ plink2.version }}.zip"
+            checksum: "sha256:{{ plink2.checksum }}"
+        - name: Download bcftools {{ bcftools.version }}
+          get_url:
+            url: "{{ bcftools.url }}"
+            dest: "{{ bio_src }}/bcftools-{{ bcftools.version }}.tar.bz2"
+            checksum: "sha256:{{ bcftools.checksum }}"
+        - name: Download admixture {{ admixture.version }}
+          get_url:
+            url: "{{ admixture.url }}"
+            dest: "{{ bio_src }}/admixture-{{ admixture.version }}.tar.gz"
+            checksum: "sha256:{{ admixture.checksum }}"
+
         - name: Build container {{ container_image }}
           command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
