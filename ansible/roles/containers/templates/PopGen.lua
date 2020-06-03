@@ -20,7 +20,11 @@ apps = {
   "loganalyser",
   "logcombiner",
   "treeannotator",
-  "treestat"
+  "treestat",
+  "bcftools",
+  "vcfutils",
+  "plink2",
+  "admixture",
 }
 
 for i, app in ipairs(apps) do

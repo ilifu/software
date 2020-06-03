@@ -49,17 +49,17 @@ From: {{ base_container_image }}
 %apprun treestat
   exec treestat "$@"
 
+%apprun bcftools
+  exec bcftools "$@"
 
+%apprun vcfutils
+  exec vcfutils.pl "$@"
 
-# bcftools  color-chrs.pl  guess-ploidy.py  plot-roh.py  plot-vcfstats  run-roh.pl  vcfutils.pl
-# Singularity> pwd
-# /singularity_software/admixture/dist/admixture_linux-1.3.0
-# Singularity> ls
-# README.32.txt  admixture  admixture-manual.pdf  admixture32
-# Singularity> pwd
-# /singularity_software/plink2
-# Singularity> ls
-# plink2
+%apprun plink2
+  exec plink2 "$@"
+
+%apprun admixture
+  exec admixture "$@"
 
 %runscript
   if [ -z "${RSTUDIO_PASSWORD}" ]; then
