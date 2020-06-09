@@ -51,6 +51,7 @@ Note that your user will need `sudo` rights in order to build containers.
 ##### Compiled Software
 | Software     | Version     | ansible tag       |
 |--------------|------------:|-------------------|
+| OpenBLAS     | 0.3.9       | openblas0.3.9     |
 | OpenJDK      | 14.0.1      | openjdk14.0.1     |
 | OpenMPI      | 4.0.3       | openmpi3.1.6      |
 | OpenMPI      | 4.0.3       | openmpi4.0.3      |
