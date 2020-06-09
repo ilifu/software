@@ -34,33 +34,15 @@
             command: "mv {{ unzipdir }} {{ install_dir }}"
             args:
               creates: "{{ install_dir }}"
-#          - name: Make OpenMPI {{ version_number }} build directory
-#            file:
-#              path: "{{ build_dir }}"
-#              state: directory
-#          - name: Run OpenMPI {{ version_number }} configure
-#            command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity"
-#            args:
-#              chdir: "{{ build_dir }}"
-#              creates: "{{ build_dir }}/Makefile"
-#          - name: Build OpenMPI {{ version_number }}
-#            make:
-#              chdir: "{{ build_dir }}"
-#            environment:
-#              MAKEFLAGS: "-j {{ ansible_processor_count }}"
-#          - name: Install OpenMPI {{ version_number }}
-#            make:
-#              chdir: "{{ build_dir }}"
-#              target: install
-#
-#    - name: Install OpenMPI {{ version_number }} module
-#      block:
-#      - name: Check module dir
-#        file:
-#          path: "{{ mpi_module_dir }}"
-#          state: directory
-#          mode: u=rwx,g=rwx,o=rx
-#      - name: Install OpenMPI module file
-#        template:
-#          src: openmpi.lua
-#          dest: "{{ mpi_module_dir }}/{{ version_number }}.lua"
+
+    - name: Install Apache Maven {{ version_number }} module
+      block:
+      - name: Check module dir
+        file:
+          path: "{{ maven_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install Apache Maven {{ version_number }} module file
+        template:
+          src: apache_maven.lua
+          dest: "{{ maven_module_dir }}/{{ version_number }}.lua"
