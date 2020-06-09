@@ -55,6 +55,18 @@
   tags:
     - always
 
+- name: Install Apache Hadoop
+  vars:
+    - apache_hadoop_versions:
+        - {
+            version_number: 3.2.1,
+            checksum: "sha512:d62709c3d7144fcaafc60e18d0fa03d7d477cc813e45526f3646030cd87dbf010aeccf3f4ce795b57b08d2884b3a55f91fe9d74ac144992d2dfe444a4bbf34ee"
+        }
+  include_tasks:
+    file: apache_hadoop.yaml
+  loop: "{{ apache_hadoop_versions }}"
+  tags:
+    - always
 
 - name: Install Apache Spark
   vars:
