@@ -1,31 +1,39 @@
-- name: Install Apache Spark
+- name: Install Apache Maven
   vars:
-    spark_dir: "{{ common_dir }}/spark"
-    spark_module_dir: "{{ common_modules }}/spark"
-    url: "http://apache.is.co.za/spark/spark-{{ item.version_number }}/spark-{{ item.version_number }}.tgz"
     version_number: "{{ item.version_number }}"
+    maven_dir: "{{ common_dir }}/maven"
+    maven_module_dir: "{{ common_modules }}/maven"
+    url: "http://apache.is.co.za/maven/maven-3/{{ version_number }}/binaries/apache-maven-{{ version_number }}-bin.tar.gz"
     checksum: "{{ item.checksum }}"
-    install_dir: "{{ spark_dir }}/{{ version_number }}"
-    unzipdir: "/dev/shm/spark-{{ version_number }}"
-    build_dir: "{{ unzipdir }}/build"
+    install_dir: "{{ maven_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/apache-maven-{{ version_number }}"
   tags:
     - never
-    - spark{{ item.version_number }}
+    - maven{{ item.version_number }}
   block:
-    - name: Install Apache Spark {{ version_number }}
+    - name: Install Apache Maven {{ version_number }}
       block:
-        - name: Download, compile and install Apache Spark {{ version_number }}
+        - name: Download, compile and install Apache Maven {{ version_number }}
           block:
-          - name: Download Apache Spark {{ version_number }}
+          - name: Download Apache Maven {{ version_number }}
             get_url:
               url: "{{ url }}"
-              dest: "{{ common_src }}/spark-{{ version_number }}.tar.tgz"
+              dest: "{{ common_src }}/apache-maven-{{ version_number }}.tar.tgz"
               checksum: "{{ checksum }}"
-          - name: Unzip Spark {{ version_number }}
+          - name: Unzip Maven {{ version_number }}
             unarchive:
-              src: "{{ common_src }}/spark-{{ version_number }}.tar.tgz"
-              dest: "/dev/shm/"
+              src: "{{ common_src }}/apache-maven-{{ version_number }}.tar.tgz"
+              dest: "/dev/shm"
               creates: "{{ unzipdir }}"
+          - name: Ensure Maven dir exists
+            file:
+              path: "{{ maven_dir }}"
+              state: directory
+              mode: u=rwx,g=rwx,o=rx
+          - name: Move uncompressed Maven {{ version_number }} to {{ install_dir }}
+            command: "mv {{ unzipdir }} {{ install_dir }}"
+            args:
+              creates: "{{ install_dir }}"
 #          - name: Make OpenMPI {{ version_number }} build directory
 #            file:
 #              path: "{{ build_dir }}"
