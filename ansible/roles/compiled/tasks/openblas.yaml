@@ -30,7 +30,7 @@
             make:
               chdir: "{{ build_dir }}"
             environment:
-              MAKEFLAGS: "-j {{ ansible_processor_count }} TARGET=ZEN"
+              MAKEFLAGS: "-j {{ ansible_processor_count }} TARGET=SKYLAKEX"
           - name: Install OpenBLAS {{ version_number }}
             make:
               chdir: "{{ build_dir }}"
