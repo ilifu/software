@@ -29,6 +29,20 @@
   tags:
     - always
 
+- name: Install LAPACK
+  vars:
+    - lapack_versions:
+        - {
+            version_number: 3.9.0,
+            checksum: "sha256:106087f1bb5f46afdfba7f569d0cbe23dacb9a07cd24733765a0e89dbe1ad573",
+        }
+  include_tasks:
+    file: lapack.yaml
+  loop: "{{ lapack_versions }}"
+  tags:
+    - always
+
+
 - name: Install Apache Spark
   vars:
     - apache_spark_versions:
