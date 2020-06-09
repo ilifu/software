@@ -56,6 +56,7 @@ Note that your user will need `sudo` rights in order to build containers.
 | OpenMPI      | 4.0.3       | openmpi4.0.3      |
 | PLINK        | 2.00a2.3    | plink2.00a2.3     |
 | PRSice       | 2.3.1d      | prsice2.3.1d      |
+| Python       | 3.7.7       | python3.7.7       |
 | Python       | 3.8.2       | python2.7.18      |
 | Python       | 3.8.2       | python3.8.2       |
 | Python       | 3.8.3       | python3.8.3       |
