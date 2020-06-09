@@ -16,6 +16,29 @@
   tags:
     - always
 
+- name: Install OpenBLAS
+  vars:
+    - openblas_versions:
+        - {
+            version_number: 0.3.9,
+            checksum: "sha256:17d4677264dfbc4433e97076220adc79b050e4f8a083ea3f853a53af253bc380",
+        }
+  include_tasks:
+    file: openblas.yaml
+  loop: "{{ openblas_versions }}"
+  tags:
+    - always
+
+- name: Install Apache Spark
+  vars:
+    - apache_spark_versions:
+        - {
+            version_number: 2.4.5,
+            checksum: "sha512:48B931F5A2614C8B72BA26C0B77B2DD837EE6F6BC352BF41F4D018FDB8D20FAA74FD40730B418EF7FFD5BBCE335756CFB782F6A6F571FC35F5874BFC2CE7C277"
+        }
+  include_tasks:
+    file: apache_spark.yaml
+
 - name: Install openmpis
   vars:
     - openmpi_versions:
@@ -26,7 +49,7 @@
         }
         - {
           version_number: "3.1.6",
-          checksum: "sha1:bc4cd7fa0a7993d0ae05ead839e6056207e432d4",
+          checksum: "sha256:50131d982ec2a516564d74d5616383178361c2f08fdd7d1202b80bdf66a0d279",
           url: "https://download.open-mpi.org/release/open-mpi/v3.1/openmpi-3.1.6.tar.bz2",
         }
   include_tasks:
