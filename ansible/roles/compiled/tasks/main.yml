@@ -171,3 +171,17 @@
   loop: "{{ mono_versions }}"
   tags:
     - always
+
+- name: Install canvass
+  vars:
+    - canvas_versions:
+        - {
+          version_number: "1.40.0.1613",
+          url: "https://github.com/Illumina/canvas/releases/download/1.40.0.1613%2Bmaster/Canvas-1.40.0.1613.master_x64.tar.gz",
+          checksum: "sha256:90ed4baf70ffe7b87e1e37d7c4988379913dccb523c507ddafc1e778b5bd8ac4",
+        }
+  include_tasks:
+    file: canvas.yaml
+  loop: "{{ canvas_versions }}"
+  tags:
+    - always
