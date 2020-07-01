@@ -157,3 +157,17 @@
   loop: "{{ plink_versions }}"
   tags:
     - always
+
+- name: Install monos
+  vars:
+    - mono_versions:
+        - {
+          version_number: "6.8.0.123",
+          url: "https://download.mono-project.com/sources/mono/mono-6.8.0.123.tar.xz",
+          checksum: "sha256:e2e42d36e19f083fc0d82f6c02f7db80611d69767112af353df2f279744a2ac5",
+        }
+  include_tasks:
+    file: mono.yaml
+  loop: "{{ mono_versions }}"
+  tags:
+    - always
