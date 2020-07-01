@@ -15,3 +15,5 @@
   hosts: all
   roles:
     - containers
+  environment:
+    SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"

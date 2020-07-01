@@ -10,6 +10,10 @@
     - plink2: "{{ item.plink2 }}"
     - bcftools: "{{ item.bcftools }}"
     - admixture: "{{ item.admixture }}"
+    - shapeit: "{{ item.shapeit }}"
+    - eigensoft: "{{ item.eigensoft }}"
+    - finestructure: "{{ item.finestructure }}"
+    - beagle: "{{ item.beagle }}"
     - popgen_module_dir: "{{ bio_modules }}/popgen"
   tags:
     - "popgen{{ item.version_number }}"
@@ -55,14 +59,34 @@
             url: "{{ admixture.url }}"
             dest: "{{ bio_src }}/admixture-{{ admixture.version }}.tar.gz"
             checksum: "sha256:{{ admixture.checksum }}"
+        - name: Download shapeit {{ shapeit.version }} 
+          get_url:
+            url: "{{ shapeit.url }}"
+            dest: "{{ bio_src }}/shapeit-{{ shapeit.version }}.tar.gz"
+            checksum: "sha256:{{ shapeit.checksum }}"
+        - name: Download eigensoft {{ eigensoft.version }}
+          get_url:
+            url: "{{ eigensoft.url }}"
+            dest: "{{ bio_src }}/eigensoft-v{{ eigensoft.version }}.tar.gz"
+            checksum: "sha256:{{ eigensoft.checksum }}"
+        - name: Download finestructure {{ finestructure.version }}
+          get_url:
+            url: "{{ finestructure.url }}"
+            dest: "{{ bio_src }}/finestructure-{{ finestructure.version }}.tar.gz"
+            checksum: "sha256:{{ finestructure.checksum }}"
+        - name: Download Beagle {{ beagle.version }}
+          get_url:
+            url: "{{ beagle.url }}"
+            dest: "{{ bio_src }}/beagle-v{{ beagle.version }}.tar.gz"
+            checksum: "sha256:{{ beagle.checksum }}"
 
         - name: Build container {{ container_image }}
           command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: yes
-          environment:
-            SINGULARITY_TMPDIR: "/dev/shm"
+#          environment:
+#            SINGULARITY_TMPDIR: "/dev/shm"
 
     - name: Install PopGen {{ container_name }} module
       block:
