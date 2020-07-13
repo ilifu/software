@@ -185,3 +185,10 @@
   loop: "{{ canvas_versions }}"
   tags:
     - always
+
+- name: Install bcbio
+  vars:
+  include_tasks:
+    file: bcbio.yaml
+  tags:
+    - always
