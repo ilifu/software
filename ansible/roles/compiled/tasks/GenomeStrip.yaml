@@ -1,0 +1,38 @@
+---
+- name: Install GenomeStrip {{ item.version_number }}
+  vars:
+    genomestrip_dir: "{{ bio_dir }}/genomestrip"
+    version_number: "{{ item.version_number }}"
+    genomestrip_module_dir: "{{ bio_modules }}/genomesrip"
+    install_dir: "{{ genomestrip_dir }}/{{ version_number }}"
+    file_name: "{{ item.file_name }}"
+  tags:
+    - never
+    - genomestrip
+  block:
+    - name: Unarchive genome strip {{ version_number }}
+      unarchive:
+        src: "{{ file_name }}"
+        dest: "/dev/shm/"
+        creates: "/dev/shm/svtoolkit"
+    - name: Make sure genome strip directory {{ genomestrip_dir }} exists
+      file:
+        path: "{{ genomestrip_dir }}"
+        state: directory
+    - name: Move genome strip {{ version_number }} to {{ install_dir }}
+      command: "mv /dev/shm/svtoolkit {{ install_dir }}"
+      args:
+        creates: "{{ install_dir }}"
+
+
+#    - name: Install Python {{ version_number }} module
+#      block:
+#      - name: Check module dir
+#        file:
+#          path: "{{ python_module_dir }}"
+#          state: directory
+#          mode: u=rwx,g=rwx,o=rx
+#      - name: Install Python module file
+#        template:
+#          src: python.lua
+#          dest: "{{ python_module_dir }}/{{ version_number }}.lua"

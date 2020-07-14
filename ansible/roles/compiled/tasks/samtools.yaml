@@ -1,0 +1,56 @@
+---
+- name: Install samtools {{ item.version_number }}
+  vars:
+    samtools_dir: "{{ bio_dir }}/samtools"
+    samtools_module_dir: "{{ bio_modules }}/samtools"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ samtools_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/samtools-{{ version_number }}"
+  tags:
+    - never
+    - samtools{{ item.version_number }}
+
+  block:
+    - name: Download and install samtools {{ version_number }}
+      block:
+      - name: Download samtools {{ version_number }} from {{ url }}
+        get_url:
+          url: "{{ url }}"
+          dest: "{{  bio_dir }}/src//samtools.tar.bz2"
+          checksum: "{{ checksum }}"
+      - name: Ensure samtools dir exists
+        file:
+          path: "{{ samtools_dir }}"
+          state: directory
+      - name: Uncompress Samtools to {{ unzip_dir }}
+        unarchive:
+          src: "{{  bio_dir }}/src//samtools.tar.bz2"
+          dest: "/dev/shm"
+          creates: "{{ unzip_dir }}"
+      - name: Run samtools {{ version_number }} configure
+        command: "./configure --prefix={{ install_dir }}"
+        args:
+          chdir: "{{ unzip_dir }}"
+      - name: Make samtools {{ version_number }}
+        make:
+          chdir: "{{ unzip_dir }}"
+        environment:
+          MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+      - name: Install samtools {{ version_number }} to {{ install_dir }}
+        make:
+          chdir: "{{ unzip_dir }}"
+          target: "install"
+
+    - name: Install samtools {{ version_number }} module
+      block:
+        - name: Check module dir {{ samtools_module_dir }}
+          file:
+            path: "{{ samtools_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install samtools {{ version_number }} module file
+          template:
+            src: samtools.lua
+            dest: "{{ samtools_module_dir }}/samtools-{{ version_number }}.lua"

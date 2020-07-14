@@ -187,8 +187,35 @@
     - always
 
 - name: Install bcbio
-  vars:
   include_tasks:
     file: bcbio.yaml
+  tags:
+    - always
+
+- name: Install samtools
+  vars:
+    - samtools_versions:
+        - {
+            version_number: "1.10",
+            url: "https://github.com/samtools/samtools/releases/download/1.10/samtools-1.10.tar.bz2",
+            checksum: "sha256:7b9ec5f05d61ec17bd9a82927e45d8ef37f813f79eb03fe06c88377f1bd03585",
+        }
+  include_tasks:
+    file: samtools.yaml
+  loop: "{{ samtools_versions }}"
+  tags:
+    - always
+
+- name: Install GenomeStrip
+  vars:
+    - genomestrip_versions:
+        - {
+          version_number: "2.00.1958",
+          file_name: "svtoolkit_2.00.1958.tar",
+          checksum: "sha256:0b4fb202971ad67ff1326c51e241abc3660428810b79c8a2f72c2de0198697d0",
+        }
+  include_tasks:
+    file: GenomeStrip.yaml
+  loop: "{{ genomestrip_versions }}"
   tags:
     - always
