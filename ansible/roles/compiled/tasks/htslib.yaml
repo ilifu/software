@@ -1,0 +1,56 @@
+---
+- name: Install htslib {{ item.version_number }}
+  vars:
+    htslib_dir: "{{ bio_dir }}/htslib"
+    htslib_module_dir: "{{ bio_modules }}/htslib"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ htslib_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/htslib-{{ version_number }}"
+  tags:
+    - never
+    - htslib{{ item.version_number }}
+
+  block:
+    - name: Download and install htslib {{ version_number }}
+      block:
+      - name: Download htslib {{ version_number }} from {{ url }}
+        get_url:
+          url: "{{ url }}"
+          dest: "{{  bio_dir }}/src//htslib.tar.bz2"
+          checksum: "{{ checksum }}"
+      - name: Ensure htslib dir exists
+        file:
+          path: "{{ htslib_dir }}"
+          state: directory
+      - name: Uncompress htslib to {{ unzip_dir }}
+        unarchive:
+          src: "{{  bio_dir }}/src/htslib.tar.bz2"
+          dest: "/dev/shm"
+          creates: "{{ unzip_dir }}"
+      - name: Run htslib {{ version_number }} configure
+        command: "./configure --prefix={{ install_dir }}"
+        args:
+          chdir: "{{ unzip_dir }}"
+      - name: Make htslib {{ version_number }}
+        make:
+          chdir: "{{ unzip_dir }}"
+        environment:
+          MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+      - name: Install htslib {{ version_number }} to {{ install_dir }}
+        make:
+          chdir: "{{ unzip_dir }}"
+          target: "install"
+
+    - name: Install htslib {{ version_number }} module
+      block:
+        - name: Check module dir {{ htslib_module_dir }}
+          file:
+            path: "{{ htslib_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install htslib {{ version_number }} module file
+          template:
+            src: htslib.lua
+            dest: "{{ htslib_module_dir }}/{{ version_number }}.lua"
