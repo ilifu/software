@@ -31,7 +31,7 @@
               path: "{{ build_dir }}"
               state: directory
           - name: Run DRMAA for Slurm {{ version_number }} configure
-            command: "../configure --prefix={{ install_dir }}"
+            command: "./configure --prefix={{ install_dir }}"
             args:
               chdir: "{{ build_dir }}"
               creates: "{{ build_dir }}/Makefile"
@@ -43,7 +43,7 @@
           - name: Install DRMAA for Slurm {{ version_number }}
             make:
               chdir: "{{ build_dir }}"
-              target: install
+              target: "install"
 #
 #    - name: Install OpenMPI {{ version_number }} module
 #      block:
