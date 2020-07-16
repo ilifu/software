@@ -7,7 +7,7 @@
     checksum: "{{ item.checksum }}"
     install_dir: "{{ drmaa_dir }}/{{ version_number }}"
     unzipdir: "/dev/shm/slurm-drmaa-{{ version_number }}"
-    build_dir: "{{ unzipdir }}/build"
+    build_dir: "{{ unzipdir }}"
   tags:
     - never
     - slurmdrmaa{{ item.version_number }}
