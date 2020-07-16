@@ -16,6 +16,21 @@
   tags:
     - always
 
+- name: Install Jave Runtime Environment
+  vars:
+    - jre_versions:
+        - {
+          version_number: "1.8.0_261",
+          checksum: "sha256:20384c4f8a904d81b57d18e8a1906d39e8f3000719b6f15bf0400b52c9808b71",
+          url: "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=242978_a4634525489241b9a9e1aa73d9e118e6",
+          filename: "jre-8u261-linux-i586.tar.gz",
+        }
+  include_tasks:
+    file: jre.yaml
+  loop: "{{ jre_versions }}"
+  tags:
+    - always
+
 - name: Install OpenBLAS
   vars:
     - openblas_versions:
