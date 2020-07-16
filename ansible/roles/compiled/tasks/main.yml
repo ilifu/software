@@ -234,6 +234,20 @@
   tags:
     - always
 
+- name: Install DRMAA for Slurm
+  vars:
+    - drmaa_slurm_versions:
+        - {
+          version_number: "1.1.1",
+          url: "https://github.com/natefoo/slurm-drmaa/releases/download/1.1.1/slurm-drmaa-1.1.1.tar.gz",
+          checksum: "sha512:be3b93090eb94aa4a32f4bb6960d5455ab7c0869a719b1cd00c33db066a7c6e4290bbd1dc468488ee0d8ac68a5d4829812593893341f9cc65c5bffa43bb15487",
+        }
+  include_tasks:
+    file: slurm-drmaa.yaml
+  loop: "{{ drmaa_slurm_versions }}"
+  tags:
+    - always
+
 - name: Install GenomeStrip
   vars:
     - genomestrip_versions:
