@@ -49,7 +49,7 @@
       block:
       - name: Check module dir {{ drmaa_module_dir }}
         file:
-          path: "{{ mdrmaa_module_dir }}"
+          path: "{{ drmaa_module_dir }}"
           state: directory
           mode: u=rwx,g=rwx,o=rx
       - name: Install DRMAA for Slurm module file {{ mpi_module_dir }}/{{ version_number }}.lua
