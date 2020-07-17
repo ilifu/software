@@ -25,14 +25,14 @@
         creates: "{{ install_dir }}"
 
     - name: Install GenomeStrip {{ version_number }} module
-        block:
-            - name: Check module dir {{ genomestrip_module_dir }}
-              file:
-                path: "{{ genomestrip_module_dir }}"
-                state: directory
-                mode: u=rwx,g=rwx,o=rx
-                - name: Install GenomeStrip module file {{ genomestrip_module_dir }}/{{ version_number }}.lua
-                  template:
-                    src: genomestrip.lua
-                    dest: "{{ genomestrip_module_dir }}/{{ version_number }}.lua"
+      block:
+        - name: Check module dir {{ genomestrip_module_dir }}
+          file:
+            path: "{{ genomestrip_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install GenomeStrip module file {{ genomestrip_module_dir }}/{{ version_number }}.lua
+          template:
+            src: genomestrip.lua
+            dest: "{{ genomestrip_module_dir }}/{{ version_number }}.lua"
 
