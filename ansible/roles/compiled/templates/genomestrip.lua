@@ -14,4 +14,4 @@ local lib_dir = pathJoin(jre_dir, "lib")
 local include_dir = pathJoin(jre_dir, "include")
 
 setenv('SV_DIR', genomestrip_dir)
-
+setenv('_JAVA_OPTIONS', '-Xmx16g')
