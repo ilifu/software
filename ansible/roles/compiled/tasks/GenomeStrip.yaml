@@ -3,7 +3,7 @@
   vars:
     genomestrip_dir: "{{ bio_dir }}/genomestrip"
     version_number: "{{ item.version_number }}"
-    genomestrip_module_dir: "{{ bio_modules }}/genomesrip"
+    genomestrip_module_dir: "{{ bio_modules }}/genomestrip"
     install_dir: "{{ genomestrip_dir }}/{{ version_number }}"
     file_name: "{{ item.file_name }}"
   tags:
