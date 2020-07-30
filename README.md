@@ -1,7 +1,5 @@
 # software
-This is a repository for scripts and recipes to install software on ilifu. The list of software managed here includes:
-* OpenMPI
-* python
+This is a repository for scripts and recipes to install software on ilifu. The list of software managed here can be seen [below](#available-software)
 
 ## Ansible installs
 These installations can be found in the `ansible` directory.
@@ -51,6 +49,7 @@ Note that your user will need `sudo` rights in order to build containers.
 ##### Compiled Software
 | Software     | Version     | ansible tag       | module name         |
 |--------------|------------:|-------------------|---------------------|
+| Anaconda3    | 20.07       | anaconda3-2020.07 | anaconda3/2020.07   |
 | Apache Maven | 3.6.3       | maven3.6.3        | maven/3.6.3         |
 | LAPACK       | 3.9.0       | lapack3.9.0       | LAPACK/3.9.3        |
 | OpenBLAS     | 0.3.9       | openblas0.3.9     | openBLAS/0.3.9      |

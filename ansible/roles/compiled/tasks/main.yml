@@ -132,6 +132,20 @@
   tags:
     - always
 
+- name: Install Anacondas
+  vars:
+    anaconda_versions:
+      - {
+        version_number: "2020.07",
+        url: "https://repo.anaconda.com/archive/Anaconda3-2020.07-Linux-x86_64.sh",
+        checksum: "sha512:ed810aaf6c08e8e50d4031958e396740d4e1e9994309c43e19f7cd5e8ef71f26d37296a7ad7bee5d863f9122a690f72f212a9b5cd40727eb40a111bb5bd9a7a5"
+      }
+  include_tasks:
+    file: anaconda.yaml
+  loop: "{{ anaconda_versions }}"
+  tags:
+    - always
+
 - name: Install PRSices
   vars:
     - prsice_versions:
