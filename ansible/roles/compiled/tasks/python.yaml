@@ -1,7 +1,4 @@
 ---
-- debug:
-    msg: "Setting up tag python{{ item.version_number }}"
-
 - name: Install Python {{ item.version_number }}
   vars:
     python_dir: "{{ common_dir }}/python"
