@@ -1,0 +1,40 @@
+---
+- name: Install cuda {{ item.version_number }}
+  vars:
+    cuda_dir: "{{ common_dir }}/cuda"
+    cuda_module_dir: "{{ common_modules }}/cuda"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ cuda_dir }}/{{ version_number }}"
+    cuda_url: "{{ item.url }}"
+  tags:
+    - never
+    - cuda{{ item.version_number }}
+
+  block:
+    - name: Download, and install cuda {{ version_number }}
+      block:
+      - name: Download cuda {{ version_number }} from {{ cuda_url }}
+        get_url:
+          url: "{{ cuda_url }}"
+          dest: "{{ common_src }}/cuda_{{ version_number }}_linux.run"
+          checksum: "{{ checksum }}"
+          mode: u=rx,g=r,o=r
+#      - name: Run cuda {{ version_number }} installer – {{ install_dir }}
+#        command: "{{ common_src }}/cuda-{{ version_number }}.sh -b -p {{ install_dir }}"
+#        args:
+#          creates: "{{ install_dir }}"
+#      - name: Install conda packages
+#        command: "{{ install_dir }}/bin/conda install coloredlogs configparser"
+#
+#    - name: Install cuda {{ version_number }} module to {{ cuda_module_dir }}
+#      block:
+#      - name: Check module dir {{ cuda_module_dir }}
+#        file:
+#          path: "{{ cuda_module_dir }}"
+#          state: directory
+#          mode: u=rwx,g=rwx,o=rx
+#      - name: Install cuda module file to {{ cuda_module_dir }}/{{ version_number }}.lua
+#        template:
+#          src: cuda.lua
+#          dest: "{{ cuda_module_dir }}/{{ version_number }}.lua"

@@ -126,6 +126,7 @@
       - pip
       - pipenv
       - ipython
+      - ldap3
   include_tasks:
     file: python.yaml
   loop: "{{ python_versions }}"
@@ -288,5 +289,19 @@
   include_tasks:
     file: GenomeStrip.yaml
   loop: "{{ genomestrip_versions }}"
+  tags:
+    - always
+
+- name: Install Cuda
+  vars:
+    - cuda_versions:
+        - {
+            version_number: "11.0.2_450.51.05",
+            url: "http://developer.download.nvidia.com/compute/cuda/11.0.2/local_installers/cuda_11.0.2_450.51.05_linux.run",
+            checksum: "sha256:48247ada0e3f106051029ae8f70fbd0c238040f58b0880e55026374a959a69c1"
+        }
+  include_tasks:
+    file: cuda.yaml
+  loop: "{{ cuda_versions }}"
   tags:
     - always
