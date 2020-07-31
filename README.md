@@ -47,23 +47,25 @@ Note that your user will need `sudo` rights in order to build containers.
 
 #### Available software
 ##### Compiled Software
-| Software     | Version     | ansible tag          | module name           |
-|--------------|------------:|----------------------|-----------------------|
-| Anaconda3    | 20.07       | anaconda3-2020.07    | anaconda3/2020.07     |
-| Apache Maven | 3.6.3       | maven3.6.3           | maven/3.6.3           |
-| cuda         | 11.0.2      | cuda11.0.2_450.51.05 | cuda/11.0.2_450.51.05 |
-| LAPACK       | 3.9.0       | lapack3.9.0          | LAPACK/3.9.3          |
-| OpenBLAS     | 0.3.9       | openblas0.3.9        | openBLAS/0.3.9        |
-| OpenJDK      | 14.0.1      | openjdk14.0.1        | java/openjdk-14.0.1   |
-| OpenMPI      | 4.0.3       | openmpi3.1.6         | openmpi/3.1.6         |
-| OpenMPI      | 4.0.3       | openmpi4.0.3         | openmpi/4.0.3         |
-| PLINK        | 2.00a2.3    | plink2.00a2.3        | plink/2.00a2.3        |
-| PRSice       | 2.3.1d      | prsice2.3.1d         | prsice-2/2.3.1d       |
-| Python       | 2.7.18      | python2.7.18         | python/2.7.18         |
-| Python       | 3.7.7       | python3.7.7          | python/3.7.7          |
-| Python       | 3.8.2       | python3.8.2          | python/3.8.2          |
-| Python       | 3.8.3       | python3.8.3          | python/3.8.3          |
-| R            | 4.0.0       | R4.0.0               | R/4.0.0               |
+| Software     | Version     | ansible tag            | module name             |
+|--------------|------------:|------------------------|-------------------------|
+| Anaconda3    | 20.07       | anaconda3-2020.07      | anaconda3/2020.07       |
+| Apache Maven | 3.6.3       | maven3.6.3             | maven/3.6.3             |
+| cuda         | 11.0.2      | cuda11.0.2_450.51.05   | cuda/11.0.2_450.51.05   |
+| cuda         | 10.2        | cuda10.2.89_440.33.01  | cuda/10.2.89_440.33.01  |
+| cuda         | 10.1        | cuda10.1.243_418.87.00 | cuda/10.1.243_418.87.00 |
+| LAPACK       | 3.9.0       | lapack3.9.0            | LAPACK/3.9.3            |
+| OpenBLAS     | 0.3.9       | openblas0.3.9          | openBLAS/0.3.9          |
+| OpenJDK      | 14.0.1      | openjdk14.0.1          | java/openjdk-14.0.1     |
+| OpenMPI      | 4.0.3       | openmpi3.1.6           | openmpi/3.1.6           |
+| OpenMPI      | 4.0.3       | openmpi4.0.3           | openmpi/4.0.3           |
+| PLINK        | 2.00a2.3    | plink2.00a2.3          | plink/2.00a2.3          |
+| PRSice       | 2.3.1d      | prsice2.3.1d           | prsice-2/2.3.1d         |
+| Python       | 2.7.18      | python2.7.18           | python/2.7.18           |
+| Python       | 3.7.7       | python3.7.7            | python/3.7.7            |
+| Python       | 3.8.2       | python3.8.2            | python/3.8.2            |
+| Python       | 3.8.3       | python3.8.3            | python/3.8.3            |
+| R            | 4.0.0       | R4.0.0                 | R/4.0.0                 |
 
 ##### Containerised Software
 | Software     | Version         | ansible tag            |
