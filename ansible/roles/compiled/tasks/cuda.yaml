@@ -20,21 +20,24 @@
           dest: "{{ common_src }}/cuda_{{ version_number }}_linux.run"
           checksum: "{{ checksum }}"
           mode: u=rx,g=r,o=r
-#      - name: Run cuda {{ version_number }} installer – {{ install_dir }}
-#        command: "{{ common_src }}/cuda-{{ version_number }}.sh -b -p {{ install_dir }}"
-#        args:
-#          creates: "{{ install_dir }}"
-#      - name: Install conda packages
-#        command: "{{ install_dir }}/bin/conda install coloredlogs configparser"
-#
-#    - name: Install cuda {{ version_number }} module to {{ cuda_module_dir }}
-#      block:
-#      - name: Check module dir {{ cuda_module_dir }}
-#        file:
-#          path: "{{ cuda_module_dir }}"
-#          state: directory
-#          mode: u=rwx,g=rwx,o=rx
-#      - name: Install cuda module file to {{ cuda_module_dir }}/{{ version_number }}.lua
-#        template:
-#          src: cuda.lua
-#          dest: "{{ cuda_module_dir }}/{{ version_number }}.lua"
+      - name: Ensure directory {{ cuda_dir }} exists
+        file:
+          path: "{{ cuda_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Run cuda {{ version_number }} installer to {{ install_dir }}
+        command: "{{ common_src }}/cuda_{{ version_number }}_linux.run --silent --toolkit --samples --override-driver-check --installpath={{ install_dir }} --nox11"
+        args:
+          creates: "{{ install_dir }}"
+
+    - name: Install cuda {{ version_number }} module to {{ cuda_module_dir }}
+      block:
+      - name: Check module dir {{ cuda_module_dir }}
+        file:
+          path: "{{ cuda_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install cuda module file to {{ cuda_module_dir }}/{{ version_number }}.lua
+        template:
+          src: cuda.lua
+          dest: "{{ cuda_module_dir }}/{{ version_number }}.lua"
