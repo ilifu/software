@@ -26,7 +26,7 @@
           state: directory
           mode: u=rwx,g=rwx,o=rx
       - name: Run cuda {{ version_number }} installer to {{ install_dir }}
-        command: "{{ common_src }}/cuda_{{ version_number }}_linux.run --silent --toolkit --samples --override-driver-check --installpath={{ install_dir }} --nox11"
+        command: "{{ common_src }}/cuda_{{ version_number }}_linux.run --silent --toolkit --toolkitpath={{ install_dir }} --override-driver-check --installpath={{ install_dir }} --librarypath={{ install_dir }} --nox11 --override"
         args:
           creates: "{{ install_dir }}"
 
