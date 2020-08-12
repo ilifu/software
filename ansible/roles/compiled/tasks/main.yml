@@ -310,6 +310,11 @@
           url: "http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_418.87.00_linux.run",
           checksum: "md5:a71f703ed688eeca637dc27df714e854",
         }
+        - {
+          version_number: "10.0.130_410.48",
+          url: "https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux",
+          checksum: "md5:9375304c8dc8d42e7f9a9ae37e80b42b",
+        }
   include_tasks:
     file: cuda.yaml
   loop: "{{ cuda_versions }}"
