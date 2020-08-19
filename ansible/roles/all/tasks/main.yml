@@ -6,9 +6,11 @@
       file:
         path: "{{ item }}"
         state: directory
-        mode: u=rwx,g=wrx,o=rx
+        mode: u=rwx,g=rwx,o=rx,g+s
         group: "{{ admin_group }}"
       loop:
+        - "{{ software_root }}"
+        - "{{ modules_dir }}"
         - "{{ astro_dir }}"
         - "{{ astro_container_dir }}"
         - "{{ astro_container_recipe_dir }}"
