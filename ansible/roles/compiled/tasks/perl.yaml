@@ -1,0 +1,30 @@
+---
+- name: Install perl {{ item.version_number }}
+  vars:
+    perlbrew_dir: "{{ common_dir }}/perlbrew"
+    version_number: "{{ item.version_number }}"
+    perls_dir: "{{ perlbrew_dir }}/perls"
+    install_dir: "{{ perls_dir }}/perl-{{ version_number }}"
+    perl_module_dir: "{{ common_modules }}/perl"
+  tags:
+    - never
+    - perl{{ item.version_number }}
+
+  block:
+    - name: Install perl {{ version_number }} using perlbrew
+      command: "/bin/bash -c 'module add perlbrew && perlbrew install -j {{ ansible_processor_vcpus }} perl-{{ version_number }}'"
+      args:
+        creates: "{{ install_dir }}"
+#    - name: Install perl modules using cpan
+
+#    - name: Install perl module
+#      block:
+#      - name: Check module dir {{ perl_module_dir }}
+#        file:
+#          path: "{{ perl_module_dir }}"
+#          state: directory
+#          mode: u=rwx,g=rwx,o=rx
+#      - name: Install perl module file to {{ perl_module_dir }}
+#        template:
+#          src: perl.lua
+#          dest: "{{ perl_module_dir }}/perl.lua"

@@ -327,18 +327,18 @@
   tags:
     - always
 
-#- name: Install Perl
-#  vars:
-#    - perl_versions:
-#        - {
-#            version_number: "5.33.0"
-#        }
-#    - cpan_modules:
-#        - Archive::Zip
-#        - DBD::MySQL
-#        - DBI
-#  include_tasks:
-#    file: perl.yaml
-#  loop: "{{ perl_versions }}"
-#  tags:
-#    - always
+- name: Install Perl
+  vars:
+    - perl_versions:
+        - {
+            version_number: "5.33.0"
+        }
+    - cpan_modules:
+        - Archive::Zip
+        - DBD::MySQL
+        - DBI
+  include_tasks:
+    file: perl.yaml
+  loop: "{{ perl_versions }}"
+  tags:
+    - always
