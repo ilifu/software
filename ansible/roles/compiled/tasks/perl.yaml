@@ -15,16 +15,18 @@
       command: "/bin/bash -c 'module add perlbrew && perlbrew install -j {{ ansible_processor_vcpus }} perl-{{ version_number }}'"
       args:
         creates: "{{ install_dir }}"
-#    - name: Install perl modules using cpan
 
-#    - name: Install perl module
-#      block:
-#      - name: Check module dir {{ perl_module_dir }}
-#        file:
-#          path: "{{ perl_module_dir }}"
-#          state: directory
-#          mode: u=rwx,g=rwx,o=rx
-#      - name: Install perl module file to {{ perl_module_dir }}
-#        template:
-#          src: perl.lua
-#          dest: "{{ perl_module_dir }}/perl.lua"
+    - name: Install perl module
+      block:
+      - name: Check module dir {{ perl_module_dir }}
+        file:
+          path: "{{ perl_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install perl module file to {{ perl_module_dir }}
+        template:
+          src: perl.lua
+          dest: "{{ perl_module_dir }}/{{ version_number }}.lua"
+
+    - name: Install cpan modules
+      command: "/bin/bash -c 'module add perl/{{ version_number }} && cpan {{ ' '.join(cpan_modules) }}'"
