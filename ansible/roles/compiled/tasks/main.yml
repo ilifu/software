@@ -358,6 +358,9 @@
     - always
 
 - name: Install HomeBrew
+  vars:
+    - software_list:
+        - brewsci/bio/treepl
   include_tasks:
     file: homebrew.yaml
   tags:
