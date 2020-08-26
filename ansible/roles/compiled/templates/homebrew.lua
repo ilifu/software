@@ -10,7 +10,7 @@ local bin_dir = pathJoin(homebrew_dir, "bin")
 local man_dir = pathJoin(homebrew_dir, "manpages")
 local software_dir = pathJoin("{{ homebrew_dir }}", "software")
 
-load("ruby/2.6")
+load("ruby/2.6.6")
 
 setenv('HOMEBREW_PREFIX', software_dir)
 setenv('HOMEBREW_PREFIX_DEFAULT', software_dir)
