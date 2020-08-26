@@ -29,8 +29,6 @@
             dest: "{{ homebrew_dir }}"
             creates: "{{ install_dir }}"
 
-
-
     - name: Install homebrew module
       block:
       - name: Check module dir {{ homebrew_module_dir }}
@@ -42,3 +40,7 @@
         template:
           src: homebrew.lua
           dest: "{{ homebrew_module_dir }}/2.4.13.lua"
+
+    - name: Install homebrew softwares
+      command: "{{install_dir}}/bin/brew install {{ item }}"
+      with_items: "{{ software_list }}"
