@@ -1,0 +1,44 @@
+---
+- name: Install homebrew
+  vars:
+    homebrew_dir: "{{ common_dir }}/homebrew"
+    homebrew_module_dir: "{{ common_modules }}/homebrew"
+    install_dir: "{{ homebrew_dir }}/brew-2.4.13"
+    homebrew_url: "https://github.com/Homebrew/brew/archive/2.4.13.tar.gz"
+    checksum: "sha256:5206b22a207f85baa157b9c5a334e261cc1c5a63b082adac93af52f56b08b8e7"
+  tags:
+    - never
+    - homebrew
+
+  block:
+    - name: Download, and install homebrew {{ major_minor }}
+      block:
+        - name: Download homebrew tarball to {{ common_src }}/homebrew.2.4.13.tar.gz
+          get_url:
+            url: "{{ homebrew_url }}"
+            dest: "{{ common_src }}/homebrew.2.4.13.tar.gz"
+            checksum: "{{ checksum }}"
+        - name: Check homebrew dir
+          file:
+            path: "{{ homebrew_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx,g+s
+        - name: Untar homebrew to {{ install_dir }}
+          unarchive:
+            src: "{{ common_src }}/homebrew.2.4.13.tar.gz"
+            dest: "{{ homebrew_dir }}"
+            creates: "{{ install_dir }}"
+
+
+
+    - name: Install homebrew module
+      block:
+      - name: Check module dir {{ homebrew_module_dir }}
+        file:
+          path: "{{ homebrew_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install homebrew module file to {{ homebrew_module_dir }}
+        template:
+          src: homebrew.lua
+          dest: "{{ homebrew_module_dir }}/2.4.13.lua"
