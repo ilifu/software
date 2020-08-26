@@ -1,0 +1,58 @@
+- name: Install ruby
+  vars:
+    ruby_dir: "{{ common_dir }}/ruby"
+    ruby_module_dir: "{{ common_modules }}/ruby"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ ruby_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/ruby-{{ version_number }}"
+    build_dir: "{{ unzipdir }}/build"
+  tags:
+    - never
+    - ruby{{ item.version_number }}
+  block:
+    - name: Install ruby {{ version_number }}
+      block:
+        - name: Download, compile and install ruby {{ version_number }}
+          block:
+          - name: Download ruby {{ version_number }}
+            get_url:
+              url: "{{ url }}"
+              dest: "{{ common_src }}/ruby-{{ version_number }}.tar.gz"
+              checksum: "{{ checksum }}"
+          - name: Unzip ruby {{ version_number }}
+            unarchive:
+              src: "{{ common_src }}/ruby-{{ version_number }}.tar.gz"
+              dest: "/dev/shm/"
+              creates: "{{ unzipdir }}"
+          - name: Make ruby {{ version_number }} build directory
+            file:
+              path: "{{ build_dir }}"
+              state: directory
+          - name: rubyun ruby {{ version_number }} configure
+            command: "../configure --prefix={{ install_dir }} --enable-shared"
+            args:
+              chdir: "{{ build_dir }}"
+              creates: "{{ build_dir }}/Makefile"
+          - name: Build ruby {{ version_number }}
+            make:
+              chdir: "{{ build_dir }}"
+            environment:
+              MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+          - name: Install ruby {{ version_number }}
+            make:
+              chdir: "{{ build_dir }}"
+              target: install
+
+    - name: Install ruby {{ version_number }} module
+      block:
+      - name: Check module dir
+        file:
+          path: "{{ ruby_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install ruby {{ version_number }} module file
+        template:
+          src: ruby.lua
+          dest: "{{ ruby_module_dir }}/{{ version_number }}.lua"
