@@ -40,7 +40,7 @@
             make:
               chdir: "{{ build_dir }}"
             environment:
-              MAKEFLAGS: "-j {{ ansible_processor_count }}"
+              MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
           - name: Install R {{ version_number }}
             make:
               chdir: "{{ build_dir }}"

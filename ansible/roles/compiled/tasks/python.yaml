@@ -35,13 +35,15 @@
         args:
           chdir: "{{ build_dir }}"
           creates: "{{ build_dir }}/Makefile"
+        environment:
+          CFLAGS: "-specs=/usr/share/dpkg/no-pie-compile.specs -fstack-protector -Wformat"
       - name: Build Python {{ version_number }}
         make:
           chdir: "{{ build_dir }}"
           params:
             PROFILE_TASK="-m test.regrtest --pgo test_array test_base64 test_binascii test_binhex test_binop test_c_locale_coercion test_csv test_json test_hashlib test_unicode test_codecs test_traceback test_decimal test_math test_compile test_threading test_time test_fstring test_re test_float test_class test_cmath test_complex test_iter test_struct test_slice test_set test_dict test_long test_bytes test_memoryview test_io test_pickle"
         environment:
-          MAKEFLAGS: "-j {{ ansible_processor_count }}"
+          MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
       - name: Install Python {{ version_number }}
         make:
           chdir: "{{ build_dir }}"
