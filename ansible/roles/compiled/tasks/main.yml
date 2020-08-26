@@ -357,7 +357,7 @@
   tags:
     - always
 
-- name: Install HomeBrew
+- name: Install HomeBrew and homebrew software
   vars:
     - software_list:
         - brewsci/bio/treepl

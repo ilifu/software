@@ -3,7 +3,7 @@ help([[
 This module configures homebrew for use
 ]])
 whatis("Keywords: homebrew")
-whatis("Description: Use homebrew to manage software packages")
+whatis("Description: Use homebrew to manage software packages including: {{' '.join(software_list)}}")
 
 local homebrew_dir = "{{ install_dir }}"
 local bin_dir = pathJoin(homebrew_dir, "bin")
