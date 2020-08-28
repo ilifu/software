@@ -8,6 +8,11 @@ Requirements
 
 The only requirement is that the directory structure from the `all` role is in place.
 
+Notes
+-----
+When installing perl, the one perl module will likely fail and may need to be somewhat manually installed. 
+https://stackoverflow.com/questions/47966512/error-installing-xmldomxpath
+
 Role Variables
 --------------
 
