@@ -29,4 +29,4 @@
           dest: "{{ perl_module_dir }}/{{ version_number }}.lua"
 
     - name: Install cpan modules
-      command: "/bin/bash -c 'module add perl/{{ version_number }} && cpan {{ ' '.join(cpan_modules) }}'"
+      command: "/bin/bash -c 'module add perl/{{ version_number }} && module add htslib && cpan {{ ' '.join(cpan_modules) }}'"
