@@ -334,9 +334,28 @@
             version_number: "5.33.0",
         }
     - cpan_modules:
+        - CPAN::DistnameInfo
+        - inc::latest
+        - Log::Log4perl
+        - Spiffy
+        - Test::YAML
+        - Test::Deep
+        - YAML
         - Archive::Zip
         - DBD::MySQL
         - DBI
+        - Module::Build
+        - CPAN::Meta
+        - DB_File
+        - XML::DOM::XPath
+        - JSON
+        - Set::IntervalTree
+        - Test::Pod
+        - Test::Pod::Coverage
+        - XML::DOM::XPath
+        - Bio::DB::BioFetch
+        - Bio::SeqFeature::Lite
+        - Bio::DB:HTS
   include_tasks:
     file: perl.yaml
   loop: "{{ perl_versions }}"

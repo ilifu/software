@@ -11,6 +11,8 @@ local bin_dir = pathJoin(perl_dir, "bin")
 local lib_dir = pathJoin(perl_dir, "lib")
 local man_dir = pathJoin(perl_dir, "man")
 
+load("htslib")
+
 prepend_path('PATH', bin_dir)
 prepend_path('LD_LIBRARY_PATH', lib_dir)
 prepend_path('LIBRARY_PATH', lib_dir)
