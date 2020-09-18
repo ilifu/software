@@ -1,0 +1,42 @@
+---
+- name: Install gemini
+  vars:
+    gemini_dir: "{{ bio_dir }}/gemini"
+    gemini_data_dir: "{{ bio_dir }}/gemini_data"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ geminis_dir }}/gemini-{{ version_number }}"
+    gemini_module_dir: "{{ bio_modules }}/gemini"
+  tags:
+    - never
+    - gemini
+
+  block:
+    - name: Copy gemini installer
+      copy:
+        src: gemini_install.py
+        dest: "{{ bio_src }}/"
+        mode: u=rx,g=r,o=r
+    - name: Ensure gemini directories exist
+      loop:
+        - "{{ gemini_dir }}"
+        - "{{ gemini_data_dir }}"
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: u=rwx,g=rxs,o=rx
+    - name: Install gemini
+      command: "/bin/bash -c 'module add python/2.7.18 && python3 {{ bio_src }}/gemini_install.py {{ gemini_dir }} {{ gemini_data_dir }}'"
+
+#    - name: Install gemini module
+#      block:
+#      - name: Check module dir {{ gemini_module_dir }}
+#        file:
+#          path: "{{ gemini_module_dir }}"
+#          state: directory
+#          mode: u=rwx,g=rwx,o=rx
+#      - name: Install gemini module file to {{ gemini_module_dir }}
+#        template:
+#          src: gemini.lua
+#          dest: "{{ gemini_module_dir }}/{{ version_number }}.lua"
+
+
