@@ -1,22 +1,23 @@
 - name: Create base ubuntu {{ item.version_name }} container
   vars:
     - base_container_name: "vep"
-    - base_container_recipe: "{{ bio_container_recipe_dir }}/{{ base_container_name }}.def"
-    - base_container_image: "{{ bio_container_dir }}/{{ base_container_name }}.sif"
+    - container_recipe: "{{ bio_container_recipe_dir }}/{{ base_container_name }}.def"
+    - container_image: "{{ bio_container_dir }}/{{ base_container_name }}.sif"
     - data_dir: "{{ bio_data_dir }}/vep"
     - cache_dir: "/opt/vep/.vep"
+    - vep_module_dir: "{{ bio_modules }}/vep"
   tags:
     - "vep"
     - never
   block:
-    - name: Copy recipe {{ base_container_recipe }}
+    - name: Copy recipe {{ container_recipe }}
       template:
         src: "vep.def"
-        dest: "{{ base_container_recipe }}"
-    - name: Build container {{ base_container_image }}
-      command: "{{ singularity }} build {{ base_container_image }} {{ base_container_recipe }}"
+        dest: "{{ container_recipe }}"
+    - name: Build container {{ container_image }}
+      command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
       args:
-        creates: "{{ base_container_image }}"
+        creates: "{{ container_image }}"
       become: yes
     - name: Ensure vep data directory exists {{ data_dir }}
       file:
@@ -24,7 +25,19 @@
         state: directory
         mode: o=rwx,g=rx,o=rx,g+s
     - name: Run vep and cache data
-      command: "singularity exec {{ base_container_image }} perl /opt/vep/src/ensembl-vep/INSTALL.pl -a cfp -s homo_sapiens -y GRCh38 -g all -c {{ cache_dir }}"
+      command: "singularity exec {{ container_image }} perl /opt/vep/src/ensembl-vep/INSTALL.pl -a cfp -s homo_sapiens -y GRCh38 -g all -c {{ cache_dir }}"
       environment:
         SINGULARITY_BINDPATH: "{{ data_dir }}:{{ cache_dir }}"
-      # docker run -t -i -v $HOME/vep_data:/opt/vep/.vep ensemblorg/ensembl-vep perl INSTALL.pl -a cfp -s homo_sapiens -y GRCh38 -g all
+      args:
+        creates: "{{ data_dir }}/homo_sapiens"
+    - name: Install vep module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ vep_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install vep module file
+          template:
+            src: vep.lua
+            dest: "{{ vep_module_dir }}/vep.lua"
