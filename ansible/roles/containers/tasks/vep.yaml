@@ -40,4 +40,4 @@
         - name: Install vep module file
           template:
             src: vep.lua
-            dest: "{{ vep_module_dir }}/vep.lua"
+            dest: "{{ vep_module_dir }}/singularity.lua"
