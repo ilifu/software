@@ -9,6 +9,6 @@ local singularity_image = "{{ container_image }}"
 
 setenv ("INGULARITY_BINDPATH" ,"{{ data_dir }}:{{ cache_dir }}")
 
-set_alias("vep", "singularity exec " .. singularity_image .. " vep --dir_cache {{ cache_dir }} --dir_plugins {{ cache_dir }}")
+set_alias("vep", "singularity exec " .. singularity_image .. " vep --cache --dir_cache {{ cache_dir }} --dir_plugins {{ cache_dir }}")
 
 
