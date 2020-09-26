@@ -8,3 +8,6 @@ From: ensemblorg/ensembl-vep
 
 %help
   Variant Effect Predictor
+
+%environment
+  PATH=/opt/vep/src/ensembl-vep:/opt/vep/src/var_c_code:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH

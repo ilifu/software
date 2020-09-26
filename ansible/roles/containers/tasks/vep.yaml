@@ -4,6 +4,7 @@
     - base_container_recipe: "{{ bio_container_recipe_dir }}/{{ base_container_name }}.def"
     - base_container_image: "{{ bio_container_dir }}/{{ base_container_name }}.sif"
     - data_dir: "{{ bio_data_dir }}/vep"
+    - cache_dir: "/opt/vep/.vep"
   tags:
     - "vep"
     - never
@@ -23,7 +24,7 @@
         state: directory
         mode: o=rwx,g=rx,o=rx,g+s
     - name: Run vep and cache data
-      command: "singularity exec {{ base_container_image }} perl /opt/vep/src/ensembl-vep/INSTALL.pl -a cfp -s homo_sapiens -y GRCh38 -g all"
+      command: "singularity exec {{ base_container_image }} perl /opt/vep/src/ensembl-vep/INSTALL.pl -a cfp -s homo_sapiens -y GRCh38 -g all -c {{ cache_dir }}"
       environment:
-        SINGULARITY_BINDPATH: "{{ data_dir }}:/opt/vep/.vep"
+        SINGULARITY_BINDPATH: "{{ data_dir }}:{{ cache_dir }}"
       # docker run -t -i -v $HOME/vep_data:/opt/vep/.vep ensemblorg/ensembl-vep perl INSTALL.pl -a cfp -s homo_sapiens -y GRCh38 -g all
