@@ -1,0 +1,10 @@
+Bootstrap: docker
+From: ensemblorg/ensembl-vep
+
+%labels
+  Maintainer Dane Kennedy
+  Version 0.1
+  vep
+
+%help
+  Variant Effect Predictor

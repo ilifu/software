@@ -1,16 +1,19 @@
 ---
 
 software_root: /software
+data_root: /software/data
 
 astro_dir: "{{ software_root }}/astro"
 astro_container_dir: "{{ astro_dir }}/containers"
 astro_container_recipe_dir: "{{ astro_container_dir }}/recipes"
 astro_src: "{{ astro_dir }}/src"
+astro_data_dir: "{{ data_root }}/astro"
 
 bio_dir: "{{ software_root }}/bio"
 bio_container_dir: "{{ bio_dir }}/containers"
 bio_container_recipe_dir: "{{ bio_container_dir }}/recipes"
 bio_src: "{{ bio_dir }}/src"
+bio_data_dir: "{{ data_root }}/bio"
 
 common_dir: "{{ software_root }}/common"
 common_container_dir: "{{ common_dir }}/containers"

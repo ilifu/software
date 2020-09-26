@@ -90,3 +90,8 @@
     file: PopGen_suite.yaml
   loop: "{{ popgen_versions }}"
   tags: always
+
+- name: Create VEP container
+  include_tasks:
+    file: vep.yaml
+  tags: always
