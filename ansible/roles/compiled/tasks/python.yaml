@@ -36,7 +36,7 @@
           chdir: "{{ build_dir }}"
           creates: "{{ build_dir }}/Makefile"
         environment:
-          CFLAGS: "-specs=/usr/share/dpkg/no-pie-compile.specs -fstack-protector -Wformat"
+          CFLAGS: "-fstack-protector -Wformat"
       - name: Build Python {{ version_number }}
         make:
           chdir: "{{ build_dir }}"
