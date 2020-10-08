@@ -128,6 +128,7 @@
       - pip
       - pipenv
       - ipython
+      - ipykernel
       - ldap3
   include_tasks:
     file: python.yaml
