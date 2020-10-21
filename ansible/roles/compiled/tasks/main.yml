@@ -412,3 +412,32 @@
     file: gemini.yaml
   tags:
     - always
+
+- name: Install VEP
+  vars:
+    - vep_versions:
+        - {
+            version_number: "101.0",
+            url: https://github.com/Ensembl/ensembl-vep/archive/release/101.0.tar.gz",
+            checksum: 'sha256:cbf4dfcbd23fcf29ed4acac1736fe6e7e25fdbee4425bcc96b6364e24df85066',
+            perl_module: 'perl/5.33.0',
+          }
+    - cpan_modules:
+        - Archive::Zip
+        - DBD::mysql
+        - DBI
+        - Module::Build
+        - Bio::SeqFeature::Lite
+        - Set::IntervalTree
+        - CPAN::DistnameInfo
+        - Test::Pod
+        - Test::Pod::Coverage
+        - XML::DOM
+        - XML::XPath
+        - XML::DOM::XPath
+        - Bio::DB:HTS
+  include_tasks:
+    file: vep.yaml
+  loop: "{{ vep_versions }}"
+  tags:
+    - always
