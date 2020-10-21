@@ -9,6 +9,7 @@
     unzipdir: "/dev/shm/ensembl-vep-release-{{ version_number }}"
     vep_module_dir: "{{ bio_modules }}/vep"
     perl_module: "{{ item.perl_module }}"
+    cache_dir: "{{ bio_data_dir }}/vep"
   tags:
     - never
     - vep{{ item.version_number }}
@@ -42,7 +43,7 @@
 
 
     - name: Install vep {{ version_number }}
-      command: "/bin/bash -c 'module add {{ perl_module }} && module add htslib/1.10.2 && ./INSTALL.pl --AUTO a --NO_HTSLIB --DESTDIR {{ install_dir }}' && touch INSTALLED.ansible"
+      command: "/bin/bash -c 'module add {{ perl_module }} && module add htslib/1.10.2 && ./INSTALL.pl --AUTO a --NO_HTSLIB --DESTDIR {{ install_dir }} && touch INSTALLED.ansible'"
       args:
         chdir: "{{ install_dir }}"
         creates: "{{ install_dir }}/INSTALLED.ansible"

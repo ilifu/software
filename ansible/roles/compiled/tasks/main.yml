@@ -436,6 +436,8 @@
         - XML::XPath
         - XML::DOM::XPath
         - Bio::DB:HTS
+        - Bio::EnsEMBL::Variation::DBSQL::VariationFeatureAdaptor
+        - Bio::EnsEMBL::Utils::Exception
   include_tasks:
     file: vep.yaml
   loop: "{{ vep_versions }}"
