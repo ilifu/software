@@ -33,7 +33,7 @@
       unarchive:
         src: "{{ bio_src }}/VEP.{{ version_number }}.tar.gz"
         dest: "{{ vep_dir }}"
-        creates: "{{ vep_dir }}/ensembl-vep-release-{{ version_number }}"
+        creates: "{{ install_dir }}"
 
     - name: Rename Uncompressed vep dir
       command: "mv {{ vep_dir }}/ensembl-vep-release-{{ version_number }} {{ install_dir }}"
@@ -42,30 +42,21 @@
 
 
     - name: Install vep {{ version_number }}
-      command: "/bin/bash -c 'module add {{ perl_module }} && module add htslib/1.10.2 && ./INSTALL.pl --AUTO a --NO_HTSLIB --DESTDIR {{ install_dir }}'"
+      command: "/bin/bash -c 'module add {{ perl_module }} && module add htslib/1.10.2 && ./INSTALL.pl --AUTO a --NO_HTSLIB --DESTDIR {{ install_dir }}' && touch INSTALLED.ansible"
       args:
         chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/INSTALLED.ansible"
 
-#         PLEASE REMEMBER TO
-# 1. add /software/bio/vep/101.0 to your PERL5LIB environment variable
-# 2. add /software/bio/vep/101.0/htslib to your PATH environment variable
 
-    # - name: Install vep {{ version_number }} using vep
-    #   command: "/bin/bash -c 'module add perl/5.33.0 && vep install -j {{ ansible_processor_vcpus }} vep-{{ version_number }}'"
-    #   args:
-    #     creates: "{{ install_dir }}"
+    - name: Install vep {{ version_number }} module
+      block:
+      - name: Check module dir {{ vep_module_dir }}
+        file:
+          path: "{{ vep_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install vep module file to {{ vep_module_dir }}
+        template:
+          src: vep.lua
+          dest: "{{ vep_module_dir }}/{{ version_number }}.lua"
 
-    # - name: Install vep module
-    #   block:
-    #   - name: Check module dir {{ vep_module_dir }}
-    #     file:
-    #       path: "{{ vep_module_dir }}"
-    #       state: directory
-    #       mode: u=rwx,g=rwx,o=rx
-    #   - name: Install vep module file to {{ vep_module_dir }}
-    #     template:
-    #       src: vep.lua
-    #       dest: "{{ vep_module_dir }}/{{ version_number }}.lua"
-
-    # - name: Install cpan modules
-    #   command: "/bin/bash -c 'module add vep/{{ version_number }} && module add htslib && cpan {{ ' '.join(cpan_modules) }}'"
