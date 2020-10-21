@@ -21,8 +21,12 @@
         dest: "{{ bio_src }}/VEP.{{ version_number }}.tar.gz"
         checksum: "{{ checksum }}"
 
+    - name: Print wanting message
+      debug:
+        msg: "If you're getting error with cpan installing XML::DOM::XPath, please check: https://stackoverflow.com/questions/47966512/error-installing-xmldomxpath"
+
     - name: Install Perl Requirements
-      command: "/bin/bash -c 'module add {{ perl_module }} && module add htslib/1.10.2 && cpan {{ ' '.join(cpan_modules) }}'"
+      command: "/bin/bash -c 'module add {{ perl_module }} && module add htslib/1.10.2 && cpan {{ ' '.join(cpan_modules) }}'"      
 
     - name: Ensure vep dir exists
       file:
