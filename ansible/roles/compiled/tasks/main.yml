@@ -177,6 +177,11 @@
           checksum: "sha256:d3bceab364da0876625e4097808b42512395fdf41292f4915ab1fd257c1bbe75",
           url: "https://cran.r-project.org/src/base/R-4/R-4.0.2.tar.gz",
         }
+        - {
+          version_number: "4.0.3",
+          checksum: "sha256:09983a8a78d5fb6bc45d27b1c55f9ba5265f78fa54a55c13ae691f87c5bb9e0d",
+          url: "https://cran.r-project.org/src/base/R-4/R-4.0.3.tar.gz",
+        }
   include_tasks:
     file: R.yaml
   loop: "{{ R_versions }}"
@@ -354,6 +359,7 @@
     - perl_versions:
         - {
             version_number: "5.33.0",
+            version_number: "5.24.4"
         }
     - cpan_modules:
         - CPAN::DistnameInfo
@@ -420,7 +426,10 @@
             version_number: "101.0",
             url: "https://github.com/Ensembl/ensembl-vep/archive/release/101.0.tar.gz",
             checksum: 'sha256:cbf4dfcbd23fcf29ed4acac1736fe6e7e25fdbee4425bcc96b6364e24df85066',
-            perl_module: 'perl/5.33.0',
+            perl_module: 'perl/5.24.4',
+            htslib_module: 'htslib/1.10.2',
+            bioperl_version: '1.6.924',
+            bioperl_url: 'https://github.com/bioperl/bioperl-live/archive/release-1-6-924.tar.gz',
           }
     - cpan_modules:
         - Archive::Zip
@@ -435,9 +444,10 @@
         - XML::DOM
         - XML::XPath
         - XML::DOM::XPath
-        - Bio::DB:HTS
-        - Bio::EnsEMBL::Variation::DBSQL::VariationFeatureAdaptor
-        - Bio::EnsEMBL::Utils::Exception
+        - Bio::DB::HTS
+        # - Bio::EnsEMBL::Variation::DBSQL::VariationFeatureAdaptor
+        # - Bio::EnsEMBL::Utils::Exception
+        # - Bio::EnsEMBL::Utils::Scalar
   include_tasks:
     file: vep.yaml
   loop: "{{ vep_versions }}"
