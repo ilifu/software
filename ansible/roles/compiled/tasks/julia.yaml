@@ -1,0 +1,40 @@
+- name: Install Julia
+  vars:
+    julia_dir: "{{ common_dir }}/julia"
+    julia_module_dir: "{{ common_modules }}/julia"
+    url: "{{ item.url }}"
+    full_version_number: "{{ item.full_version_number }}"
+    major_minor_version_number: "{{ item.major_minor_version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ julia_dir }}/julia-{{ full_version_number }}"
+  tags:
+    - never
+    - julia{{ item.full_version_number }}
+  block:
+    - name: Download julia {{ full_version_number }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ common_src }}/julia-{{ full_version_number }}-linux-x86_64.tar.gz"
+        checksum: "{{ checksum }}"
+    - name: Ensure julia dir {{ julia_dir }} exists
+      file:
+        path: "{{ julia_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Unzip julia {{ full_version_number }}
+      unarchive:
+        src: "{{ common_src }}/julia-{{ full_version_number }}-linux-x86_64.tar.gz"
+        dest: "{{ julia_dir }}"
+        creates: "{{ install_dir }}"
+
+    - name: Install julia {{ version_number }} module
+      block:
+      - name: Check module dir
+        file:
+          path: "{{ julia_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install julia {{ full_version_number }} module file
+        template:
+          src: julia.lua
+          dest: "{{ julia_module_dir }}/{{ full_version_number }}.lua"

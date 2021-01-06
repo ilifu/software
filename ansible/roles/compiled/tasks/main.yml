@@ -404,6 +404,21 @@
   tags:
     - always
 
+- name: Install julia
+  vars:
+    - julia_versions:
+        - {
+            full_version_number: "1.5.3",
+            major_minor_version_number: "1.5.3",
+            url: "https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.3-linux-x86_64.tar.gz",
+            checksum: "sha256:f190c938dd6fed97021953240523c9db448ec0a6760b574afd4e9924ab5615f1",
+        }
+  include_tasks:
+    file: julia.yaml
+  loop: "{{ julia_versions }}"
+  tags:
+    - always
+
 - name: Install HomeBrew and homebrew software
   vars:
     - software_list:
