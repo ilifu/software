@@ -1,6 +1,5 @@
 ---
 # tasks file for compiled
-# - { include: openmpi.yaml }
 
 - name: Install openjdks
   vars:
@@ -108,6 +107,11 @@
           version_number: "3.1.6",
           checksum: "sha256:50131d982ec2a516564d74d5616383178361c2f08fdd7d1202b80bdf66a0d279",
           url: "https://download.open-mpi.org/release/open-mpi/v3.1/openmpi-3.1.6.tar.bz2",
+        }
+        - {
+            version_number: "2.1.6",
+            checksum: "sha1:7a1d7f1b7efe2258bda3929b8b1729bfb7a51f08",
+            url: "https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.6.tar.bz2",
         }
   include_tasks:
     file: openmpi.yaml
