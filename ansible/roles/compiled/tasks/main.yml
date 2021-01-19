@@ -104,6 +104,11 @@
           url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.0.tar.bz2",
         }
         - {
+          version_number: "4.0.5",
+          checksum: "sha256:c58f3863b61d944231077f344fe6b4b8fbb83f3d1bc93ab74640bf3e5acac009",
+          url: "https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.5.tar.bz2",
+        }
+        - {
           version_number: "4.0.3",
           checksum: "sha256:1402feced8c3847b3ab8252165b90f7d1fa28c23b6b2ca4632b6e4971267fd03",
           url: "https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.3.tar.bz2",
