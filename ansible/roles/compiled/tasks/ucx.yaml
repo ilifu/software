@@ -1,0 +1,58 @@
+- name: Install UCX
+  vars:
+    ucx_dir: "{{ common_dir }}/ucx"
+    ucx_module_dir: "{{ common_modules }}/ucx"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ ucx_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/ucx-{{ version_number }}"
+    build_dir: "{{ unzipdir }}/build"
+  tags:
+    - never
+    - ucx{{ item.version_number }}
+  block:
+    - name: Install UCX {{ version_number }}
+      block:
+        - name: Download, compile and install UCX {{ version_number }}
+          block:
+          - name: Download UCX {{ version_number }}
+            get_url:
+              url: "{{ url }}"
+              dest: "{{ common_src }}/ucx-{{ version_number }}.tar.gz"
+              checksum: "{{ checksum }}"
+          - name: Unzip UCX {{ version_number }}
+            unarchive:
+              src: "{{ common_src }}/ucx-{{ version_number }}.tar.gz"
+              dest: "/dev/shm/"
+              creates: "{{ unzipdir }}"
+          - name: Make UCX {{ version_number }} build directory
+            file:
+              path: "{{ build_dir }}"
+              state: directory
+          - name: Run UCX {{ version_number }} configure
+            command: "../configure --prefix={{ install_dir }} --enable-optimizations"
+            args:
+              chdir: "{{ build_dir }}"
+              creates: "{{ build_dir }}/Makefile"
+          - name: Build UCX {{ version_number }}
+            make:
+              chdir: "{{ build_dir }}"
+            environment:
+              MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+          - name: Install UCX {{ version_number }}
+            make:
+              chdir: "{{ build_dir }}"
+              target: install
+
+#    - name: Install UCX {{ version_number }} module
+#      block:
+#      - name: Check module dir
+#        file:
+#          path: "{{ ucx_module_dir }}"
+#          state: directory
+#          mode: u=rwx,g=rwx,o=rx
+#      - name: Install UCX module file
+#        template:
+#          src: openmpi.lua
+#          dest: "{{ ucx_module_dir }}/{{ version_number }}.lua"

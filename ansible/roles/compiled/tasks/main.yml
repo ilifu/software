@@ -13,7 +13,8 @@
     file: openjdk.yaml
   loop: "{{ openjdk_versions }}"
   tags:
-    - always
+    - never
+    - openjdk
 
 - name: Install Jave Runtime Environment
   vars:
@@ -28,7 +29,8 @@
     file: jre.yaml
   loop: "{{ jre_versions }}"
   tags:
-    - always
+    - never
+    - jre
 
 - name: Install OpenBLAS
   vars:
@@ -41,7 +43,8 @@
     file: openblas.yaml
   loop: "{{ openblas_versions }}"
   tags:
-    - always
+    - never
+    - openblas
 
 - name: Install LAPACK
   vars:
@@ -54,7 +57,8 @@
     file: lapack.yaml
   loop: "{{ lapack_versions }}"
   tags:
-    - always
+    - never
+    - lapack
 
 - name: Install Apache Maven
   vars:
@@ -67,7 +71,8 @@
     file: apache_maven.yaml
   loop: "{{ apache_maven_versions }}"
   tags:
-    - always
+    - never
+    - maven
 
 - name: Install Apache Hadoop
   vars:
@@ -80,7 +85,8 @@
     file: apache_hadoop.yaml
   loop: "{{ apache_hadoop_versions }}"
   tags:
-    - always
+    - never
+    - hadoop
 
 - name: Install Apache Spark
   vars:
@@ -93,7 +99,24 @@
     file: apache_spark.yaml
   loop: "{{ apache_spark_versions }}"
   tags:
-    - always
+    - never
+    - spark
+
+- name: Install UCX
+  vars:
+    - ucx_versions:
+        - {
+            version_number: "1.9.0",
+            url: "https://github.com/openucx/ucx/releases/download/v1.9.0/ucx-1.9.0.tar.gz",
+            checksum: "sha256:a7a2c8841dc0d5444088a4373dc9b9cc68dbffcd917c1eba92ca8ed8e5e635fb",
+        }
+  include_tasks:
+    file: ucx.yaml
+  loop: "{{ ucx_versions }}"
+  tags:
+    - never
+    - ucx
+
 
 - name: Install openmpis
   vars:
@@ -102,32 +125,38 @@
           version_number: "4.1.0",
           checksum: "sha256:73866fb77090819b6a8c85cb8539638d37d6877455825b74e289d647a39fd5b5",
           url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.0.tar.bz2",
+          ucx_version: "1.9.0",
         }
         - {
           version_number: "4.0.5",
           checksum: "sha256:c58f3863b61d944231077f344fe6b4b8fbb83f3d1bc93ab74640bf3e5acac009",
           url: "https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.5.tar.bz2",
+          ucx_version: "1.9.0",
         }
         - {
           version_number: "4.0.3",
           checksum: "sha256:1402feced8c3847b3ab8252165b90f7d1fa28c23b6b2ca4632b6e4971267fd03",
           url: "https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.3.tar.bz2",
+          ucx_version: "1.9.0",
         }
         - {
           version_number: "3.1.6",
           checksum: "sha256:50131d982ec2a516564d74d5616383178361c2f08fdd7d1202b80bdf66a0d279",
           url: "https://download.open-mpi.org/release/open-mpi/v3.1/openmpi-3.1.6.tar.bz2",
+          ucx_version: "1.9.0",
         }
         - {
             version_number: "2.1.6",
             checksum: "sha1:7a1d7f1b7efe2258bda3929b8b1729bfb7a51f08",
             url: "https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.6.tar.bz2",
+            ucx_version: "1.9.0",
         }
   include_tasks:
     file: openmpi.yaml
   loop: "{{ openmpi_versions }}"
   tags:
-    - always
+    - never
+    - openmpi
 
 - name: Install pythons
   vars:
@@ -148,7 +177,8 @@
     file: python.yaml
   loop: "{{ python_versions }}"
   tags:
-    - always
+    - never
+    - python
 
 - name: Install Anacondas
   vars:
@@ -162,7 +192,8 @@
     file: anaconda.yaml
   loop: "{{ anaconda_versions }}"
   tags:
-    - always
+    - never
+    - anaconda
 
 - name: Install PRSices
   vars:
@@ -176,7 +207,8 @@
     file: PRSice-2.yaml
   loop: "{{ prsice_versions }}"
   tags:
-    - always
+    - never
+    - prsice
 
 - name: Install Rs
   vars:
@@ -200,7 +232,8 @@
     file: R.yaml
   loop: "{{ R_versions }}"
   tags:
-    - always
+    - never
+    - R
 
 - name: Install PLINKs
   vars:
@@ -213,7 +246,8 @@
     file: plink-ng.yaml
   loop: "{{ plink_versions }}"
   tags:
-    - always
+    - never
+    - plink
 
 - name: Install monos
   vars:
@@ -227,7 +261,8 @@
     file: mono.yaml
   loop: "{{ mono_versions }}"
   tags:
-    - always
+    - never
+    - mono
 
 - name: Install canvass
   vars:
@@ -241,13 +276,15 @@
     file: canvas.yaml
   loop: "{{ canvas_versions }}"
   tags:
-    - always
+    - never
+    - canvas
 
 - name: Install bcbio
   include_tasks:
     file: bcbio.yaml
   tags:
-    - always
+    - never
+    - bcbio
 
 - name: Install samtools
   vars:
@@ -261,7 +298,8 @@
     file: samtools.yaml
   loop: "{{ samtools_versions }}"
   tags:
-    - always
+    - never
+    - samtools
 
 - name: Install htslib
   vars:
@@ -275,7 +313,8 @@
     file: htslib.yaml
   loop: "{{ htslib_versions }}"
   tags:
-    - always
+    - never
+    - htslib
 
 - name: Install bcftools
   vars:
@@ -289,7 +328,8 @@
     file: bcftools.yaml
   loop: "{{ bcftools_versions }}"
   tags:
-    - always
+    - never
+    - bcftools
 
 - name: Install vcftools
   vars:
@@ -303,7 +343,8 @@
     file: vcftools.yaml
   loop: "{{ vcftools_versions }}"
   tags:
-    - always
+    - never
+    - vcftools
 
 - name: Install DRMAA for Slurm
   vars:
@@ -317,7 +358,8 @@
     file: slurm-drmaa.yaml
   loop: "{{ drmaa_slurm_versions }}"
   tags:
-    - always
+    - never
+    - drmaa
 
 - name: Install GenomeStrip
   vars:
@@ -331,7 +373,8 @@
     file: GenomeStrip.yaml
   loop: "{{ genomestrip_versions }}"
   tags:
-    - always
+    - never
+    - genomestrip
 
 - name: Install Cuda
   vars:
@@ -360,13 +403,15 @@
     file: cuda.yaml
   loop: "{{ cuda_versions }}"
   tags:
-    - always
+    - never
+    - cuda
 
 - name: Install PerlBrew
   include_tasks:
     file: perlbrew.yaml
   tags:
-    - always
+    - never
+    - perlbrew
 
 - name: Install Perl
   vars:
@@ -402,7 +447,8 @@
     file: perl.yaml
   loop: "{{ perl_versions }}"
   tags:
-    - always
+    - never
+    - perl
 
 - name: Install ruby
   vars:
@@ -416,7 +462,8 @@
     file: ruby.yaml
   loop: "{{ ruby_versions }}"
   tags:
-    - always
+    - never
+    - ruby
 
 - name: Install julia
   vars:
@@ -431,7 +478,8 @@
     file: julia.yaml
   loop: "{{ julia_versions }}"
   tags:
-    - always
+    - never
+    - julia
 
 - name: Install HomeBrew and homebrew software
   vars:
@@ -440,13 +488,15 @@
   include_tasks:
     file: homebrew.yaml
   tags:
-    - always
+    - never
+    - homebrew
 
 - name: Install gemini
   include_tasks:
     file: gemini.yaml
   tags:
-    - always
+    - never
+    - gemini
 
 - name: Install VEP
   vars:
@@ -481,4 +531,5 @@
     file: vep.yaml
   loop: "{{ vep_versions }}"
   tags:
-    - always
+    - never
+    - vep
