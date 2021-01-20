@@ -31,7 +31,7 @@
               path: "{{ build_dir }}"
               state: directory
           - name: Run UCX {{ version_number }} configure
-            command: "../configure --prefix={{ install_dir }} --enable-optimizations"
+            command: "../contrib/configure-release --prefix={{ install_dir }} --enable-optimizations"
             args:
               chdir: "{{ build_dir }}"
               creates: "{{ build_dir }}/Makefile"
