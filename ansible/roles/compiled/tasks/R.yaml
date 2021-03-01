@@ -47,6 +47,12 @@
               target: install
           - name: Install R packages {{ r_packages }}
             command: "{{ install_dir }}/bin/Rscript -e 'install.packages(c({{ r_packages }}), repos=\"http://cran.rstudio.com/\")'"
+          - name: Ensure Rprofile.site is up-to-date
+            lineinfile:
+              path: "{{ install_dir }}/lib/R/etc/Rprofile.site"
+              create: yes
+              line: "options(bitmapType='cairo')"
+            tags: Rprofile
 
     - name: Install R {{ version_number }} module
       block:
