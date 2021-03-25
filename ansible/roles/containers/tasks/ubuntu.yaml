@@ -4,8 +4,8 @@
     - base_container_recipe: "{{ common_container_recipe_dir }}/{{ base_container_name }}.def"
     - base_container_image: "{{ common_container_dir }}/{{ base_container_name }}.sif"
   tags:
-    - "ubuntu-{{ item.version_name }}"
     - never
+    - "ubuntu-{{ item.version_name }}"
   block:
     - name: Copy recipe {{ base_container_recipe }}
       template:
@@ -16,8 +16,8 @@
       args:
         creates: "{{ base_container_image }}"
       become: yes
-#      environment:
-#        SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"
+      environment:
+        SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"
 
 - name: Create ubuntu {{ item.version_name }} compile container
   vars:
@@ -27,8 +27,8 @@
     - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
     - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
   tags:
-    - "ubuntu-{{ item.version_name }}-compile"
     - never
+    - "ubuntu-{{ item.version_name }}-compile"
   block:
     - name: "Check for existence of {{ base_container_image }} container"
       stat:
@@ -50,6 +50,6 @@
           args:
             creates: "{{ container_image }}"
           become: yes
- #         environment:
- #           SINGULARITY_TMPDIR: "/dev/shm"
+          environment:
+            SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"
 

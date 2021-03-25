@@ -10,7 +10,9 @@
   include_tasks:
     file: ubuntu.yaml
   loop: "{{ ubuntu_versions }}"
-  tags: always
+  tags:
+    - never
+    - base
 
 - name: Create RStudio Containers
   vars:
@@ -30,7 +32,9 @@
   include_tasks:
     file: RStudio.yaml
   loop: "{{ rstudio_versions }}"
-  tags: always
+  tags:
+    - never
+    - RStudio
 
 
 - name: Create PopGen Containers
@@ -89,9 +93,13 @@
   include_tasks:
     file: PopGen_suite.yaml
   loop: "{{ popgen_versions }}"
-  tags: always
+  tags:
+    - never
+    - popgen
 
 - name: Create VEP container
   include_tasks:
     file: vep.yaml
-  tags: always
+  tags:
+    - never
+    - vep

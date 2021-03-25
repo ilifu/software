@@ -19,6 +19,3 @@ apps = {
 for i, app in ipairs(apps) do
     set_alias(app, "singularity run --app " .. app .. " " .. singularity_image)
 end
-
-set_env("casa_mem", "232G")
-set_alias("slurm_casa", "srun WHATWHAT -m ${casa_mem} --pty 'singularity exec {{image}} somelongpath/casa'")
