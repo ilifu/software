@@ -167,6 +167,7 @@
       - { version_number: "3.8.3", checksum: "sha256:dfab5ec723c218082fe3d5d7ae17ecbdebffa9a1aea4d64aa3a2ecdd2e795864" }
       - { version_number: "3.8.6", checksum: "sha256:a9e0b79d27aa056eb9cce8d63a427b5f9bab1465dee3f942dcfdb25a82f4ab8a" }
       - { version_number: "3.9.0", checksum: "sha256:9c73e63c99855709b9be0b3cc9e5b072cb60f37311e8c4e50f15576a0bf82854" }
+      - { version_number: "3.9.4", checksum: "sha256:4b0e6644a76f8df864ae24ac500a51bbf68bd098f6a173e27d3b61cdca9aa134" }
     pip_packages:
       - pip
       - pipenv
