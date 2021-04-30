@@ -251,6 +251,22 @@
     - never
     - golang
 
+- name: Install singularity
+  vars:
+    - singularity_versions:
+        - {
+          version_number: "3.7.3",
+          checksum: "sha256:6667eb8875d2b66d73504f40c956b42b1351744f488d164204376215d885da5c",
+          url: "https://github.com/hpcng/singularity/releases/download/v3.7.3/singularity-3.7.3.tar.gz",
+          go_location: "{{ common_dir }}/golang/1.16.3/bin"
+        }
+  include_tasks:
+    file: singularity.yaml
+  loop: "{{ singularity_versions }}"
+  tags:
+    - never
+    - singularity
+
 - name: Install PLINKs
   vars:
     - plink_versions:
