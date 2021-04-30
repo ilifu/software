@@ -236,6 +236,21 @@
     - never
     - R
 
+- name: Install Go
+  vars:
+    - go_versions:
+        - {
+          version_number: "1.16.3",
+          checksum: "sha256:951a3c7c6ce4e56ad883f97d9db74d3d6d80d5fec77455c6ada6c1f7ac4776d2",
+          url: "https://golang.org/dl/go1.16.3.linux-amd64.tar.gz",
+        }
+  include_tasks:
+    file: golang.yaml
+  loop: "{{ go_versions }}"
+  tags:
+    - never
+    - golang
+
 - name: Install PLINKs
   vars:
     - plink_versions:
@@ -419,7 +434,9 @@
     - perl_versions:
         - {
             version_number: "5.33.0",
-            version_number: "5.24.4"
+        }
+        - {
+            version_number: "5.24.4",
         }
     - cpan_modules:
         - CPAN::DistnameInfo

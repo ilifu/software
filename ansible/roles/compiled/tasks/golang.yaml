@@ -1,0 +1,46 @@
+- name: Install Go
+  vars:
+    go_dir: "{{ common_dir }}/golang"
+    go_module_dir: "{{ common_modules }}/go"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ go_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/go"
+  tags:
+    - never
+    - golang{{ item.version_number }}
+  block:
+    - name: Install go {{ version_number }}
+      block:
+        - name: Download and install go {{ version_number }}
+          block:
+          - name: Download go {{ version_number }}
+            get_url:
+              url: "{{ url }}"
+              dest: "{{ common_src }}/go-{{ version_number }}.tar.gz"
+              checksum: "{{ checksum }}"
+          - name: Unzip go {{ version_number }}
+            unarchive:
+              src: "{{ common_src }}/go-{{ version_number }}.tar.gz"
+              dest: "/dev/shm/"
+              creates: "{{ unzip_dir }}"
+          - name: Ensure installation parent exists
+            file:
+              path: "{{ go_dir }}"
+              state: directory
+              mode: o=rwx,g=rx,o=rx
+          - name: Move unzipped dir to installation location
+            command: "mv {{ unzip_dir }} {{ install_dir }}"
+
+    - name: Install go {{ version_number }} module
+      block:
+      - name: Check module dir
+        file:
+          path: "{{ go_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install go {{ version_number }} module file
+        template:
+          src: golang.lua
+          dest: "{{ go_module_dir }}/{{ version_number }}.lua"
