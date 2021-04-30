@@ -32,12 +32,13 @@
               state: directory
               mode: o=rwx,g=rx,o=rx
           - name: Configure singularity
-            command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir=/usr/local/etc"
+            command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir=/usr/local/etc --without-suid"
             args:
               chdir: "{{ unzip_dir }}"
               creates: "{{ unzip_dir }}/builddir/Makefile"
             environment:
               PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
+              MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
           - name: Compile singularity
             make:
               chdir: "{{ unzip_dir }}/builddir"
