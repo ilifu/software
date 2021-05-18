@@ -38,10 +38,12 @@
               creates: "{{ unzip_dir }}/builddir/Makefile"
             environment:
               PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
-              MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
           - name: Compile singularity
             make:
               chdir: "{{ unzip_dir }}/builddir"
+            environment:
+              PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
+              MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
           - name: Install singularity
             make:
               chdir: "{{ unzip_dir }}/builddir"
