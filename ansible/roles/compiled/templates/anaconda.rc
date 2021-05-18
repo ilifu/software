@@ -1,0 +1,8 @@
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+envs_dirs:
+  - ~/.conda/envs
+  - {{ install_dir }}/envs

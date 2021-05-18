@@ -189,6 +189,11 @@
         url: "https://repo.anaconda.com/archive/Anaconda3-2020.07-Linux-x86_64.sh",
         checksum: "sha512:ed810aaf6c08e8e50d4031958e396740d4e1e9994309c43e19f7cd5e8ef71f26d37296a7ad7bee5d863f9122a690f72f212a9b5cd40727eb40a111bb5bd9a7a5"
       }
+      - {
+        version_number: "2021.05",
+        url: "https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh",
+        checksum: "sha512:e1126ffc8c35b4d22959a3fd50282a3e1e7e31471f2d1d2996d9948ed44550d76a94fcecaeebad5cbd7a1b8aeaa1b8f8abaf78672634424ec00fd269ad08cf2d"
+      }
   include_tasks:
     file: anaconda.yaml
   loop: "{{ anaconda_versions }}"

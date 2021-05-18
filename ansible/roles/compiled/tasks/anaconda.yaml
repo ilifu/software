@@ -25,7 +25,17 @@
         args:
           creates: "{{ install_dir }}"
       - name: Install conda packages
-        command: "{{ install_dir }}/bin/conda install coloredlogs configparser"
+        command: "{{ install_dir }}/bin/conda install coloredlogs configparser pandas"
+        args:
+          creates: "{{ install_dir }}/pkgs/pandas*"
+      - name: Install Jupyter
+        command: "{{ install_dir }}/bin/conda install -c conda-forge jupyterlab"
+        args:
+          creates: "{{ install_dir }}/pkgs/jupyter*"
+      - name: Add condarc
+        template:
+          src: anaconda.rc
+          dest: "{{ install_dir }}/condarc"
 
     - name: Install Anaconda {{ version_number }} module to {{ anaconda_module_dir }}
       block:
