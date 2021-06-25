@@ -1,0 +1,49 @@
+- name: Install dotnet
+  vars:
+    dotnet_dir: "{{ common_dir }}/dotnet"
+    dotnet_module_dir: "{{ common_modules }}/dotnet"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ dotnet_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - dotnet{{ item.version_number }}
+  block:
+    - name: Install dotnet {{ version_number }}
+      block:
+        - name: Download and install dotnet {{ version_number }}
+          block:
+          - name: Download dotnet {{ version_number }}
+            get_url:
+              url: "{{ url }}"
+              dest: "{{ common_src }}/dotnet-{{ version_number }}.tar.gz"
+              checksum: "{{ checksum }}"
+          - name: Ensure installation parent {{ dotnet_dir }} exists
+            file:
+              path: "{{ dotnet_dir }}"
+              state: directory
+              mode: o=rwx,g=rx,o=rx
+          - name: Ensure installation directory {{ install_dir }} exists
+            file:
+              path: "{{ install_dir }}"
+              state: directory
+              mode: o=rwx,g=rx,o=rx
+          - name: Unzip dotnet {{ version_number }} to {{ install_dir }}
+            unarchive:
+              src: "{{ common_src }}/dotnet-{{ version_number }}.tar.gz"
+              dest: "{{ install_dir }}"
+              creates: "{{ install_dir }}/dotnet"
+
+
+    - name: Install dotnet {{ version_number }} module
+      block:
+      - name: Check module dir
+        file:
+          path: "{{ dotnet_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install dotnet {{ version_number }} module file
+        template:
+          src: dotnet.lua
+          dest: "{{ dotnet_module_dir }}/{{ version_number }}.lua"

@@ -572,3 +572,18 @@
   tags:
     - never
     - vep
+
+- name: Install dotnet
+  vars:
+    - dotnet_versions:
+        - {
+            version_number: "5.0.301",
+            url: "https://download.visualstudio.microsoft.com/download/pr/e1c236ec-c392-4eaa-a846-c600c82bb7f6/b13bd8b69f875f87cf83fc6f5457bcdf/dotnet-sdk-5.0.301-linux-x64.tar.gz",
+            checksum: "sha512:81cd7a3550a262d5c907030677429fa9a1cb515071274931ab760bd8bb2a14f40c9384c8757e1c1aa681b1de22035f16bf20b41ed208becd054cc9bb1f620322",
+        }
+  include_tasks:
+    file: dotnet.yaml
+  loop: "{{ dotnet_versions }}"
+  tags:
+    - never
+    - dotnet
