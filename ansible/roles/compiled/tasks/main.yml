@@ -234,6 +234,11 @@
           checksum: "sha256:09983a8a78d5fb6bc45d27b1c55f9ba5265f78fa54a55c13ae691f87c5bb9e0d",
           url: "https://cran.r-project.org/src/base/R-4/R-4.0.3.tar.gz",
         }
+        - {
+          version_number: "4.1.0",
+          checksum: "sha256:e8e68959d7282ca147360fc9644ada9bd161bab781bab14d33b8999a95182781",
+          url: "https://cran.r-project.org/src/base/R-4/R-4.1.0.tar.gz",
+        }
   include_tasks:
     file: R.yaml
   loop: "{{ R_versions }}"
@@ -260,9 +265,9 @@
   vars:
     - singularity_versions:
         - {
-          version_number: "3.7.3",
-          checksum: "sha256:6667eb8875d2b66d73504f40c956b42b1351744f488d164204376215d885da5c",
-          url: "https://github.com/hpcng/singularity/releases/download/v3.7.3/singularity-3.7.3.tar.gz",
+          version_number: "3.8.0",
+          checksum: "sha256:5fa2c0e7ef2b814d8aa170826b833f91e5031a85d85cd1292a234e6c55da1be1",
+          url: "https://github.com/sylabs/singularity/releases/download/v3.8.0/singularity-ce-3.8.0.tar.gz",
           go_location: "{{ common_dir }}/golang/1.16.3/bin"
         }
   include_tasks:

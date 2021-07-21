@@ -6,7 +6,7 @@
     version_number: "{{ item.version_number }}"
     checksum: "{{ item.checksum }}"
     install_dir: "{{ singularity_dir }}/{{ version_number }}"
-    unzip_dir: "/dev/shm/singularity"
+    unzip_dir: "/dev/shm/singularity-ce-{{ version_number }}"
     go_location: "{{ item.go_location }}"
   tags:
     - never
@@ -32,7 +32,7 @@
               state: directory
               mode: o=rwx,g=rx,o=rx
           - name: Configure singularity
-            command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir=/usr/local/etc --without-suid"
+            command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir=/usr/local/etc"
             args:
               chdir: "{{ unzip_dir }}"
               creates: "{{ unzip_dir }}/builddir/Makefile"
