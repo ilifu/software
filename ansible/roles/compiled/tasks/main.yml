@@ -151,6 +151,12 @@
             url: "https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.6.tar.bz2",
             ucx_version: "1.9.0",
         }
+        - {
+          version_number: "2.1.1",
+          checksum: "sha1:3aaee35c17b6ef02f4cee274f2670d5b7b2c968a",
+          url: "https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.1.tar.bz2",
+          ucx_version: "1.9.0",
+        }
   include_tasks:
     file: openmpi.yaml
   loop: "{{ openmpi_versions }}"
