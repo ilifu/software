@@ -276,6 +276,12 @@
           url: "https://github.com/sylabs/singularity/releases/download/v3.8.0/singularity-ce-3.8.0.tar.gz",
           go_location: "{{ common_dir }}/golang/1.16.3/bin"
         }
+        - {
+          version_number: "3.8.3",
+          checksum: "sha256:9ecb6f01f1a3f2cd8d0f73d9806201ec1b25b23c9722d374a6430eeba0785981",
+          url: "https://github.com/sylabs/singularity/releases/download/v3.8.3/singularity-ce-3.8.3.tar.gz",
+          go_location: "{{ common_dir }}/golang/1.16.3/bin"
+        }
   include_tasks:
     file: singularity.yaml
   loop: "{{ singularity_versions }}"
