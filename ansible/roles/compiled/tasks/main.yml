@@ -174,6 +174,7 @@
       - { version_number: "3.8.6", checksum: "sha256:a9e0b79d27aa056eb9cce8d63a427b5f9bab1465dee3f942dcfdb25a82f4ab8a" }
       - { version_number: "3.9.0", checksum: "sha256:9c73e63c99855709b9be0b3cc9e5b072cb60f37311e8c4e50f15576a0bf82854" }
       - { version_number: "3.9.4", checksum: "sha256:4b0e6644a76f8df864ae24ac500a51bbf68bd098f6a173e27d3b61cdca9aa134" }
+      - { version_number: "3.9.7", checksum: "sha256:f8145616e68c00041d1a6399b76387390388f8359581abc24432bb969b5e3c57" }
     pip_packages:
       - pip
       - pipenv
@@ -244,6 +245,11 @@
           version_number: "4.1.0",
           checksum: "sha256:e8e68959d7282ca147360fc9644ada9bd161bab781bab14d33b8999a95182781",
           url: "https://cran.r-project.org/src/base/R-4/R-4.1.0.tar.gz",
+        }
+        - {
+          version_number: "4.1.1",
+          checksum: "sha256:515e03265752257d0b7036f380f82e42b46ed8473f54f25c7b67ed25bbbdd364",
+          url: "https://cran.r-project.org/src/base/R-4/R-4.1.1.tar.gz",
         }
   include_tasks:
     file: R.yaml

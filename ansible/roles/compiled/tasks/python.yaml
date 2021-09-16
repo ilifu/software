@@ -31,7 +31,7 @@
           path: "{{ build_dir }}"
           state: directory
       - name: Run Python {{ version_number }} configure
-        command: "../configure --prefix={{ install_dir }} --enable-optimizations"
+        command: "../configure --prefix={{ install_dir }} --enable-optimizations --enable-loadable-sqlite-extensions"
         args:
           chdir: "{{ build_dir }}"
           creates: "{{ build_dir }}/Makefile"
