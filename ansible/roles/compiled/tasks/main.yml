@@ -446,7 +446,7 @@
     - cuda_versions:
         - {
           version_number: "11.4.2_470.57.02",
-          url: "11.4.2_470.57.02",
+          url: "https://developer.download.nvidia.com/compute/cuda/11.4.2/local_installers/cuda_11.4.2_470.57.02_linux.run",
           checksum: "sha256:bbd87ca0e913f837454a796367473513cddef555082e4d86ed9a38659cc81f0a"
         }
         - {
