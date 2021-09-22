@@ -14,31 +14,30 @@
       block:
         - name: Download and install githubcli {{ version_number }}
           block:
-          - name: Download githubcli {{ version_number }}
-            get_url:
-              url: "{{ url }}"
-              dest: "{{ common_src }}/githubcli-{{ version_number }}.tar.gz"
-              checksum: "{{ checksum }}"
-          - name: Ensure installation parent {{ githubcli_dir }} exists
-            file:
-              path: "{{ githubcli_dir }}"
-              state: directory
-              mode: o=rwx,g=rx,o=rx
-          - name: Unzip githubcli {{ version_number }} to {{ install_dir }}
-            unarchive:
-              src: "{{ common_src }}/githubcli-{{ version_number }}.tar.gz"
-              dest: "{{ githubcli_dir }}"
-              creates: "{{ install_dir }}"
-
+            - name: Download githubcli {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ common_src }}/githubcli-{{ version_number }}.tar.gz"
+                checksum: "{{ checksum }}"
+            - name: Ensure installation parent {{ githubcli_dir }} exists
+              file:
+                path: "{{ githubcli_dir }}"
+                state: directory
+                mode: o=rwx,g=rx,o=rx
+            - name: Unzip githubcli {{ version_number }} to {{ install_dir }}
+              unarchive:
+                src: "{{ common_src }}/githubcli-{{ version_number }}.tar.gz"
+                dest: "{{ githubcli_dir }}"
+                creates: "{{ install_dir }}"
 
     - name: Install githubcli {{ version_number }} module
       block:
-      - name: Check module dir
-        file:
-          path: "{{ githubcli_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install githubcli {{ version_number }} module file
-        template:
-          src: githubcli.lua
-          dest: "{{ githubcli_module_dir }}/{{ version_number }}.lua"
+        - name: Check module dir
+          file:
+            path: "{{ githubcli_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install githubcli {{ version_number }} module file
+          template:
+            src: githubcli.lua
+            dest: "{{ githubcli_module_dir }}/{{ version_number }}.lua"
