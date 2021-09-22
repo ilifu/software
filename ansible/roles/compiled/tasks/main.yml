@@ -644,3 +644,18 @@
   tags:
     - never
     - dotnet
+
+- name: Install githubcli
+  vars:
+    githubcli_versions:
+      - {
+          version_number: "2.0.0",
+          url: "https://github.com/cli/cli/releases/download/v2.0.0/gh_2.0.0_linux_amd64.tar.gz",
+          checksum: "sha512:aadcb431d719f89dd8c6b5ee22f099b919a2f10fd24583fce2824d10032678fa1e194c9eb23843730c57336e108ba9f5dbf281422af7e554ff5a7c5d61e90723"
+      }
+  include_tasks:
+    file: githubcli.yaml
+  loop: "{{ githubcli_versions }}"
+  tags:
+    - never
+    - githubcli
