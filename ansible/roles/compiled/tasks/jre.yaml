@@ -14,20 +14,20 @@
   block:
     - name: Download and install JRE {{ version_number }}
       block:
-      - name: Download JRE {{ version_number }} from {{ url }}
-        get_url:
-          url: "{{ url }}"
-          dest: "{{ common_src }}/{{ filename }}"
-          checksum: "{{ checksum }}"
-      - name: Ensure java dir exists
-        file:
-          path: "{{ java_dir }}"
-          state: directory
-      - name: Uncompress OpenJDK
-        unarchive:
-          src: "{{ common_src }}/{{ filename }}"
-          dest: "{{ java_dir }}"
-          creates: "{{ install_dir }}"
+        - name: Download JRE {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ common_src }}/{{ filename }}"
+            checksum: "{{ checksum }}"
+        - name: Ensure java dir exists
+          file:
+            path: "{{ java_dir }}"
+            state: directory
+        - name: Uncompress OpenJDK
+          unarchive:
+            src: "{{ common_src }}/{{ filename }}"
+            dest: "{{ java_dir }}"
+            creates: "{{ install_dir }}"
 
     - name: Install JRE {{ version_number }} module
       block:

@@ -36,8 +36,8 @@
   vars:
     - openblas_versions:
         - {
-            version_number: 0.3.9,
-            checksum: "sha256:17d4677264dfbc4433e97076220adc79b050e4f8a083ea3f853a53af253bc380",
+          version_number: 0.3.9,
+          checksum: "sha256:17d4677264dfbc4433e97076220adc79b050e4f8a083ea3f853a53af253bc380",
         }
   include_tasks:
     file: openblas.yaml
@@ -50,8 +50,8 @@
   vars:
     - lapack_versions:
         - {
-            version_number: 3.9.0,
-            checksum: "sha256:106087f1bb5f46afdfba7f569d0cbe23dacb9a07cd24733765a0e89dbe1ad573",
+          version_number: 3.9.0,
+          checksum: "sha256:106087f1bb5f46afdfba7f569d0cbe23dacb9a07cd24733765a0e89dbe1ad573",
         }
   include_tasks:
     file: lapack.yaml
@@ -64,8 +64,8 @@
   vars:
     - apache_maven_versions:
         - {
-            version_number: 3.6.3,
-            checksum: "sha512:c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0"
+          version_number: 3.6.3,
+          checksum: "sha512:c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0"
         }
   include_tasks:
     file: apache_maven.yaml
@@ -78,8 +78,8 @@
   vars:
     - apache_hadoop_versions:
         - {
-            version_number: 3.2.1,
-            checksum: "sha512:d62709c3d7144fcaafc60e18d0fa03d7d477cc813e45526f3646030cd87dbf010aeccf3f4ce795b57b08d2884b3a55f91fe9d74ac144992d2dfe444a4bbf34ee"
+          version_number: 3.2.1,
+          checksum: "sha512:d62709c3d7144fcaafc60e18d0fa03d7d477cc813e45526f3646030cd87dbf010aeccf3f4ce795b57b08d2884b3a55f91fe9d74ac144992d2dfe444a4bbf34ee"
         }
   include_tasks:
     file: apache_hadoop.yaml
@@ -92,8 +92,8 @@
   vars:
     - apache_spark_versions:
         - {
-            version_number: 2.4.5,
-            checksum: "sha512:48B931F5A2614C8B72BA26C0B77B2DD837EE6F6BC352BF41F4D018FDB8D20FAA74FD40730B418EF7FFD5BBCE335756CFB782F6A6F571FC35F5874BFC2CE7C277"
+          version_number: 2.4.5,
+          checksum: "sha512:48B931F5A2614C8B72BA26C0B77B2DD837EE6F6BC352BF41F4D018FDB8D20FAA74FD40730B418EF7FFD5BBCE335756CFB782F6A6F571FC35F5874BFC2CE7C277"
         }
   include_tasks:
     file: apache_spark.yaml
@@ -106,9 +106,9 @@
   vars:
     - ucx_versions:
         - {
-            version_number: "1.9.0",
-            url: "https://github.com/openucx/ucx/releases/download/v1.9.0/ucx-1.9.0.tar.gz",
-            checksum: "sha256:a7a2c8841dc0d5444088a4373dc9b9cc68dbffcd917c1eba92ca8ed8e5e635fb",
+          version_number: "1.9.0",
+          url: "https://github.com/openucx/ucx/releases/download/v1.9.0/ucx-1.9.0.tar.gz",
+          checksum: "sha256:a7a2c8841dc0d5444088a4373dc9b9cc68dbffcd917c1eba92ca8ed8e5e635fb",
         }
   include_tasks:
     file: ucx.yaml
@@ -146,10 +146,10 @@
           ucx_version: "1.9.0",
         }
         - {
-            version_number: "2.1.6",
-            checksum: "sha1:7a1d7f1b7efe2258bda3929b8b1729bfb7a51f08",
-            url: "https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.6.tar.bz2",
-            ucx_version: "1.9.0",
+          version_number: "2.1.6",
+          checksum: "sha1:7a1d7f1b7efe2258bda3929b8b1729bfb7a51f08",
+          url: "https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.6.tar.bz2",
+          ucx_version: "1.9.0",
         }
         - {
           version_number: "2.1.1",
@@ -167,14 +167,38 @@
 - name: Install pythons
   vars:
     python_versions:
-      - { version_number: "2.7.18", checksum: "sha256:b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43" }
-      - { version_number: "3.7.7", checksum: "sha256:06a0a9f1bf0d8cd1e4121194d666c4e28ddae4dd54346de6c343206599f02136" }
-      - { version_number: "3.8.2", checksum: "sha256:2646e7dc233362f59714c6193017bb2d6f7b38d6ab4a0cb5fbac5c36c4d845df" }
-      - { version_number: "3.8.3", checksum: "sha256:dfab5ec723c218082fe3d5d7ae17ecbdebffa9a1aea4d64aa3a2ecdd2e795864" }
-      - { version_number: "3.8.6", checksum: "sha256:a9e0b79d27aa056eb9cce8d63a427b5f9bab1465dee3f942dcfdb25a82f4ab8a" }
-      - { version_number: "3.9.0", checksum: "sha256:9c73e63c99855709b9be0b3cc9e5b072cb60f37311e8c4e50f15576a0bf82854" }
-      - { version_number: "3.9.4", checksum: "sha256:4b0e6644a76f8df864ae24ac500a51bbf68bd098f6a173e27d3b61cdca9aa134" }
-      - { version_number: "3.9.7", checksum: "sha256:f8145616e68c00041d1a6399b76387390388f8359581abc24432bb969b5e3c57" }
+      - {
+        version_number: "2.7.18",
+        checksum: "sha256:b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43"
+      }
+      - {
+        version_number: "3.7.7",
+        checksum: "sha256:06a0a9f1bf0d8cd1e4121194d666c4e28ddae4dd54346de6c343206599f02136"
+      }
+      - {
+        version_number: "3.8.2",
+        checksum: "sha256:2646e7dc233362f59714c6193017bb2d6f7b38d6ab4a0cb5fbac5c36c4d845df"
+      }
+      - {
+        version_number: "3.8.3",
+        checksum: "sha256:dfab5ec723c218082fe3d5d7ae17ecbdebffa9a1aea4d64aa3a2ecdd2e795864"
+      }
+      - {
+        version_number: "3.8.6",
+        checksum: "sha256:a9e0b79d27aa056eb9cce8d63a427b5f9bab1465dee3f942dcfdb25a82f4ab8a"
+      }
+      - {
+        version_number: "3.9.0",
+        checksum: "sha256:9c73e63c99855709b9be0b3cc9e5b072cb60f37311e8c4e50f15576a0bf82854"
+      }
+      - {
+        version_number: "3.9.4",
+        checksum: "sha256:4b0e6644a76f8df864ae24ac500a51bbf68bd098f6a173e27d3b61cdca9aa134"
+      }
+      - {
+        version_number: "3.9.7",
+        checksum: "sha256:f8145616e68c00041d1a6399b76387390388f8359581abc24432bb969b5e3c57"
+      }
     pip_packages:
       - pip
       - pipenv
@@ -350,9 +374,9 @@
   vars:
     - samtools_versions:
         - {
-            version_number: "1.10",
-            url: "https://github.com/samtools/samtools/releases/download/1.10/samtools-1.10.tar.bz2",
-            checksum: "sha256:7b9ec5f05d61ec17bd9a82927e45d8ef37f813f79eb03fe06c88377f1bd03585",
+          version_number: "1.10",
+          url: "https://github.com/samtools/samtools/releases/download/1.10/samtools-1.10.tar.bz2",
+          checksum: "sha256:7b9ec5f05d61ec17bd9a82927e45d8ef37f813f79eb03fe06c88377f1bd03585",
         }
         - {
           version_number: "1.13",
@@ -370,9 +394,9 @@
   vars:
     - htslib_versions:
         - {
-            version_number: "1.10.2",
-            url: "https://github.com/samtools/htslib/releases/download/1.10.2/htslib-1.10.2.tar.bz2",
-            checksum: "sha256:e3b543de2f71723830a1e0472cf5489ec27d0fbeb46b1103e14a11b7177d1939",
+          version_number: "1.10.2",
+          url: "https://github.com/samtools/htslib/releases/download/1.10.2/htslib-1.10.2.tar.bz2",
+          checksum: "sha256:e3b543de2f71723830a1e0472cf5489ec27d0fbeb46b1103e14a11b7177d1939",
         }
   include_tasks:
     file: htslib.yaml
@@ -385,9 +409,9 @@
   vars:
     - bcftools_versions:
         - {
-            version_number: "1.10.2",
-            url: "https://github.com/samtools/bcftools/releases/download/1.10.2/bcftools-1.10.2.tar.bz2",
-            checksum: "sha256:f57301869d0055ce3b8e26d8ad880c0c1989bf25eaec8ea5db99b60e31354e2c",
+          version_number: "1.10.2",
+          url: "https://github.com/samtools/bcftools/releases/download/1.10.2/bcftools-1.10.2.tar.bz2",
+          checksum: "sha256:f57301869d0055ce3b8e26d8ad880c0c1989bf25eaec8ea5db99b60e31354e2c",
         }
   include_tasks:
     file: bcftools.yaml
@@ -400,9 +424,9 @@
   vars:
     - vcftools_versions:
         - {
-            version_number: "0.1.16",
-            url: "https://github.com/vcftools/vcftools/releases/download/v0.1.16/vcftools-0.1.16.tar.gz",
-            checksum: "sha256:dbfc774383c106b85043daa2c42568816aa6a7b4e6abc965eeea6c47dde914e3",
+          version_number: "0.1.16",
+          url: "https://github.com/vcftools/vcftools/releases/download/v0.1.16/vcftools-0.1.16.tar.gz",
+          checksum: "sha256:dbfc774383c106b85043daa2c42568816aa6a7b4e6abc965eeea6c47dde914e3",
         }
   include_tasks:
     file: vcftools.yaml
@@ -450,14 +474,14 @@
           checksum: "sha256:bbd87ca0e913f837454a796367473513cddef555082e4d86ed9a38659cc81f0a"
         }
         - {
-            version_number: "11.0.2_450.51.05",
-            url: "http://developer.download.nvidia.com/compute/cuda/11.0.2/local_installers/cuda_11.0.2_450.51.05_linux.run",
-            checksum: "sha256:48247ada0e3f106051029ae8f70fbd0c238040f58b0880e55026374a959a69c1"
+          version_number: "11.0.2_450.51.05",
+          url: "http://developer.download.nvidia.com/compute/cuda/11.0.2/local_installers/cuda_11.0.2_450.51.05_linux.run",
+          checksum: "sha256:48247ada0e3f106051029ae8f70fbd0c238040f58b0880e55026374a959a69c1"
         }
         - {
-            version_number: "10.2.89_440.33.01",
-            url: "http://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run",
-            checksum: "md5:3d816c583759efa8567a92c1a2af90db",
+          version_number: "10.2.89_440.33.01",
+          url: "http://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run",
+          checksum: "md5:3d816c583759efa8567a92c1a2af90db",
         }
         - {
           version_number: "10.1.243_418.87.00",
@@ -487,10 +511,10 @@
   vars:
     - perl_versions:
         - {
-            version_number: "5.33.0",
+          version_number: "5.33.0",
         }
         - {
-            version_number: "5.24.4",
+          version_number: "5.24.4",
         }
     - cpan_modules:
         - CPAN::DistnameInfo
@@ -526,9 +550,9 @@
   vars:
     - ruby_versions:
         - {
-            version_number: "2.6.6",
-            url: "https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.6.tar.gz",
-            checksum: "sha256:364b143def360bac1b74eb56ed60b1a0dca6439b00157ae11ff77d5cd2e92291",
+          version_number: "2.6.6",
+          url: "https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.6.tar.gz",
+          checksum: "sha256:364b143def360bac1b74eb56ed60b1a0dca6439b00157ae11ff77d5cd2e92291",
         }
   include_tasks:
     file: ruby.yaml
@@ -541,10 +565,10 @@
   vars:
     - julia_versions:
         - {
-            full_version_number: "1.5.3",
-            major_minor_version_number: "1.5.3",
-            url: "https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.3-linux-x86_64.tar.gz",
-            checksum: "sha256:f190c938dd6fed97021953240523c9db448ec0a6760b574afd4e9924ab5615f1",
+          full_version_number: "1.5.3",
+          major_minor_version_number: "1.5.3",
+          url: "https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.3-linux-x86_64.tar.gz",
+          checksum: "sha256:f190c938dd6fed97021953240523c9db448ec0a6760b574afd4e9924ab5615f1",
         }
   include_tasks:
     file: julia.yaml
@@ -574,14 +598,14 @@
   vars:
     - vep_versions:
         - {
-            version_number: "101.0",
-            url: "https://github.com/Ensembl/ensembl-vep/archive/release/101.0.tar.gz",
-            checksum: 'sha256:cbf4dfcbd23fcf29ed4acac1736fe6e7e25fdbee4425bcc96b6364e24df85066',
-            perl_module: 'perl/5.24.4',
-            htslib_module: 'htslib/1.10.2',
-            bioperl_version: '1.6.924',
-            bioperl_url: 'https://github.com/bioperl/bioperl-live/archive/release-1-6-924.tar.gz',
-          }
+          version_number: "101.0",
+          url: "https://github.com/Ensembl/ensembl-vep/archive/release/101.0.tar.gz",
+          checksum: 'sha256:cbf4dfcbd23fcf29ed4acac1736fe6e7e25fdbee4425bcc96b6364e24df85066',
+          perl_module: 'perl/5.24.4',
+          htslib_module: 'htslib/1.10.2',
+          bioperl_version: '1.6.924',
+          bioperl_url: 'https://github.com/bioperl/bioperl-live/archive/release-1-6-924.tar.gz',
+        }
     - cpan_modules:
         - Archive::Zip
         - DBD::mysql
@@ -610,9 +634,9 @@
   vars:
     - dotnet_versions:
         - {
-            version_number: "5.0.301",
-            url: "https://download.visualstudio.microsoft.com/download/pr/e1c236ec-c392-4eaa-a846-c600c82bb7f6/b13bd8b69f875f87cf83fc6f5457bcdf/dotnet-sdk-5.0.301-linux-x64.tar.gz",
-            checksum: "sha512:81cd7a3550a262d5c907030677429fa9a1cb515071274931ab760bd8bb2a14f40c9384c8757e1c1aa681b1de22035f16bf20b41ed208becd054cc9bb1f620322",
+          version_number: "5.0.301",
+          url: "https://download.visualstudio.microsoft.com/download/pr/e1c236ec-c392-4eaa-a846-c600c82bb7f6/b13bd8b69f875f87cf83fc6f5457bcdf/dotnet-sdk-5.0.301-linux-x64.tar.gz",
+          checksum: "sha512:81cd7a3550a262d5c907030677429fa9a1cb515071274931ab760bd8bb2a14f40c9384c8757e1c1aa681b1de22035f16bf20b41ed208becd054cc9bb1f620322",
         }
   include_tasks:
     file: dotnet.yaml

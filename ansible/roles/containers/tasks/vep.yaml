@@ -18,7 +18,7 @@
       command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
       args:
         creates: "{{ container_image }}"
-      become: yes
+      become: true
     - name: Ensure vep data directory exists {{ data_dir }}
       file:
         path: "{{ data_dir }}"

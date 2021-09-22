@@ -15,25 +15,25 @@
       block:
         - name: Download, compile and install Apache Hadoop {{ version_number }}
           block:
-          - name: Download Apache Hadoop {{ version_number }} from {{ url }}
-            get_url:
-              url: "{{ url }}"
-              dest: "{{ common_src }}/apache-hadoop-{{ version_number }}.tar.tgz"
-              checksum: "{{ checksum }}"
-          - name: Unzip Apache Hadoop {{ version_number }}
-            unarchive:
-              src: "{{ common_src }}/apache-hadoop-{{ version_number }}.tar.tgz"
-              dest: "/dev/shm"
-              creates: "{{ unzipdir }}"
-          - name: Ensure Hadoop dir exists
-            file:
-              path: "{{ hadoop_dir }}"
-              state: directory
-              mode: u=rwx,g=rwx,o=rx
-          - name: Move uncompressed Hadoop {{ version_number }} to {{ install_dir }}
-            command: "mv {{ unzipdir }} {{ install_dir }}"
-            args:
-              creates: "{{ install_dir }}"
+            - name: Download Apache Hadoop {{ version_number }} from {{ url }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ common_src }}/apache-hadoop-{{ version_number }}.tar.tgz"
+                checksum: "{{ checksum }}"
+            - name: Unzip Apache Hadoop {{ version_number }}
+              unarchive:
+                src: "{{ common_src }}/apache-hadoop-{{ version_number }}.tar.tgz"
+                dest: "/dev/shm"
+                creates: "{{ unzipdir }}"
+            - name: Ensure Hadoop dir exists
+              file:
+                path: "{{ hadoop_dir }}"
+                state: directory
+                mode: u=rwx,g=rwx,o=rx
+            - name: Move uncompressed Hadoop {{ version_number }} to {{ install_dir }}
+              command: "mv {{ unzipdir }} {{ install_dir }}"
+              args:
+                creates: "{{ install_dir }}"
 
 #    - name: Install Apache Maven {{ version_number }} module
 #      block:

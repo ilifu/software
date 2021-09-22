@@ -17,30 +17,30 @@
   block:
     - name: Download, and install cuda {{ major_minor }}
       block:
-      - name: Download cuda {{ major_minor }} from {{ cuda_url }}
-        get_url:
-          url: "{{ cuda_url }}"
-          dest: "{{ common_src }}/cuda_{{ version_number }}_linux.run"
-          checksum: "{{ checksum }}"
-          mode: u=rx,g=r,o=r
-      - name: Ensure directory {{ cuda_dir }} exists
-        file:
-          path: "{{ cuda_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Run cuda {{ version_number }} installer to {{ install_dir }}
-        command: "{{ common_src }}/cuda_{{ version_number }}_linux.run --silent --toolkit --toolkitpath={{ install_dir }}{% if major_minor != '10.0' %} --override-driver-check --installpath={{ install_dir }} --librarypath={{ install_dir }}{% endif %} --nox11 --override"
-        args:
-          creates: "{{ install_dir }}"
+        - name: Download cuda {{ major_minor }} from {{ cuda_url }}
+          get_url:
+            url: "{{ cuda_url }}"
+            dest: "{{ common_src }}/cuda_{{ version_number }}_linux.run"
+            checksum: "{{ checksum }}"
+            mode: u=rx,g=r,o=r
+        - name: Ensure directory {{ cuda_dir }} exists
+          file:
+            path: "{{ cuda_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Run cuda {{ version_number }} installer to {{ install_dir }}
+          command: "{{ common_src }}/cuda_{{ version_number }}_linux.run --silent --toolkit --toolkitpath={{ install_dir }}{% if major_minor != '10.0' %} --override-driver-check --installpath={{ install_dir }} --librarypath={{ install_dir }}{% endif %} --nox11 --override"
+          args:
+            creates: "{{ install_dir }}"
 
     - name: Install cuda {{ version_number }} module to {{ cuda_module_dir }}
       block:
-      - name: Check module dir {{ cuda_module_dir }}
-        file:
-          path: "{{ cuda_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install cuda module file to {{ cuda_module_dir }}/{{ version_number }}.lua
-        template:
-          src: cuda.lua
-          dest: "{{ cuda_module_dir }}/{{ version_number }}.lua"
+        - name: Check module dir {{ cuda_module_dir }}
+          file:
+            path: "{{ cuda_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install cuda module file to {{ cuda_module_dir }}/{{ version_number }}.lua
+          template:
+            src: cuda.lua
+            dest: "{{ cuda_module_dir }}/{{ version_number }}.lua"

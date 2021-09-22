@@ -35,4 +35,3 @@
           template:
             src: genomestrip.lua
             dest: "{{ genomestrip_module_dir }}/{{ version_number }}.lua"
-

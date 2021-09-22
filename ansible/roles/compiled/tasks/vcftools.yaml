@@ -15,34 +15,34 @@
   block:
     - name: Download and install vcftools {{ version_number }}
       block:
-      - name: Download vcftools {{ version_number }} from {{ url }}
-        get_url:
-          url: "{{ url }}"
-          dest: "{{  bio_dir }}/src/vcftools-{{ version_number }}.tar.gz"
-          checksum: "{{ checksum }}"
-      - name: Ensure vcftools dir exists
-        file:
-          path: "{{ vcftools_dir }}"
-          state: directory
-      - name: Uncompress vcftools to {{ unzip_dir }}
-        unarchive:
-          src: "{{  bio_dir }}/src/vcftools-{{ version_number }}.tar.gz"
-          dest: "/dev/shm"
-          creates: "{{ unzip_dir }}"
-      - name: Run vcftools {{ version_number }} configure
-        command: "./configure --prefix={{ install_dir }}"
-        args:
-          chdir: "{{ unzip_dir }}"
-          creates: "{{ unzip_dir }}/Makefile"
-      - name: Make vcftools {{ version_number }}
-        make:
-          chdir: "{{ unzip_dir }}"
-        environment:
-          MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
-      - name: Install vcftools {{ version_number }} to {{ install_dir }}
-        make:
-          chdir: "{{ unzip_dir }}"
-          target: "install"
+        - name: Download vcftools {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{  bio_dir }}/src/vcftools-{{ version_number }}.tar.gz"
+            checksum: "{{ checksum }}"
+        - name: Ensure vcftools dir exists
+          file:
+            path: "{{ vcftools_dir }}"
+            state: directory
+        - name: Uncompress vcftools to {{ unzip_dir }}
+          unarchive:
+            src: "{{  bio_dir }}/src/vcftools-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Run vcftools {{ version_number }} configure
+          command: "./configure --prefix={{ install_dir }}"
+          args:
+            chdir: "{{ unzip_dir }}"
+            creates: "{{ unzip_dir }}/Makefile"
+        - name: Make vcftools {{ version_number }}
+          make:
+            chdir: "{{ unzip_dir }}"
+          environment:
+            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+        - name: Install vcftools {{ version_number }} to {{ install_dir }}
+          make:
+            chdir: "{{ unzip_dir }}"
+            target: "install"
 
     - name: Install vcftools {{ version_number }} module
       block:

@@ -15,34 +15,34 @@
       block:
         - name: Download, compile and install Apache Maven {{ version_number }}
           block:
-          - name: Download Apache Maven {{ version_number }}
-            get_url:
-              url: "{{ url }}"
-              dest: "{{ common_src }}/apache-maven-{{ version_number }}.tar.tgz"
-              checksum: "{{ checksum }}"
-          - name: Unzip Maven {{ version_number }}
-            unarchive:
-              src: "{{ common_src }}/apache-maven-{{ version_number }}.tar.tgz"
-              dest: "/dev/shm"
-              creates: "{{ unzipdir }}"
-          - name: Ensure Maven dir exists
-            file:
-              path: "{{ maven_dir }}"
-              state: directory
-              mode: u=rwx,g=rwx,o=rx
-          - name: Move uncompressed Maven {{ version_number }} to {{ install_dir }}
-            command: "mv {{ unzipdir }} {{ install_dir }}"
-            args:
-              creates: "{{ install_dir }}"
+            - name: Download Apache Maven {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ common_src }}/apache-maven-{{ version_number }}.tar.tgz"
+                checksum: "{{ checksum }}"
+            - name: Unzip Maven {{ version_number }}
+              unarchive:
+                src: "{{ common_src }}/apache-maven-{{ version_number }}.tar.tgz"
+                dest: "/dev/shm"
+                creates: "{{ unzipdir }}"
+            - name: Ensure Maven dir exists
+              file:
+                path: "{{ maven_dir }}"
+                state: directory
+                mode: u=rwx,g=rwx,o=rx
+            - name: Move uncompressed Maven {{ version_number }} to {{ install_dir }}
+              command: "mv {{ unzipdir }} {{ install_dir }}"
+              args:
+                creates: "{{ install_dir }}"
 
     - name: Install Apache Maven {{ version_number }} module
       block:
-      - name: Check module dir
-        file:
-          path: "{{ maven_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install Apache Maven {{ version_number }} module file
-        template:
-          src: apache_maven.lua
-          dest: "{{ maven_module_dir }}/{{ version_number }}.lua"
+        - name: Check module dir
+          file:
+            path: "{{ maven_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Apache Maven {{ version_number }} module file
+          template:
+            src: apache_maven.lua
+            dest: "{{ maven_module_dir }}/{{ version_number }}.lua"

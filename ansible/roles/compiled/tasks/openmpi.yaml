@@ -17,43 +17,43 @@
       block:
         - name: Download, compile and install OpenMPI {{ version_number }}
           block:
-          - name: Download OpenMPI {{ version_number }}
-            get_url:
-              url: "{{ url }}"
-              dest: "{{ common_src }}/openmpi-{{ version_number }}.tar.bz2"
-              checksum: "{{ checksum }}"
-          - name: Unzip OpenMPI {{ version_number }}
-            unarchive:
-              src: "{{ common_src }}/openmpi-{{ version_number }}.tar.bz2"
-              dest: "/dev/shm/"
-              creates: "{{ unzipdir }}"
-          - name: Make OpenMPI {{ version_number }} build directory
-            file:
-              path: "{{ build_dir }}"
-              state: directory
-          - name: Run OpenMPI {{ version_number }} configure
-            command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity --with-ucx={{ ucx_dir }}"
-            args:
-              chdir: "{{ build_dir }}"
-              creates: "{{ build_dir }}/Makefile"
-          - name: Build OpenMPI {{ version_number }}
-            make:
-              chdir: "{{ build_dir }}"
-            environment:
-              MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
-          - name: Install OpenMPI {{ version_number }}
-            make:
-              chdir: "{{ build_dir }}"
-              target: install
+            - name: Download OpenMPI {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ common_src }}/openmpi-{{ version_number }}.tar.bz2"
+                checksum: "{{ checksum }}"
+            - name: Unzip OpenMPI {{ version_number }}
+              unarchive:
+                src: "{{ common_src }}/openmpi-{{ version_number }}.tar.bz2"
+                dest: "/dev/shm/"
+                creates: "{{ unzipdir }}"
+            - name: Make OpenMPI {{ version_number }} build directory
+              file:
+                path: "{{ build_dir }}"
+                state: directory
+            - name: Run OpenMPI {{ version_number }} configure
+              command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity --with-ucx={{ ucx_dir }}"
+              args:
+                chdir: "{{ build_dir }}"
+                creates: "{{ build_dir }}/Makefile"
+            - name: Build OpenMPI {{ version_number }}
+              make:
+                chdir: "{{ build_dir }}"
+              environment:
+                MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+            - name: Install OpenMPI {{ version_number }}
+              make:
+                chdir: "{{ build_dir }}"
+                target: install
 
     - name: Install OpenMPI {{ version_number }} module
       block:
-      - name: Check module dir
-        file:
-          path: "{{ mpi_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install OpenMPI module file
-        template:
-          src: openmpi.lua
-          dest: "{{ mpi_module_dir }}/{{ version_number }}.lua"
+        - name: Check module dir
+          file:
+            path: "{{ mpi_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install OpenMPI module file
+          template:
+            src: openmpi.lua
+            dest: "{{ mpi_module_dir }}/{{ version_number }}.lua"

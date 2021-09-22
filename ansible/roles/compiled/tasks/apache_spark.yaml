@@ -16,16 +16,16 @@
       block:
         - name: Download, compile and install Apache Spark {{ version_number }}
           block:
-          - name: Download Apache Spark {{ version_number }}
-            get_url:
-              url: "{{ url }}"
-              dest: "{{ common_src }}/spark-{{ version_number }}.tar.tgz"
-              checksum: "{{ checksum }}"
-          - name: Unzip Spark {{ version_number }}
-            unarchive:
-              src: "{{ common_src }}/spark-{{ version_number }}.tar.tgz"
-              dest: "/dev/shm/"
-              creates: "{{ unzipdir }}"
+            - name: Download Apache Spark {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ common_src }}/spark-{{ version_number }}.tar.tgz"
+                checksum: "{{ checksum }}"
+            - name: Unzip Spark {{ version_number }}
+              unarchive:
+                src: "{{ common_src }}/spark-{{ version_number }}.tar.tgz"
+                dest: "/dev/shm/"
+                creates: "{{ unzipdir }}"
 #          - name: Make OpenMPI {{ version_number }} build directory
 #            file:
 #              path: "{{ build_dir }}"

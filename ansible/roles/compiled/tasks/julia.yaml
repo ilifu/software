@@ -29,12 +29,12 @@
 
     - name: Install julia {{ version_number }} module
       block:
-      - name: Check module dir
-        file:
-          path: "{{ julia_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install julia {{ full_version_number }} module file
-        template:
-          src: julia.lua
-          dest: "{{ julia_module_dir }}/{{ full_version_number }}.lua"
+        - name: Check module dir
+          file:
+            path: "{{ julia_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install julia {{ full_version_number }} module file
+          template:
+            src: julia.lua
+            dest: "{{ julia_module_dir }}/{{ full_version_number }}.lua"

@@ -12,13 +12,13 @@
   block:
     - name: Download, and install bcbio
       block:
-      - name: Download bcbio installer
-        get_url:
-          url: "https://raw.githubusercontent.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py"
-          dest: "{{ bio_src }}/bcbio_nextgen_install.py"
-          checksum: "sha256:37709c321b7fa0e66671b5d96683ce6da439adf43992ea199e2fe75dc524dd3e"
-      - name: Run bcbio installer
-        command: "python3 {{ bio_src }}/bcbio_nextgen_install.py --genomes hg38 --aligners bwa --aligners hisat2 --aligners minimap2 --tooldir={{ toolsn_dir }} --datatarget gemini --isolate {{ install_dir }}"
+        - name: Download bcbio installer
+          get_url:
+            url: "https://raw.githubusercontent.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py"
+            dest: "{{ bio_src }}/bcbio_nextgen_install.py"
+            checksum: "sha256:37709c321b7fa0e66671b5d96683ce6da439adf43992ea199e2fe75dc524dd3e"
+        - name: Run bcbio installer
+          command: "python3 {{ bio_src }}/bcbio_nextgen_install.py --genomes hg38 --aligners bwa --aligners hisat2 --aligners minimap2 --tooldir={{ toolsn_dir }} --datatarget gemini --isolate {{ install_dir }}"
 
 #      - name: Unzip Python {{ version_number }}
 #        unarchive:

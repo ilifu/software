@@ -15,33 +15,33 @@
   block:
     - name: Download and install bcftools {{ version_number }}
       block:
-      - name: Download bcftools {{ version_number }} from {{ url }}
-        get_url:
-          url: "{{ url }}"
-          dest: "{{  bio_dir }}/src/bcftools.tar.bz2"
-          checksum: "{{ checksum }}"
-      - name: Ensure bcftools dir exists
-        file:
-          path: "{{ bcftools_dir }}"
-          state: directory
-      - name: Uncompress bcftools to {{ unzip_dir }}
-        unarchive:
-          src: "{{  bio_dir }}/src/bcftools.tar.bz2"
-          dest: "/dev/shm"
-          creates: "{{ unzip_dir }}"
-      - name: Run bcftools {{ version_number }} configure
-        command: "./configure --prefix={{ install_dir }}"
-        args:
-          chdir: "{{ unzip_dir }}"
-      - name: Make bcftools {{ version_number }}
-        make:
-          chdir: "{{ unzip_dir }}"
-        environment:
-          MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
-      - name: Install bcftools {{ version_number }} to {{ install_dir }}
-        make:
-          chdir: "{{ unzip_dir }}"
-          target: "install"
+        - name: Download bcftools {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{  bio_dir }}/src/bcftools.tar.bz2"
+            checksum: "{{ checksum }}"
+        - name: Ensure bcftools dir exists
+          file:
+            path: "{{ bcftools_dir }}"
+            state: directory
+        - name: Uncompress bcftools to {{ unzip_dir }}
+          unarchive:
+            src: "{{  bio_dir }}/src/bcftools.tar.bz2"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Run bcftools {{ version_number }} configure
+          command: "./configure --prefix={{ install_dir }}"
+          args:
+            chdir: "{{ unzip_dir }}"
+        - name: Make bcftools {{ version_number }}
+          make:
+            chdir: "{{ unzip_dir }}"
+          environment:
+            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+        - name: Install bcftools {{ version_number }} to {{ install_dir }}
+          make:
+            chdir: "{{ unzip_dir }}"
+            target: "install"
 
     - name: Install bcftools {{ version_number }} module
       block:

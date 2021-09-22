@@ -14,37 +14,37 @@
   block:
     - name: Download, and install Anaconda {{ version_number }}
       block:
-      - name: Download Anaconda {{ version_number }} from {{ anaconda_url }}
-        get_url:
-          url: "{{ anaconda_url }}"
-          dest: "{{ common_src }}/Anaconda3-{{ version_number }}.sh"
-          checksum: "{{ checksum }}"
-          mode: u=rx,g=r,o=r
-      - name: Run Anaconda {{ version_number }} installer – {{ install_dir }}
-        command: "{{ common_src }}/Anaconda3-{{ version_number }}.sh -b -f -p {{ install_dir }}"
-        args:
-          creates: "{{ install_dir }}"
-      - name: Install conda packages
-        command: "{{ install_dir }}/bin/conda install --force-reinstall coloredlogs configparser pandas"
-        args:
-          creates: "{{ install_dir }}/pkgs/pandas*"
-      - name: Install Jupyter
-        command: "{{ install_dir }}/bin/conda install -c conda-forge jupyterlab"
-        args:
-          creates: "{{ install_dir }}/pkgs/jupyter*"
-      - name: Add condarc
-        template:
-          src: anaconda.rc
-          dest: "{{ install_dir }}/condarc"
+        - name: Download Anaconda {{ version_number }} from {{ anaconda_url }}
+          get_url:
+            url: "{{ anaconda_url }}"
+            dest: "{{ common_src }}/Anaconda3-{{ version_number }}.sh"
+            checksum: "{{ checksum }}"
+            mode: u=rx,g=r,o=r
+        - name: Run Anaconda {{ version_number }} installer – {{ install_dir }}
+          command: "{{ common_src }}/Anaconda3-{{ version_number }}.sh -b -f -p {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}"
+        - name: Install conda packages
+          command: "{{ install_dir }}/bin/conda install --force-reinstall coloredlogs configparser pandas"
+          args:
+            creates: "{{ install_dir }}/pkgs/pandas*"
+        - name: Install Jupyter
+          command: "{{ install_dir }}/bin/conda install -c conda-forge jupyterlab"
+          args:
+            creates: "{{ install_dir }}/pkgs/jupyter*"
+        - name: Add condarc
+          template:
+            src: anaconda.rc
+            dest: "{{ install_dir }}/condarc"
 
     - name: Install Anaconda {{ version_number }} module to {{ anaconda_module_dir }}
       block:
-      - name: Check module dir {{ anaconda_module_dir }}
-        file:
-          path: "{{ anaconda_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install Anaconda module file to {{ anaconda_module_dir }}/{{ version_number }}.lua
-        template:
-          src: anaconda.lua
-          dest: "{{ anaconda_module_dir }}/{{ version_number }}.lua"
+        - name: Check module dir {{ anaconda_module_dir }}
+          file:
+            path: "{{ anaconda_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Anaconda module file to {{ anaconda_module_dir }}/{{ version_number }}.lua
+          template:
+            src: anaconda.lua
+            dest: "{{ anaconda_module_dir }}/{{ version_number }}.lua"

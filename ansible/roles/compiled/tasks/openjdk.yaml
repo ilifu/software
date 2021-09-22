@@ -16,20 +16,20 @@
   block:
     - name: Download and install OpenJDK {{ version_number }}
       block:
-      - name: Download OpenJDK {{ version_number }} from {{ url }}
-        get_url:
-          url: "{{ url }}"
-          dest: "{{ common_src }}/openjdk-{{ version_number }}.tar.gz"
-          checksum: "{{ checksum }}"
-      - name: Ensure java dir exists
-        file:
-          path: "{{ java_dir }}"
-          state: directory
-      - name: Uncompress OpenJDK
-        unarchive:
-          src: "{{ common_src }}/openjdk-{{ version_number }}.tar.gz"
-          dest: "{{ java_dir }}"
-          creates: "{{ install_dir }}"
+        - name: Download OpenJDK {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ common_src }}/openjdk-{{ version_number }}.tar.gz"
+            checksum: "{{ checksum }}"
+        - name: Ensure java dir exists
+          file:
+            path: "{{ java_dir }}"
+            state: directory
+        - name: Uncompress OpenJDK
+          unarchive:
+            src: "{{ common_src }}/openjdk-{{ version_number }}.tar.gz"
+            dest: "{{ java_dir }}"
+            creates: "{{ install_dir }}"
 
     - name: Install JRE {{ version_number }} module
       block:

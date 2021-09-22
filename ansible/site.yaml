@@ -1,17 +1,17 @@
 ---
 - name: Import all playbook
   hosts: all
-  become: no
+  become: false
   roles:
     - all
 - name: Import compiled playbook
-  become: no
+  become: false
   hosts: all
   roles:
     - compiled
 
 - name: Import containers playbook
-  become: no
+  become: false
   hosts: all
   roles:
     - containers

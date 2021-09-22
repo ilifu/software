@@ -26,7 +26,7 @@
         msg: "If you're getting error with cpan installing XML::DOM::XPath, please check: https://stackoverflow.com/questions/47966512/error-installing-xmldomxpath"
 
     - name: Install Perl Requirements
-      command: "/bin/bash -c 'module add {{ perl_module }} && module add htslib/1.10.2 && cpan {{ ' '.join(cpan_modules) }}'"      
+      command: "/bin/bash -c 'module add {{ perl_module }} && module add htslib/1.10.2 && cpan {{ ' '.join(cpan_modules) }}'"
 
     - name: Ensure vep dir exists
       file:
@@ -55,13 +55,12 @@
 
     - name: Install vep {{ version_number }} module
       block:
-      - name: Check module dir {{ vep_module_dir }}
-        file:
-          path: "{{ vep_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install vep module file to {{ vep_module_dir }}
-        template:
-          src: vep.lua
-          dest: "{{ vep_module_dir }}/{{ version_number }}.lua"
-
+        - name: Check module dir {{ vep_module_dir }}
+          file:
+            path: "{{ vep_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install vep module file to {{ vep_module_dir }}
+          template:
+            src: vep.lua
+            dest: "{{ vep_module_dir }}/{{ version_number }}.lua"
