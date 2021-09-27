@@ -1,0 +1,58 @@
+- name: Install graphviz
+  vars:
+    graphviz_dir: "{{ common_dir }}/graphviz"
+    graphviz_module_dir: "{{ common_modules }}/graphviz"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ graphviz_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/graphviz-{{ version_number }}"
+    build_dir: "{{ unzipdir }}/build"
+  tags:
+    - never
+    - graphviz{{ item.version_number }}
+  block:
+    - name: Install graphviz {{ version_number }}
+      block:
+        - name: Download, compile and install graphviz {{ version_number }}
+          block:
+            - name: Download graphviz {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ common_src }}/graphviz-{{ version_number }}.tar.gz"
+                checksum: "{{ checksum }}"
+            - name: Unzip graphviz {{ version_number }}
+              unarchive:
+                src: "{{ common_src }}/graphviz-{{ version_number }}.tar.gz"
+                dest: "/dev/shm/"
+                creates: "{{ unzipdir }}"
+            - name: Make graphviz {{ version_number }} build directory
+              file:
+                path: "{{ build_dir }}"
+                state: directory
+            - name: Run graphviz {{ version_number }} configure
+              command: "../configure --prefix={{ install_dir }} --enable-static"
+              args:
+                chdir: "{{ build_dir }}"
+                creates: "{{ build_dir }}/Makefile"
+            - name: Build graphviz {{ version_number }}
+              make:
+                chdir: "{{ build_dir }}"
+              environment:
+                MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+            - name: Install graphviz {{ version_number }}
+              make:
+                chdir: "{{ build_dir }}"
+                target: install
+
+    - name: Install graphviz {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ graphviz_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install graphviz {{ version_number }} module file
+          template:
+            src: graphviz.lua
+            dest: "{{ graphviz_module_dir }}/{{ version_number }}.lua"
