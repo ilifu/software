@@ -11,27 +11,27 @@
   block:
     - name: Download, and install perlbrew {{ major_minor }}
       block:
-      - name: Copy perlbrew installer
-        copy:
-          src: install_perlbrew.sh
-          dest: "{{ common_src }}/install_perlbrew.sh"
-          mode: u=rx,g=r,o=r
-      - name: Run installer
-        command: "{{ common_src }}/install_perlbrew.sh"
-        args:
-          creates: "{{ install_dir }}"
-        environment:
-          PERLBREW_ROOT: "{{ install_dir }}"
+        - name: Copy perlbrew installer
+          copy:
+            src: install_perlbrew.sh
+            dest: "{{ common_src }}/install_perlbrew.sh"
+            mode: u=rx,g=r,o=r
+        - name: Run installer
+          command: "{{ common_src }}/install_perlbrew.sh"
+          args:
+            creates: "{{ install_dir }}"
+          environment:
+            PERLBREW_ROOT: "{{ install_dir }}"
 
 
     - name: Install perlbrew module
       block:
-      - name: Check module dir {{ perlbrew_module_dir }}
-        file:
-          path: "{{ perlbrew_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install perlbrew module file to {{ perlbrew_module_dir }}
-        template:
-          src: perlbrew.lua
-          dest: "{{ perlbrew_module_dir }}/perlbrew.lua"
+        - name: Check module dir {{ perlbrew_module_dir }}
+          file:
+            path: "{{ perlbrew_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install perlbrew module file to {{ perlbrew_module_dir }}
+          template:
+            src: perlbrew.lua
+            dest: "{{ perlbrew_module_dir }}/perlbrew.lua"

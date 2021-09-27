@@ -31,30 +31,29 @@
 
     - name: Install homebrew module
       block:
-      - name: Check module dir {{ homebrew_module_dir }}
-        file:
-          path: "{{ homebrew_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install homebrew module file to {{ homebrew_module_dir }}
-        template:
-          src: homebrew.lua
-          dest: "{{ homebrew_module_dir }}/2.4.13.lua"
+        - name: Check module dir {{ homebrew_module_dir }}
+          file:
+            path: "{{ homebrew_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install homebrew module file to {{ homebrew_module_dir }}
+          template:
+            src: homebrew.lua
+            dest: "{{ homebrew_module_dir }}/2.4.13.lua"
 
     - name: Install homebrew softwares and modules
       block:
         - name: Install homebrew'd software
           command: "{{install_dir}}/bin/brew install {{ item }}"
           with_items: "{{ software_list }}"
-
         - name: Install treePL module
           block:
-          - name: "Check treePL module dir {{ bio_modules }}/treePL"
-            file:
-              path: "{{ bio_modules }}/treePL"
-              state: directory
-              mode: u=rwx,g=rwx,o=rx
-          - name: "Install treePL module file to {{ bio_modules }}/treePL"
-            template:
-              src: homebrew.lua
-              dest: "{{ bio_modules }}/treePL/homebrew.lua"
+            - name: "Check treePL module dir {{ bio_modules }}/treePL"
+              file:
+                path: "{{ bio_modules }}/treePL"
+                state: directory
+                mode: u=rwx,g=rwx,o=rx
+            - name: "Install treePL module file to {{ bio_modules }}/treePL"
+              template:
+                src: homebrew.lua
+                dest: "{{ bio_modules }}/treePL/homebrew.lua"

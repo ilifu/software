@@ -16,48 +16,48 @@
       block:
         - name: Download and install singularity {{ version_number }}
           block:
-          - name: Download singularity {{ version_number }}
-            get_url:
-              url: "{{ url }}"
-              dest: "{{ common_src }}/singularity-{{ version_number }}.tar.gz"
-              checksum: "{{ checksum }}"
-          - name: Unzip singularity {{ version_number }}
-            unarchive:
-              src: "{{ common_src }}/singularity-{{ version_number }}.tar.gz"
-              dest: "/dev/shm/"
-              creates: "{{ unzip_dir }}"
-          - name: Ensure installation parent exists
-            file:
-              path: "{{ singularity_dir }}"
-              state: directory
-              mode: o=rwx,g=rx,o=rx
-          - name: Configure singularity
-            command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir=/usr/local/etc"
-            args:
-              chdir: "{{ unzip_dir }}"
-              creates: "{{ unzip_dir }}/builddir/Makefile"
-            environment:
-              PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
-          - name: Compile singularity
-            make:
-              chdir: "{{ unzip_dir }}/builddir"
-            environment:
-              PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
-              MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
-          - name: Install singularity
-            make:
-              chdir: "{{ unzip_dir }}/builddir"
-              target: install
-            become: yes
+            - name: Download singularity {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ common_src }}/singularity-{{ version_number }}.tar.gz"
+                checksum: "{{ checksum }}"
+            - name: Unzip singularity {{ version_number }}
+              unarchive:
+                src: "{{ common_src }}/singularity-{{ version_number }}.tar.gz"
+                dest: "/dev/shm/"
+                creates: "{{ unzip_dir }}"
+            - name: Ensure installation parent exists
+              file:
+                path: "{{ singularity_dir }}"
+                state: directory
+                mode: o=rwx,g=rx,o=rx
+            - name: Configure singularity
+              command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir=/usr/local/etc"
+              args:
+                chdir: "{{ unzip_dir }}"
+                creates: "{{ unzip_dir }}/builddir/Makefile"
+              environment:
+                PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
+            - name: Compile singularity
+              make:
+                chdir: "{{ unzip_dir }}/builddir"
+              environment:
+                PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
+                MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+            - name: Install singularity
+              make:
+                chdir: "{{ unzip_dir }}/builddir"
+                target: install
+              become: true
 
     - name: Install singularity {{ version_number }} module
       block:
-      - name: Check module dir
-        file:
-          path: "{{ singularity_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install singularity {{ version_number }} module file
-        template:
-          src: singularity.lua
-          dest: "{{ singularity_module_dir }}/{{ version_number }}.lua"
+        - name: Check module dir
+          file:
+            path: "{{ singularity_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install singularity {{ version_number }} module file
+          template:
+            src: singularity.lua
+            dest: "{{ singularity_module_dir }}/{{ version_number }}.lua"

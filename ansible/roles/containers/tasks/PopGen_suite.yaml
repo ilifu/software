@@ -26,9 +26,9 @@
     - name: "Missing {{ base_container_image }}"
       fail:
         msg: "The container {{ base_container_image }} is missing."
-      when: base_container_exists.stat.exists == False
+      when: base_container_exists.stat.exists is False
     - name: Create PopGen {{ version_number }} container
-      when: base_container_exists.stat.exists == True
+      when: base_container_exists.stat.exists is True
       block:
         - name: Copy recipe  {{ container_recipe }}
           template:
@@ -59,7 +59,7 @@
             url: "{{ admixture.url }}"
             dest: "{{ bio_src }}/admixture-{{ admixture.version }}.tar.gz"
             checksum: "sha256:{{ admixture.checksum }}"
-        - name: Download shapeit {{ shapeit.version }} 
+        - name: Download shapeit {{ shapeit.version }}
           get_url:
             url: "{{ shapeit.url }}"
             dest: "{{ bio_src }}/shapeit-{{ shapeit.version }}.tar.gz"
@@ -84,7 +84,7 @@
           command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
-          become: yes
+          become: true
 #          environment:
 #            SINGULARITY_TMPDIR: "/dev/shm"
 

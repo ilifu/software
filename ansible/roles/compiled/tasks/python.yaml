@@ -16,66 +16,66 @@
   block:
     - name: Download, compile and install Python {{ version_number }}
       block:
-      - name: Download Python {{ version_number }} from {{ python_url }}
-        get_url:
-          url: "{{ python_url }}"
-          dest: "{{ common_src }}/Python-{{ version_number }}.tar.xz"
-          checksum: "{{ checksum }}"
-      - name: Unzip Python {{ version_number }}
-        unarchive:
-          src: "{{ common_src }}/Python-{{ version_number }}.tar.xz"
-          dest: "/dev/shm/"
-          creates: "{{ unzipdir }}"
-      - name: Make Python {{ version_number }} build directory
-        file:
-          path: "{{ build_dir }}"
-          state: directory
-      - name: Run Python {{ version_number }} configure
-        command: "../configure --prefix={{ install_dir }} --enable-optimizations --enable-loadable-sqlite-extensions"
-        args:
-          chdir: "{{ build_dir }}"
-          creates: "{{ build_dir }}/Makefile"
-        environment:
-          CFLAGS: "-fstack-protector -Wformat"
-      - name: Build Python {{ version_number }}
-        make:
-          chdir: "{{ build_dir }}"
-          params:
-            PROFILE_TASK="-m test.regrtest --pgo test_array test_base64 test_binascii test_binhex test_binop test_c_locale_coercion test_csv test_json test_hashlib test_unicode test_codecs test_traceback test_decimal test_math test_compile test_threading test_time test_fstring test_re test_float test_class test_cmath test_complex test_iter test_struct test_slice test_set test_dict test_long test_bytes test_memoryview test_io test_pickle"
-        environment:
-          MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
-      - name: Install Python {{ version_number }}
-        make:
-          chdir: "{{ build_dir }}"
-          target: install
-      - name: Setup python to python3 symlink
-        file:
-          src: "python3"
-          dest: "{{ install_dir }}/bin/python"
-          state: link
-        ignore_errors: yes
-      - name: Setup pip to pip3 symlink
-        file:
-          src: "pip3"
-          dest: "{{ install_dir }}/bin/pip"
-          state: link
-        ignore_errors: yes
-      - name: Ensure pip is installed
-        command: "{{ install_dir }}/bin/python -m  ensurepip"
-      - name: install / upgrade pip packages
-        command: "{{ install_dir }}/bin/pip install --upgrade {{ package_name }}"
-        loop: "{{ pip_packages }}"
-        loop_control:
-          loop_var: "package_name"
+        - name: Download Python {{ version_number }} from {{ python_url }}
+          get_url:
+            url: "{{ python_url }}"
+            dest: "{{ common_src }}/Python-{{ version_number }}.tar.xz"
+            checksum: "{{ checksum }}"
+        - name: Unzip Python {{ version_number }}
+          unarchive:
+            src: "{{ common_src }}/Python-{{ version_number }}.tar.xz"
+            dest: "/dev/shm/"
+            creates: "{{ unzipdir }}"
+        - name: Make Python {{ version_number }} build directory
+          file:
+            path: "{{ build_dir }}"
+            state: directory
+        - name: Run Python {{ version_number }} configure
+          command: "../configure --prefix={{ install_dir }} --enable-optimizations --enable-loadable-sqlite-extensions"
+          args:
+            chdir: "{{ build_dir }}"
+            creates: "{{ build_dir }}/Makefile"
+          environment:
+            CFLAGS: "-fstack-protector -Wformat"
+        - name: Build Python {{ version_number }}
+          make:
+            chdir: "{{ build_dir }}"
+            params:
+              PROFILE_TASK="-m test.regrtest --pgo test_array test_base64 test_binascii test_binhex test_binop test_c_locale_coercion test_csv test_json test_hashlib test_unicode test_codecs test_traceback test_decimal test_math test_compile test_threading test_time test_fstring test_re test_float test_class test_cmath test_complex test_iter test_struct test_slice test_set test_dict test_long test_bytes test_memoryview test_io test_pickle"
+          environment:
+            MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+        - name: Install Python {{ version_number }}
+          make:
+            chdir: "{{ build_dir }}"
+            target: install
+        - name: Setup python to python3 symlink
+          file:
+            src: "python3"
+            dest: "{{ install_dir }}/bin/python"
+            state: link
+          ignore_errors: true
+        - name: Setup pip to pip3 symlink
+          file:
+            src: "pip3"
+            dest: "{{ install_dir }}/bin/pip"
+            state: link
+          ignore_errors: true
+        - name: Ensure pip is installed
+          command: "{{ install_dir }}/bin/python -m  ensurepip"
+        - name: install / upgrade pip packages
+          command: "{{ install_dir }}/bin/pip install --upgrade {{ package_name }}"
+          loop: "{{ pip_packages }}"
+          loop_control:
+            loop_var: "package_name"
 
     - name: Install Python {{ version_number }} module
       block:
-      - name: Check module dir
-        file:
-          path: "{{ python_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install Python module file
-        template:
-          src: python.lua
-          dest: "{{ python_module_dir }}/{{ version_number }}.lua"
+        - name: Check module dir
+          file:
+            path: "{{ python_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Python module file
+          template:
+            src: python.lua
+            dest: "{{ python_module_dir }}/{{ version_number }}.lua"

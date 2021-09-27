@@ -30,14 +30,12 @@
 
     - name: Install gemini module
       block:
-      - name: Check module dir {{ gemini_module_dir }}
-        file:
-          path: "{{ gemini_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install gemini module file to {{ gemini_module_dir }}
-        template:
-          src: gemini.lua
-          dest: "{{ gemini_module_dir }}/gemini.lua"
-
-
+        - name: Check module dir {{ gemini_module_dir }}
+          file:
+            path: "{{ gemini_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install gemini module file to {{ gemini_module_dir }}
+          template:
+            src: gemini.lua
+            dest: "{{ gemini_module_dir }}/gemini.lua"

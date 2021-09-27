@@ -15,7 +15,7 @@
       command: "{{ singularity }} build {{ base_container_image }} {{ base_container_recipe }}"
       args:
         creates: "{{ base_container_image }}"
-      become: yes
+      become: true
       environment:
         SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"
 
@@ -37,9 +37,9 @@
     - name: "Missing {{ base_container_image }}"
       fail:
         msg: "The container {{ base_container_image }} is missing."
-      when: base_container_exists.stat.exists == False
+      when: base_container_exists.stat.exists is False
     - name: Create container
-      when: base_container_exists.stat.exists == True
+      when: base_container_exists.stat.exists is True
       block:
         - name: Copy recipe  {{ container_recipe }}
           template:
@@ -49,7 +49,6 @@
           command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
-          become: yes
+          become: true
           environment:
             SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"
-
