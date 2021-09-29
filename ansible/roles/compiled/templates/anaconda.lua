@@ -1,25 +1,37 @@
 -- -*- lua -*-
-help([[
-This module configures Anaconda3 {{ version_number }} for use
-]])
-whatis("Version: {{ version_number }}")
-whatis("Keywords: Anaconda, python")
-whatis("Description: Anaconda {{ version_number }}")
 
-local anaconda_dir = "{{ install_dir }}"
-local bin_dir = pathJoin(anaconda_dir, "bin")
-local lib_dir = pathJoin(anaconda_dir, "lib")
-local include_dir = pathJoin(anaconda_dir, "include")
-local man_dir = pathJoin(anaconda_dir, "share/man")
-local pkgconfig_dir = pathJoin(anaconda_dir, "lib/pkgconfig")
+-- Thank you Greg Zynda! http://gregoryzynda.com/python/lmod/module/conda/tensorflow/2020/04/30/conda-modules.html
 
-prepend_path('PATH', bin_dir)
-prepend_path('LD_LIBRARY_PATH', lib_dir)
-prepend_path('LIBRARY_PATH', lib_dir)
-prepend_path('INCLUDE', include_dir)
-prepend_path('C_INCLUDE', include_dir)
-prepend_path('MANPATH', man_dir)
-prepend_path('PKG_CONFIG_PATH', pkgconfig_dir)
-setenv('CONDARC', pathJoin(anaconda_dir, "condarc"))
-prepend_path('CONDA_ENVS_PATH', pathJoin(anaconda_dir, "envs"))
-prepend_path('CONDA_ENVS_PATH', "~/.conda/envs")
+local help_message = [[
+The base Anaconda python environment.
+
+You can modify this environment as follows:
+
+  - Extend this environment locally
+
+      $ pip install --user [package]
+
+https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html
+]]
+
+help(help_message,"\n")
+
+whatis("Name: conda")
+whatis("Version: ${VER}")
+whatis("Category: python conda")
+whatis("Keywords: python conda")
+whatis("Description: Base Anaconda python environment")
+whatis("URL: https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html")
+
+local conda_dir = "{{ install_dir }}"
+local funcs = "conda __conda_activate __conda_hashr __conda_reactivate __add_sys_prefix_to_path"
+local the_shell = os.getenv("SHELL")
+
+-- Initialize conda
+execute{cmd="source " .. conda_dir .. "/etc/profile.d/conda.sh; conda activate", modeA={"load"}}
+
+execute{cmd="source " .. conda_dir .. "/etc/profile.d/conda.sh; deactivate", modeA={"unload"}}
+
+
+-- Prevent from being loaded with another system python or conda environment
+family("python")
