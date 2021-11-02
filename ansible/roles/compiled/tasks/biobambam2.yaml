@@ -1,0 +1,76 @@
+---
+- name: Check libmaus2 exists
+  tags:
+    - biobambam2{{ item.version_number }}
+  vars:
+    libmaus2_version: "{{ item.libmaus2_version }}"
+    libmaus2_dir: "{{ bio_dir }}/libmaus2/{{ libmaus2_version }}"
+  stat:
+    path: "{{ libmaus2_dir }}"
+  register: libmaus2
+
+- name: Message to install libmaus2
+  tags:
+    - biobambam2{{ item.version_number }}
+  vars:
+    libmaus2_version: "{{ item.libmaus2_version }}"
+    libmaus2_dir: "{{ bio_dir }}/libmaus2/{{ libmaus2_version }}"
+  debug:
+    msg: "Could not find libmaus2 directory: {{ libmaus2_dir }}."
+  when: not libmaus2.stat.exists or not libmaus2.stat.isdir
+  failed_when: True
+
+
+- name: Install biobambam2 {{ item.version_number }}
+  vars:
+    libmaus2_version: "{{ item.libmaus2_version }}"
+    libmaus2_dir: "{{ bio_dir }}/libmaus2/{{ libmaus2_version }}"
+    biobambam2_dir: "{{ bio_dir }}/biobambam2"
+    biobambam2_module_dir: "{{ bio_modules }}/biobambam2"
+    git_repo: "{{ item.git_repo }}"
+    git_tag: "{{ item.git_tag }}"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ biobambam2_dir }}/{{ version_number }}"
+    repo_dir: "/dev/shm/biobambam2-{{ version_number }}"
+  tags:
+    - never
+    - biobambam2{{ item.version_number }}
+  when: libmaus2.stat.exists and libmaus2.stat.isdir
+  block:
+    - name: Download and install biobambam2 {{ version_number }}
+      block:
+
+        - name: git clone biobambam2 repo
+          git:
+            repo: "{{ git_repo }}"
+            dest: "{{  repo_dir }}"
+            version: "{{ git_tag }}"
+        - name: Ensure biobambam2 dir exists
+          file:
+            path: "{{ biobambam2_dir }}"
+            state: directory
+        - name: Run biobambam2 {{ version_number }} configure
+          command: "./configure --prefix={{ install_dir }} --with-libmaus2={{ bio_dir }}/libmaus2/{{ libmaus2_version }}"
+          args:
+            chdir: "{{ repo_dir }}"
+        - name: Make biobambam2 {{ version_number }}
+          make:
+            chdir: "{{ repo_dir }}"
+          environment:
+            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+        - name: Install biobambam2 {{ version_number }} to {{ install_dir }}
+          make:
+            chdir: "{{ repo_dir }}"
+            target: "install"
+
+    - name: Install biobambam2 {{ version_number }} module
+      block:
+        - name: Check module dir {{ biobambam2_module_dir }}
+          file:
+            path: "{{ biobambam2_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install biobambam2 {{ version_number }} module file
+          template:
+            src: biobambam2.lua
+            dest: "{{ biobambam2_module_dir }}/{{ version_number }}.lua"
