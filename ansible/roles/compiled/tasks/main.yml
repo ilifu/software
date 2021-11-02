@@ -682,3 +682,34 @@
   tags:
     - never
     - graphviz
+
+- name: Install libmaus2
+  vars:
+    libmaus2_versions:
+      - {
+        version_number: "2.0.806",
+        git_tag: "2.0.806-release-20211016174753",
+        git_repo: "https://gitlab.com/german.tischler/libmaus2.git"
+      }
+  include_tasks:
+    file: libmaus2.yaml
+  loop: "{{ libmaus2_versions }}"
+  tags:
+    - never
+    - libmaus2
+
+- name: Install biobambam2
+  vars:
+    biobambam2_versions:
+      - {
+          version_number: "2.0.183",
+          git_tag: "2.0.183-release-20210802180148",
+          git_repo: "https://gitlab.com/german.tischler/biobambam2.git",
+          libmaus2_version: "2.0.806"
+      }
+  include_tasks:
+    file: biobambam2.yaml
+  loop: "{{ biobambam2_versions }}"
+  tags:
+    - never
+    - biobambam2
