@@ -1,0 +1,50 @@
+---
+- name: Install cdhit {{ item.version_number }}
+  vars:
+    cdhit_dir: "{{ bio_dir }}/cd-hit"
+    cdhit_module_dir: "{{ bio_modules }}/cd-hit"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ cdhit_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/{{ item.unzip_dir_name }}"
+  tags:
+    - never
+    - cdhit{{ item.version_number }}
+
+  block:
+    - name: Download and install cd-hit {{ version_number }}
+      block:
+        - name: Download cd-hit {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{  bio_dir }}/src/cd-hit-{{ version_number }}.tar.gz"
+            checksum: "{{ checksum }}"
+        - name: Ensure cdh-it dir exists
+          file:
+            path: "{{ cdhit_dir }}"
+            state: directory
+        - name: Uncompress cdh-it to {{ unzip_dir }}
+          unarchive:
+            src: "{{  bio_dir }}/src/cd-hit-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Make cd-hit {{ version_number }}
+          make:
+            chdir: "{{ unzip_dir }}"
+        - name: Move cd-hit {{ version_number }} to {{ install_dir }}
+          command: mv {{ unzip_dir }} {{ install_dir }}
+          args:
+            creates: "{{ install_dir }}"
+
+    - name: Install cd-hit {{ version_number }} module
+      block:
+        - name: Check module dir {{ cdhit_module_dir }}
+          file:
+            path: "{{ cdhit_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install cdhit {{ version_number }} module file
+          template:
+            src: cd-hit.lua
+            dest: "{{ cdhit_module_dir }}/{{ version_number }}.lua"

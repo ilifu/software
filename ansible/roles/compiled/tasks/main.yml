@@ -718,3 +718,19 @@
   tags:
     - never
     - biobambam2
+
+- name: Install cdhit
+  vars:
+    cdhit_versions:
+      - {
+          version_number: "4.8.2",
+          url: "https://github.com/weizhongli/cdhit/releases/download/V4.8.1/cd-hit-v4.8.1-2019-0228.tar.gz",
+          checksum: "sha256:26172dba3040d1ae5c73ff0ac6c3be8c8e60cc49fc7379e434cdf9cb1e7415de",
+          unzip_dir_name: "cd-hit-v4.8.1-2019-0228"
+      }
+  include_tasks:
+    file: cdhit.yaml
+  loop: "{{ cdhit_versions }}"
+  tags:
+    - never
+    - cdhit
