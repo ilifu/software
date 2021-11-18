@@ -294,6 +294,11 @@
           checksum: "sha256:951a3c7c6ce4e56ad883f97d9db74d3d6d80d5fec77455c6ada6c1f7ac4776d2",
           url: "https://golang.org/dl/go1.16.3.linux-amd64.tar.gz",
         }
+        - {
+          version_number: "1.17.3",
+          checksum: "sha256:550f9845451c0c94be679faf116291e7807a8d78b43149f9506c1b15eb89008c",
+          url: "https://golang.org/dl/go1.17.3.linux-amd64.tar.gz",
+        }
   include_tasks:
     file: golang.yaml
   loop: "{{ go_versions }}"
