@@ -320,6 +320,10 @@
           version_number: "2.6.1",
           checksum: "sha256:f38d46a225e8368eb4693137806d2dc96e925a50bdf7f6983662848831041df2"
         }
+        - {
+          version_number: "3.9.0",
+          checksum: "sha256:3569928cbd907fe90c52f6a809f5f8e99f597237c5a25a9dce07e3efb3b1447a"
+        }
   include_tasks:
     file: singularity.yaml
   loop: "{{ singularity_versions }}"
@@ -734,3 +738,31 @@
   tags:
     - never
     - cdhit
+
+- name: Install exomiser
+  vars:
+    exomiser_versions:
+      - {
+          version_number: "13.0.0",
+          url: "https://github.com/exomiser/Exomiser/releases/download/13.0.0/exomiser-cli-13.0.0-distribution.zip",
+          checksum: "sha256:b48d6835a6682b23a4352aab19c09d7a43db03c2cc1363f34de7565f89358996",
+      }
+    data:
+      - {
+        name: "hg19",
+        url: "https://g-879a9f.f5dc97.75bc.dn.glob.us/latest/2109_hg19.zip",
+      }
+      - {
+          name: "hg38",
+          url: "https://g-879a9f.f5dc97.75bc.dn.glob.us/latest/2109_hg38.zip",
+      }
+      - {
+          name: "phenotype",
+          url: "https://g-879a9f.f5dc97.75bc.dn.glob.us/latest/2109_phenotype.zip"
+      }
+  include_tasks:
+    file: exomiser.yaml
+  loop: "{{ exomiser_versions }}"
+  tags:
+    - never
+    - exomiser
