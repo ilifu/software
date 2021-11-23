@@ -754,7 +754,7 @@
           url: "https://github.com/exomiser/Exomiser/releases/download/13.0.0/exomiser-cli-13.0.0-distribution.zip",
           checksum: "sha256:b48d6835a6682b23a4352aab19c09d7a43db03c2cc1363f34de7565f89358996",
       }
-    data:
+    exomiser_data:
       - {
         name: "hg19",
         url: "https://g-879a9f.f5dc97.75bc.dn.glob.us/latest/2109_hg19.zip",
