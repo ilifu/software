@@ -1,0 +1,58 @@
+- name: Install mpich
+  vars:
+    mpi_dir: "{{ common_dir }}/mpich"
+    mpi_module_dir: "{{ common_modules }}/mpich"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ mpi_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/mpich-{{ version_number }}"
+    build_dir: "{{ unzipdir }}/build"
+  tags:
+    - never
+    - openmpi{{ item.version_number }}
+  block:
+    - name: Install mpich {{ version_number }}
+      block:
+        - name: Download, compile and install mpich {{ version_number }}
+          block:
+            - name: Download mpich {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ common_src }}/mpich-{{ version_number }}.tar.gz"
+                checksum: "{{ checksum }}"
+            - name: Unzip mpich {{ version_number }}
+              unarchive:
+                src: "{{ common_src }}/openmpi-{{ version_number }}.tar.bz2"
+                dest: "/dev/shm/"
+                creates: "{{ unzipdir }}"
+            - name: Make mpich {{ version_number }} build directory
+              file:
+                path: "{{ build_dir }}"
+                state: directory
+            - name: Run mpich {{ version_number }} configure
+              command: "../configure --prefix={{ install_dir }} --disable-silent-rules --disable-maintainer-mode --disable-dependency-tracking --enable-shared --enable-fortran=all --disable-rpath --disable-wrapper-rpath --with-hwloc-prefix=system"
+              args:
+                chdir: "{{ build_dir }}"
+                creates: "{{ build_dir }}/Makefile"
+            - name: Build mpich {{ version_number }}
+              make:
+                chdir: "{{ build_dir }}"
+              environment:
+                MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+            - name: Install mpich {{ version_number }}
+              make:
+                chdir: "{{ build_dir }}"
+                target: install
+
+    - name: Install mpich {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ mpi_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install mpich module file
+          template:
+            src: openmpi.lua
+            dest: "{{ mpi_module_dir }}/{{ version_number }}.lua"

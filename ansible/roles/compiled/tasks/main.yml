@@ -164,6 +164,21 @@
     - never
     - openmpi
 
+- name: Install mpich
+  vars:
+    - mpich_versions:
+        - {
+          version_number: "3.3a2",
+          checksum: "sha256:5d408e31917c5249bf5e35d1341afc34928e15483473dbb4e066b76c951125cf",
+          url: "https://www.mpich.org/static/downloads/3.3a2/mpich-3.3a2.tar.gz",
+        }
+  include_tasks:
+    file: mpich.yaml
+  loop: "{{ mpich_versions }}"
+  tags:
+    - never
+    - mpich
+
 - name: Install pythons
   vars:
     python_versions:
