@@ -8,9 +8,10 @@
     install_dir: "{{ mpi_dir }}/{{ version_number }}"
     unzipdir: "/dev/shm/mpich-{{ version_number }}"
     build_dir: "{{ unzipdir }}/build"
+    hwloc_version: "{{ item.hwloc_version }}"
   tags:
     - never
-    - openmpi{{ item.version_number }}
+    - mpich{{ item.version_number }}
   block:
     - name: Install mpich {{ version_number }}
       block:
@@ -23,7 +24,7 @@
                 checksum: "{{ checksum }}"
             - name: Unzip mpich {{ version_number }}
               unarchive:
-                src: "{{ common_src }}/openmpi-{{ version_number }}.tar.bz2"
+                src: "{{ common_src }}/mpich-{{ version_number }}.tar.gz"
                 dest: "/dev/shm/"
                 creates: "{{ unzipdir }}"
             - name: Make mpich {{ version_number }} build directory
@@ -31,7 +32,7 @@
                 path: "{{ build_dir }}"
                 state: directory
             - name: Run mpich {{ version_number }} configure
-              command: "../configure --prefix={{ install_dir }} --disable-silent-rules --disable-maintainer-mode --disable-dependency-tracking --enable-shared --enable-fortran=all --disable-rpath --disable-wrapper-rpath --with-hwloc-prefix=system"
+              command: "../configure --prefix={{ install_dir }} --disable-silent-rules --disable-maintainer-mode --disable-dependency-tracking --enable-shared --enable-fortran=all --disable-rpath --disable-wrapper-rpath --with-hwloc-prefix={{ common_dir }}/hwloc/{{ hwloc_version }}"
               args:
                 chdir: "{{ build_dir }}"
                 creates: "{{ build_dir }}/Makefile"
@@ -54,5 +55,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install mpich module file
           template:
-            src: openmpi.lua
+            src: mpich.lua
             dest: "{{ mpi_module_dir }}/{{ version_number }}.lua"

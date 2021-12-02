@@ -171,6 +171,7 @@
           version_number: "3.3a2",
           checksum: "sha256:5d408e31917c5249bf5e35d1341afc34928e15483473dbb4e066b76c951125cf",
           url: "https://www.mpich.org/static/downloads/3.3a2/mpich-3.3a2.tar.gz",
+          hwloc_version: "1.11.13"
         }
   include_tasks:
     file: mpich.yaml
@@ -178,6 +179,23 @@
   tags:
     - never
     - mpich
+
+
+- name: Install hwloc
+  vars:
+    - hwloc_versions:
+        - {
+          version_number: "1.11.13",
+          url: "https://download.open-mpi.org/release/hwloc/v1.11/hwloc-1.11.13.tar.gz",
+          checksum: "sha1:e3384557e6b4aca110209f8cb45a8f604e993d53",
+        }
+  include_tasks:
+    file: hwloc.yaml
+  loop: "{{ hwloc_versions }}"
+  tags:
+    - never
+    - hwloc
+
 
 - name: Install pythons
   vars:
