@@ -13,7 +13,7 @@ local include_dir = pathJoin(mpi_dir, "include")
 local man_dir = pathJoin(mpi_dir, "share/man")
 local pkgconfig_dir = pathJoin(mpi_dir, "lib/pkgconfig")
 
-load("hwlock/{{ hwloc_version }}")
+load("hwloc/{{ hwloc_version }}")
 
 prepend_path('PATH', bin_dir)
 prepend_path('LD_LIBRARY_PATH', lib_dir)
