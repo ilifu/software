@@ -240,12 +240,17 @@
         version_number: "3.10.0",
         checksum: "md5:3e7035d272680f80e3ce4e8eb492d580"
       }
+      - {
+        version_number: "3.10.1",
+        checksum: "md5:789210934745a65247a3ebf5da9adb64"
+      }
     pip_packages:
       - pip
       - pipenv
       - ipython
       - ipykernel
       - ldap3
+      - virtualenv
   include_tasks:
     file: python.yaml
   loop: "{{ python_versions }}"
