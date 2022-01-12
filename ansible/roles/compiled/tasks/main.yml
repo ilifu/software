@@ -653,6 +653,7 @@
   vars:
     software_list:
       - brewsci/bio/treepl
+      - brewsci/bio/vcflib
   include_tasks:
     file: homebrew.yaml
   tags:

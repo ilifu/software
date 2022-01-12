@@ -9,7 +9,6 @@
   tags:
     - never
     - homebrew
-
   block:
     - name: Download, and install homebrew {{ major_minor }}
       block:
@@ -57,3 +56,14 @@
               template:
                 src: homebrew.lua
                 dest: "{{ bio_modules }}/treePL/homebrew.lua"
+        - name: Install vcflib module
+          block:
+            - name: "Check vcflib module dir {{ bio_modules }}/vcflib"
+              file:
+                path: "{{ bio_modules }}/vcflib"
+                state: directory
+                mode: u=rwx,g=rwx,o=rx
+            - name: "Install vcflib module file to {{ bio_modules }}/vcflib"
+              template:
+                src: homebrew.lua
+                dest: "{{ bio_modules }}/vcflib/homebrew.lua"
