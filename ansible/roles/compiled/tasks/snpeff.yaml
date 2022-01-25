@@ -1,0 +1,51 @@
+---
+- name: Install snpeff {{ item.version_number }}
+  vars:
+    snpeff_dir: "{{ bio_dir }}/snpEff"
+    snpeff_module_dir: "{{ bio_modules }}/snpeff"
+    url: "https://snpeff.blob.core.windows.net/versions/snpEff_latest_core.zip"
+    install_dir: "{{ snpeff_dir }}"
+    unzip_dir: "{{ bio_dir }}"
+  tags:
+    - never
+    - snpeff
+  block:
+    - name: Download and install snpeff
+      block:
+        - name: Download snpeff from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/snpEff_latest_core.zip"
+        - name: Uncompress snpeff
+          unarchive:
+            src: "{{ bio_src }}/snpEff_latest_core.zip"
+            dest: "{{ unzip_dir }}"
+            creates: "{{ snpeff_dir }}"
+        - name: Set snpeff data.dir
+          lineinfile:
+            path: "{{ snpeff_dir }}/snpEff.config"
+            regexp: "data[.]dir =.*"
+            line: "data.dir = ../snpEff.data"
+        - name: Ensure snpEff data dir exists
+          file:
+            path: "{{ bio_dir }}/snpEff.data"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install snpEffData
+          command: "java -jar {{ snpeff_dir }}/snpEff.jar download {{ item }}"
+          args:
+            chdir: "{{ snpeff_dir }}"
+          with_items:
+            - GRCh38.99
+
+    - name: Install snpeff {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ snpeff_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+#        - name: Install JRE module file
+#          template:
+#            src: opensnpeff.lua
+#            dest: "{{ snpeff_module_dir }}/opensnpeff-{{ version_number }}.lua"

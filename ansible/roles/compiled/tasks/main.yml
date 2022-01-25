@@ -822,3 +822,10 @@
   tags:
     - never
     - exomiser
+
+- name: Install snpeff
+  include_tasks:
+    file: snpeff.yaml
+  tags:
+    - never
+    - snpeff
