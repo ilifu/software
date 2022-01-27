@@ -1,0 +1,79 @@
+---
+- name: Install mafft {{ item.version_number }}
+  vars:
+    mafft_dir: "{{ bio_dir }}/mafft"
+    mafft_module_dir: "{{ bio_modules }}/mafft"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ mafft_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/{{ item.unzip_dir_name }}"
+  tags:
+    - never
+    - mafft{{ item.version_number }}
+
+  block:
+    - name: Download and install mafft {{ version_number }}
+      block:
+        - name: Download mafft {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_dir }}/src/mafft-{{ version_number }}.tgz"
+            checksum: "{{ checksum }}"
+        - name: Ensure mafft dir exists
+          file:
+            path: "{{ mafft_dir }}"
+            state: directory
+        - name: Uncompress mafft to {{ unzip_dir }}
+          unarchive:
+            src: "{{  bio_dir }}/src/mafft-{{ version_number }}.tgz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Update destination in Makefile
+          lineinfile:
+            path: "{{ unzip_dir }}/{{ sub_dir }}/Makefile"
+            regexp: "^PREFIX = .*"
+            line: "PREFIX = {{ install_dir }}"
+          loop:
+            - "core"
+            - "extensions"
+          loop_control:
+            label: "Updating PREFIX in {{ unzip_dir }}/{{ sub_dir }}/Makefile"
+            loop_var: sub_dir
+        - name: Make mafft and extensions
+          make:
+            chdir: "{{ unzip_dir }}/{{ sub_dir }}"
+          environment:
+            MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+          loop:
+            - "core"
+            - "extensions"
+          loop_control:
+            label: "Running Make in  {{ unzip_dir }}/{{ sub_dir }}"
+            loop_var: sub_dir
+        - name: Install mafft and extensions
+          make:
+            chdir: "{{ unzip_dir }}/{{ sub_dir }}"
+            target: "install"
+          environment:
+            MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+          loop:
+            - "core"
+            - "extensions"
+          loop_control:
+            label: "Running Make install in  {{ unzip_dir }}/{{ sub_dir }} to install in {{ install_dir }}"
+            loop_var: sub_dir
+
+    - name: Install mafft {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ mafft_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install mafft module file
+          template:
+            src: mafft.lua
+            dest: "{{ mafft_module_dir }}/{{ version_number }}.lua"
+
+
