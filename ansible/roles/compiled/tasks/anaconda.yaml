@@ -21,7 +21,7 @@
             checksum: "{{ checksum }}"
             mode: u=rx,g=r,o=r
         - name: Run Anaconda {{ version_number }} installer – {{ install_dir }}
-          command: "{{ common_src }}/Anaconda3-{{ version_number }}.sh -b -f -p {{ install_dir }}"
+          command: "/usr/bin/bash {{ common_src }}/Anaconda3-{{ version_number }}.sh -b -f -p {{ install_dir }}"
           args:
             creates: "{{ install_dir }}"
         - name: Install conda packages
