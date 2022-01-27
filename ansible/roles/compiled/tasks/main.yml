@@ -829,3 +829,17 @@
   tags:
     - never
     - snpeff
+
+- name: Install usertools
+  vars:
+    python_dir: "/software/common/python/3.10.1"
+    tools:
+      - {
+          name: "show_cat",
+          description: "CLI tool to display images"
+      }
+  include_tasks:
+    file: user_tools.yaml
+  tags:
+    - never
+    - user_tools
