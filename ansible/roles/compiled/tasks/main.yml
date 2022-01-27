@@ -859,3 +859,19 @@
   tags:
     - never
     - mafft
+
+- name: Install Mash
+  vars:
+    mash_versions:
+      - {
+          version_number: "2.3",
+          url: "https://github.com/marbl/Mash/releases/download/v2.3/mash-Linux64-v2.3.tar",
+          checksum: "sha256:543a9b8b3e60a05a374e7566cc9f4838df186a80b4f16cd69e812841d0ba6582",
+          unzip_dir_name: "mash-Linux64-v2.3"
+      }
+  include_tasks:
+    file: mash.yaml
+  loop: "{{ mash_versions }}"
+  tags:
+    - never
+    - mash
