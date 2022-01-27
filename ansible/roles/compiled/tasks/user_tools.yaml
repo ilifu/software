@@ -20,6 +20,7 @@
             name: "."
             virtualenv: "{{ usertools_dir }}/.venv"
             virtualenv_command: "{{ python_dir }}/bin/virtualenv"
+            virtualenv_python: "{{ python_dir }}/bin/python"
             chdir: "{{ usertools_dir }}"
         - name: Create bin directory
           file:
