@@ -271,6 +271,11 @@
         url: "https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh",
         checksum: "sha512:e1126ffc8c35b4d22959a3fd50282a3e1e7e31471f2d1d2996d9948ed44550d76a94fcecaeebad5cbd7a1b8aeaa1b8f8abaf78672634424ec00fd269ad08cf2d"
       }
+      - {
+        version_number: "2021.11",
+        url: "https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh",
+        checksum: "sha512:f38b3ffc5d8bccbbb1b9c0538bc608043013c41a1be32b3992b12bf043f7ef0c0cd75469b7dc672f9b544d1095cd7896de5fa8aabd60f2cccaec1dd07a638baa"
+      }
   include_tasks:
     file: anaconda.yaml
   loop: "{{ anaconda_versions }}"
@@ -861,6 +866,22 @@
     - mafft
 
 - name: Install Mash
+  vars:
+    mash_versions:
+      - {
+          version_number: "2.3",
+          url: "https://github.com/marbl/Mash/releases/download/v2.3/mash-Linux64-v2.3.tar",
+          checksum: "sha256:543a9b8b3e60a05a374e7566cc9f4838df186a80b4f16cd69e812841d0ba6582",
+          unzip_dir_name: "mash-Linux64-v2.3"
+      }
+  include_tasks:
+    file: mash.yaml
+  loop: "{{ mash_versions }}"
+  tags:
+    - never
+    - mash
+
+- name: Install pyseer
   vars:
     mash_versions:
       - {
