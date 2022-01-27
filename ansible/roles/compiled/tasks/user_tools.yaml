@@ -1,0 +1,40 @@
+---
+- name: Install user_tools
+  vars:
+    usertools_dir: "{{ common_dir }}/user_tools"
+    git_repo: "https://github.com/ilifu/user-tools.git"
+  tags:
+    - never
+    - user_tools
+
+  block:
+    - name: Clone git repo, setup venv and install
+      block:
+        - name: clone repo
+          git:
+            repo: "{{ git_repo}}"
+            dest: "{{ usertools_dir }}"
+            update: yes
+        - name: Create virtual_environment
+          pip:
+            name: "."
+            virtualenv: "{{ usertools_dir }}/.venv"
+            virtualenv_command: "{{ python_dir }}/bin/virtualenv"
+            chdir: "{{ usertools_dir }}"
+        - name: Create bin directory
+          file:
+            path: "{{ usertools_dir }}/bin"
+            state: directory
+            mode: "u=rwx,g=rwx,o=rx"
+        - name: Setup usertools tools
+          file:
+            src: "{{ usertools_dir }}/.venv/bin/{{ item.name }}"
+            dest: "{{ usertools_dir }}/bin/{{ item.name }}"
+            state: link
+          loop: "{{ tools }}"
+
+
+    - name: Install user_tools module file
+      template:
+        src: user_tools.lua
+        dest: "{{ common_modules }}/user_tools.lua"
