@@ -1,0 +1,49 @@
+---
+- name: Install mash {{ item.version_number }}
+  vars:
+    mash_dir: "{{ bio_dir }}/mash"
+    mash_module_dir: "{{ bio_modules }}/mash"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ mash_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/{{ item.unzip_dir_name }}"
+  tags:
+    - never
+    - mash{{ item.version_number }}
+
+  block:
+    - name: Download and install mash {{ version_number }}
+      block:
+        - name: Download mash {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_dir }}/src/mash-{{ version_number }}.tar"
+            checksum: "{{ checksum }}"
+        - name: Ensure mash dir exists
+          file:
+            path: "{{ mash_dir }}"
+            state: directory
+        - name: Uncompress mash to {{ unzip_dir }}
+          unarchive:
+            src: "{{ bio_dir }}/src/mash-{{ version_number }}.tar"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Move mash to final location
+          command: "mv {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}"
+
+    - name: Install mash {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ mash_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install mash module file
+          template:
+            src: mash.lua
+            dest: "{{ mash_module_dir }}/{{ version_number }}.lua"
+
+
