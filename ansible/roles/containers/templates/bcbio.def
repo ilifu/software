@@ -9,7 +9,7 @@ From: {{ base_container_image }}
   bcbio container
 
 %environment
-  # meh
+  export PATH=/opt/bcbio_nextgen_tools/bin:${PATH}
 
 %files
   # meh
@@ -29,7 +29,7 @@ From: {{ base_container_image }}
   wget https://raw.githubusercontent.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
 
   # Install bcbio base
-  python3 bcbio_nextgen_install.py --cores {{  ansible_processor_vcpus }} --tooldir=/opt/bcbio_nextgen_tools --nodata --isolate /opt/bcbio_nextgengi
+  python3 bcbio_nextgen_install.py --cores {{  ansible_processor_vcpus }} --tooldir=/opt/bcbio_nextgen_tools --nodata --isolate /opt/bcbio_nextgen
 
   # Cleanup the container
   apt-get clean
