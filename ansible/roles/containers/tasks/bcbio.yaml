@@ -1,0 +1,44 @@
+- name: Create bcbio container
+  vars:
+    base_container_image: "{{ common_container_dir }}/{{ base_container_name }}.sif"
+    container_name: "bcbio"
+    container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+  tags:
+    - "bcbio_container"
+    - never
+  block:
+    - name: "Check for existence of {{ base_container_image }} container"
+      stat:
+        path: "{{ base_container_image }}"
+      register: base_container_exists
+    - name: "Missing {{ base_container_image }}"
+      fail:
+        msg: "The container {{ base_container_image }} is missing."
+      when: not base_container_exists.stat.exists
+    - name: Create bcbio container
+      when: base_container_exists.stat.exists
+      block:
+        - name: Copy bcbio recipe  {{ container_recipe }}
+          template:
+            src: "bcbio.def"
+            dest: "{{ container_recipe }}"
+        - name: Build container {{ container_image }}
+          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          args:
+            creates: "{{ container_image }}"
+          become: true
+          environment:
+            SINGULARITY_TMPDIR: "/dev/shm"
+
+#    - name: Install RStudio {{ container_name }} module
+#      block:
+#        - name: Check module dir
+#          file:
+#            path: "{{ R_module_dir }}"
+#            state: directory
+#            mode: u=rwx,g=rwx,o=rx
+#        - name: Install RStudio module file
+#          template:
+#            src: RStudio.lua
+#            dest: "{{ R_module_dir }}/{{ container_name}}.lua"

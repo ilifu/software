@@ -1,0 +1,39 @@
+Bootstrap: localimage
+From: {{ base_container_image }}
+
+%labels
+  Maintainer Dane Kennedy
+  bcbio
+
+%help
+  bcbio container
+
+%environment
+  # meh
+
+%files
+  # meh
+
+%post
+  # Create Installation Directories and export paths. This is needed as part of post.
+  # %environment scriptlet does not define these paths during %post, only after.
+  export DEBIAN_FRONTEND=noninteractive
+
+  # Update apt
+  apt-get update -y && apt-get dist-upgrade -y
+
+  # Set python3 as default python
+  update-alternatives --install /usr/bin/python python /usr/bin/python3 20
+
+  # get installation script
+  wget https://raw.githubusercontent.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
+
+  # Install bcbio base
+  python3 bcbio_nextgen_install.py --cores {{  ansible_processor_vcpus }} --tooldir=/opt/bcbio_nextgen_tools --nodata --isolate /opt/bcbio_nextgengi
+
+  # Cleanup the container
+  apt-get clean
+  apt-get autoclean
+
+%test
+  # meh

@@ -2,11 +2,11 @@
 # tasks file for containers
 - name: Create Ubuntu Base Containers
   vars:
-    - ubuntu_versions:
-        - {
-          version_name: bionic,
-          version_number: 18.04,
-        }
+    ubuntu_versions:
+      - {
+        version_name: bionic,
+        version_number: 18.04,
+      }
   include_tasks:
     file: ubuntu.yaml
   loop: "{{ ubuntu_versions }}"
@@ -16,19 +16,19 @@
 
 - name: Create RStudio Containers
   vars:
-    - rstudio_versions:
-        - {
-          base_container_name: ubuntu-bionic-compile,
-          base_container_version_name: bionic,
-          r_version: 4.0.0,
-          rstudio_version: 1.2.5042,  # 1.3.959,
-        }
-        - {
-          base_container_name: ubuntu-bionic-compile,
-          base_container_version_name: bionic,
-          r_version: 4.0.4,
-          rstudio_version: 1.2.5042,  # 1.3.959,
-        }
+    rstudio_versions:
+      - {
+        base_container_name: ubuntu-bionic-compile,
+        base_container_version_name: bionic,
+        r_version: 4.0.0,
+        rstudio_version: 1.2.5042,  # 1.3.959,
+      }
+      - {
+        base_container_name: ubuntu-bionic-compile,
+        base_container_version_name: bionic,
+        r_version: 4.0.4,
+        rstudio_version: 1.2.5042,  # 1.3.959,
+      }
   include_tasks:
     file: RStudio.yaml
   loop: "{{ rstudio_versions }}"
@@ -39,56 +39,56 @@
 
 - name: Create PopGen Containers
   vars:
-    - popgen_versions:
-        - {
-          base_container_name: RStudio1.2.5042-R4.0.0,
-          version_number: 0.1,
-          arlecore: {
-            version: 3.5,
-            url: "http://cmpg.unibe.ch/software/arlequin35/linux/arlecore_linux.zip",
-            checksum: 79d7ce0c126c32f88a66290aabd29e0b2e5b2d8c46cbcf02ef95ac7cbb91ead8,
-          },
-          beast: {
-            version: 1.8.4,
-            url: "https://github.com/beast-dev/beast-mcmc/releases/download/v1.8.4/BEASTv1.8.4.tgz",
-            checksum: c14e93976008463108aefa34ecc23287ab70703caccf4962e36e295207120d78,
-          },
-          plink2: {
-            version: 2.00a2.3,
-            url: "https://github.com/chrchang/plink-ng/releases/download/v2.00a2.3/plink2_linux_x86_64.zip",
-            checksum: 3fa20a2058df542e928b11d715cc314c01d7c5961525b55fd17a088e6caa9cc9,
-          },
-          bcftools: {
-            version: 1.10.2,
-            url: "https://github.com/samtools/bcftools/releases/download/1.10.2/bcftools-1.10.2.tar.bz2",
-            checksum: f57301869d0055ce3b8e26d8ad880c0c1989bf25eaec8ea5db99b60e31354e2c,
-          },
-          admixture: {
-            version: 1.3.0,
-            url: "http://dalexander.github.io/admixture/binaries/admixture_linux-1.3.0.tar.gz",
-            checksum: 353e8b170c81f8d95946bf18bc78afda5d6bd32645b2a68658bd6781ff35703c,
-          },
-          shapeit: {
-            version: 2.17,
-            url: "https://mathgen.stats.ox.ac.uk/genetics_software/shapeit/shapeit.v2.r904.glibcv2.17.linux.tar.gz",
-            checksum: a5c3445c82fa45b1fa604582f003a491ecce8de6316e210be831127da09ea9e6,
-          },
-          eigensoft: {
-            version: 7.2.1,
-            url: "https://github.com/DReichLab/EIG/archive/v7.2.1.tar.gz",
-            checksum: f09a46ec4b83c5062ec71eaca48a78f2373f1666fe23cbf17757150a679c8650,
-          },
-          finestructure: {
-            version: 2.1.3,
-            url: "https://people.maths.bris.ac.uk/~madjl/finestructure/fs-2.1.3.tar.gz",
-            checksum: f771ee6795b2ce6a5032412b3f856598c3c37308f722ddfcb62174baaf7779f2,
-          },
-          beagle: {
-            version: 3.1.2,
-            url: "https://github.com/beagle-dev/beagle-lib/archive/v3.1.2.tar.gz",
-            checksum: dd872b484a3a9f0bce369465e60ccf4e4c0cd7bd5ce41499415366019f236275,
-          },
-        }
+    popgen_versions:
+      - {
+        base_container_name: RStudio1.2.5042-R4.0.0,
+        version_number: 0.1,
+        arlecore: {
+          version: 3.5,
+          url: "http://cmpg.unibe.ch/software/arlequin35/linux/arlecore_linux.zip",
+          checksum: 79d7ce0c126c32f88a66290aabd29e0b2e5b2d8c46cbcf02ef95ac7cbb91ead8,
+        },
+        beast: {
+          version: 1.8.4,
+          url: "https://github.com/beast-dev/beast-mcmc/releases/download/v1.8.4/BEASTv1.8.4.tgz",
+          checksum: c14e93976008463108aefa34ecc23287ab70703caccf4962e36e295207120d78,
+        },
+        plink2: {
+          version: 2.00a2.3,
+          url: "https://github.com/chrchang/plink-ng/releases/download/v2.00a2.3/plink2_linux_x86_64.zip",
+          checksum: 3fa20a2058df542e928b11d715cc314c01d7c5961525b55fd17a088e6caa9cc9,
+        },
+        bcftools: {
+          version: 1.10.2,
+          url: "https://github.com/samtools/bcftools/releases/download/1.10.2/bcftools-1.10.2.tar.bz2",
+          checksum: f57301869d0055ce3b8e26d8ad880c0c1989bf25eaec8ea5db99b60e31354e2c,
+        },
+        admixture: {
+          version: 1.3.0,
+          url: "http://dalexander.github.io/admixture/binaries/admixture_linux-1.3.0.tar.gz",
+          checksum: 353e8b170c81f8d95946bf18bc78afda5d6bd32645b2a68658bd6781ff35703c,
+        },
+        shapeit: {
+          version: 2.17,
+          url: "https://mathgen.stats.ox.ac.uk/genetics_software/shapeit/shapeit.v2.r904.glibcv2.17.linux.tar.gz",
+          checksum: a5c3445c82fa45b1fa604582f003a491ecce8de6316e210be831127da09ea9e6,
+        },
+        eigensoft: {
+          version: 7.2.1,
+          url: "https://github.com/DReichLab/EIG/archive/v7.2.1.tar.gz",
+          checksum: f09a46ec4b83c5062ec71eaca48a78f2373f1666fe23cbf17757150a679c8650,
+        },
+        finestructure: {
+          version: 2.1.3,
+          url: "https://people.maths.bris.ac.uk/~madjl/finestructure/fs-2.1.3.tar.gz",
+          checksum: f771ee6795b2ce6a5032412b3f856598c3c37308f722ddfcb62174baaf7779f2,
+        },
+        beagle: {
+          version: 3.1.2,
+          url: "https://github.com/beagle-dev/beagle-lib/archive/v3.1.2.tar.gz",
+          checksum: dd872b484a3a9f0bce369465e60ccf4e4c0cd7bd5ce41499415366019f236275,
+        },
+      }
   include_tasks:
     file: PopGen_suite.yaml
   loop: "{{ popgen_versions }}"
@@ -102,3 +102,17 @@
   tags:
     - never
     - vep
+    -
+
+- name: Create bcbio container
+  vars:
+    base_container_name: ubuntu-bionic-compile
+    base_container_version_name: bionic
+    singularity: "/software/common/singularity/3.9.1/bin/singularity"
+    bcbio_tools_path: "{{ bio_dir }}/bcbio_nextgen_tools"
+    bcbio_genome_path: "{{ bio_dir }}/bcbio_nextgen_genomes"
+  include_tasks:
+    file: bcbio.yaml
+  tags:
+    - never
+    - bcbio_container
