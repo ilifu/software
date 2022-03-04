@@ -11,6 +11,7 @@ From: {{ base_container_image }}
 %environment
   export PATH=/opt/bcbio_nextgen_tools/bin:${PATH}
 
+
 %files
   # meh
 
