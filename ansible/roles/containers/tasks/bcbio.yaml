@@ -39,7 +39,7 @@
             path: "{{ module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install RStudio module file
+        - name: Install bcbio module file
           template:
             src: bcbio.lua
             dest: "{{ module_dir }}/{{ container_name }}_container.lua"
