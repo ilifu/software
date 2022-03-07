@@ -4,6 +4,7 @@
     container_name: "bcbio"
     container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
     container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+    module_dir: "{{ bio_modules }}/bcbio"
   tags:
     - "bcbio_container"
     - never
@@ -31,14 +32,14 @@
           environment:
             SINGULARITY_TMPDIR: "/dev/shm"
 
-#    - name: Install RStudio {{ container_name }} module
-#      block:
-#        - name: Check module dir
-#          file:
-#            path: "{{ R_module_dir }}"
-#            state: directory
-#            mode: u=rwx,g=rwx,o=rx
-#        - name: Install RStudio module file
-#          template:
-#            src: RStudio.lua
-#            dest: "{{ R_module_dir }}/{{ container_name}}.lua"
+    - name: Install bcbio {{ container_name }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install RStudio module file
+          template:
+            src: bcbio.lua
+            dest: "{{ module_dir }}/{{ container_name }}_container.lua"
