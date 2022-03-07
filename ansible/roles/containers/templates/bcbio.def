@@ -32,6 +32,9 @@ From: {{ base_container_image }}
   # Install bcbio base
   python3 bcbio_nextgen_install.py --cores {{  ansible_processor_vcpus }} --tooldir=/opt/bcbio_nextgen_tools --nodata --isolate /opt/bcbio_nextgen
 
+  . /opt/bcbio_nextgen/anaconda/bin/activate
+  bcbio_nextgen.py upgrade -u stable --aligners bwa --tools
+
   # Cleanup the container
   apt-get clean
   apt-get autoclean
