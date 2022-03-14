@@ -9,7 +9,7 @@
         state: directory
         mode: u=rwx,g=rwx,o=rx,g+s
         group: "{{ admin_group }}"
-        recurse: yes
+        # recurse: yes
       loop:
         - "{{ software_root }}"
         - "{{ modules_dir }}"
