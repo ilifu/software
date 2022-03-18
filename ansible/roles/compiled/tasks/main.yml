@@ -933,3 +933,18 @@
   tags:
     - never
     - gatk
+
+- name: Install picard
+  vars:
+    versions:
+      - {
+          version_number: "2.26.11",
+          url: "https://github.com/broadinstitute/picard/releases/download/2.26.11/picard.jar",
+          checksum: "sha256:d2cc20828d5ae60131a63dd581a58a4ff4d877badf48505ca91ac05119d33e33",
+      }
+  include_tasks:
+    file: picard.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - picard

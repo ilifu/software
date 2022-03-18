@@ -1,0 +1,45 @@
+---
+- name: Install Picard {{ item.version_number }}
+  vars:
+    picard_dir: "{{ bio_dir }}/picard"
+    picard_module_dir: "{{ bio_modules }}/picard"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ picard_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/{{ item.unzip_dir_name }}"
+  tags:
+    - never
+    - picard{{ item.version_number }}
+
+  block:
+    - name: Download and install Picard {{ version_number }}
+      block:
+        - name: Download Picard {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_dir }}/src/picard-{{ version_number }}.jar"
+            checksum: "{{ checksum }}"
+        - name: Ensure Picard dir exists
+          file:
+            path: "{{ install_dir }}"
+            state: directory
+            recurse: yes
+        - name: Copy Picard.jar to final location
+          command: "cp {{ bio_dir }}/src/picard-{{ version_number }}.jar {{ install_dir }}/picard.jar"
+          args:
+            creates: "{{ install_dir }}/picard.jar"
+
+    - name: Install Picard {{ version_number }} module
+      block:
+        - name: Check module dir {{ picard_module_dir }}
+          file:
+            path: "{{ picard_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Picard module file
+          template:
+            src: picard.lua
+            dest: "{{ picard_module_dir }}/{{ version_number }}.lua"
+
+
