@@ -18,6 +18,7 @@
           git:
             repo: "{{ repo }}"
             dest: "{{ unzip_dir }}"
+            force: yes
         - name: Ensure bwa dir exists
           file:
             path: "{{ install_dir }}"
@@ -33,14 +34,14 @@
           args:
             creates: "{{ install_dir }}/bwa"
 
-#    - name: Install bwa {{ version_number }} module
-#      block:
-#        - name: Check module dir {{ bwa_module_dir }}
-#          file:
-#            path: "{{ bwa_module_dir }}"
-#            state: directory
-#            mode: u=rwx,g=rwx,o=rx
-#        - name: Install bwa {{ version_number }} module file
-#          template:
-#            src: bwa.lua
-#            dest: "{{ bwa_module_dir }}/{{ version_number }}.lua"
+    - name: Install bwa {{ version_number }} module
+      block:
+        - name: Check module dir {{ bwa_module_dir }}
+          file:
+            path: "{{ bwa_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install bwa {{ version_number }} module file
+          template:
+            src: bwa.lua
+            dest: "{{ bwa_module_dir }}/{{ version_number }}.lua"
