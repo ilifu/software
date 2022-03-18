@@ -917,3 +917,19 @@
   tags:
     - never
     - fastqc
+
+- name: Install GATK
+  vars:
+    versions:
+      - {
+          version_number: "4.2.5.0",
+          url: "https://github.com/broadinstitute/gatk/releases/download/4.2.5.0/gatk-4.2.5.0.zip",
+          checksum: "sha256:203f17868f0a73a8322d2f8bd568b9f7b4bb81e36d37db5b6a142d8050ef049f",
+          unzip_dir_name: "gatk-4.2.5.0"
+      }
+  include_tasks:
+    file: gatk.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - gatk
