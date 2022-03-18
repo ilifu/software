@@ -1,0 +1,53 @@
+---
+- name: Install fastqc {{ item.version_number }}
+  vars:
+    fastqc_dir: "{{ bio_dir }}/fastqc"
+    fastqc_module_dir: "{{ bio_modules }}/fastqc"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ fastqc_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/{{ item.unzip_dir_name }}"
+  tags:
+    - never
+    - fastqc{{ item.version_number }}
+
+  block:
+    - name: Download and install fastqc {{ version_number }}
+      block:
+        - name: Download FastQC {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_dir }}/src/fastqc-{{ version_number }}.zip"
+            checksum: "{{ checksum }}"
+        - name: Ensure FastQC dir exists
+          file:
+            path: "{{ fastqc_dir }}"
+            state: directory
+        - name: Uncompress FastQC to {{ unzip_dir }}
+          unarchive:
+            src: "{{ bio_dir }}/src/fastqc-{{ version_number }}.zip"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Move FastQC to final location
+          command: "mv {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}"
+        - name: Make fastqc binary executable
+          file:
+            path: "{{ install_dir }}/fastqc"
+            mode: "ugo+x"
+
+    - name: Install FastQC {{ version_number }} module
+      block:
+        - name: Check module dir {{ fastqc_module_dir }}
+          file:
+            path: "{{ fastqc_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install FastQC module file
+          template:
+            src: fastqc.lua
+            dest: "{{ fastqc_module_dir }}/{{ version_number }}.lua"
+
+
