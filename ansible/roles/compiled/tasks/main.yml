@@ -948,3 +948,17 @@
   tags:
     - never
     - picard
+
+- name: Install bwa
+  vars:
+    versions:
+      - {
+          version_number: "github",
+          repo: "https://github.com/lh3/bwa.git",
+      }
+  include_tasks:
+    file: bwa.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - bwa
