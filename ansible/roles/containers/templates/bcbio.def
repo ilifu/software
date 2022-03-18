@@ -35,7 +35,7 @@ From: {{ base_container_image }}
   . /opt/bcbio_nextgen/anaconda/bin/activate
   bcbio_nextgen.py upgrade -u stable --genomes hg38 --aligners bwa --tools
 
-  bcbio_nextgen.py upgrade -u stable --genomes hg38 --aligners bwa --data
+  bcbio_nextgen.py upgrade -u stable --genomes hg38 --aligners bwa --data --datatarget gemini
 
   # Cleanup the container
   apt-get clean
