@@ -1,0 +1,49 @@
+---
+- name: Install GATK {{ item.version_number }}
+  vars:
+    gatk_dir: "{{ bio_dir }}/gatk"
+    gatk_module_dir: "{{ bio_modules }}/gatk"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ gatk_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/{{ item.unzip_dir_name }}"
+  tags:
+    - never
+    - gatk{{ item.version_number }}
+
+  block:
+    - name: Download and install GATK {{ version_number }}
+      block:
+        - name: Download GATK {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_dir }}/src/gatk-{{ version_number }}.zip"
+            checksum: "{{ checksum }}"
+        - name: Ensure GATK dir exists
+          file:
+            path: "{{ gatk_dir }}"
+            state: directory
+        - name: Uncompress GATK to {{ unzip_dir }}
+          unarchive:
+            src: "{{ bio_dir }}/src/gatk-{{ version_number }}.zip"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Move GATK to final location
+          command: "mv {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}"
+
+    - name: Install GATK {{ version_number }} module
+      block:
+        - name: Check module dir {{ gatk_module_dir }}
+          file:
+            path: "{{ gatk_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install GATK module file
+          template:
+            src: gatk.lua
+            dest: "{{ gatk_module_dir }}/{{ version_number }}.lua"
+
+

@@ -9,6 +9,11 @@
         checksum: "sha256:22ce248e0bd69f23028625bede9d1b3080935b68d011eaaf9e241f84d6b9c4cc",
         url: "https://download.java.net/java/GA/jdk14.0.1/664493ef4a6946b186ff29eb326336a2/7/GPL/openjdk-14.0.1_linux-x64_bin.tar.gz",
       }
+      - {
+        version_number: "17.0.2",
+        checksum: "sha256:0022753d0cceecacdd3a795dd4cea2bd7ffdf9dc06e22ffd1be98411742fbb44",
+        url: "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz",
+      }
   include_tasks:
     file: openjdk.yaml
   loop: "{{ openjdk_versions }}"
@@ -896,3 +901,64 @@
   tags:
     - never
     - mash
+
+- name: Install FastQC
+  vars:
+    versions:
+      - {
+          version_number: "0.11.9",
+          url: "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip",
+          checksum: "sha256:15510a176ef798e40325b717cac556509fb218268cfdb9a35ea6776498321369",
+          unzip_dir_name: "FastQC"
+      }
+  include_tasks:
+    file: fastqc.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - fastqc
+
+- name: Install GATK
+  vars:
+    versions:
+      - {
+          version_number: "4.2.5.0",
+          url: "https://github.com/broadinstitute/gatk/releases/download/4.2.5.0/gatk-4.2.5.0.zip",
+          checksum: "sha256:203f17868f0a73a8322d2f8bd568b9f7b4bb81e36d37db5b6a142d8050ef049f",
+          unzip_dir_name: "gatk-4.2.5.0"
+      }
+  include_tasks:
+    file: gatk.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - gatk
+
+- name: Install picard
+  vars:
+    versions:
+      - {
+          version_number: "2.26.11",
+          url: "https://github.com/broadinstitute/picard/releases/download/2.26.11/picard.jar",
+          checksum: "sha256:d2cc20828d5ae60131a63dd581a58a4ff4d877badf48505ca91ac05119d33e33",
+      }
+  include_tasks:
+    file: picard.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - picard
+
+- name: Install bwa
+  vars:
+    versions:
+      - {
+          version_number: "github",
+          repo: "https://github.com/lh3/bwa.git",
+      }
+  include_tasks:
+    file: bwa.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - bwa
