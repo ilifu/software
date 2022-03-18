@@ -3,7 +3,7 @@ help([[
 This module configures GATK {{ version_number }} for use
 ]])
 whatis("Version: {{ version_number }}")
-whatis("Keywords: fastqc")
+whatis("Keywords: gatk")
 whatis("Description: GATK {{ version_number }}")
 
 load("java/openjdk-17.0.2", "python/3.10.1")
