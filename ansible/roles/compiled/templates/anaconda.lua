@@ -27,6 +27,14 @@ local conda_dir = "{{ install_dir }}"
 local funcs = "conda __conda_activate __conda_hashr __conda_reactivate __add_sys_prefix_to_path"
 local the_shell = os.getenv("SHELL")
 
+
+local user = os.getenv("USER")
+local conda_envs = pathJoin(user, ".conda/envs")
+local conda_pkgs = pathJoin(user, ".conda/pkgs")
+setenv('CONDA_ENVS_PATH', conda_envs)
+setenv('CONDA_PKGS_DIRS', conda_pkgs)
+
+
 -- Initialize conda
 execute{cmd="source " .. conda_dir .. "/etc/profile.d/conda.sh; conda activate", modeA={"load"}}
 
