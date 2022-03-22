@@ -28,9 +28,9 @@ local funcs = "conda __conda_activate __conda_hashr __conda_reactivate __add_sys
 local the_shell = os.getenv("SHELL")
 
 
-local user = os.getenv("USER")
-local conda_envs = pathJoin(user, ".conda/envs")
-local conda_pkgs = pathJoin(user, ".conda/pkgs")
+local home = os.getenv("HOME")
+local conda_envs = pathJoin(home, ".conda/envs")
+local conda_pkgs = pathJoin(home, ".conda/pkgs")
 setenv('CONDA_ENVS_PATH', conda_envs)
 setenv('CONDA_PKGS_DIRS', conda_pkgs)
 
