@@ -693,7 +693,7 @@
         version_number: "106.1",
         url: "https://github.com/Ensembl/ensembl-vep/archive/release/106.1.tar.gz",
         checksum: 'sha256:8078c37c0d0ad3af629aa66c442caeaf2b246ad03f62939d2b2163d05e93033a',
-        perl_module: 'perl/5.24.4',
+        perl_module: 'perl/5.33.0',
         htslib_module: 'htslib/1.10.2',
         bioperl_version: '1.6.924',
         bioperl_url: 'https://github.com/bioperl/bioperl-live/archive/release-1-6-924.tar.gz',
