@@ -21,7 +21,7 @@
         dest: "{{ bio_src }}/VEP.{{ version_number }}.tar.gz"
         checksum: "{{ checksum }}"
 
-    - name: Print wanting message
+    - name: Print warning message
       debug:
         msg: "If you're getting error with cpan installing XML::DOM::XPath, please check: https://stackoverflow.com/questions/47966512/error-installing-xmldomxpath"
 
