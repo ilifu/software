@@ -18,7 +18,7 @@
         msg: "The container {{ base_container_image }} is missing."
       when: not base_container_exists.stat.exists
     - name: Create RStudio {{ item.rstudio_version }} container
-      when: base_container_exists.stat.exists is True
+      when: base_container_exists.stat.exists
       block:
         - name: Copy recipe  {{ container_recipe }}
           template:
