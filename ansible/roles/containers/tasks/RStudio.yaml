@@ -16,7 +16,7 @@
     - name: "Missing {{ base_container_image }}"
       fail:
         msg: "The container {{ base_container_image }} is missing."
-      when: base_container_exists.stat.exists is False
+      when: not base_container_exists.stat.exists
     - name: Create RStudio {{ item.rstudio_version }} container
       when: base_container_exists.stat.exists is True
       block:
