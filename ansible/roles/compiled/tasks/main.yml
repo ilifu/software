@@ -242,12 +242,20 @@
         checksum: "sha256:f8145616e68c00041d1a6399b76387390388f8359581abc24432bb969b5e3c57"
       }
       - {
+        version_number: "3.9.12",
+        checksum: "sha256:2cd94b20670e4159c6d9ab57f91dbf255b97d8c1a1451d1c35f4ec1968adf971"
+      }
+      - {
         version_number: "3.10.0",
         checksum: "md5:3e7035d272680f80e3ce4e8eb492d580"
       }
       - {
         version_number: "3.10.1",
         checksum: "md5:789210934745a65247a3ebf5da9adb64"
+      }
+      - {
+        version_number: "3.10.4",
+        checksum: "sha256:80bf925f571da436b35210886cf79f6eb5fa5d6c571316b73568343451f77a19"
       }
     pip_packages:
       - pip
