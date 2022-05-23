@@ -1,0 +1,46 @@
+- name: Install Pandoc
+  vars:
+    pandoc_dir: "{{ common_dir }}/pandoc"
+    pandoc_module_dir: "{{ common_modules }}/pandoc"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ pandoc_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/pandoc-{{ version_number }}"
+  tags:
+    - never
+    - pandoc{{ item.version_number }}
+  block:
+    - name: Install pandoc {{ version_number }}
+      block:
+        - name: Download and install pandoc {{ version_number }}
+          block:
+            - name: Download pandoc {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ common_src }}/pandoc-{{ version_number }}.tar.gz"
+                checksum: "{{ checksum }}"
+            - name: Unzip pandoc {{ version_number }}
+              unarchive:
+                src: "{{ common_src }}/pandoc-{{ version_number }}.tar.gz"
+                dest: "/dev/shm/"
+                creates: "{{ unzip_dir }}"
+            - name: Ensure installation parent exists
+              file:
+                path: "{{ pandoc_dir }}"
+                state: directory
+                mode: o=rwx,g=rx,o=rx
+            - name: Move unzipped dir to installation location
+              command: "mv {{ unzip_dir }} {{ install_dir }}"
+
+    - name: Install pandoc {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ pandoc_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install pandoc {{ version_number }} module file
+          template:
+            src: pandoc.lua
+            dest: "{{ pandoc_module_dir }}/{{ version_number }}.lua"
