@@ -1009,9 +1009,11 @@
   vars:
     beagle_versions:
       - {
-        version_number: "2.18",
-        checksum: "sha256:103df36dc21081b7205d763ef7705e340eb0ea7e18694239b328a549892cc007",
-        url: "https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-linux-amd64.tar.gz",
+        version_number: "3.1.2",
+        checksum: "sha256:dd872b484a3a9f0bce369465e60ccf4e4c0cd7bd5ce41499415366019f236275",
+        url: "https://github.com/beagle-dev/beagle-lib/archive/refs/tags/v3.1.2.tar.gz",
+        cuda_location: "/software/common/cuda/10.2.89_440.33.01",
+        java_location: "/software/common/java/jdk-17.0.2"
       }
   include_tasks:
     file: beagle.yaml

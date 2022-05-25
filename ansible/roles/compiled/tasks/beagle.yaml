@@ -1,14 +1,16 @@
 ---
 - name: Install BEAGLE {{ item.version_number }}
   vars:
-    beagle_dir: "{{ common_dir }}/beagle"
-    beagle_module_dir: "{{ common_modules }}/beagle"
+    beagle_dir: "{{ bio_dir }}/beagle"
+    beagle_module_dir: "{{ bio_modules }}/beagle"
     version_number: "{{ item.version_number }}"
     checksum: "{{ item.checksum }}"
     install_dir: "{{ beagle_dir }}/{{ version_number }}"
-    unzipdir: "/dev/shm/BEAGLE-{{ version_number }}"
+    unzipdir: "/dev/shm/beagle-lib-{{ version_number }}"
     build_dir: "{{ unzipdir }}/build"
-    beagle_url: "https://www.beagle.org/ftp/beagle/{{ version_number }}/BEAGLE-{{ version_number }}.tar.xz"
+    beagle_url: "{{ item.url }}"
+    cuda_location: "{{ item.cuda_location }}"
+    java_location: "{{ item.java_location }}"
   tags:
     - never
     - beagle{{ item.version_number }}
@@ -19,63 +21,82 @@
         - name: Download BEAGLE {{ version_number }} from {{ beagle_url }}
           get_url:
             url: "{{ beagle_url }}"
-            dest: "{{ common_src }}/BEAGLE-{{ version_number }}.tar.xz"
+            dest: "{{ common_src }}/beagle-v{{ version_number }}.tar.gz"
             checksum: "{{ checksum }}"
         - name: Unzip BEAGLE {{ version_number }}
           unarchive:
-            src: "{{ common_src }}/BEAGLE-{{ version_number }}.tar.xz"
+            src: "{{ common_src }}/beagle-v{{ version_number }}.tar.gz"
             dest: "/dev/shm/"
             creates: "{{ unzipdir }}"
-        - name: Make BEAGLE {{ version_number }} build directory
-          file:
-            path: "{{ build_dir }}"
-            state: directory
-        - name: Run BEAGLE {{ version_number }} configure
-          command: "../configure --prefix={{ install_dir }} --enable-optimizations --enable-loadable-sqlite-extensions"
+#        - name: Make BEAGLE {{ version_number }} build directory
+#          file:
+#            path: "{{ build_dir }}"
+#            state: directory
+        - name: Run autogen BEAGLE {{ version_number }}
+          command: "./autogen.sh"
           args:
-            chdir: "{{ build_dir }}"
-            creates: "{{ build_dir }}/Makefile"
+            chdir: "{{ unzipdir }}"
+            creates: "{{ unzipdir }}/configure"
           environment:
+            PATH: "{{ cuda_location }}/bin:{{ ansible_env.PATH }}"
+            LD_LIBRARY_PATH: "{{ cuda_location }}/lib64:{{ cuda_location }}/extras/CUPTI/lib64:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ cuda_location }}/lib64:{{ cuda_location }}/extras/CUPTI/lib64:{{ ansible_env.LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ cuda_location }}/include:{{ cuda_location }}/extras/CUPTI/include:{{ ansible_env.INCLUDE | default('') }}"
+            C_INCLUDE: "{{ cuda_location }}/include:{{ cuda_location }}/extras/CUPTI/include:{{ ansible_env.C_INCLUDE | default('') }}"
+            PKG_CONFIG_PATH: "{{ cuda_location }}/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
             CFLAGS: "-fstack-protector -Wformat"
+        - name: Run configure BEAGLE {{ version_number }}
+          command: "./configure --prefix={{ install_dir }} --with-cuda={{ cuda_location }}"
+          args:
+            chdir: "{{ unzipdir }}"
+            creates: "{{ unzipdir }}/Makefile"
+          environment:
+            JAVA_HOME: "{{ java_location }}"
+            JDK_HOME: "{{ java_location }}"
+            PATH: "{{ java_location }}/bin:{{ ansible_env.PATH }}"
+            LD_LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            C_INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.C_INCLUDE | default('') }}"
+            CFLAGS: "-fstack-protector -Wformat"
+#        - name: Run cmake BEAGLE {{ version_number }} configure
+#          command: "cmake -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -DBUILD_OPENCL=OFF .."
+#          args:
+#            chdir: "{{ build_dir }}"
+##            creates: "{{ build_dir }}/Makefile"
+#          environment:
+#            PATH: "{{ cuda_location }}/bin:{{ ansible_env.PATH }}"
+#            LD_LIBRARY_PATH: "{{ cuda_location }}/lib64:{{ cuda_location }}/extras/CUPTI/lib64:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+#            LIBRARY_PATH: "{{ cuda_location }}/lib64:{{ cuda_location }}/extras/CUPTI/lib64:{{ ansible_env.LIBRARY_PATH | default('') }}"
+#            INCLUDE: "{{ cuda_location }}/include:{{ cuda_location }}/extras/CUPTI/include:{{ ansible_env.INCLUDE | default('') }}"
+#            C_INCLUDE: "{{ cuda_location }}/include:{{ cuda_location }}/extras/CUPTI/include:{{ ansible_env.C_INCLUDE | default('') }}"
+#            PKG_CONFIG_PATH: "{{ cuda_location }}/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+#            CFLAGS: "-fstack-protector -Wformat"
         - name: Build BEAGLE {{ version_number }}
           make:
-            chdir: "{{ build_dir }}"
-            params:
-              PROFILE_TASK="-m test.regrtest --pgo test_array test_base64 test_binascii test_binhex test_binop test_c_locale_coercion test_csv test_json test_hashlib test_unicode test_codecs test_traceback test_decimal test_math test_compile test_threading test_time test_fstring test_re test_float test_class test_cmath test_complex test_iter test_struct test_slice test_set test_dict test_long test_bytes test_memoryview test_io test_pickle"
+            chdir: "{{ unzipdir }}"
           environment:
             MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+            JAVA_HOME: "{{ java_location }}"
+            JDK_HOME: "{{ java_location }}"
+            PATH: "{{ java_location }}/bin:{{ ansible_env.PATH }}"
+            LD_LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            C_INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.C_INCLUDE | default('') }}"
         - name: Install BEAGLE {{ version_number }}
           make:
-            chdir: "{{ build_dir }}"
+            chdir: "{{ unzipdir }}"
             target: install
-        - name: Setup beagle to beagle3 symlink
-          file:
-            src: "beagle3"
-            dest: "{{ install_dir }}/bin/beagle"
-            state: link
-          ignore_errors: true
-        - name: Setup pip to pip3 symlink
-          file:
-            src: "pip3"
-            dest: "{{ install_dir }}/bin/pip"
-            state: link
-          ignore_errors: true
-        - name: Ensure pip is installed
-          command: "{{ install_dir }}/bin/beagle -m  ensurepip"
-        - name: install / upgrade pip packages
-          command: "{{ install_dir }}/bin/pip install --upgrade {{ package_name }}"
-          loop: "{{ pip_packages }}"
-          loop_control:
-            loop_var: "package_name"
 
-    - name: Install BEAGLE {{ version_number }} module
-      block:
-        - name: Check module dir
-          file:
-            path: "{{ beagle_module_dir }}"
-            state: directory
-            mode: u=rwx,g=rwx,o=rx
-        - name: Install BEAGLE module file
-          template:
-            src: beagle.lua
-            dest: "{{ beagle_module_dir }}/{{ version_number }}.lua"
+#    - name: Install BEAGLE {{ version_number }} module
+#      block:
+#        - name: Check module dir
+#          file:
+#            path: "{{ beagle_module_dir }}"
+#            state: directory
+#            mode: u=rwx,g=rwx,o=rx
+#        - name: Install BEAGLE module file
+#          template:
+#            src: beagle.lua
+#            dest: "{{ beagle_module_dir }}/{{ version_number }}.lua"
