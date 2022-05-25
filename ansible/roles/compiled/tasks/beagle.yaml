@@ -1,0 +1,81 @@
+---
+- name: Install BEAGLE {{ item.version_number }}
+  vars:
+    beagle_dir: "{{ common_dir }}/beagle"
+    beagle_module_dir: "{{ common_modules }}/beagle"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ beagle_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/BEAGLE-{{ version_number }}"
+    build_dir: "{{ unzipdir }}/build"
+    beagle_url: "https://www.beagle.org/ftp/beagle/{{ version_number }}/BEAGLE-{{ version_number }}.tar.xz"
+  tags:
+    - never
+    - beagle{{ item.version_number }}
+
+  block:
+    - name: Download, compile and install BEAGLE {{ version_number }}
+      block:
+        - name: Download BEAGLE {{ version_number }} from {{ beagle_url }}
+          get_url:
+            url: "{{ beagle_url }}"
+            dest: "{{ common_src }}/BEAGLE-{{ version_number }}.tar.xz"
+            checksum: "{{ checksum }}"
+        - name: Unzip BEAGLE {{ version_number }}
+          unarchive:
+            src: "{{ common_src }}/BEAGLE-{{ version_number }}.tar.xz"
+            dest: "/dev/shm/"
+            creates: "{{ unzipdir }}"
+        - name: Make BEAGLE {{ version_number }} build directory
+          file:
+            path: "{{ build_dir }}"
+            state: directory
+        - name: Run BEAGLE {{ version_number }} configure
+          command: "../configure --prefix={{ install_dir }} --enable-optimizations --enable-loadable-sqlite-extensions"
+          args:
+            chdir: "{{ build_dir }}"
+            creates: "{{ build_dir }}/Makefile"
+          environment:
+            CFLAGS: "-fstack-protector -Wformat"
+        - name: Build BEAGLE {{ version_number }}
+          make:
+            chdir: "{{ build_dir }}"
+            params:
+              PROFILE_TASK="-m test.regrtest --pgo test_array test_base64 test_binascii test_binhex test_binop test_c_locale_coercion test_csv test_json test_hashlib test_unicode test_codecs test_traceback test_decimal test_math test_compile test_threading test_time test_fstring test_re test_float test_class test_cmath test_complex test_iter test_struct test_slice test_set test_dict test_long test_bytes test_memoryview test_io test_pickle"
+          environment:
+            MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+        - name: Install BEAGLE {{ version_number }}
+          make:
+            chdir: "{{ build_dir }}"
+            target: install
+        - name: Setup beagle to beagle3 symlink
+          file:
+            src: "beagle3"
+            dest: "{{ install_dir }}/bin/beagle"
+            state: link
+          ignore_errors: true
+        - name: Setup pip to pip3 symlink
+          file:
+            src: "pip3"
+            dest: "{{ install_dir }}/bin/pip"
+            state: link
+          ignore_errors: true
+        - name: Ensure pip is installed
+          command: "{{ install_dir }}/bin/beagle -m  ensurepip"
+        - name: install / upgrade pip packages
+          command: "{{ install_dir }}/bin/pip install --upgrade {{ package_name }}"
+          loop: "{{ pip_packages }}"
+          loop_control:
+            loop_var: "package_name"
+
+    - name: Install BEAGLE {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ beagle_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install BEAGLE module file
+          template:
+            src: beagle.lua
+            dest: "{{ beagle_module_dir }}/{{ version_number }}.lua"

@@ -1004,3 +1004,18 @@
   tags:
     - never
     - pandoc
+
+- name: Install BEAGLE
+  vars:
+    beagle_versions:
+      - {
+        version_number: "2.18",
+        checksum: "sha256:103df36dc21081b7205d763ef7705e340eb0ea7e18694239b328a549892cc007",
+        url: "https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-linux-amd64.tar.gz",
+      }
+  include_tasks:
+    file: beagle.yaml
+  loop: "{{ beagle_versions }}"
+  tags:
+    - never
+    - beagle
