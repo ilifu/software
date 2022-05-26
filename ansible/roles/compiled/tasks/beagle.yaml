@@ -46,20 +46,20 @@
             PKG_CONFIG_PATH: "{{ cuda_location }}/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
             CFLAGS: "-fstack-protector -Wformat"
         - name: Run configure BEAGLE {{ version_number }}
-          command: "./configure --prefix={{ install_dir }} --with-cuda={{ cuda_location }}"
+          command: "./configure --prefix={{ install_dir }} --with-cuda={{ cuda_location }} --with-jdk={{ java_location }}"
           args:
             chdir: "{{ unzipdir }}"
             creates: "{{ unzipdir }}/Makefile"
           environment:
             JAVA_HOME: "{{ java_location }}"
             JDK_HOME: "{{ java_location }}"
-            PATH: "{{ java_location }}/bin:{{ ansible_env.PATH }}"
-            LD_LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
-            INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            C_INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.C_INCLUDE | default('') }}"
+#            PATH: "{{ java_location }}/bin:{{ ansible_env.PATH }}"
+#            LD_LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+#            LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
+#            INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
+#            C_INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.C_INCLUDE | default('') }}"
             CFLAGS: "-fstack-protector -Wformat"
-            GCC_EXEC_PREFIX: "-8"
+#            GCC_EXEC_PREFIX: "-8"
 #        - name: Run cmake BEAGLE {{ version_number }} configure
 #          command: "cmake -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -DBUILD_OPENCL=OFF .."
 #          args:
@@ -78,14 +78,14 @@
             chdir: "{{ unzipdir }}"
           environment:
             MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
-            JAVA_HOME: "{{ java_location }}"
-            JDK_HOME: "{{ java_location }}"
-            PATH: "{{ java_location }}/bin:{{ ansible_env.PATH }}"
-            LD_LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
-            INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            C_INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.C_INCLUDE | default('') }}"
-            GCC_EXEC_PREFIX: "-8"
+#            JAVA_HOME: "{{ java_location }}"
+#            JDK_HOME: "{{ java_location }}"
+#            PATH: "{{ java_location }}/bin:{{ ansible_env.PATH }}"
+#            LD_LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+#            LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
+#            INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
+#            C_INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.C_INCLUDE | default('') }}"
+#            GCC_EXEC_PREFIX: "-8"
         - name: Install BEAGLE {{ version_number }}
           make:
             chdir: "{{ unzipdir }}"
