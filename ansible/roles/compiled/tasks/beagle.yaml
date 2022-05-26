@@ -59,6 +59,7 @@
             INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
             C_INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.C_INCLUDE | default('') }}"
             CFLAGS: "-fstack-protector -Wformat"
+            GCC_EXEC_PREFIX: "-8"
 #        - name: Run cmake BEAGLE {{ version_number }} configure
 #          command: "cmake -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -DBUILD_OPENCL=OFF .."
 #          args:
@@ -84,6 +85,7 @@
             LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
             INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
             C_INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.C_INCLUDE | default('') }}"
+            GCC_EXEC_PREFIX: "-8"
         - name: Install BEAGLE {{ version_number }}
           make:
             chdir: "{{ unzipdir }}"
