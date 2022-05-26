@@ -46,7 +46,7 @@
 #            PKG_CONFIG_PATH: "{{ cuda_location }}/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
             CFLAGS: "-fstack-protector -Wformat"
         - name: Run configure BEAGLE {{ version_number }}
-          command: "./configure --prefix={{ install_dir }} --with-cuda={{ cuda_location }} --with-jdk={{ java_location }}"
+          command: "./configure --prefix={{ install_dir }} --with-cuda={{ cuda_location }} --with-jdk={{ java_location }}/bin"
           args:
             chdir: "{{ unzipdir }}"
             creates: "{{ unzipdir }}/Makefile"
