@@ -1,0 +1,46 @@
+- name: Create beast {{ item.version_name }} container
+  vars:
+    - base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
+    - beast_version_number: "{{ item.beast_version_number }}"
+    - container_name: "beast{{ item.{{ item.r_version }}"
+    - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
+    - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
+    - beast_module_dir: "{{ common_modules }}/beast"
+  tags:
+    - "beast{{ item.r_version }}"
+    - never
+  block:
+    - name: "Check for existence of {{ base_container_image }} container"
+      stat:
+        path: "{{ base_container_image }}"
+      register: base_container_exists
+    - name: "Missing {{ base_container_image }}"
+      fail:
+        msg: "The container {{ base_container_image }} is missing."
+      when: not base_container_exists.stat.exists
+    - name: Create beast {{ item.rstudio_version }} container
+      when: base_container_exists.stat.exists
+      block:
+        - name: Copy recipe  {{ container_recipe }}
+          template:
+            src: "beast.def"
+            dest: "{{ container_recipe }}"
+        - name: Build container {{ container_image }}
+          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          args:
+            creates: "{{ container_image }}"
+          become: true
+#          environment:
+#            SINGULARITY_TMPDIR: "/dev/shm"
+
+    - name: Install beast {{ container_name }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ R_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install beast module file
+          template:
+            src: beast.lua
+            dest: "{{ R_module_dir }}/{{ container_name}}.lua"
