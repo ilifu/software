@@ -6,7 +6,6 @@
     version_number: "{{ item.version_number }}"
     checksum: "{{ item.checksum }}"
     install_dir: "{{ singularity_dir }}/{{ version_number }}"
-
     go_location: "{{ item.go_location }}"
   tags:
     - never
