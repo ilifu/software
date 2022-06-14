@@ -17,5 +17,5 @@ apps = {
 }
 
 for i, app in ipairs(apps) do
-    set_alias(app, "singularity run --app " .. app .. " " .. singularity_image)
+    set_alias(app, "singularity run --nv --app " .. app .. " " .. singularity_image)
 end
