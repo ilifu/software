@@ -836,22 +836,25 @@
   vars:
     exomiser_versions:
       - {
-          version_number: "13.0.0",
-          url: "https://github.com/exomiser/Exomiser/releases/download/13.0.0/exomiser-cli-13.0.0-distribution.zip",
-          checksum: "sha256:b48d6835a6682b23a4352aab19c09d7a43db03c2cc1363f34de7565f89358996",
+          version_number: "13.0.1",
+          url: "https://github.com/exomiser/Exomiser/releases/download/13.0.1/exomiser-cli-13.0.1-distribution.zip",
+          checksum: "sha256:bad1a7f6c29b0844bc4931337af794358a75602da0aace87028ff57b3abf61a7",
       }
     exomiser_data:
       - {
         name: "hg19",
-        url: "https://g-879a9f.f5dc97.75bc.dn.glob.us/latest/2109_hg19.zip",
+        url: "https://data.monarchinitiative.org/exomiser/latest/2109_hg19.zip",
+        checksum: "sha256:50f0005e97b697af6fb5ba35b5389aa417e1b040bb8700e3eb29fc339267c5fc",
       }
       - {
           name: "hg38",
-          url: "https://g-879a9f.f5dc97.75bc.dn.glob.us/latest/2109_hg38.zip",
+          url: "https://data.monarchinitiative.org/exomiser/latest/2109_hg38.zip",
+          checksum: "sha256:67cf14400681978f1ec8a33b660413b16fe6959d12f1bb2e29ba0e35e781107c",
       }
       - {
           name: "phenotype",
-          url: "https://g-879a9f.f5dc97.75bc.dn.glob.us/latest/2109_phenotype.zip"
+          url: "https://data.monarchinitiative.org/exomiser/latest/2109_phenotype.zip",
+          checksum: "sha256:ef2eb758e1fb3aff9b84f769bd05f7f2d5e042b55a896cd7095cd30c29f20458",
       }
   include_tasks:
     file: exomiser.yaml
