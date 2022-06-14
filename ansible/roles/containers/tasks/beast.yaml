@@ -1,13 +1,20 @@
 - name: Create beast {{ item.version_name }} container
   vars:
+    - beast_version: "{{ item.beast_version }}"
+    - beast_url: "{{ item.beast_url }}"
+    - beast_checksum: "{{ item.beast_checksum }}"
+    - beagle_version: "{{ item.beagle_version }}"
+    - beagle_url: "{{ item.beagle_url }}"
+    - beagle_checksum: "{{ item.beagle_checksum }}"
+    - cuda_install: "{{ item.cuda_install }}"
+    - cuda_version: "{{ item.cuda_version }}"
     - base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
-    - beast_version_number: "{{ item.beast_version_number }}"
-    - container_name: "beast{{ item.{{ item.r_version }}"
-    - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
-    - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
-    - beast_module_dir: "{{ common_modules }}/beast"
+    - container_name: "beast{{  beast_version }}"
+    - container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
+    - container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+    - beast_module_dir: "{{ bio_modules }}/beast"
   tags:
-    - "beast{{ item.r_version }}"
+    - "beast{{ item.beast_version }}"
     - never
   block:
     - name: "Check for existence of {{ base_container_image }} container"
@@ -18,9 +25,19 @@
       fail:
         msg: "The container {{ base_container_image }} is missing."
       when: not base_container_exists.stat.exists
-    - name: Create beast {{ item.rstudio_version }} container
+    - name: Create beast {{ beast_version }} container
       when: base_container_exists.stat.exists
       block:
+        - name: Download beast {{ beast_version }}
+          get_url:
+            url: "{{ beast_url }}"
+            dest: "{{ bio_src }}/BEASTv{{ beast_version }}.tgz"
+            checksum: "{{ beast_checksum }}"
+        - name: Download beagle {{ beagle_version }}
+          get_url:
+            url: "{{ beagle_url }}"
+            dest: "{{ bio_src }}/beagle_v{{ beagle_version }}.tar.gz"
+            checksum: "{{ beagle_checksum }}"
         - name: Copy recipe  {{ container_recipe }}
           template:
             src: "beast.def"

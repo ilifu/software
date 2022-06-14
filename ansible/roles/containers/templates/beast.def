@@ -1,0 +1,103 @@
+Bootstrap: localimage
+From: {{ base_container_image }}
+
+%labels
+  Maintainer Dane Kennedy
+  Beast_Version {{ beast_version }}
+  Beagle_Version {{ beagle_version }}
+  Cuda_Version {{ cuda_version }}
+
+%help
+  beast {{ beast_version }} container with beagle {{ beagle_version }} and cuda {{ cuda_version }}
+
+%apprun beast
+  exec beast "${@}"
+
+%apprun beauti
+  exec beauti "${@}"
+
+%apprun loganalyser
+  exec loganalyser "${@}"
+
+%apprun logcombiner
+  exec logcombiner "${@}"
+
+%apprun treestat
+  exec treestat "${@}"
+
+
+%environment
+  export CUDA_PATH=/opt/cuda
+  export PATH=/opt/beast/bin:/opt/cuda/bin:${PATH}
+  export LD_LIBRARY_PATH=/opt/cuda/lib64:/opt/cuda/extras/CUPTI/lib64:/opt/beagle/lib:${LD_LIBRARY_PATH}
+  export INCLUDE=/opt/cuda/include:/opt/cuda/targets/x86_64-linux/include:/opt/cuda/extras/CUPTI/include:/opt/beagle/include:${INCLUDE}
+
+%setup
+  mkdir -p ${SINGULARITY_ROOTFS}/usr/lib/rstudio-server/bin
+
+%files
+  {{ bio_src }}/BEASTv{{ beast_version }}.tgz /opt/BEASTv{{ beast_version }}.tgz
+  {{ bio_src }}/beagle_v{{ beagle_version }}.tar.gz /opt/beagle_v{{ beagle_version }}.tar.gz
+  {{ item.cuda_install }} /opt/cuda.run
+
+%post
+  # Create Installation Directories and export paths. This is needed as part of post.
+  # %environment scriptlet does not define these paths during %post, only after.
+  export DEBIAN_FRONTEND=noninteractive
+
+  # Update apt
+  apt-get update -y && apt-get dist-upgrade -y
+  apt-get install -y \
+    autoconf \
+    automake \
+    build-essential \
+    cmake \
+    gcc \
+    git \
+    libtool \
+    openjdk-11-jdk \
+    pkg-config
+
+  # install cuda
+  add-apt-repository ppa:graphics-drivers/ppa
+
+  # install cuda toolkit
+  /opt/cuda.run --silent --toolkit --toolkitpath=/opt/cuda --nox11 --override
+
+  # remove cuda install
+  rm /opt/cuda.run
+
+  # update paths and whatnot
+  export PATH=/opt/cuda/bin:${PATH}
+  export LD_LIBRARY_PATH=/opt/cuda/lib64:/opt/cuda/targets/x86_64-linux/lib/stubs:/opt/cuda/extras/CUPTI/lib64:${LD_LIBRARY_PATH}
+  export LIBRARY_PATH=/opt/cuda/lib64:/opt/cuda/targets/x86_64-linux/lib/stubs:/opt/cuda/extras/CUPTI/lib64:${LIBRARY_PATH}
+  export INCLUDE=/opt/cuda/include:/opt/cuda/targets/x86_64-linux/include:/opt/cuda/extras/CUPTI/include:${INCLUDE}
+  export C_INCLUDE=/opt/cuda/include:/opt/cuda/targets/x86_64-linux/include:/opt/cuda/extras/CUPTI/include:${C_INCLUDE}
+
+  # compile beagle
+  cd /opt
+  tar -zxf /opt/beagle_v{{ beagle_version }}.tar.gz
+  cd beagle-lib-{{ beagle_version }}
+  ./autogen.sh
+  mkdir build; cd build
+  ../configure --with-cuda=/opt/cuda --with-nvcc-ccbin=/opt/cuda/bin/nvcc --prefix=/opt/beagle
+  make
+  make install
+
+  # Clean beagle
+  rm -rf /opt/beagle_v{{ beagle_version }}.tar.gz beagle-lib-{{ beagle_version }}
+
+  # unzip beast
+  cd /opt
+  tar -zxf /opt/BEASTv{{ beast_version }}.tgz
+  mv BEASTv{{ beast_version }} beast
+
+  # Clean beast
+  rm /opt/BEASTv{{ beast_version }}.tgz
+
+  # Cleanup the container
+  apt-get clean
+  apt-get autoclean
+
+%test
+  true

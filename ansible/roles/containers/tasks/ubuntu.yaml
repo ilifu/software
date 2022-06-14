@@ -37,9 +37,9 @@
     - name: "Missing {{ base_container_image }}"
       fail:
         msg: "The container {{ base_container_image }} is missing."
-      when: base_container_exists.stat.exists is False
+      when: not base_container_exists.stat.exists
     - name: Create container
-      when: base_container_exists.stat.exists is True
+      when: base_container_exists.stat.exists
       block:
         - name: Copy recipe  {{ container_recipe }}
           template:
