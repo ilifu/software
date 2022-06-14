@@ -34,22 +34,33 @@
             path: "{{ exomiser_data_dir }}"
             state: directory
             mode: "u=rwx,go=rx"
-        - name: "Download data file {{ the_data.name }} from {{ the_data.url }} to {{ exomiser_data_dir }}"
-          get_url:
-            url: "{{ the_data.url }}"
-            dest: "{{ exomiser_data_dir }}/"
-          loop: "{{ exomiser_data }}"
-          loop_control:
-            loop_var: "the_data"
+        - name: "Configure data-directory"
+          lineinfile:
+            path: "{{ install_dir }}/application.properties"
+            insertafter: "^#exomiser.data-directory=.*"
+            regex: "^exomiser.data-directory=.*"
+            line: "exomiser.data-directory={{ exomiser_data_dir }}"
 
-#    - name: Install exomiser {{ version_number }} module
-#      block:
-#        - name: Check module dir {{ exomiser_module_dir }}
-#          file:
-#            path: "{{ exomiser_module_dir }}"
-#            state: directory
-#            mode: u=rwx,g=rwx,o=rx
-#        - name: Install exomiser {{ version_number }} module file
-#          template:
-#            src: exomiser.lua
-#            dest: "{{ exomiser_module_dir }}/{{ version_number }}.lua"
+    - name: Install exomiser {{ version_number }} module
+      block:
+        - name: Check module dir {{ exomiser_module_dir }}
+          file:
+            path: "{{ exomiser_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install exomiser {{ version_number }} module file
+          template:
+            src: exomiser.lua
+            dest: "{{ exomiser_module_dir }}/{{ version_number }}.lua"
+
+- name: Install exomiser data
+  vars:
+    exomiser_dir: "{{ bio_dir }}/exomiser"
+    exomiser_data_dir: "{{ exomiser_dir }}/data"
+  tags:
+    - never
+    - exomiserdata
+  include_tasks: exomiser_data.yaml
+  loop: "{{ exomiser_data }}"
+  loop_control:
+    loop_var: "the_data"

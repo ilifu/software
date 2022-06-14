@@ -1,0 +1,10 @@
+---
+- name: "Download {{ the_data.name }} from {{ the_data.url }} to {{ exomiser_data_dir }}"
+  get_url:
+    url: "{{ the_data.url }}"
+    dest: "{{ exomiser_data_dir }}/"
+    checksum: "{{ the_data.checksum }}"
+
+- name: "Uncompress {{ the_data.name }}"
+  debug:
+    msg: "Uncompressing {{ the_data.name }}"
