@@ -54,10 +54,10 @@
       block:
         - name: Check module dir
           file:
-            path: "{{ R_module_dir }}"
+            path: "{{ beast_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install beast module file
           template:
             src: beast.lua
-            dest: "{{ R_module_dir }}/{{ container_name}}.lua"
+            dest: "{{ beast_module_dir }}/{{ container_name }}.lua"
