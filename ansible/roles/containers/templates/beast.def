@@ -85,12 +85,12 @@ From: {{ base_container_image }}
   make install
 
   # Clean beagle
-  rm /opt/beagle_v{{ beagle_version }}.tar.gz
+  rm -rf /opt/beagle_v{{ beagle_version }}.tar.gz beagle-lib-{{ beagle_version }}
 
-  # compile beast
+  # unzip beast
   cd /opt
   tar -zxf /opt/BEASTv{{ beast_version }}.tgz
-  cd BEASTv{{ beast_version }}
+  mv BEASTv{{ beast_version }} beast
 
   # Clean beast
   rm /opt/BEASTv{{ beast_version }}.tgz
