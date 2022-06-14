@@ -15,3 +15,4 @@ setenv('_JAVA_OPTIONS', '-Xmx16g')
 prepend_path('PATH', exomiser_dir)
 prepend_path('CLASSPATH', exomiser_dir)
 
+set_alias("exomiser", "java -jar {{ install_dir }}/exomiser-cli-{{ version_number }}.jar")

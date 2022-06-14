@@ -1,6 +1,5 @@
 ---
 - name: "Download {{ the_data.name }} from {{ the_data.url }} to {{ exomiser_data_dir }}"
-  tags: [never, exomiser_data]
   get_url:
     url: "{{ the_data.url }}"
     dest: "{{ exomiser_data_dir }}/"
