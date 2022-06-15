@@ -1007,3 +1007,18 @@
   tags:
     - never
     - pandoc
+
+- name: Install Stacks
+  vars:
+    versions:
+      - {
+        version_number: "2.61",
+        checksum: "sha256:ec2719b21a6a572677530306daa124381ec6e5958519b4d21ef6432cfe9a7585",
+        url: "https://catchenlab.life.illinois.edu/stacks/source/stacks-2.61.tar.gz",
+      }
+  include_tasks:
+    file: stacks.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - stacks
