@@ -1,0 +1,10 @@
+Bootstrap: docker
+From: {{ docker_source }}
+
+%labels
+  Maintainer Dane Kennedy
+  Version 0.1
+  ClinSV
+
+%help
+  Robust detection of clinically relevant structural and copy number variation from whole genome sequencing data

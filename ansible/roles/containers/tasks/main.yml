@@ -143,3 +143,18 @@
   tags:
     - never
     - beast
+
+- name: Create ClinSV Containers
+  vars:
+    versions:
+      - {
+          version_number: "1.0.0",
+          docker_source: "mrbradley2/clinsv:v1.0",
+          reference_data: "https://nci.space/_projects/clinsv_b38/refdata-b38_v1.0.tar"
+      }
+  include_tasks:
+    file: ClinSV.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - ClinSV
