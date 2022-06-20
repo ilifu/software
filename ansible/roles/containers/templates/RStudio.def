@@ -149,6 +149,24 @@ From: {{ base_container_image }}
   Rscript -e 'install.packages("BiocManager")'
   Rscript -e 'BiocManager::install(ask=FALSE, update=TRUE)'
 
+  Rscript -e 'install.packages(
+    pkgs = "bcbioRNASeq",
+    repos = c(
+        "https://r.acidgenomics.com",
+        BiocManager::repositories()
+    ),
+    dependencies = TRUE
+  )'
+
+  install.packages(
+    pkgs = "DESeqAnalysis",
+    repos = c(
+        "https://r.acidgenomics.com",
+        BiocManager::repositories()
+    ),
+    dependencies = TRUE
+  )
+
   # Cleanup the container
   apt-get clean
   apt-get autoclean
