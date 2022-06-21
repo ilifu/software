@@ -7,6 +7,10 @@
         version_name: bionic,
         version_number: 18.04,
       }
+#      - {
+#        version_name: focal,
+#        version_number: 20.04,
+#      }
   include_tasks:
     file: ubuntu.yaml
   loop: "{{ ubuntu_versions }}"
