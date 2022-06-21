@@ -84,9 +84,11 @@ From: {{ base_container_image }}
     wget \
 
   # Add R repositories
-  echo "deb http://cran.r-project.org/bin/linux/ubuntu {{ item.base_container_version_name }}-cran40/" > /etc/apt/sources.list.d/r.list
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
-  apt-get update
+#  echo "deb http://cran.r-project.org/bin/linux/ubuntu {{ item.base_container_version_name }}-cran40/" > /etc/apt/sources.list.d/r.list
+#  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+#  apt-get update
+  wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+  add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
 
 # Install R and requirements
   apt-get install -y --no-install-recommends \
@@ -148,6 +150,24 @@ From: {{ base_container_image }}
 
   Rscript -e 'install.packages("BiocManager")'
   Rscript -e 'BiocManager::install(ask=FALSE, update=TRUE)'
+
+  Rscript -e 'install.packages(
+    pkgs = "bcbioRNASeq",
+    repos = c(
+        "https://r.acidgenomics.com",
+        BiocManager::repositories()
+    ),
+    dependencies = TRUE
+  )'
+
+  Rscript -e 'install.packages(
+    pkgs = "DESeqAnalysis",
+    repos = c(
+        "https://r.acidgenomics.com",
+        BiocManager::repositories()
+    ),
+    dependencies = TRUE
+  )'
 
   # Cleanup the container
   apt-get clean

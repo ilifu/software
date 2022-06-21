@@ -1,5 +1,5 @@
 Bootstrap: debootstrap
-MirrorURL: http://ftp.leg.uct.ac.za/ubuntu/
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
 OSVersion: {{ item.version_name }}
 Include: software-properties-common
 
@@ -48,7 +48,7 @@ Include: software-properties-common
     dpkg-reconfigure --frontend noninteractive tzdata
 
   # Create /users to bind home directories into the container.
-  mkdir -p /users /scratch /data /software
+  mkdir -p /users /scratch /data /software /idia /ilifu /carta_share /cchem /cbio /scratch3
 
   # Cleanup the container
   apt-get clean
