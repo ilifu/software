@@ -8,3 +8,7 @@ From: {{ docker_source }}
 
 %help
   Robust detection of clinically relevant structural and copy number variation from whole genome sequencing data
+
+%post
+  # fix permissions on bigwig stupidity
+  chmod ugo+x /app/clinsv/bigWigTools/*
