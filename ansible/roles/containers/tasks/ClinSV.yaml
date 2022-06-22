@@ -27,11 +27,11 @@
           file:
             path: "{{ ClinSV_data_dir }}"
             state: directory
-        - name: "Get reference data from {{ reference_data }}"
-          tags: [never, data]
-          get_url:
-            url: "{{ reference_data }}"
-            dest: "{{ ClinSV_data_dir }}"
+#        - name: "Get reference data from {{ reference_data }}"
+#          tags: [never, data]
+#          get_url:
+#            url: "{{ reference_data }}"
+#            dest: "{{ ClinSV_data_dir }}"
 
     - name: Install ClinSV {{ container_name }} module
       block:
