@@ -11,4 +11,4 @@ From: {{ docker_source }}
 
 %post
   # fix permissions on bigwig stupidity
-  chmod ugo+x /app/clinsv/bigWigTools/*
+  chmod ugo+x /app/clinsv/bigWigTools/* /app/clinsv/bin/*
