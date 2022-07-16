@@ -103,6 +103,8 @@ From: {{ base_container_image }}
     libcairo2-dev \
     libxt-dev \
     netcdf-bin \
+    pandoc \
+    pandoc-citeproc \
     patchelf \
     r-base=${R_VERSION}* \
     r-base-core=${R_VERSION}* \
