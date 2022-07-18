@@ -57,6 +57,7 @@ From: {{ base_container_image }}
     git \
     hdf5-tools libhdf5-dev \
     hwloc libhwloc-dev \
+    imagemagick \
     libboost-all-dev \
     libcairo2-dev \
     libcurl4-openssl-dev \
@@ -73,6 +74,8 @@ From: {{ base_container_image }}
     libxslt1.1 libxslt1-dev \
     libxt-dev \
     netcdf-bin \
+    pandoc \
+    pandoc-citeproc \
     patchelf \
     pkg-config \
     python python-dev python3 python3-dev \
