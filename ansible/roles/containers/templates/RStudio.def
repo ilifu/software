@@ -95,6 +95,7 @@ From: {{ base_container_image }}
     ca-certificates \
     gdebi-core \
     hdf5-tools \
+    imagemagick \
     libhdf5-dev \
     libcurl4-openssl-dev \
     libnetcdf-dev \
