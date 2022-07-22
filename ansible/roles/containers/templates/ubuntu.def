@@ -1,7 +1,6 @@
 Bootstrap: debootstrap
 MirrorURL: http://us.archive.ubuntu.com/ubuntu/
 OSVersion: {{ item.version_name }}
-Include: software-properties-common
 
 %labels
   Maintainer Dane Kennedy
@@ -27,13 +26,24 @@ Include: software-properties-common
   # Update apt
   apt-get update -y && apt-get dist-upgrade -y
 
+  apt-get install software-properties-common -y
+
   # Add repositories
   apt-add-repository universe
   apt-add-repository restricted
   apt-get update
 
   # Install common stuff
-  apt-get install -y locales screen tmux tcsh zsh lftp nano emacs tzdata
+  apt-get install -y \
+    emacs \
+    lftp \
+    locales \
+    nano \
+    screen \
+    tcsh \
+    tmux \
+    tzdata \
+    zsh \
 
   # Configure locale
   echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
@@ -48,7 +58,17 @@ Include: software-properties-common
     dpkg-reconfigure --frontend noninteractive tzdata
 
   # Create /users to bind home directories into the container.
-  mkdir -p /users /scratch /data /software /idia /ilifu /carta_share /cchem /cbio /scratch3
+  mkdir -p \
+    /carta_share \
+    /cbio \
+    /cchem \
+    /data \
+    /idia \
+    /ilifu \
+    /scratch \
+    /scratch3 \
+    /software \
+    /users \
 
   # Cleanup the container
   apt-get clean

@@ -67,7 +67,7 @@ From: {{ base_container_image }}
     libncurses5 libncurses5-dev \
     libnetcdf-dev \
     libnuma1 libnuma-dev \
-    libreadline7 libreadline-dev \
+    libreadline-dev \
     libssl1.1 libssl-dev \
     libtool \
     libxml2 libxml2-dev \
@@ -95,7 +95,17 @@ From: {{ base_container_image }}
   ldconfig
 
   # Create /users to bind home directories into the container.
-  mkdir -p /users /scratch /data /software
+  mkdir -p \
+    /carta_share \
+    /cbio \
+    /cchem \
+    /data \
+    /idia \
+    /ilifu \
+    /scratch \
+    /scratch3 \
+    /software \
+    /users \
 
   # Cleanup the container
   apt-get clean
