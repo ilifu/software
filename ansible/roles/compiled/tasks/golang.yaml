@@ -11,7 +11,12 @@
     - never
     - golang{{ item.version_number }}
   block:
+    - name: Check if already installed
+      stat:
+        path: "{{ install_dir }}"
+      register: go_install_dir_stat
     - name: Install go {{ version_number }}
+      when: not go_install_dir_stat.stat.exists
       block:
         - name: Download and install go {{ version_number }}
           block:

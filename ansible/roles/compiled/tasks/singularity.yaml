@@ -34,7 +34,7 @@
                 state: directory
                 mode: o=rwx,g=rx,o=rx
             - name: Configure singularity
-              command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir=/usr/local/etc"
+              command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir=/usr/local/etc{% if version_number is version('3.10', '>=') %} --without-seccomp --without-conmon{% endif %}"
               args:
                 chdir: "{{ unzip_dir }}"
                 creates: "{{ unzip_dir }}/builddir/Makefile"
