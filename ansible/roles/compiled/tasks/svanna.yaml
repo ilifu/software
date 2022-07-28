@@ -1,0 +1,62 @@
+---
+- name: Install svanna {{ item.version_number }}
+  vars:
+    svanna_dir: "{{ bio_dir }}/svanna"
+    svanna_module_dir: "{{ bio_modules }}/svanna"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ svanna_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/svanna-cli-{{ version_number }}"
+  tags:
+    - never
+    - svanna{{ item.version_number }}
+
+  block:
+    - name: Check if svanna already installed
+      stat:
+        path: "{{ install_dir }}"
+      register: svanna_installed
+    - name: Download and install svanna {{ version_number }}
+      when: not svanna_installed.stat.exists
+      block:
+        - name: Download svanna {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{  bio_dir }}/src/svanna-cli-{{ version_number }}-distribution.zip"
+            checksum: "{{ checksum }}"
+        - name: Ensure svanna dir exists
+          file:
+            path: "{{ svanna_dir }}"
+            state: directory
+        - name: Uncompress svanna to {{ unzip_dir }}
+          unarchive:
+            src: "{{  bio_dir }}/src/svanna-cli-{{ version_number }}-distribution.zip"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Ensure svanna dir exists
+          file:
+            path: "{{ svanna_dir }}"
+            state: directory
+        - name: Move svanna to final location {{ install_dir }}
+          file:
+            src: "{{ unzip_dir }}"
+            dest: "{{ install_dir }}"
+            state: link
+    - name: Create svanna binary
+      template:
+        src: svanna.sh.j2
+        dest: "{{ install_dir }}/svanna"
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Install svanna {{ version_number }} module
+      block:
+        - name: Check module dir {{ svanna_module_dir }}
+          file:
+            path: "{{ svanna_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install svanna {{ version_number }} module file
+          template:
+            src: svanna.lua
+            dest: "{{ svanna_module_dir }}/{{ version_number }}.lua"
