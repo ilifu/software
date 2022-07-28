@@ -14,6 +14,11 @@
         checksum: "sha256:0022753d0cceecacdd3a795dd4cea2bd7ffdf9dc06e22ffd1be98411742fbb44",
         url: "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz",
       }
+      - {
+        version_number: "18.0.2",
+        checksum: "sha256:cf06f41a3952038df0550e8cbc2baf0aa877c3ba00cca0dd26f73134f8baf0e6",
+        url: "https://download.java.net/java/GA/jdk18.0.2/f6ad4b4450fd4d298113270ec84f30ee/9/GPL/openjdk-18.0.2_linux-x64_bin.tar.gz",
+      }
   include_tasks:
     file: openjdk.yaml
   loop: "{{ openjdk_versions }}"
@@ -21,7 +26,7 @@
     - never
     - openjdk
 
-- name: Install Jave Runtime Environment
+- name: Install Java Runtime Environment
   vars:
     jre_versions:
       - {
@@ -1033,3 +1038,4 @@
   tags:
     - never
     - stacks
+
