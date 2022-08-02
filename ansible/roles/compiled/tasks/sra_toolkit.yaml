@@ -1,0 +1,49 @@
+- name: Install SRA Toolkit
+  vars:
+    sra_toolkit_dir: "{{ bio_dir }}/sratoolkit"
+    sra_toolkit_module_dir: "{{ bio_modules }}/sratoolkit"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ sra_toolkit_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/sratoolkit.{{ version_number }}-ubuntu64"
+  tags:
+    - never
+    - sratoolkit{{ item.version_number }}
+  block:
+    - name: Check if already installed
+      stat:
+        path: "{{ install_dir }}"
+      register: sra_toolkit_install_dir_stat
+    - name: Install SRA Toolkit {{ version_number }}
+      when: not sra_toolkit_install_dir_stat.stat.exists
+      block:
+        - name: Download SRA Toolkit {{ version_number }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ common_src }}/sratoolkit-{{ version_number }}.tar.gz"
+            checksum: "{{ checksum }}"
+        - name: Unzip SRA Toolkit {{ version_number }}
+          unarchive:
+            src: "{{ common_src }}/sratoolkit-{{ version_number }}.tar.gz"
+            dest: "/dev/shm/"
+            creates: "{{ unzip_dir }}"
+        - name: Ensure installation parent exists
+          file:
+            path: "{{ sra_toolkit_dir }}"
+            state: directory
+            mode: o=rwx,g=rx,o=rx
+        - name: Move unzipped dir to installation location
+          command: "mv {{ unzip_dir }} {{ install_dir }}"
+
+    - name: Install SRA Toolkit {{ version_number }} module
+      block:
+        - name: Check module dir {{ sra_toolkit_module_dir }}
+          file:
+            path: "{{ sra_toolkit_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install SRA Toolkit {{ version_number }} module file
+          template:
+            src: sra_toolkit.lua
+            dest: "{{ sra_toolkit_module_dir }}/{{ version_number }}.lua"
