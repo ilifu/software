@@ -1053,3 +1053,18 @@
   tags:
     - never
     - svanna
+
+- name: Install SRA Toolkit
+  vars:
+    versions:
+      - {
+        version_number: "3.0.0",
+        checksum: "sha256:a4886d2d067fd5bc1d50bfe6d9d1da777aaba018a5a3b0231d985a09fcee622d",
+        url: "https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.tar.gz",
+      }
+  include_tasks:
+    file: sra_toolkit.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - sratoolkit
