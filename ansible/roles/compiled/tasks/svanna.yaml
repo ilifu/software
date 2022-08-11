@@ -39,10 +39,7 @@
             path: "{{ svanna_dir }}"
             state: directory
         - name: Move svanna to final location {{ install_dir }}
-          file:
-            src: "{{ unzip_dir }}"
-            dest: "{{ install_dir }}"
-            state: link
+          command: "mv {{ unzip_dir }} {{ install_dir }}"
     - name: Create svanna binary
       template:
         src: svanna.sh.j2
