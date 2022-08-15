@@ -9,6 +9,7 @@
     unzipdir: "/dev/shm/openmpi-{{ version_number }}"
     build_dir: "{{ unzipdir }}/build"
     ucx_dir: "{{ common_dir }}/ucx/{{ item.ucx_version }}"
+    singularity_dir: "{{ common_dir }}/singularity/{{ item.singularity_version }}"
   tags:
     - never
     - openmpi{{ item.version_number }}
@@ -32,7 +33,7 @@
                 path: "{{ build_dir }}"
                 state: directory
             - name: Run OpenMPI {{ version_number }} configure
-              command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity --with-ucx={{ ucx_dir }}"
+              command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity={{ singularity_dir }} --with-ucx={{ ucx_dir }}"
               args:
                 chdir: "{{ build_dir }}"
                 creates: "{{ build_dir }}/Makefile"

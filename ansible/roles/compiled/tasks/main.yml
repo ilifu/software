@@ -120,6 +120,9 @@
         url: "https://github.com/openucx/ucx/releases/download/v1.9.0/ucx-1.9.0.tar.gz",
         checksum: "sha256:a7a2c8841dc0d5444088a4373dc9b9cc68dbffcd917c1eba92ca8ed8e5e635fb",
       }
+      - {
+        version_number: "1.13.0",
+      }
   include_tasks:
     file: ucx.yaml
   loop: "{{ ucx_versions }}"
@@ -131,6 +134,13 @@
 - name: Install openmpis
   vars:
     openmpi_versions:
+      - {
+        version_number: "4.1.4",
+        checksum: "sha256:92912e175fd1234368c8730c03f4996fe5942e7479bb1d10059405e7f2b3930d",
+        url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.4.tar.bz2",
+        ucx_version: "1.13.0",
+        singularity_version: "3.9.1",
+      }
       - {
         version_number: "4.1.0",
         checksum: "sha256:73866fb77090819b6a8c85cb8539638d37d6877455825b74e289d647a39fd5b5",
@@ -1068,3 +1078,20 @@
   tags:
     - never
     - sratoolkit
+
+- name: Install GROMACS
+  vars:
+    versions:
+      - {
+        version_number: "2022.2",
+        checksum: "sha256:656404f884d2fa2244c97d2a5b92af148d0dbea94ad13004724b3fcbf45e01bf",
+        url: "https://ftp.gromacs.org/gromacs/gromacs-2022.2.tar.gz",
+        cuda_root: "/software/common/cuda/11.7.0_515.43.04",
+        mpi_root: "/software/common/openmpi/4.1.4"
+      }
+  include_tasks:
+    file: gromacs.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - gromacs
