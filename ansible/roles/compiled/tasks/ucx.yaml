@@ -8,6 +8,7 @@
     install_dir: "{{ ucx_dir }}/{{ version_number }}"
     unzipdir: "/dev/shm/ucx"
     build_dir: "{{ unzipdir }}/build"
+    cuda_root: "{{ item.cuda_root }}"
   tags:
     - never
     - ucx{{ item.version_number }}
@@ -32,7 +33,7 @@
                 chdir: "{{ unzipdir }}"
                 creates: "{{ unzipdir }}/configure"
             - name: Run UCX {{ version_number }} configure
-              command: "../contrib/configure-release --prefix={{ install_dir }} --enable-optimizations"
+              command: "../contrib/configure-release --prefix={{ install_dir }} --enable-optimizations --with-cuda={{ cuda_root }}"
               args:
                 chdir: "{{ build_dir }}"
                 creates: "{{ build_dir }}/Makefile"
