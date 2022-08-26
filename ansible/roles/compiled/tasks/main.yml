@@ -122,7 +122,7 @@
       }
       - {
         version_number: "1.13.0",
-        cuda_root: "/software/common/cuda/11.7.0_515.43.04",
+        cuda_root: "/software/common/cuda/",
       }
   include_tasks:
     file: ucx.yaml
@@ -141,7 +141,7 @@
         url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.4.tar.bz2",
         ucx_version: "1.13.0",
         singularity_version: "3.9.1",
-        cuda_root: "/software/common/cuda/11.7.0_515.43.04",
+        cuda_root: "/software/common/cuda/11.6.0_510.39.01",
       }
       - {
         version_number: "4.1.0",
@@ -591,10 +591,15 @@
 - name: Install Cuda
   vars:
     cuda_versions:
+#      - {
+#        version_number: "11.7.0_515.43.04",
+#        url: "https://developer.download.nvidia.com/compute/cuda/11.7.0/local_installers/cuda_11.7.0_515.43.04_linux.run",
+#        checksum: "md5:bcb7d3c6505894b3b8f2aaf1542abfcd"
+#      }
       - {
-        version_number: "11.7.0_515.43.04",
-        url: "https://developer.download.nvidia.com/compute/cuda/11.7.0/local_installers/cuda_11.7.0_515.43.04_linux.run",
-        checksum: "md5:bcb7d3c6505894b3b8f2aaf1542abfcd"
+        version_number: "11.6.0_510.39.01",
+        url: "https://developer.download.nvidia.com/compute/cuda/11.6.0/local_installers/cuda_11.6.0_510.39.01_linux.run",
+        checksum: "md5:685ef40564b829eb8e6892563e9d8b80"
       }
       - {
         version_number: "11.4.2_470.57.02",
@@ -1088,8 +1093,8 @@
         version_number: "2022.2",
         checksum: "sha256:656404f884d2fa2244c97d2a5b92af148d0dbea94ad13004724b3fcbf45e01bf",
         url: "https://ftp.gromacs.org/gromacs/gromacs-2022.2.tar.gz",
-        cuda_root: "/software/common/cuda/11.7.0_515.43.04",
-        cuda_module: "cuda/11.7.0_515.43.04",
+        cuda_root: "/software/common/cuda/11.6.0_510.39.01",
+        cuda_module: "cuda/11.6.0_510.39.01",
         mpi_root: "/software/common/openmpi/4.1.4",
         mpi_module: "openmpi/4.1.4",
       }
