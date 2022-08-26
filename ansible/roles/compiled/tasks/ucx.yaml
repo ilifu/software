@@ -6,8 +6,9 @@
     version_number: "{{ item.version_number }}"
     checksum: "{{ item.checksum }}"
     install_dir: "{{ ucx_dir }}/{{ version_number }}"
-    unzipdir: "/dev/shm/ucx-{{ version_number }}"
+    unzipdir: "/dev/shm/ucx"
     build_dir: "{{ unzipdir }}/build"
+    cuda_root: "{{ item.cuda_root }}"
   tags:
     - never
     - ucx{{ item.version_number }}
@@ -16,22 +17,23 @@
       block:
         - name: Download, compile and install UCX {{ version_number }}
           block:
-            - name: Download UCX {{ version_number }}
-              get_url:
-                url: "{{ url }}"
-                dest: "{{ common_src }}/ucx-{{ version_number }}.tar.gz"
-                checksum: "{{ checksum }}"
-            - name: Unzip UCX {{ version_number }}
-              unarchive:
-                src: "{{ common_src }}/ucx-{{ version_number }}.tar.gz"
-                dest: "/dev/shm/"
-                creates: "{{ unzipdir }}"
+            - name: clone ucx and checkout {{ version_number }}
+              git:
+                repo: "https://github.com/openucx/ucx.git"
+                dest: "{{ unzipdir }}"
+                version: "tags/v{{ version_number }}"
+                force: yes
             - name: Make UCX {{ version_number }} build directory
               file:
                 path: "{{ build_dir }}"
                 state: directory
+            - name: Run autogen for UCX {{ version_number }}
+              command: "./autogen.sh"
+              args:
+                chdir: "{{ unzipdir }}"
+                creates: "{{ unzipdir }}/configure"
             - name: Run UCX {{ version_number }} configure
-              command: "../contrib/configure-release --prefix={{ install_dir }} --enable-optimizations"
+              command: "../contrib/configure-release --prefix={{ install_dir }} --enable-optimizations --with-cuda={{ cuda_root }}"
               args:
                 chdir: "{{ build_dir }}"
                 creates: "{{ build_dir }}/Makefile"
@@ -40,7 +42,7 @@
                 chdir: "{{ build_dir }}"
               environment:
                 MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
-            - name: Install UCX {{ version_number }}
+            - name: Install UCX {{ version_number }} to {{ install_dir }}
               make:
                 chdir: "{{ build_dir }}"
                 target: install
