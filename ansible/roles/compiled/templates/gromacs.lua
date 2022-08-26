@@ -23,3 +23,10 @@ prepend_path('INCLUDE', include_dir)
 prepend_path('C_INCLUDE', include_dir)
 prepend_path('MANPATH', man_dir)
 prepend_path('PKG_CONFIG_PATH', pkgconfig_dir)
+
+setenv("GMXBIN","{{ install_dir }}/bin")
+setenv("GMXDATA","{{ install_dir }}/share/gromacs")
+setenv("GMXLDLIB","{{ install_dir }}/lib")
+setenv("GMXMAN","{{ install_dir }}/share/man")
+setenv("GROMACS_DIR","{{ install_dir }}")
+
