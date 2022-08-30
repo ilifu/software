@@ -168,3 +168,17 @@
   tags:
     - never
     - ClinSV
+
+- name: Create GATK Containers
+  vars:
+    versions:
+      - {
+          version_number: "4.2.6.1",
+          docker_source: "broadinstitute/gatk:4.2.6.1",
+      }
+  include_tasks:
+    file: gatk.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - gatk
