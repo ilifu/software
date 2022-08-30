@@ -1,0 +1,36 @@
+- name: Create GATK container
+  vars:
+    docker_source: "{{ item.docker_source }}"
+    version_number: "{{ item.version_number }}"
+    container_name: "gatk_{{ version_number }}"
+    container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+    GATK_module_dir: "{{ bio_modules }}/GATK"
+  tags:
+    - "gatk_container{{ item.version_number }}"
+    - never
+  block:
+    - name: Create GATK {{ version_number }} container
+      block:
+        - name: Copy recipe  {{ container_recipe }}
+          template:
+            src: "gatk.def"
+            dest: "{{ container_recipe }}"
+        - name: Build container {{ container_image }}
+          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          args:
+            creates: "{{ container_image }}"
+          become: true
+
+
+#    - name: Install GATK {{ container_name }} module
+#      block:
+#        - name: Check module dir
+#          file:
+#            path: "{{ GATK_module_dir }}"
+#            state: directory
+#            mode: u=rwx,g=rwx,o=rx
+#        - name: Install GATK module file
+#          template:
+#            src: GATK.lua
+#            dest: "{{ GATK_module_dir }}/{{ container_name }}.lua"
