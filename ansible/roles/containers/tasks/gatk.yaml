@@ -5,7 +5,8 @@
     container_name: "gatk_{{ version_number }}"
     container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
     container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
-    GATK_module_dir: "{{ bio_modules }}/GATK"
+    GATK_module_dir: "{{ bio_modules }}/gatk"
+    gatk_binary_dir: "{{ bio_container_dir }}/gatk/{{ version_number }}"
   tags:
     - "gatk_container{{ item.version_number }}"
     - never
@@ -21,16 +22,26 @@
           args:
             creates: "{{ container_image }}"
           become: true
+        - name: Ensure gatk binary directory exists
+          file:
+            path: "{{ gatk_binary_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Create gatk binary
+          template:
+            src: "gatk.sh"
+            dest: "{{ gatk_binary_dir }}/gatk"
+            mode: 0755
 
 
-#    - name: Install GATK {{ container_name }} module
-#      block:
-#        - name: Check module dir
-#          file:
-#            path: "{{ GATK_module_dir }}"
-#            state: directory
-#            mode: u=rwx,g=rwx,o=rx
-#        - name: Install GATK module file
-#          template:
-#            src: GATK.lua
-#            dest: "{{ GATK_module_dir }}/{{ container_name }}.lua"
+    - name: Install GATK {{ container_name }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ GATK_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install GATK module file
+          template:
+            src: gatk.lua
+            dest: "{{ GATK_module_dir }}/{{ container_name }}.lua"
