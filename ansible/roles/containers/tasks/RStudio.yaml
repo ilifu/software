@@ -5,6 +5,7 @@
     - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
     - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
     - R_module_dir: "{{ common_modules }}/R"
+    - R_binary_dir: "{{ bio_container_dir }}/RStudio/{{ item.rstudio_version }}-R{{ item.r_version }}"
   tags:
     - "RStudio{{ item.rstudio_version }}-R{{ item.r_version }}"
     - never
@@ -29,6 +30,22 @@
           args:
             creates: "{{ container_image }}"
           become: true
+    - name: Ensure R binary directory exists
+      file:
+        path: "{{ R_binary_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Create R binaries
+      template:
+        src: "{{ binary.template }}"
+        dest: "{{ R_binary_dir }}/{{ binary.name }}"
+        mode: 0755
+      with_items:
+        - { name: "R", template: "R.sh"}
+        - { name: "Rscript", template: "Rscript.sh"}
+        - { name: "RStudio", template: "RStudio.sh"}
+      loop_control:
+        loop_var: binary
 #          environment:
 #            SINGULARITY_TMPDIR: "/dev/shm"
 

@@ -19,3 +19,6 @@ apps = {
 for i, app in ipairs(apps) do
     set_alias(app, "singularity run --app " .. app .. " " .. singularity_image)
 end
+
+prepend_path("PATH", "{{ R_binary_dir }}")
+

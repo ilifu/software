@@ -1,3 +1,3 @@
-#!/bin.bash
+#!/bin/bash
 
 singularity run --bind /software:/software {{ container_image }} gatk "$@"
