@@ -7,6 +7,27 @@
     container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
     proteowizard_module_dir: "{{ bio_modules }}/proteowizard"
     proteowizard_binary_dir: "{{ bio_container_dir }}/proteowizard/{{ version_number }}"
+    wine_commands:
+      - "msconvert"
+      - "SkylineCmd"
+      - "chainsaw"
+      - "msaccess"
+      - "idconvert"
+      - "msdiff"
+      - "msdir"
+      - "msistats"
+      - "mspicture"
+      - "mscat"
+      - "peakaboo"
+      - "pepcat"
+      - "pepsum"
+      - "qtofpeakpicker"
+      - "sldout"
+      - "ThermoRawMetaDump"
+      - "txt2mzml"
+      - "MSConvertGUI"
+      - "SeeMS"
+      - "Topograph"
   tags:
     - "proteowizard{{ item.version_number }}"
     - never
@@ -29,14 +50,12 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Create ProteoWizard binaries
           template:
-            src: "{{ binary.template }}"
-            dest: "{{ proteowizard_binary_dir }}/{{ binary.name }}"
+            src: "proteowizard_wine_template.sh"
+            dest: "{{ proteowizard_binary_dir }}/{{ wine_command }}"
             mode: 0755
-          with_items:
-            - { name: "msconvert", template: "proteowizard_msconvert.sh" }
-            - { name: "SkylineCmd", template: "proteowizard_SkylineCmd.sh" }
+          with_items: "{{ wine_commands }}"
           loop_control:
-            loop_var: binary
+            loop_var: wine_command
 
 
     - name: Install ProteoWizard {{ container_name }} module
