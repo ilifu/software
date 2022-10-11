@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: {{ docker_source }}
+
+%labels
+  Maintainer Dane Kennedy
+  Version {{ version_number }}
+  ProteoWizard
+
+%help
+  ProteoWizard
+
+

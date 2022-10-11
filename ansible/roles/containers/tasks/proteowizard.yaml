@@ -1,0 +1,52 @@
+- name: Create ProteoWizard container
+  vars:
+    docker_source: "{{ item.docker_source }}"
+    version_number: "{{ item.version_number }}"
+    container_name: "proteowizard_{{ version_number }}"
+    container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+    proteowizard_module_dir: "{{ bio_modules }}/proteowizard"
+    proteowizard_binary_dir: "{{ bio_container_dir }}/proteowizard/{{ version_number }}"
+  tags:
+    - "proteowizard{{ item.version_number }}"
+    - never
+  block:
+    - name: Create ProteoWizard {{ version_number }} container
+      block:
+        - name: Copy recipe  {{ container_recipe }}
+          template:
+            src: "proteowizard.def"
+            dest: "{{ container_recipe }}"
+        - name: Build container {{ container_image }}
+          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          args:
+            creates: "{{ container_image }}"
+          become: true
+        - name: Ensure ProteoWizard binary directory exists
+          file:
+            path: "{{ proteowizard_binary_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Create ProteoWizard binaries
+          template:
+            src: "{{ binary.template }}"
+            dest: "{{ proteowizard_binary_dir }}/{{ binary.name }}"
+            mode: 0755
+          with_items:
+            - { name: "msconvert", template: "proteowizard_msconvert.sh" }
+            - { name: "SkylineCmd", template: "proteowizard_SkylineCmd.sh" }
+          loop_control:
+            loop_var: binary
+
+
+    - name: Install ProteoWizard {{ container_name }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ proteowizard_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install ProteoWizard module file
+          template:
+            src: proteowizard.lua
+            dest: "{{ proteowizard_module_dir }}/{{ container_name }}.lua"
