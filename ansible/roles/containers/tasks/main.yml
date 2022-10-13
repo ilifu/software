@@ -182,3 +182,17 @@
   tags:
     - never
     - gatk
+
+- name: Create proteowizard container
+  vars:
+    versions:
+      - {
+          version_number: "3.0.22167",
+          docker_source: "chambm/pwiz-skyline-i-agree-to-the-vendor-licenses:3.0.22167-d016184"
+      }
+  include_tasks:
+    file: proteowizard.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - proteowizard
