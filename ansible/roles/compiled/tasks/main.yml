@@ -1121,3 +1121,19 @@
   tags:
     - never
     - lirical
+
+- name: Install FragPipe with MSFragger
+  vars:
+    versions:
+      - {
+          version_number: "18.0",
+          checksum: "sha512:d36f7d4b454a11bfafc9d7ca717d074f3694f48390fdf400afc501e11f964f612ced74a8b5892e35f3d6dab210c6dc273ffb836bbc6d35e7be4a56fd092beb20",
+          url: "https://github.com/Nesvilab/FragPipe/releases/download/18.0/FragPipe-18.0.zip",
+          java_module: "java/openjdk-18.0.2",
+      }
+  include_tasks:
+    file: 'fragpipe.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - fragpipe

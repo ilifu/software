@@ -1,0 +1,50 @@
+---
+- name: Install FragPipe {{ item.version_number }}
+  vars:
+    fragpipe_dir: "{{ bio_dir }}/fragpipe"
+    fragpipe_module_dir: "{{ bio_modules }}/fragpipe"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ fragpipe_dir }}/{{ version_number }}"
+    java_module: "{{ item.java_module }}"
+  tags:
+    - never
+    - fragpipe{{ item.version_number }}
+
+  block:
+    - name: Download and install FragPipe {{ version_number }}
+      block:
+        - name: Download FragPipe {{ version_number }} from {{ url }} to {{ bio_src }}/FragPipe-{{ version_number }}.zip
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/FragPipe-{{ version_number }}.zip"
+            checksum: "{{ checksum }}"
+        - name: Ensure FragPipe dir {{ fragpipe_dir }} exists
+          file:
+            path: "{{ fragpipe_dir }}"
+            state: directory
+            recurse: yes
+        - name: Uncompress FragPipe in {{ fragpipe_dir }}
+          unarchive:
+            src: "{{ bio_src }}/FragPipe-{{ version_number }}.zip"
+            dest: "{{ fragpipe_dir }}"
+            creates: "{{ fragpipe_dir }}/fragpipe"
+        - name: Rename fragpipe to use version number
+          command: "mv {{ fragpipe_dir }}/fragpipe {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}"
+
+    - name: Install FragPipe {{ version_number }} module
+      block:
+        - name: Check module dir {{ fragpipe_module_dir }}
+          file:
+            path: "{{ fragpipe_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install FragPipe module file
+          template:
+            src: fragpipe.lua
+            dest: "{{ fragpipe_module_dir }}/{{ version_number }}.lua"
+
+
