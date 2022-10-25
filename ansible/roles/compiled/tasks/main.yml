@@ -274,6 +274,10 @@
         version_number: "3.10.4",
         checksum: "sha256:80bf925f571da436b35210886cf79f6eb5fa5d6c571316b73568343451f77a19"
       }
+      - {
+        version_number: "3.11.0",
+        checksum: "md5:fe92acfa0db9b9f5044958edb451d463"
+      }
     pip_packages:
       - pip
       - pipenv
