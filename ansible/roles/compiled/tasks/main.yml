@@ -1141,3 +1141,19 @@
   tags:
     - never
     - fragpipe
+
+- name: Install rclone
+  vars:
+    versions:
+      - {
+        version_number: "1.60.1",
+        checksum: "sha512:fabfe4913f25496c612f4b63a4ecbd5149c2a69eef2f12b0e916589dc7ef764c4722f7d114e1108687369b63b436606d54eb3b94622d215d885c7dcff0a12417",
+        url: "https://downloads.rclone.org/v1.60.1/rclone-v1.60.1-linux-amd64.zip",
+        creates: 'rclone-v1.60.1-linux-amd64'
+      }
+  include_tasks:
+    file: 'rclone.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - rclone
