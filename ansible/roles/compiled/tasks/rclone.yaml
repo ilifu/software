@@ -1,0 +1,53 @@
+---
+- name: Install rclone {{ item.version_number }}
+  vars:
+    rclone_dir: "{{ bio_dir }}/rclone"
+    rclone_module_dir: "{{ bio_modules }}/rclone"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ rclone_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/{{ item.creates }}"
+  tags:
+    - never
+    - rclone{{ item.version_number }}
+
+  block:
+    - name: Download and install rclone {{ version_number }}
+      block:
+        - name: Download Rclone {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_dir }}/src/rclone-{{ version_number }}.zip"
+            checksum: "{{ checksum }}"
+        - name: Ensure Rclone dir exists
+          file:
+            path: "{{ rclone_dir }}"
+            state: directory
+        - name: Uncompress Rclone to {{ unzip_dir }}
+          unarchive:
+            src: "{{ bio_dir }}/src/rclone-{{ version_number }}.zip"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Move Rclone to final location
+          command: "mv {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}"
+        - name: Make rclone binary executable
+          file:
+            path: "{{ install_dir }}/rclone"
+            mode: "ugo+x"
+
+    - name: Install Rclone {{ version_number }} module
+      block:
+        - name: Check module dir {{ rclone_module_dir }}
+          file:
+            path: "{{ rclone_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Rclone module file
+          template:
+            src: rclone.lua
+            dest: "{{ rclone_module_dir }}/{{ version_number }}.lua"
+
+
