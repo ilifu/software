@@ -235,6 +235,10 @@
         checksum: "sha256:06a0a9f1bf0d8cd1e4121194d666c4e28ddae4dd54346de6c343206599f02136"
       }
       - {
+        version_number: "3.7.16",
+        checksum: "md5:df3b8ad6e2ab8f198d65ecf68816bf42"
+      }
+      - {
         version_number: "3.8.2",
         checksum: "sha256:2646e7dc233362f59714c6193017bb2d6f7b38d6ab4a0cb5fbac5c36c4d845df"
       }
@@ -245,6 +249,10 @@
       - {
         version_number: "3.8.6",
         checksum: "sha256:a9e0b79d27aa056eb9cce8d63a427b5f9bab1465dee3f942dcfdb25a82f4ab8a"
+      }
+      - {
+        version_number: "3.8.16",
+        checksum: "md5:621ac153586a3152e2ab7d3a8614df9a"
       }
       - {
         version_number: "3.9.0",
@@ -263,6 +271,10 @@
         checksum: "sha256:2cd94b20670e4159c6d9ab57f91dbf255b97d8c1a1451d1c35f4ec1968adf971"
       }
       - {
+        version_number: "3.9.16",
+        checksum: "md5:5738c204eecc375e29751cb2176fc9cc"
+      }
+      - {
         version_number: "3.10.0",
         checksum: "md5:3e7035d272680f80e3ce4e8eb492d580"
       }
@@ -275,8 +287,16 @@
         checksum: "sha256:80bf925f571da436b35210886cf79f6eb5fa5d6c571316b73568343451f77a19"
       }
       - {
+        version_number: "3.10.9",
+        checksum: "md5:dc8c0f274b28ee9e95923d20cfc364c9"
+      }
+      - {
         version_number: "3.11.0",
         checksum: "md5:fe92acfa0db9b9f5044958edb451d463"
+      }
+      - {
+        version_number: "3.11.1",
+        checksum: "md5:4efe92adf28875c77d3b9b2e8d3bc44a"
       }
     pip_packages:
       - pip
