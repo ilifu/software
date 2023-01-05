@@ -12,9 +12,13 @@
   tags:
     - never
     - python{{ item.version_number }}
-
   block:
+    - name: Check if python binary already exists
+      stat:
+        path: "{{ install_dir }}/bin/python"
+      register: python_binary
     - name: Download, compile and install Python {{ version_number }}
+      when: not python_binary.stat.exists
       block:
         - name: Download Python {{ version_number }} from {{ python_url }}
           get_url:
