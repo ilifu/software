@@ -1177,3 +1177,18 @@
   tags:
     - never
     - rclone
+
+- name: Install neovim
+  vars:
+    versions:
+      - {
+        version_number: "0.8.2",
+        checksum: "sha256:27aef92fba0d3f51ebb8b98f3689895f9bbe48f11b74920d89280bc58fbe8e28",
+        url: "https://github.com/neovim/neovim/releases/download/v0.8.2/nvim-linux64.tar.gz",
+      }
+  include_tasks:
+    file: 'neovim.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - neovim
