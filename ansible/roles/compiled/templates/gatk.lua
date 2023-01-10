@@ -13,4 +13,5 @@ local gatk_dir = "{{ install_dir }}"
 setenv('_JAVA_OPTIONS', '-Xmx16g')
 
 prepend_path('PATH', gatk_dir)
+prepend_path('CLASSPATH', pathJoin(gatk_dir, "gatk-package-{{ version_number }}-local.jar"))
 
