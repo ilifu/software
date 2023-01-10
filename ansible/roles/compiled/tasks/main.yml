@@ -1014,6 +1014,12 @@
           checksum: "sha256:203f17868f0a73a8322d2f8bd568b9f7b4bb81e36d37db5b6a142d8050ef049f",
           unzip_dir_name: "gatk-4.2.5.0"
       }
+      - {
+        version_number: "4.3.0.0",
+        url: "https://github.com/broadinstitute/gatk/releases/download/4.3.0.0/gatk-4.3.0.0.zip",
+        checksum: "sha256:e2c27229b34c3e22445964adf00639a0909887bbfcc040f6910079177bc6e2dd",
+        unzip_dir_name: "gatk-4.3.0.0"
+      }
   include_tasks:
     file: gatk.yaml
   loop: "{{ versions }}"
@@ -1192,3 +1198,17 @@
   tags:
     - never
     - neovim
+
+- name: Install SavvySuite
+  vars: {
+    java_module: "java/openjdk-18.0.2",
+    java_location: "/software/common/java/jdk-18.0.2",
+    gatk_module: "gatk/4.3.0.0",
+    gatk_package_location: "/software/bio/gatk/4.3.0.0/gatk-package-4.3.0.0-local.jar",
+  }
+
+  include_tasks:
+    file: 'savvysuite.yaml'
+  tags:
+    - never
+    - savvysuite

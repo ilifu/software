@@ -1,0 +1,45 @@
+---
+- name: Install SavvySuite {{ item.version_number }}
+  vars:
+    savvysuite_dir: "{{ bio_dir }}/savvysuite"
+    savvysuite_module_dir: "{{ bio_modules }}/savvysuite"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ savvysuite_dir }}/git"
+    unzipdir: "/dev/shm/savvysuite"
+    java_module: "{{ item.java_module }}"
+    java_location: "{{ item.java_location }}"
+    gatk_package_location: "{{ item.gatk_location }}"
+  tags:
+    - never
+    - savvysuite
+  block:
+    - name: Download, compile and install SavvySuite {{ version_number }}
+      block:
+        - name: Checkout savvysuite from git repository to {{ install_dir }}
+          git:
+            repo: "https://github.com/rdemolgen/SavvySuite.git"
+            dest: "{{ install_dir }}"
+        - name: Compile savvysuite in {{ install_dir }}
+          command: "{{ java_location }}/bin/javac {{ item }}"
+          args:
+            chdir: "{{ install_dir }}"
+          environment:
+            JAVA_HOME: "{{ java_location }}"
+            CLASSPATH: "{{ gatk_package_location }}:{{ install_dir }}"
+          with_fileglob:
+            - "{{ install_dir }}/*.java"
+          loop_control:
+            label: "{{ item }}"
+
+
+    - name: Install SavvySuite {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ savvysuite_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install SavvySuite module file
+          template:
+            src: savvysuite.lua
+            dest: "{{ savvysuite_module_dir }}/git.lua"
