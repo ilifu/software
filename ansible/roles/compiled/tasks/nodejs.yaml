@@ -1,0 +1,47 @@
+---
+- name: Install Node.js {{ item.version_number }}
+  vars:
+    nodejs_dir: "{{ common_dir }}/nodejs"
+    nodejs_module_dir: "{{ common_modules }}/nodejs"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ nodejs_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/node-v{{ version_number }}-linux-x64"
+  tags:
+    - never
+    - nodejs{{ item.version_number }}
+
+  block:
+    - name: Download and install Node.js {{ version_number }}
+      block:
+        - name: Download Node.js {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ common_src }}/node-v{{ version_number }}-linux-x64.tar.xz"
+            checksum: "{{ checksum }}"
+        - name: Ensure nodejs dir exists
+          file:
+            path: "{{ nodejs_dir }}"
+            state: directory
+        - name: Uncompress Node.js
+          unarchive:
+            src: "{{ common_src }}/node-v{{ version_number }}-linux-x64.tar.xz"
+            dest: "/dev/shm"
+            creates: "{{ unzipdir }}"
+        - name: Move Node.js to final location
+          command: "mv {{ unzipdir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}"
+
+    - name: Install Node.js {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ nodejs_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Nodejs module file
+          template:
+            src: nodejs.lua
+            dest: "{{ nodejs_module_dir }}/{{ version_number }}.lua"

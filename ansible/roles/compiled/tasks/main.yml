@@ -42,6 +42,26 @@
     - never
     - jre
 
+- name: Install nodejs
+  vars:
+    versions:
+      - {
+        version_number: "18.13.0",
+        checksum: "sha256:7f5d6922a91986ef059ba8a4396aa435440adacfe6fc6fab60a857c8f2cf5e7a",
+        url: "https://nodejs.org/dist/v18.13.0/node-v18.13.0-linux-x64.tar.xz",
+      }
+      - {
+        version_number: "19.4.0",
+        checksum: "sha256:2f3b7a02e41eeda113326370f51bd1d2a54de6b8a3628b0d36623c40ca4db783",
+        url: "https://nodejs.org/dist/v19.4.0/node-v19.4.0-linux-x64.tar.xz"
+      }
+  include_tasks:
+    file: nodejs.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - nodejs
+
 - name: Install OpenBLAS
   vars:
     openblas_versions:
