@@ -1232,3 +1232,13 @@
   tags:
     - never
     - savvysuite
+
+- name: Install Genome Browser and Blat Applications
+  vars: {
+      url: 'rsync://hgdownload.soe.ucsc.edu/genome/admin/exe/linux.x86_64/'
+  }
+  include_tasks:
+    file: 'genome_browser.yaml'
+  tags:
+    - never
+    - genomebrowser
