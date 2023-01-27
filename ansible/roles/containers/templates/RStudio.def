@@ -100,12 +100,14 @@ From: {{ base_container_image }}
     ca-certificates \
     gdebi-core \
     hdf5-tools \
-    libhdf5-dev \
+    libcairo2-dev \
     libcurl4-openssl-dev \
+    libgsl23 \
+    libgsl-dev \
+    libhdf5-dev \
     libnetcdf-dev \
     libssl-dev \
     libxml2-dev \
-    libcairo2-dev \
     libxt-dev \
     netcdf-bin \
     patchelf \

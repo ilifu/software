@@ -45,6 +45,12 @@
         r_version: 4.2.1,
         rstudio_version: 1.2.5042,  # 1.3.959,
       }
+      - {
+        base_container_name: ubuntu-focal-compile,
+        base_container_version_name: focal,
+        r_version: 4.2.2,
+        rstudio_version: 1.2.5042,  # 1.3.959,
+      }
   include_tasks:
     file: RStudio.yaml
   loop: "{{ rstudio_versions }}"
