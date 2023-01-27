@@ -44,6 +44,7 @@
         - { name: "R", template: "R.sh"}
         - { name: "Rscript", template: "Rscript.sh"}
         - { name: "RStudio", template: "RStudio.sh"}
+        - { name: "rstudio", template: "RStudio.sh"}
       loop_control:
         loop_var: binary
 #          environment:

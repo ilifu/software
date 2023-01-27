@@ -28,4 +28,4 @@ common_modules: "{{ modules_dir }}/common"
 
 admin_group: "idia-admins"
 
-singularity: "/software/common/singularity/3.9.1/bin/singularity"
+singularity: "/software/common/singularity/3.10.1/bin/singularity"

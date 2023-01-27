@@ -27,8 +27,7 @@ From: {{ base_container_image }}
   echo "    ssh -A ${USER}@${HOST} -o \"ProxyCommand=ssh ${USER}@slurm.ilifu.ac.za nc ${HOST} 22\" -L8081:localhost:${PORT}"
   echo "then visit http://localhost:8081 in your browser and use the username \"${USER}\" to login with the password \"${RSTUDIO_PASSWORD}\""
   echo "(You may need to choose a different port (other than 8081), so remember to change this in both the ssh and browser)"
-  exec rserver --auth-none 0 --auth-pam-helper rstudio_auth --secure-cookie-key-file /tmp/rstudio-server-${USER}/secure-cookie.key --www-port ${PORT} "${@}"
-
+  exec rserver --server-user ${USER} --auth-none 0 --auth-pam-helper rstudio_auth --secure-cookie-key-file ${HOME}/.RStudio.rserver/secure-cookie.key --www-port ${PORT} --server-data-dir ${HOME}/.RStudio.rserver/data "${@}"
 
 %runscript
   if [ -z "${RSTUDIO_PASSWORD}" ]; then
@@ -42,7 +41,7 @@ From: {{ base_container_image }}
   echo "    ssh -A ${USER}@${HOST} -o \"ProxyCommand=ssh ${USER}@slurm.ilifu.ac.za nc ${HOST} 22\" -L8081:localhost:${PORT}"
   echo "then visit http://localhost:8081 in your browser and use the username \"${USER}\" to login with the password \"${RSTUDIO_PASSWORD}\""
   echo "(You may need to choose a different port (other than 8081), so remember to change this in both the ssh and browser)"
-  exec rserver --auth-none 0 --auth-pam-helper rstudio_auth --secure-cookie-key-file /tmp/rstudio-server-${USER}/secure-cookie.key --www-port ${PORT} "${@}"
+  exec rserver --server-user ${USER} --auth-none 0 --auth-pam-helper rstudio_auth --secure-cookie-key-file ${HOME}/.RStudio.rserver/secure-cookie.key --www-port ${PORT} --server-data-dir ${HOME}/.RStudio.rserver/data "${@}"
 
 %environment
   export R_VERSION={{ item.r_version }}
@@ -87,9 +86,6 @@ From: {{ base_container_image }}
     wget \
 
   # Add R repositories
-#  echo "deb http://cran.r-project.org/bin/linux/ubuntu {{ item.base_container_version_name }}-cran40/" > /etc/apt/sources.list.d/r.list
-#  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
-#  apt-get update
   wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
   add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
 
@@ -100,12 +96,14 @@ From: {{ base_container_image }}
     ca-certificates \
     gdebi-core \
     hdf5-tools \
-    libhdf5-dev \
+    libcairo2-dev \
     libcurl4-openssl-dev \
+    libgsl23 \
+    libgsl-dev \
+    libhdf5-dev \
     libnetcdf-dev \
     libssl-dev \
     libxml2-dev \
-    libcairo2-dev \
     libxt-dev \
     netcdf-bin \
     patchelf \
