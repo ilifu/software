@@ -86,9 +86,6 @@ From: {{ base_container_image }}
     wget \
 
   # Add R repositories
-#  echo "deb http://cran.r-project.org/bin/linux/ubuntu {{ item.base_container_version_name }}-cran40/" > /etc/apt/sources.list.d/r.list
-#  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
-#  apt-get update
   wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
   add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
 
@@ -133,47 +130,47 @@ From: {{ base_container_image }}
   gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb
   rm rstudio-server-${RSTUDIO_VERSION}-amd64.deb
 
-#  # install a few basics
-#  Rscript -e 'install.packages(
-#    c(
-#      "data.table",
-#      "devtools",
-#      "DBI",
-#      "mgcv",
-#      "nlme",
-#      "pacman",
-#      "rmarkdown",
-#      "Rcpp",
-#      "shiny",
-#      "tidyverse",
-#      "xtable"
-#    ))'
-#  Rscript -e 'update.packages(ask=FALSE)'
+  # install a few basics
+  Rscript -e 'install.packages(
+    c(
+      "data.table",
+      "devtools",
+      "DBI",
+      "mgcv",
+      "nlme",
+      "pacman",
+      "rmarkdown",
+      "Rcpp",
+      "shiny",
+      "tidyverse",
+      "xtable"
+    ))'
+  Rscript -e 'update.packages(ask=FALSE)'
 
   mkdir -p /var/run/rstudio-server
   chmod ugo+w /var/run/rstudio-server
   chmod +t /var/run/rstudio-server
 
-#  Rscript -e 'install.packages("BiocManager")'
-#  Rscript -e 'BiocManager::install(ask=FALSE, update=TRUE)'
+  Rscript -e 'install.packages("BiocManager")'
+  Rscript -e 'BiocManager::install(ask=FALSE, update=TRUE)'
 
-#  Rscript -e 'install.packages(
-#    pkgs = "bcbioRNASeq",
-#    repos = c(
-#        "https://r.acidgenomics.com",
-#        BiocManager::repositories()
-#    ),
-#    dependencies = TRUE
-#  )'
+  Rscript -e 'install.packages(
+    pkgs = "bcbioRNASeq",
+    repos = c(
+        "https://r.acidgenomics.com",
+        BiocManager::repositories()
+    ),
+    dependencies = TRUE
+  )'
 
-#  Rscript -e 'install.packages(
-#    pkgs = "DESeqAnalysis",
-#    repos = c(
-#        "https://r.acidgenomics.com",
-#        BiocManager::repositories()
-#    ),
-#    dependencies = TRUE
-#  )'
+  Rscript -e 'install.packages(
+    pkgs = "DESeqAnalysis",
+    repos = c(
+        "https://r.acidgenomics.com",
+        BiocManager::repositories()
+    ),
+    dependencies = TRUE
+  )'
 
   # Cleanup the container
   apt-get clean
