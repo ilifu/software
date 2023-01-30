@@ -32,7 +32,7 @@
                 path: "{{ build_dir }}"
                 state: directory
             - name: Run R {{ version_number }} configure
-              command: "../configure --prefix={{ install_dir }} --enable-static"
+              command: "../configure --prefix={{ install_dir }} --enable-static --with-x=no"
               args:
                 chdir: "{{ build_dir }}"
                 creates: "{{ build_dir }}/Makefile"
