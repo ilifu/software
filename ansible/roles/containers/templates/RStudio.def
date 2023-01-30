@@ -98,7 +98,7 @@ From: {{ base_container_image }}
     hdf5-tools \
     libcairo2-dev \
     libcurl4-openssl-dev \
-    libfribidi \
+    libfribidi-bin \
     libfribidi-dev \
     libgsl23 \
     libgsl-dev \
