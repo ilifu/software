@@ -149,6 +149,7 @@ From: {{ base_container_image }}
       "xtable"
     ))'
   Rscript -e 'update.packages(ask=FALSE)'
+  Rscript -e 'devtools::install_github("hadley/devtools")'
 
   mkdir -p /var/run/rstudio-server
   chmod ugo+w /var/run/rstudio-server
