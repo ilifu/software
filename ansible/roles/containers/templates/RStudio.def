@@ -98,8 +98,11 @@ From: {{ base_container_image }}
     hdf5-tools \
     libcairo2-dev \
     libcurl4-openssl-dev \
+    libfribidi \
+    libfribidi-dev \
     libgsl23 \
     libgsl-dev \
+    libharfbuzz-dev \
     libhdf5-dev \
     libnetcdf-dev \
     libssl-dev \
