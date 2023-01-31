@@ -63,14 +63,16 @@ From: {{ base_container_image }}
   export DEBIAN_FRONTEND=noninteractive
 
   # Update apt
-  apt-get update -y && apt-get dist-upgrade -y
+  apt-get update -y && apt-get upgrade -y && apt-get dist-upgrade -y
   apt-get install -y \
     apt-utils \
+    build-essential \
     dirmngr \
     git \
     imagemagick \
     pandoc \
     pandoc-citeproc \
+    pkg-config \
     texlive \
     texlive-extra-utils \
     texlive-fonts-extra \
@@ -98,14 +100,20 @@ From: {{ base_container_image }}
     hdf5-tools \
     libcairo2-dev \
     libcurl4-openssl-dev \
+    libfontconfig-dev \
+    libfreetype6-dev \
     libfribidi-bin \
     libfribidi-dev \
+    libgit2-dev \
     libgsl23 \
     libgsl-dev \
     libharfbuzz-dev \
     libhdf5-dev \
+    libjpeg-dev \
     libnetcdf-dev \
+    libpng-dev \
     libssl-dev \
+    libtiff5-dev \
     libxml2-dev \
     libxt-dev \
     netcdf-bin \
