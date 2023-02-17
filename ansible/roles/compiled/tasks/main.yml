@@ -1231,7 +1231,6 @@
     gatk_module: "gatk/4.3.0.0",
     gatk_package_location: "/software/bio/gatk/4.3.0.0/gatk-package-4.3.0.0-local.jar",
   }
-
   include_tasks:
     file: 'savvysuite.yaml'
   tags:
@@ -1262,3 +1261,20 @@
   tags:
     - never
     - gsl
+
+- name: Install VarFish
+  vars:
+    java_module: "java/openjdk-18.0.2"
+    java_location: "/software/common/java/jdk-18.0.2"
+    versions:
+      - {
+         version_number: "0.32",
+         url: "https://github.com/bihealth/varfish-annotator/releases/download/v0.32/varfish-annotator-cli-0.32.jar",
+         checksum: "sha256:9e82d37d111959de4fef2babefcdb5fc359c15d88265e0dd360574ed8330b821"
+      }
+  include_tasks:
+    file: 'varfish.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - varfish
