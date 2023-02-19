@@ -28,8 +28,8 @@
       command: "singularity exec {{ container_image }} perl /opt/vep/src/ensembl-vep/INSTALL.pl -a cfp -s homo_sapiens -y GRCh38 -g all -c {{ cache_dir }}"
       environment:
         SINGULARITY_BINDPATH: "{{ data_dir }}:{{ cache_dir }}"
-      args:
-        creates: "{{ data_dir }}/homo_sapiens"
+#      args:
+#        creates: "{{ data_dir }}/homo_sapiens"
     - name: Install vep module
       block:
         - name: Check module dir
