@@ -7,6 +7,7 @@
     install_dir: "{{ varfish_dir }}/{{ item.version_number }}"
     java_module: "{{ item.java_module }}"
     java_location: "{{ item.java_location }}"
+    version_number: "{{ item.version_number }}"
   tags:
     - never
     - varfish
@@ -25,14 +26,23 @@
               checksum: "{{ checksum }}"
               mode: u=rw,g=r,o=r
 
-#    - name: Install VarFish {{ version_number }} module
-#      block:
-#        - name: Check module dir
-#          file:
-#            path: "{{ varfish_module_dir }}"
-#            state: directory
-#            mode: u=rwx,g=rwx,o=rx
-#        - name: Install VarFish module file
-#          template:
-#            src: varfish.lua
-#            dest: "{{ varfish_module_dir }}/git.lua"
+        - name: Create varfish binary
+          copy:
+            dest: "{{ install_dir }}/varfish"
+            mode: u=rwx,g=rx,o=rx
+            content: |
+              #!/bin/bash
+              module add {{ java_module }}
+              java -jar {{ install_dir }}/varfish-annotator.jar "$@"
+
+    - name: Install VarFish {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ varfish_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install VarFish module file
+          template:
+            src: varfish.lua
+            dest: "{{ varfish_module_dir }}/{{ version_number }}.lua"
