@@ -318,6 +318,10 @@
         version_number: "3.11.1",
         checksum: "md5:4efe92adf28875c77d3b9b2e8d3bc44a"
       }
+      - {
+        version_number: "3.11.2",
+        checksum: "md5:a957cffb58a89303b62124896881950b"
+      }
     pip_packages:
       - pip
       - pipenv
@@ -1278,3 +1282,19 @@
   tags:
     - never
     - varfish
+
+- name: Install NextFlow
+  vars:
+    java_module: "java/openjdk-18.0.2"
+    versions:
+      - {
+         version_number: "22.10.7",
+         url: "https://github.com/nextflow-io/nextflow/releases/download/v22.10.7/nextflow-22.10.7-all",
+         checksum: "sha512:478f215e233de41bb68b22c4dab58eaa7c574f8ec26f6b74b82e583928bbf0d3679972c1f4bc09fadc64deeac9e00615178581dd8c698d062d43e69dc56971c3"
+      }
+  include_tasks:
+    file: 'nextflow.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - nextflow
