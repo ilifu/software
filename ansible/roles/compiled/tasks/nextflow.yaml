@@ -1,0 +1,39 @@
+---
+- name: Install NextFlow {{ item.version_number }}
+  vars:
+    nextflow_dir: "{{ bio_dir }}/nextflow"
+    nextflow_module_dir: "{{ bio_modules }}/nextflow"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ nextflow_dir }}/{{ item.version_number }}"
+    java_module: "{{ item.java_module }}"
+    java_location: "{{ item.java_location }}"
+    version_number: "{{ item.version_number }}"
+  tags:
+    - never
+    - nextflow
+  block:
+    - name: Download, compile and install NextFlow {{ version_number }}
+      block:
+        - name: Ensure nextflow directory exists
+          file:
+            path: "{{ install_dir }}"
+            state: directory
+            mode: u=rwx,g=rx,o=rx
+        - name: Download NextFlow {{ version_number }}
+          get_url:
+              url: "{{ item.url }}"
+              dest: "{{ install_dir }}/nextflow"
+              checksum: "{{ checksum }}"
+              mode: u=rwx,g=rx,o=rx
+
+    - name: Install NextFlow {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ nextflow_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install NextFlow module file
+          template:
+            src: nextflow.lua
+            dest: "{{ nextflow_module_dir }}/{{ version_number }}.lua"
