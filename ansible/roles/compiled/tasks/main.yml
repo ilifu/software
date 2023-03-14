@@ -1298,3 +1298,17 @@
   tags:
     - never
     - nextflow
+
+- name: Install NanoPlot
+  vars:
+    versions:
+      - {
+         version_number: "1.41.0",
+         python_location: "/software/common/python/3.11.2"
+      }
+  include_tasks:
+    file: 'nanoplot.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - nanoplot
