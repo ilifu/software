@@ -1312,3 +1312,19 @@
   tags:
     - never
     - nanoplot
+
+- name: Install rust
+  vars:
+    versions:
+      - {
+        version_number: "1.68.0",
+        url: "https://static.rust-lang.org/dist/rust-1.68.0-x86_64-unknown-linux-gnu.tar.gz",
+        checksum: "sha512:b696c6c00608433360e606f9697112c6ef5b7b35b870aa5ff759594a754035b0b4a1e69c42f7cc012f2121f7ae8ff22905555ddc3aa7bbb56fda62667ecde6ea"
+      }
+  include_tasks:
+    file: 'rust.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - rust
+

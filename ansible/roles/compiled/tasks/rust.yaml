@@ -1,0 +1,43 @@
+---
+- name: Install Rust
+  vars:
+    rust_dir: "{{ common_dir }}/rust"
+    rust_module_dir: "{{ common_modules }}/rust"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ rust_dir }}/{{ item.version_number }}"
+    version_number: "{{ item.version_number }}"
+    uncompressed_dir: "/dev/shm/rust-{{ version_number }}-x86_64-unknown-linux-gnu"
+  tags:
+    - never
+    - rust{{ item.version_number }}
+
+  block:
+    - name: Download rust
+      get_url:
+          url: "{{ url }}"
+          dest: "{{ common_src }}/rust_{{ version_number }}.tar.gz"
+          checksum: "{{ checksum }}"
+          mode: "ug=rw,o=r"
+    - name: "Uncompress rust to {{ uncompressed_dir }}"
+      unarchive:
+          src: "{{ common_src }}/rust_{{ version_number }}.tar.gz"
+          dest: "/dev/shm"
+          remote_src: yes
+#          mode: "ug=rw,o=r"
+          creates: "{{ uncompressed_dir }}"
+    - name: Run rust install
+      command: "./install.sh --prefix={{ install_dir }}"
+      args:
+          chdir: "{{ uncompressed_dir }}"
+          creates: "{{ install_dir }}/bin/rustc"
+
+    - name: "Create rust module directory {{ rust_module_dir }}"
+      file:
+          path: "{{ rust_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install rust module file"
+      template:
+        src: rust.lua
+        dest: "{{ rust_module_dir }}/{{ version_number }}.lua"
