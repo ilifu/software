@@ -1328,3 +1328,18 @@
     - never
     - rust
 
+- name: Install PhyML
+  vars:
+    versions:
+      - {
+          version_number: "Spring2022",
+          url: "https://github.com/stephaneguindon/phyml/archive/refs/tags/v3.3.20220408.tar.gz",
+          checksum: "sha256:9cef375c0186e8a8d4db72ac02148707624c97174ffac244167a138ceb9f65bd",
+          unzip_dir: "phyml-3.3.20220408"
+      }
+  include_tasks:
+    file: 'phyml.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - phyml
