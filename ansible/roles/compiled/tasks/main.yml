@@ -1343,3 +1343,20 @@
   tags:
     - never
     - phyml
+
+- name: Install HyPhy
+  vars:
+    versions:
+      - {
+          version_number: "2.5.49",
+          url: "https://github.com/veg/hyphy/archive/refs/tags/2.5.49.tar.gz",
+          checksum: "sha512:3b9b1065418b200d07ccbf25e5714ff5c2ce61b4a992191722dd4efbdc6f8126df649d66603ec3fcc39d6c344968043fa3203f70907a5849716498eab0816193",
+          mpi_dir: "/software/common/openmpi/4.1.4",
+          mpi_module: "openmpi/4.1.4"
+      }
+  include_tasks:
+    file: 'hyphy.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - hyphy
