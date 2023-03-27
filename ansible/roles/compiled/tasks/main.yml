@@ -1360,3 +1360,23 @@
   tags:
     - never
     - hyphy
+
+- name: Install IQ-TREE
+  vars:
+    versions:
+      - {
+          version_number: "1.6.12",
+          url: "https://github.com/Cibiv/IQ-TREE/releases/download/v1.6.12/iqtree-1.6.12-Linux.tar.gz",
+          checksum: "sha512:89832ac6ac7bd5e450be4cd10d2ea3fc19d6cff358b0f525e945cb8fac02e92d4b21401069ef67c4bbdc26ee74d7e480c4005f01ba6ce301b9dc8e58fa19e3ac",
+      }
+      - {
+        version_number: "2.2.0",
+        url: "https://github.com/iqtree/iqtree2/releases/download/v2.2.0/iqtree-2.2.0-Linux.tar.gz",
+        checksum: "sha512:7c257e9d004a1a8fc6fedfff09d9c282a9196e3974bdfb517f63b773e82a92c554736f74741ff4f42425f67c5a439acd94ae638c06f91d8a04aeaf43250ef523",
+      }
+  include_tasks:
+    file: 'iqtree.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - iqtree

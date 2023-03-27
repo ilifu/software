@@ -1,0 +1,49 @@
+---
+- name: Install iqtree {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    iqtree_dir: "{{ bio_dir }}/iqtree"
+    iqtree_module_dir: "{{ bio_modules }}/iqtree"
+    version_number: "{{ item.version_number }}"
+    unzip_dir: "/dev/shm/iqtree-{{ version_number }}-Linux"
+    install_dir: "{{ iqtree_dir }}/{{ version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+  tags:
+    - never
+    - iqtree{{ item.version_number }}
+
+  block:
+    - name: Download and install iqtree ({{ version_number }})
+      block:
+        - name: Download iqtree {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/iqtree-{{ version_number }}-Linux.tar.gz"
+            checksum: "{{ checksum }}"
+        - name: Unzip source to {{ unzip_dir }}
+          unarchive:
+            src: "{{ bio_src }}/iqtree-{{ version_number }}-Linux.tar.gz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Ensure iqtree dir exists
+          file:
+            path: "{{ iqtree_dir }}"
+            state: directory
+            recurse: yes
+        - name: Mv iqtree from {{ unzip_dir }} to {{ install_dir }}
+          command: "mv {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}"
+
+    - name: Install iqtree {{ version_number }} module
+      block:
+        - name: Check module dir {{ iqtree_module_dir }}
+          file:
+            path: "{{ iqtree_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install iqtree {{ version_number }} module file
+          template:
+            src: iqtree.lua
+            dest: "{{ iqtree_module_dir }}/{{ version_number }}.lua"
