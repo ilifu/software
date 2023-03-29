@@ -1,0 +1,46 @@
+- name: Install Minimap2
+  vars:
+    version_number: "{{ item.version_number }}"
+    minimap2_dir: "{{ bio_dir }}/minimap2"
+    minimap2_module_dir: "{{ bio_modules }}/minimap2"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ minimap2_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/minimap2-{{ version_number }}_x64-linux"
+  tags:
+    - never
+    - minimap2{{ item.version_number }}
+  block:
+    - name: Download, compile and install Minimap2 {{ version_number }}
+      block:
+        - name: Download Minimap2 {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/minimap2-{{ version_number }}.tar.tgz"
+            checksum: "{{ checksum }}"
+        - name: Unzip Minimap2 {{ version_number }}
+          unarchive:
+            src: "{{ bio_src }}/minimap2-{{ version_number }}.tar.tgz"
+            dest: "/dev/shm"
+            creates: "{{ unzipdir }}"
+        - name: Ensure Minimap2 dir exists
+          file:
+            path: "{{ minimap2_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Move uncompressed Minimap2 {{ version_number }} to {{ install_dir }}
+          command: "mv {{ unzipdir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}"
+
+    - name: Install Minimap2 {{ version_number }} module
+      block:
+      - name: Check module dir
+        file:
+          path: "{{ minimap2_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install Minimap2 {{ version_number }} module file
+        template:
+          src: minimap2.lua
+          dest: "{{ minimap2_module_dir }}/{{ version_number }}.lua"
