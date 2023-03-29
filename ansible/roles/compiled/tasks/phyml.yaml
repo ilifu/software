@@ -1,0 +1,65 @@
+---
+- name: Install phyml {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    phyml_dir: "{{ bio_dir }}/phyml"
+    phyml_module_dir: "{{ bio_modules }}/phyml"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ phyml_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/{{ item.unzip_dir }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+  tags:
+    - never
+    - phyml{{ item.version_number }}
+
+  block:
+    - name: Download and install phyml ({{ version_number }})
+      block:
+        - name: Download phyml {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/phyml_{{ version_number }}.tar.gz"
+            checksum: "{{ checksum }}"
+        - name: Unzip source to {{ unzip_dir }}
+          unarchive:
+            src: "{{ bio_src }}/phyml_{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Ensure phyml dir exists
+          file:
+            path: "{{ phyml_dir }}"
+            state: directory
+            recurse: yes
+        - name: Run autogen in {{ unzip_dir }}
+          command: "{{ unzip_dir }}/autogen.sh"
+          args:
+            chdir: "{{ unzip_dir }}/"
+            creates: "{{ unzip_dir }}/configure"
+        - name: Configure phyml
+          command: "{{ unzip_dir }}/configure --prefix={{ install_dir }} --enable-phyml"
+          args:
+            chdir: "{{ unzip_dir }}"
+            creates: "{{ unzip_dir }}/Makefile"
+
+        - name: Make phyml {{ version_number }}
+          make:
+            chdir: "{{ unzip_dir }}"
+          environment:
+            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+        - name: Install phyml {{ version_number }}
+          make:
+            chdir: "{{ unzip_dir }}"
+            target: install
+
+    - name: Install phyml {{ version_number }} module
+      block:
+        - name: Check module dir {{ phyml_module_dir }}
+          file:
+            path: "{{ phyml_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install phyml {{ version_number }} module file
+          template:
+            src: phyml.lua
+            dest: "{{ phyml_module_dir }}/{{ version_number }}.lua"

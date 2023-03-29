@@ -559,6 +559,11 @@
         url: "https://github.com/samtools/samtools/releases/download/1.14/samtools-1.14.tar.bz2",
         checksum: "sha256:9341dabaa98b0ea7d60fd47e42af25df43a7d3d64d8e654cdf852974546b7d74",
       }
+      - {
+          version_number: "1.17",
+          url: "https://github.com/samtools/samtools/releases/download/1.17/samtools-1.17.tar.bz2",
+          checksum: "sha256:3adf390b628219fd6408f14602a4c4aa90e63e18b395dad722ab519438a2a729"
+      }
   include_tasks:
     file: samtools.yaml
   loop: "{{ samtools_versions }}"
@@ -573,6 +578,11 @@
         version_number: "1.10.2",
         url: "https://github.com/samtools/htslib/releases/download/1.10.2/htslib-1.10.2.tar.bz2",
         checksum: "sha256:e3b543de2f71723830a1e0472cf5489ec27d0fbeb46b1103e14a11b7177d1939",
+      }
+      - {
+          version_number: "1.17",
+          url: "https://github.com/samtools/htslib/releases/download/1.17/htslib-1.17.tar.bz2",
+          checksum: "sha256:763779288c40f07646ec7ad98b96c378c739171d162ad98398868783b721839f"
       }
   include_tasks:
     file: htslib.yaml
@@ -1298,3 +1308,146 @@
   tags:
     - never
     - nextflow
+
+- name: Install NanoPlot
+  vars:
+    versions:
+      - {
+         version_number: "1.41.0",
+         python_location: "/software/common/python/3.11.2"
+      }
+  include_tasks:
+    file: 'nanoplot.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - nanoplot
+
+- name: Install rust
+  vars:
+    versions:
+      - {
+        version_number: "1.68.0",
+        url: "https://static.rust-lang.org/dist/rust-1.68.0-x86_64-unknown-linux-gnu.tar.gz",
+        checksum: "sha512:b696c6c00608433360e606f9697112c6ef5b7b35b870aa5ff759594a754035b0b4a1e69c42f7cc012f2121f7ae8ff22905555ddc3aa7bbb56fda62667ecde6ea"
+      }
+  include_tasks:
+    file: 'rust.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - rust
+
+- name: Install PhyML
+  vars:
+    versions:
+      - {
+          version_number: "Spring2022",
+          url: "https://github.com/stephaneguindon/phyml/archive/refs/tags/v3.3.20220408.tar.gz",
+          checksum: "sha256:9cef375c0186e8a8d4db72ac02148707624c97174ffac244167a138ceb9f65bd",
+          unzip_dir: "phyml-3.3.20220408"
+      }
+  include_tasks:
+    file: 'phyml.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - phyml
+
+- name: Install HyPhy
+  vars:
+    versions:
+      - {
+          version_number: "2.5.49",
+          url: "https://github.com/veg/hyphy/archive/refs/tags/2.5.49.tar.gz",
+          checksum: "sha512:3b9b1065418b200d07ccbf25e5714ff5c2ce61b4a992191722dd4efbdc6f8126df649d66603ec3fcc39d6c344968043fa3203f70907a5849716498eab0816193",
+          mpi_dir: "/software/common/openmpi/4.1.4",
+          mpi_module: "openmpi/4.1.4"
+      }
+  include_tasks:
+    file: 'hyphy.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - hyphy
+
+- name: Install IQ-TREE
+  vars:
+    versions:
+      - {
+          version_number: "1.6.12",
+          url: "https://github.com/Cibiv/IQ-TREE/releases/download/v1.6.12/iqtree-1.6.12-Linux.tar.gz",
+          checksum: "sha512:89832ac6ac7bd5e450be4cd10d2ea3fc19d6cff358b0f525e945cb8fac02e92d4b21401069ef67c4bbdc26ee74d7e480c4005f01ba6ce301b9dc8e58fa19e3ac",
+      }
+      - {
+        version_number: "2.2.0",
+        url: "https://github.com/iqtree/iqtree2/releases/download/v2.2.0/iqtree-2.2.0-Linux.tar.gz",
+        checksum: "sha512:7c257e9d004a1a8fc6fedfff09d9c282a9196e3974bdfb517f63b773e82a92c554736f74741ff4f42425f67c5a439acd94ae638c06f91d8a04aeaf43250ef523",
+      }
+  include_tasks:
+    file: 'iqtree.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - iqtree
+
+- name: Install filtlong
+  vars:
+    versions:
+      - {
+          version_number: "0.2.1",
+          url: "https://github.com/rrwick/Filtlong/archive/refs/tags/v0.2.1.tar.gz",
+          checksum: "sha512:f061be5fba685fdd46d5152b9d3a1a737e3c1e3219ec5065bb1ecf827475ce1c08a9ab4228615f5068201081ec5735e8b824ae174f1a61dc89f7d3309c6f7819"
+      }
+  include_tasks:
+    file: 'filtlong.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - filtlong
+
+- name: Install Minimap2
+  vars:
+    versions:
+      - {
+          version_number: "2.24",
+          url: "https://github.com/lh3/minimap2/releases/download/v2.24/minimap2-2.24_x64-linux.tar.bz2",
+          checksum: "sha512:5e27233f75d0ae776707c4b56d43925c0f0f2a25b868e18d43d1a33b67fb730013df04ca881949859d22667aba803681ee0da1c95b01ce0d3dcb7458b12603d9"
+        }
+  include_tasks:
+    file: 'minimap2.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - minimap2
+
+- name: Install Medaka
+  vars:
+    versions:
+      - {
+        version_number: "1.7.3",
+        python_location: "/software/common/python/3.10.9",
+        modules: ["samtools/1.17", "minimap2/2.24", "htslib/1.17"]
+      }
+  include_tasks:
+    file: 'medaka.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - medaka
+
+- name: Install Polypolish
+  vars:
+    versions:
+      - {
+        version_number: "0.5.0",
+        url: "https://github.com/rrwick/Polypolish/releases/download/v0.5.0/polypolish-linux-x86_64-musl-v0.5.0.tar.gz",
+        checksum: "sha256:ff85f0b4be16bd7bad131125a649013de9012baa1664b7e5cfacb5d0ce0a82e1",
+        python_module: "python/3.11.2"
+        }
+  include_tasks:
+    file: 'polypolish.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - polypolish

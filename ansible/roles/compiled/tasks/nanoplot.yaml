@@ -1,0 +1,52 @@
+---
+- name: Install NanoPlot
+  vars:
+    nanoplot_dir: "{{ bio_dir }}/nanoplot"
+    nanoplot_module_dir: "{{ bio_modules }}/nanoplot"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ nanoplot_dir }}/{{ item.version_number }}"
+    python_location: "{{ item.python_location }}"
+    version_number: "{{ item.version_number }}"
+    pipfile_prefix: "Pipfiles/nanoplot.{{ version_number }}"
+  tags:
+    - never
+    - nanoplot{{ item.version_number }}
+
+  block:
+    - name: Create nanoplot directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+    - name: Copy Pipfiles
+      copy:
+        src: "{{ pipfiles.src }}"
+        dest: "{{ pipfiles.dest }}"
+      with_items:
+        - {
+            src: "{{ pipfile_prefix }}.Pipfile",
+            dest: "{{ install_dir }}/Pipfile"
+          }
+        - {
+            src: "{{ pipfile_prefix }}.Pipfile.lock",
+            dest: "{{ install_dir }}/Pipfile.lock"
+          }
+      loop_control:
+        loop_var: pipfiles
+    - name: Create Virtual Environment
+      command: "{{ python_location }}/bin/pipenv sync"
+      args:
+        chdir: "{{ install_dir }}"
+      environment:
+        PIPENV_VENV_IN_PROJECT: "1"
+        PIPENV_IGNORE_VIRTUALENVS: "1"
+
+    - name: "Create nanoplot module directory {{ nanoplot_module_dir }}"
+      file:
+          path: "{{ nanoplot_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install nanoplot module file"
+      template:
+        src: nanoplot.lua
+        dest: "{{ nanoplot_module_dir }}/{{ version_number }}.lua"

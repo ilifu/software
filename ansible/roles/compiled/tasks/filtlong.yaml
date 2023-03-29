@@ -1,0 +1,52 @@
+---
+- name: Install filtlong {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    filtlong_dir: "{{ bio_dir }}/filtlong"
+    filtlong_module_dir: "{{ bio_modules }}/filtlong"
+    version_number: "{{ item.version_number }}"
+    unzip_dir: "/dev/shm/Filtlong-{{ version_number }}"
+    install_dir: "{{ filtlong_dir }}/{{ version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+  tags:
+    - never
+    - filtlong{{ item.version_number }}
+
+  block:
+    - name: Download and install filtlong ({{ version_number }})
+      block:
+        - name: Download filtlong {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/filtlong-{{ version_number }}.tar.gz"
+            checksum: "{{ checksum }}"
+        - name: Unzip source to {{ unzip_dir }}
+          unarchive:
+            src: "{{ bio_src }}/filtlong-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Ensure filtlong dir exists
+          file:
+            path: "{{ install_dir }}"
+            state: directory
+            recurse: yes
+        - name: Compile filtlong
+          make:
+            chdir: "{{ unzip_dir }}"
+        - name: move filtlong binary to final resting place {{ install_dir }}
+          command: "mv {{ unzip_dir }}/bin/filtlong {{ install_dir }}/filtlong"
+          args:
+            creates: "{{ install_dir }}/filtlong"
+
+    - name: Install filtlong {{ version_number }} module
+      block:
+        - name: Check module dir {{ filtlong_module_dir }}
+          file:
+            path: "{{ filtlong_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install filtlong {{ version_number }} module file
+          template:
+            src: filtlong.lua
+            dest: "{{ filtlong_module_dir }}/{{ version_number }}.lua"

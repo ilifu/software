@@ -1,0 +1,53 @@
+---
+- name: Install Medaka
+  vars:
+    medaka_dir: "{{ bio_dir }}/medaka"
+    medaka_module_dir: "{{ bio_modules }}/medaka"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ medaka_dir }}/{{ item.version_number }}"
+    python_location: "{{ item.python_location }}"
+    version_number: "{{ item.version_number }}"
+    pipfile_prefix: "Pipfiles/medaka.{{ version_number }}"
+  tags:
+    - never
+    - medaka{{ item.version_number }}
+
+  block:
+    - name: Create medaka directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+    - name: Copy Pipfiles
+      copy:
+        src: "{{ pipfiles.src }}"
+        dest: "{{ pipfiles.dest }}"
+      with_items:
+        - {
+            src: "{{ pipfile_prefix }}.Pipfile",
+            dest: "{{ install_dir }}/Pipfile"
+          }
+        - {
+            src: "{{ pipfile_prefix }}.Pipfile.lock",
+            dest: "{{ install_dir }}/Pipfile.lock"
+          }
+      loop_control:
+        loop_var: pipfiles
+    - name: Create Virtual Environment
+      command: "{{ python_location }}/bin/pipenv sync"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv/bin/medaka"
+      environment:
+        PIPENV_VENV_IN_PROJECT: "1"
+        PIPENV_IGNORE_VIRTUALENVS: "1"
+
+    - name: "Create medaka module directory {{ medaka_module_dir }}"
+      file:
+          path: "{{ medaka_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install medaka module file"
+      template:
+        src: medaka.lua
+        dest: "{{ medaka_module_dir }}/{{ version_number }}.lua"
