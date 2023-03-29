@@ -1380,3 +1380,18 @@
   tags:
     - never
     - iqtree
+
+- name: Install filtlong
+  vars:
+    versions:
+      - {
+          version_number: "0.2.1",
+          url: "https://github.com/rrwick/Filtlong/archive/refs/tags/v0.2.1.tar.gz",
+          checksum: "sha512:f061be5fba685fdd46d5152b9d3a1a737e3c1e3219ec5065bb1ecf827475ce1c08a9ab4228615f5068201081ec5735e8b824ae174f1a61dc89f7d3309c6f7819"
+      }
+  include_tasks:
+    file: 'filtlong.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - filtlong
