@@ -559,6 +559,11 @@
         url: "https://github.com/samtools/samtools/releases/download/1.14/samtools-1.14.tar.bz2",
         checksum: "sha256:9341dabaa98b0ea7d60fd47e42af25df43a7d3d64d8e654cdf852974546b7d74",
       }
+      - {
+          version_number: "1.17",
+          url: "https://github.com/samtools/samtools/releases/download/1.17/samtools-1.17.tar.bz2",
+          checksum: "sha256:3adf390b628219fd6408f14602a4c4aa90e63e18b395dad722ab519438a2a729"
+      }
   include_tasks:
     file: samtools.yaml
   loop: "{{ samtools_versions }}"
@@ -1395,3 +1400,4 @@
   tags:
       - never
       - filtlong
+
