@@ -1,0 +1,42 @@
+- name: Install Polypolish
+  vars:
+    version_number: "{{ item.version_number }}"
+    polypolish_dir: "{{ bio_dir }}/polypolish"
+    polypolish_module_dir: "{{ bio_modules }}/polypolish"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ polypolish_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - polypolish{{ item.version_number }}
+  block:
+    - name: Download, compile and install Polypolish {{ version_number }}
+      block:
+        - name: Download Polypolish {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/polypolish-{{ version_number }}.tar.tgz"
+            checksum: "{{ checksum }}"
+        - name: Ensure Polypolish dir exists
+          file:
+            path: "{{ install_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+            recurse: yes
+        - name: Unzip Polypolish {{ version_number }}
+          unarchive:
+            src: "{{ bio_src }}/polypolish-{{ version_number }}.tar.tgz"
+            dest: "{{ install_dir }}"
+            creates: "{{ install_dir }}/polypolish"
+
+    - name: Install Polypolish {{ version_number }} module
+      block:
+      - name: Check module dir
+        file:
+          path: "{{ polypolish_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install Polypolish {{ version_number }} module file
+        template:
+          src: polypolish.lua
+          dest: "{{ polypolish_module_dir }}/{{ version_number }}.lua"

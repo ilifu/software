@@ -1435,3 +1435,19 @@
   tags:
     - never
     - medaka
+
+- name: Install Polypolish
+  vars:
+    versions:
+      - {
+        version_number: "0.5.0",
+        url: "https://github.com/rrwick/Polypolish/releases/download/v0.5.0/polypolish-linux-x86_64-musl-v0.5.0.tar.gz",
+        checksum: "sha256:ff85f0b4be16bd7bad131125a649013de9012baa1664b7e5cfacb5d0ce0a82e1",
+        python_module: "python/3.11.2"
+        }
+  include_tasks:
+    file: 'polypolish.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - polypolish
