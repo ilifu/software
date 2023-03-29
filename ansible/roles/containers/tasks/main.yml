@@ -208,3 +208,23 @@
   tags:
     - never
     - proteowizard
+
+- name: Create trycycler container
+  vars:
+    versions:
+      - {
+          version_name: "biocontainers",
+          version_number: "0.5.4--pyhdfd78af_0",
+          docker_source: "quay.io/biocontainers/trycycler"
+      }
+      - {
+          version_name: "staphb",
+          version_number: "0.5.4",
+          docker_source: "quay.io/staphb/trycycler"
+      }
+  loop: "{{ versions }}"
+  include_tasks:
+    file: trycycler.yaml
+  tags:
+    - never
+    - trycycler

@@ -1,0 +1,45 @@
+- name: Create Trycycler container
+  vars:
+    docker_source: "{{ item.docker_source }}"
+    container_name: "trycycler_{{ item.version_name }}.{{ item.version_number }}"
+    container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+    trycycler_module_dir: "{{ bio_modules }}/trycycler"
+    trycycler_binary_dir: "{{ bio_container_dir }}/trycycler/{{ item.version_name }}/{{ item.version_number }}"
+  tags:
+    - "trycycler.{{ item.version_name }}_{{ item.version_number }}"
+    - never
+  block:
+    - name: Create Trycycler {{ item.version_number }} container
+      block:
+        - name: Copy recipe  {{ container_recipe }}
+          template:
+            src: "trycycler.def"
+            dest: "{{ container_recipe }}"
+        - name: Build container {{ container_image }}
+          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          args:
+            creates: "{{ container_image }}"
+          become: true
+        - name: Ensure Trycycler binary directory exists
+          file:
+            path: "{{ trycycler_binary_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Create Trycycler binary
+          template:
+            src: "trycycler.sh"
+            dest: "{{ trycycler_binary_dir }}/trycycler"
+            mode: 0755
+
+    - name: Install Trycycler {{ container_name }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ trycycler_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Trycycler module file
+          template:
+            src: trycycler.lua
+            dest: "{{ trycycler_module_dir }}/{{ container_name }}.lua"

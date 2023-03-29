@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: {{ docker_source }}:{{ item.version_number }}
+
+%labels
+  Maintainer Dane Kennedy
+  Version {{ item.version_number }}
+  Tryclycler
+
+%help
+  Trycycler
+
+
