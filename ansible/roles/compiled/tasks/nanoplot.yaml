@@ -39,6 +39,7 @@
         chdir: "{{ install_dir }}"
       environment:
         PIPENV_VENV_IN_PROJECT: "1"
+        PIPENV_IGNORE_VIRTUALENVS: "1"
 
     - name: "Create nanoplot module directory {{ nanoplot_module_dir }}"
       file:
