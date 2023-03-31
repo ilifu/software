@@ -599,6 +599,11 @@
         url: "https://github.com/samtools/bcftools/releases/download/1.10.2/bcftools-1.10.2.tar.bz2",
         checksum: "sha256:f57301869d0055ce3b8e26d8ad880c0c1989bf25eaec8ea5db99b60e31354e2c",
       }
+      - {
+          version_number: "1.17",
+          url: "https://github.com/samtools/bcftools/releases/download/1.17/bcftools-1.17.tar.bz2",
+          checksum: "sha256:01f75d8e701d85b2c759172412009cc04f29b61616ace2fa75116123de4596cc"
+      }
   include_tasks:
     file: bcftools.yaml
   loop: "{{ bcftools_versions }}"
@@ -1451,3 +1456,5 @@
   tags:
       - never
       - polypolish
+
+
