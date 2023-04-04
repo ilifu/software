@@ -1,0 +1,53 @@
+---
+- name: Install Pysam
+  vars:
+    pysam_dir: "{{ bio_dir }}/pysam"
+    pysam_module_dir: "{{ bio_modules }}/pysam"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ pysam_dir }}/{{ item.version_number }}"
+    python_location: "{{ item.python_location }}"
+    version_number: "{{ item.version_number }}"
+    pipfile_prefix: "Pipfiles/pysam.{{ version_number }}"
+    modules: "{{ item.modules }}"
+  tags:
+    - never
+    - pysam{{ item.version_number }}
+
+  block:
+    - name: Create pysam directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+    - name: Copy Pipfiles
+      copy:
+        src: "{{ pipfiles.src }}"
+        dest: "{{ pipfiles.dest }}"
+      with_items:
+        - {
+            src: "{{ pipfile_prefix }}.Pipfile",
+            dest: "{{ install_dir }}/Pipfile"
+          }
+        - {
+            src: "{{ pipfile_prefix }}.Pipfile.lock",
+            dest: "{{ install_dir }}/Pipfile.lock"
+          }
+      loop_control:
+        loop_var: pipfiles
+    - name: Create Virtual Environment
+      command: "{{ python_location }}/bin/pipenv sync"
+      args:
+        chdir: "{{ install_dir }}"
+      environment:
+        PIPENV_VENV_IN_PROJECT: "1"
+        PIPENV_IGNORE_VIRTUALENVS: "1"
+
+    - name: "Create pysam module directory {{ pysam_module_dir }}"
+      file:
+          path: "{{ pysam_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install pysam module file"
+      template:
+        src: pysam.lua
+        dest: "{{ pysam_module_dir }}/{{ version_number }}.lua"
