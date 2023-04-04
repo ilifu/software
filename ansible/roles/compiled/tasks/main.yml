@@ -1462,7 +1462,13 @@
     versions:
       - {
          version_number: "0.20.0",
-         python_location: "/software/common/python/3.11.2"
+         python_location: "/software/common/python/3.11.2",
+         modules: ["samtools/1.17", "htslib/1.17", "bcftools/1.17"]
+      }
+      - {
+        version_number: "0.21.0",
+        python_location: "/software/common/python/3.11.2",
+        modules: ["samtools/1.17", "htslib/1.17", "bcftools/1.17"]
       }
   include_tasks:
     file: 'pysam.yaml'

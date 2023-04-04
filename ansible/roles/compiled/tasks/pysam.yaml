@@ -8,6 +8,7 @@
     python_location: "{{ item.python_location }}"
     version_number: "{{ item.version_number }}"
     pipfile_prefix: "Pipfiles/pysam.{{ version_number }}"
+    modules: "{{ item.modules }}"
   tags:
     - never
     - pysam{{ item.version_number }}
