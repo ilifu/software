@@ -1476,3 +1476,20 @@
   tags:
     - never
     - pysam
+
+- name: Install popdel
+  vars:
+    versions:
+      - {
+          version_number: "1.5.0",
+          url: "https://github.com/kehrlab/PopDel/archive/refs/tags/v1.5.0.tar.gz",
+          checksum: "sha256:c4f9dd1838379a9bcb3545da3a8d2d779f85212528a523215df9d2dc505fe515",
+          htslib_module: "htslib/1.17",
+          htslib_dir: "/software/bio/htslib/1.17",
+      }
+  include_tasks:
+    file: 'popdel.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - popdel
