@@ -1,0 +1,59 @@
+---
+- name: Install popdel {{ item.version_number }}
+  vars:
+    popdel_dir: "{{ bio_dir }}/popdel"
+    popdel_module_dir: "{{ bio_modules }}/popdel"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ popdel_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/PopDel-{{ version_number }}"
+    htslib_module: "{{ item.htslib_module }}"
+    htslib_dir: "{{ item.htslib_dir }}"
+  tags:
+    - never
+    - popdel{{ item.version_number }}
+
+  block:
+    - name: Download and install popdel {{ version_number }}
+      block:
+        - name: Download popdel {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_dir }}/src/popdel-{{ version_number }}.tar.gz"
+            checksum: "{{ checksum }}"
+        - name: Ensure popdel dir exists
+          file:
+            path: "{{ install_dir }}"
+            state: directory
+        - name: Uncompress popdel to {{ unzip_dir }}
+          unarchive:
+            src: "{{  bio_dir }}/src/popdel-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Make popdel {{ version_number }}
+          make:
+            chdir: "{{ unzip_dir }}"
+          environment:
+            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+            CPATH: "{{ htslib_dir }}/include"
+            LD_LIBRARY_PATH: "{{ htslib_dir }}/lib"
+            LIBRARY_PATH: "{{ htslib_dir }}/lib"
+        - name: Install popdel {{ version_number }} to {{ install_dir }}
+          copy:
+            src: "{{ unzip_dir }}/popdel"
+            dest: "{{ install_dir }}/popdel"
+            mode: u=rwx,g=rx,o=rx
+
+
+    - name: Install popdel {{ version_number }} module
+      block:
+        - name: Check module dir {{ popdel_module_dir }}
+          file:
+            path: "{{ popdel_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install popdel {{ version_number }} module file
+          template:
+            src: popdel.lua
+            dest: "{{ popdel_module_dir }}/{{ version_number }}.lua"
