@@ -228,3 +228,12 @@
   tags:
     - never
     - trycycler
+
+- name: Create TRIBES container
+  vars:
+    versions:
+      - {
+          version_number: "0.2",
+          git_repo: "https://github.com/ilifu/TRIBES.git",
+          git_branch: "branch-0.2",
+      }
