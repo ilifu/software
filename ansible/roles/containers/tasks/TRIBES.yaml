@@ -1,0 +1,43 @@
+- name: Create TRIBES container
+  vars:
+    singularity_sif_url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    version_number: "{{ item.version_number }}"
+    container_name: "tribes_{{ version_number }}"
+    container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+    tribes_module_dir: "{{ bio_modules }}/tribes"
+    tribes_binary_dir: "{{ bio_container_dir }}/tribes/{{ version_number }}/"
+  tags:
+    - "TRIBES{{ item.version_number }}"
+    - never
+  block:
+    - name: Create TRIBES {{ version_number }} container
+      block:
+        - name: Copy TRIBES {{version_number }} sif from github
+          get_url:
+              url: "{{ singularity_sif_url }}"
+              dest: "{{ container_image }}"
+              checksum: "{{ checksum }}"
+              mode: 0755
+        - name: Ensure TRIBES binary directory exists
+          file:
+            path: "{{ tribes_binary_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Create TRIBES binary
+          template:
+            src: "tribes.sh"
+            dest: "{{ tribes_binary_dir }}/tribes"
+            mode: 0755
+
+    - name: Install TRIBES {{ container_name }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ tribes_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install TRIBES module file
+          template:
+            src: tribes.lua
+            dest: "{{ tribes_module_dir }}/{{ version_number }}.lua"

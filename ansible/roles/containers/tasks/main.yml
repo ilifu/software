@@ -228,3 +228,18 @@
   tags:
     - never
     - trycycler
+
+- name: Create TRIBES container
+  vars:
+    versions:
+      - {
+          version_number: "0.2",
+          url: "https://github.com/ilifu/TRIBES/releases/download/v0.2.0-singularity/tribes.sif",
+          checksum: "sha512:89ce1df64f1ad8e230d0a7d84a1749c1ff4ab1e71f36622a70939c3cbf2a346a5713a97d5e85270cced2bcd72fb31e71b3398be7f3a6fcfc860eb9a779b6fc3e"
+      }
+  loop: "{{ versions }}"
+  include_tasks:
+      file: TRIBES.yaml
+  tags:
+    - never
+    - TRIBES
