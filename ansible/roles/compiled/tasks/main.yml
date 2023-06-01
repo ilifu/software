@@ -490,7 +490,7 @@
       }
       - {
           version_number: "3.11.3",
-          checksum: "",
+          checksum: "sha256:a77ede063fd115f85f98f82d2e30459b5565db7d098665497bcd684bf8edaec9",
           url: "https://github.com/sylabs/singularity/releases/download/v3.11.3/singularity-ce-3.11.3.tar.gz",
           go_location: "{{ common_dir }}/golang/1.20.4/bin"
       }
