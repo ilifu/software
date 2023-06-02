@@ -5,8 +5,9 @@
     - container_name: "DIANN_{{ version_number }}"
     - container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
     - container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
-    - diann_binary_dir: "{{ bio_container_dir }}/DIANN/{{ item.diann_version }}"
+    - diann_binary_dir: "{{ bio_container_dir }}/DIANN/{{ version_number }}"
     - diann_deb_url: "{{ item.deb_url }}"
+    - diann_module_dir: "{{ bio_modules }}/DIANN"
   tags:
     - "diann{{ item.version_number }}"
     - never
@@ -37,33 +38,25 @@
           args:
             creates: "{{ container_image }}"
           become: true
-#    - name: Ensure DIANN binary directory exists
-#      file:
-#        path: "{{ diann_binary_dir }}"
-#        state: directory
-#        mode: u=rwx,g=rwx,o=rx
-#    - name: Create R binaries
-#      template:
-#        src: "{{ binary.template }}"
-#        dest: "{{ R_binary_dir }}/{{ binary.name }}"
-#        mode: 0755
-#      with_items:
-#        - { name: "R", template: "R.sh"}
-#        - { name: "Rscript", template: "Rscript.sh"}
-#        - { name: "DIANN", template: "DIANN.sh"}
-#        - { name: "diann", template: "DIANN.sh"}
-#      loop_control:
-#        loop_var: binary
-#
-#
-#    - name: Install DIANN {{ container_name }} module
-#      block:
-#        - name: Check module dir
-#          file:
-#            path: "{{ R_module_dir }}"
-#            state: directory
-#            mode: u=rwx,g=rwx,o=rx
-#        - name: Install DIANN module file
-#          template:
-#            src: DIANN.lua
-#            dest: "{{ R_module_dir }}/{{ container_name}}.lua"
+    - name: Ensure DIANN binary directory exists
+      file:
+        path: "{{ diann_binary_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Create diann binary
+      template:
+        src: "diann.sh"
+        dest: "{{ diann_binary_dir }}/diann"
+        mode: 0755
+
+    - name: Install DIANN {{ container_name }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ diann_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install DIANN module file
+          template:
+            src: diann.lua
+            dest: "{{ diann_module_dir }}/{{ version_number }}.lua"
