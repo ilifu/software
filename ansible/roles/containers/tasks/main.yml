@@ -243,3 +243,19 @@
   tags:
     - never
     - TRIBES
+
+- name: Create DIANN Containers
+  vars:
+    versions:
+      - {
+        base_container_name: ubuntu-bionic-compile,
+        base_container_version_name: bionic,
+        version_number: "1.8.1",
+        deb_url: "https://github.com/vdemichev/DiaNN/releases/download/1.8.1/diann_1.8.1.deb",
+      }
+  include_tasks:
+    file: DIANN.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - diann

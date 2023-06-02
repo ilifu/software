@@ -1,0 +1,62 @@
+- name: Create DIANN {{ item.version_name }} container
+  vars:
+    - base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
+    - version_number: "{{ item.version_number }}"
+    - container_name: "DIANN_{{ version_number }}"
+    - container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
+    - container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+    - diann_binary_dir: "{{ bio_container_dir }}/DIANN/{{ version_number }}"
+    - diann_deb_url: "{{ item.deb_url }}"
+    - diann_module_dir: "{{ bio_modules }}/DIANN"
+  tags:
+    - "diann{{ item.version_number }}"
+    - never
+  block:
+    - name: "Check for existence of {{ base_container_image }} container"
+      stat:
+        path: "{{ base_container_image }}"
+      register: base_container_exists
+    - name: "Missing {{ base_container_image }}"
+      fail:
+        msg: "The container {{ base_container_image }} is missing."
+      when: not base_container_exists.stat.exists
+    - name: Download DIANN .deb file
+      get_url:
+          url: "{{ diann_deb_url }}"
+          dest: "{{ bio_dir }}/src/diann_{{ version_number }}.deb"
+          mode: 0755
+      when: base_container_exists.stat.exists
+    - name: Create DIANN {{ item.diann_version }} container
+      when: base_container_exists.stat.exists
+      block:
+        - name: Copy recipe  {{ container_recipe }}
+          template:
+            src: "DIANN.def"
+            dest: "{{ container_recipe }}"
+        - name: Build container {{ container_image }}
+          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          args:
+            creates: "{{ container_image }}"
+          become: true
+    - name: Ensure DIANN binary directory exists
+      file:
+        path: "{{ diann_binary_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Create diann binary
+      template:
+        src: "diann.sh"
+        dest: "{{ diann_binary_dir }}/diann"
+        mode: 0755
+
+    - name: Install DIANN {{ container_name }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ diann_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install DIANN module file
+          template:
+            src: diann.lua
+            dest: "{{ diann_module_dir }}/{{ version_number }}.lua"
