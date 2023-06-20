@@ -1,8 +1,8 @@
 ---
 - name: Install rclone {{ item.version_number }}
   vars:
-    rclone_dir: "{{ bio_dir }}/rclone"
-    rclone_module_dir: "{{ bio_modules }}/rclone"
+    rclone_dir: "{{ common_dir }}/rclone"
+    rclone_module_dir: "{{ common_modules }}/rclone"
     url: "{{ item.url }}"
     version_number: "{{ item.version_number }}"
     checksum: "{{ item.checksum }}"
