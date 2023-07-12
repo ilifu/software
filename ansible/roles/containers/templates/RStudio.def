@@ -137,7 +137,7 @@ From: {{ base_container_image }}
   echo "R_LIBS_SITE=/library:\${R_LIBS_SITE}" >> /usr/lib/R/etc/Renviron.site
 
   cd /tmp
-  wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb
+  wget https://download2.rstudio.org/server/focal/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb
   gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb
   rm rstudio-server-${RSTUDIO_VERSION}-amd64.deb
 
