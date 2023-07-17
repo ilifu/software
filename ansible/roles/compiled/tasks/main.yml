@@ -1510,3 +1510,19 @@
   tags:
       - never
       - popdel
+
+- name: Install fzf
+  vars:
+    versions:
+      - {
+        version_number: "0.42.0",
+        url: "https://github.com/junegunn/fzf/releases/download/0.42.0/fzf-0.42.0-linux_amd64.tar.gz",
+        checksum: "sha256:e1c28b67b9199c329280598b4f344ac943dd3d31ee04f351d89084933a8efed7"
+      }
+  include_tasks:
+    file: 'fzf.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - fzf
+
