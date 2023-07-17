@@ -1,0 +1,45 @@
+---
+- name: Install fzf {{ item.version_number }}
+  vars:
+    fzf_dir: "{{ common_dir }}/fzf"
+    fzf_module_dir: "{{ common_modules }}/fzf"
+    repo: "{{ item.repo }}"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    source_dir: "{{ common_dir }}/src"
+    install_dir: "{{ fzf_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - fzf{{ item.version_number }}
+
+  block:
+    - name: Download and install fzf ({{ version_number }})
+      block:
+        - name: Download fzf {{ version_number }} from {{ repo }}
+          get_url:
+              url: "{{ url }}"
+              dest: "{{ source_dir }}/fzf-{{ version_number }}.tar.gz"
+              mode: 0644
+        - name: Ensure fzf dir exists
+          file:
+            path: "{{ install_dir }}"
+            state: directory
+            recurse: yes
+        - name: Extract fzf {{ version_number }}
+          unarchive:
+              src: "{{ source_dir }}/fzf-{{ version_number }}.tar.gz"
+              dest: "{{ install_dir }}"
+              remote_src: yes
+              creates: "{{ install_dir }}/fzf"
+
+    - name: Install fzf {{ version_number }} module
+      block:
+        - name: Check module dir {{ fzf_module_dir }}
+          file:
+            path: "{{ fzf_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install fzf {{ version_number }} module file
+          template:
+            src: fzf.lua
+            dest: "{{ fzf_module_dir }}/{{ version_number }}.lua"
