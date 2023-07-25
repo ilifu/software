@@ -1194,6 +1194,15 @@
         mpi_root: "/software/common/openmpi/4.1.4",
         mpi_module: "openmpi/4.1.4",
       }
+      - {
+        version_number: "2023.2",
+        checksum: "md5:fb85104d9cd1f753fde761bcbf842566",
+        url: "https://ftp.gromacs.org/gromacs/gromacs-2023.2.tar.gz",
+        cuda_root: "/software/common/cuda/11.7.0_515.43.04",
+        cuda_module: "cuda/11.7.0_515.43.04",
+        mpi_root: "/software/common/openmpi/4.1.4",
+        mpi_module: "openmpi/4.1.4",
+      }
   include_tasks:
     file: gromacs.yaml
   loop: "{{ versions }}"
