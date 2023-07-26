@@ -1,0 +1,49 @@
+---
+- name: Install cmake {{ item.version_number }}
+  vars:
+    cmake_dir: "{{ common_dir }}/cmake"
+    cmake_module_dir: "{{ common_modules }}/cmake"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ cmake_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/cmake-{{ version_number }}-linux-x86_64"
+    url: "{{ item.url }}"
+  tags:
+    - never
+    - cmake{{ item.version_number }}
+  block:
+    - name: Check if cmake binary already exists
+      stat:
+        path: "{{ install_dir }}/bin/cmake"
+      register: cmake_binary
+    - name: Download, compile and install cmake {{ version_number }}
+      when: not cmake_binary.stat.exists
+      block:
+        - name: Download cmake {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ common_src }}/cmake-{{ version_number }}.tar.gz"
+            checksum: "{{ checksum }}"
+        - name: Ensure cmake dir exists
+          file:
+              path: "{{ cmake_dir }}"
+              state: directory
+        - name: Unzip cmake {{ version_number }}
+          unarchive:
+            src: "{{ common_src }}/cmake-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Move unzipped cmake to install dir
+          command: "mv {{ unzip_dir }} {{ install_dir }}"
+
+    - name: Install cmake {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ cmake_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install cmake module file
+          template:
+            src: cmake.lua
+            dest: "{{ cmake_module_dir }}/{{ version_number }}.lua"
