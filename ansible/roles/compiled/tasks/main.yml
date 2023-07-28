@@ -675,6 +675,11 @@
 - name: Install Cuda
   vars:
     cuda_versions:
+      - {
+        version_number: "12.2.0_535.54.03",
+        url: "https://developer.download.nvidia.com/compute/cuda/12.2.0/local_installers/cuda_12.2.0_535.54.03_linux.run",
+        checksum: "sha256:ecf3d2afadcbac029f0f4505785810d52d006e4b87ba79ff3f984336a2bbf518"
+      }
 #      - {
 #        version_number: "11.7.0_515.43.04",
 #        url: "https://developer.download.nvidia.com/compute/cuda/11.7.0/local_installers/cuda_11.7.0_515.43.04_linux.run",
