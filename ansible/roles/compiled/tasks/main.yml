@@ -1559,3 +1559,12 @@
   tags:
     - never
     - cmake
+
+- name: Install Disk Management Tools
+  vars:
+    python_dir: "/software/common/python/3.10.9"
+  include_tasks:
+    file: disk_management.yaml
+  tags:
+    - never
+    - disk_management
