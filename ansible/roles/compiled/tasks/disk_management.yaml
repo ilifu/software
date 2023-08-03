@@ -38,3 +38,4 @@
       template:
         src: disk_management.lua
         dest: "{{ common_modules }}/disk_management.lua"
+        mode: "u=rwx,g=rx,o="
