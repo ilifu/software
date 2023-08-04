@@ -1,0 +1,38 @@
+---
+- name: Install mdanalysis
+  vars:
+    mdanalysis_dir: "{{ bio_dir }}/mdanalysis"
+    version_number: "{{ item.version_number }}"
+    module_dir: "{{ bio_modules }}/mdanalysis"
+    install_dir: "{{ mdanalysis_dir }}/{{ version_number }}"
+    python_dir: "{{ item.python_dir }}"
+  tags:
+    - never
+    - "mdanalysis{{ item.version_number }}"
+  block:
+    - name: Clone git repo, setup venv and install
+      block:
+        - name: ensure mdanalysis dir exists
+          file:
+              path: "{{ mdanalysis_dir }}"
+              state: directory
+        - name: Create virtual_environment
+          pip:
+            name:
+              - "mdanalysis[analysis]=={{ version_number }}"
+              - ipython
+            virtualenv: "{{ install_dir }}"
+            virtualenv_command: "{{ python_dir }}/bin/virtualenv"
+            virtualenv_python: "{{ python_dir }}/bin/python"
+            chdir: "{{ mdanalysis_dir }}"
+
+    - name: Ensure mdanalsys module dir exists
+      file:
+          path: "{{ module_dir }}"
+          state: directory
+          mode: "u=rwx,g=rwx,o=rx"
+
+    - name: Install mdanalysis module file
+      template:
+        src: mdanalysis.lua
+        dest: "{{ module_dir }}/{{ version_number }}.lua"
