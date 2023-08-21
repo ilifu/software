@@ -34,7 +34,7 @@
                 path: "{{ build_dir }}"
                 state: directory
             - name: Run OpenMPI {{ version_number }} configure
-              command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity={{ singularity_dir }} --with-ucx={{ ucx_dir }} --with-cuda={{ cuda_root }} --with-pmi=/opt/slurm/include/slurm --with-pmi-libdir=/opt/slurm/lib"
+              command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity={{ singularity_dir }} --with-ucx={{ ucx_dir }} --with-cuda={{ cuda_root }} --with-pmi=/opt/slurm --with-pmi-libdir=/opt/slurm/lib"
               args:
                 chdir: "{{ build_dir }}"
                 creates: "{{ build_dir }}/Makefile"
