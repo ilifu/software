@@ -53,16 +53,18 @@
       command: "{{ python_location }}/bin/pipenv sync"
       args:
         chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv"
       environment:
         PIPENV_VENV_IN_PROJECT: "1"
         PIPENV_IGNORE_VIRTUALENVS: "1"
 
-#    - name: "Create cnvkit module directory {{ cnvkit_module_dir }}"
-#      file:
-#          path: "{{ cnvkit_module_dir }}"
-#          state: directory
-#          mode: "ug=rwx,o=rx"
-#    - name: "Install cnvkit module file"
-#      template:
-#        src: cnvkit.lua
-#        dest: "{{ cnvkit_module_dir }}/{{ version_number }}.lua"
+
+    - name: "Create cnvkit module directory {{ cnvkit_module_dir }}"
+      file:
+          path: "{{ cnvkit_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install cnvkit module file"
+      template:
+        src: cnvkit.lua
+        dest: "{{ cnvkit_module_dir }}/{{ version_number }}.lua"
