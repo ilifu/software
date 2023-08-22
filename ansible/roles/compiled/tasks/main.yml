@@ -1590,3 +1590,18 @@
   tags:
     - never
     - mdanalysis
+
+- name: Install CNVkit
+  vars:
+      versions:
+      - {
+        version_number: "0.9.10",
+        python_dir: "/software/common/python/3.10.9",
+        url: "https://github.com/etal/cnvkit/archive/refs/tags/v0.9.10.tar.gz"
+      }
+  include_tasks:
+    file: 'cnvkit.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - cnvkit
