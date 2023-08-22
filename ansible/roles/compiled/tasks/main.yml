@@ -1596,8 +1596,9 @@
       versions:
       - {
         version_number: "0.9.10",
-        python_dir: "/software/common/python/3.10.9",
-        url: "https://github.com/etal/cnvkit/archive/refs/tags/v0.9.10.tar.gz"
+        python_location: "/software/common/python/3.10.9",
+        url: "https://github.com/etal/cnvkit/archive/refs/tags/v0.9.10.tar.gz",
+        checksum: "sha512:ca1c2de49661e06e43549beeb2be9f9e305734289da0880d18d2356f423ce2841073652d4a90573f10ff91840c9b01c16996997b28231deeff4302e514115b34"
       }
   include_tasks:
     file: 'cnvkit.yaml'

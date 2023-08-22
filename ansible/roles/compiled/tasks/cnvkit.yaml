@@ -1,0 +1,68 @@
+---
+- name: Install CNVKit
+  vars:
+    cnvkit_dir: "{{ bio_dir }}/cnvkit"
+    cnvkit_module_dir: "{{ bio_modules }}/cnvkit"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ cnvkit_dir }}/{{ item.version_number }}"
+    python_location: "{{ item.python_location }}"
+    version_number: "{{ item.version_number }}"
+    pipfile_prefix: "Pipfiles/cnvkit.{{ version_number }}"
+    url: "{{ item.url }}"
+  tags:
+    - never
+    - cnvkit{{ item.version_number }}
+
+  block:
+    - name: Create cnvkit directory
+      file:
+        path: "{{ cnvkit_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+    - name: Download cnvkit
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ bio_src }}/cnvkit.{{ version_number }}.tar.gz"
+        checksum: "{{ checksum }}"
+    - name: Unzip cnvkit
+      unarchive:
+        src: "{{ bio_src }}/cnvkit.{{ version_number }}.tar.gz"
+        dest: "/dev/shm"
+        creates: "/dev/shm/cnvkit-{{ version_number }}"
+    - name: Move cnvkit source to install dir
+      command: "mv /dev/shm/cnvkit-{{ version_number }} {{ install_dir }}"
+      args:
+          creates: "{{ install_dir }}"
+    - name: Copy Pipfiles
+      copy:
+        src: "{{ pipfiles.src }}"
+        dest: "{{ pipfiles.dest }}"
+      with_items:
+        - {
+            src: "{{ pipfile_prefix }}.Pipfile",
+            dest: "{{ install_dir }}/Pipfile"
+          }
+        - {
+            src: "{{ pipfile_prefix }}.Pipfile.lock",
+            dest: "{{ install_dir }}/Pipfile.lock"
+          }
+      loop_control:
+        loop_var: pipfiles
+
+    - name: Create Virtual Environment
+      command: "{{ python_location }}/bin/pipenv sync"
+      args:
+        chdir: "{{ install_dir }}"
+      environment:
+        PIPENV_VENV_IN_PROJECT: "1"
+        PIPENV_IGNORE_VIRTUALENVS: "1"
+
+#    - name: "Create cnvkit module directory {{ cnvkit_module_dir }}"
+#      file:
+#          path: "{{ cnvkit_module_dir }}"
+#          state: directory
+#          mode: "ug=rwx,o=rx"
+#    - name: "Install cnvkit module file"
+#      template:
+#        src: cnvkit.lua
+#        dest: "{{ cnvkit_module_dir }}/{{ version_number }}.lua"
