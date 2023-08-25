@@ -362,6 +362,11 @@
         url: "https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh",
         checksum: "sha512:f38b3ffc5d8bccbbb1b9c0538bc608043013c41a1be32b3992b12bf043f7ef0c0cd75469b7dc672f9b544d1095cd7896de5fa8aabd60f2cccaec1dd07a638baa"
       }
+      - {
+          version_number: "2023.07",
+          url: "https://repo.anaconda.com/archive/Anaconda3-2023.07-2-Linux-x86_64.sh",
+          checksum: "sha512:2d9250848f92ac38acb7a4b4699bd01252eefaeeb17a5ca489bb06d06a89e02681fe3944ccf17cb92e07261e96d6b96cb9530d27a2d8d5cab37df44734aef492"
+      }
   include_tasks:
     file: anaconda.yaml
   loop: "{{ anaconda_versions }}"
@@ -1606,3 +1611,26 @@
   tags:
     - never
     - cnvkit
+
+- name: Install Mamba
+  vars:
+    mamba_versions:
+      - {
+        version_number: "23.3.1-0",
+        url: "https://github.com/conda-forge/miniforge/releases/download/23.3.1-0/Mambaforge-23.3.1-0-Linux-x86_64.sh",
+        checksum: "sha512:45debde31bce3a124057148dba18143a6a83446556fb05d2910d54f5058767f1c2d1a1bb658d5fc7ef93606111c00af09497c569eb6d3629c654235cf3190fae"
+      }
+  include_tasks:
+    file: mamba.yaml
+  loop: "{{ mamba_versions }}"
+  tags:
+    - never
+    - mamba
+
+# QIIME2
+
+# Bracken
+
+# HISAT2
+
+# Kraken / Kraken2
