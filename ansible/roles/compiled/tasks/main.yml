@@ -1626,8 +1626,21 @@
   tags:
     - never
     - mamba
-
-# QIIME2
+    -
+- name: Install Kraken2
+  vars:
+    versions:
+      - {
+        version_number: "2.1.3",
+        url: "https://github.com/DerrickWood/kraken2/archive/refs/tags/v2.1.3.tar.gz",
+        checksum: "sha512:2365cdcff3d955bcb83bb2cd942c9f22757b80ed568b187835cfb9d0516973b652a6fa8c8ff3ebadbd2c78c125046fd74434524281c29e77a09397103a293835"
+      }
+  include_tasks:
+    file: 'kraken2.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - kraken2
 
 # Bracken
 
