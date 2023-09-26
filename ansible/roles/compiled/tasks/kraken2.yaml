@@ -1,0 +1,51 @@
+- name: Install Kraken2
+  vars:
+    kraken2_dir: "{{ bio_dir }}/kraken2"
+    kraken2_module_dir: "{{ bio_modules }}/kraken2"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ kraken2_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/kraken2-{{ version_number }}"
+  tags:
+    - never
+    - kraken2-{{ item.version_number }}
+  block:
+    - name: Install Kraken2 {{ version_number }}
+      block:
+        - name: Download and install Kraken2 {{ version_number }}
+          block:
+            - name: Download Kraken2 {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ bio_src }}/kraken2-{{ version_number }}.tar.gz"
+                checksum: "{{ checksum }}"
+            - name: Unzip Kraken2 {{ version_number }}
+              unarchive:
+                src: "{{ bio_src }}/kraken2-{{ version_number }}.tar.gz"
+                dest: "/dev/shm/"
+                creates: "{{ unzipdir }}"
+            - name: Ensure kraken2 dir exists
+              file:
+                  path: "{{ kraken2_dir }}"
+                  state: directory
+                  mode: u=rwx,g=rx,o=rx
+            - name: Install Kraken2 {{ version_number }} to {{ install_dir }}
+              command:
+                cmd: "./install_kraken2.sh {{ install_dir }}"
+              args:
+                chdir: "{{ unzipdir }}"
+                creates: "{{ install_dir }}"
+
+
+    - name: Install Kraken2 {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ kraken2_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Kraken2 module file
+          template:
+            src: kraken2.lua
+            dest: "{{ kraken2_module_dir }}/{{ version_number }}.lua"
