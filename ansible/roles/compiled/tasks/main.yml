@@ -1642,7 +1642,21 @@
       - never
       - kraken2
 
-# Bracken
+- name: Install Bracken
+  vars:
+    versions:
+      - {
+        version_number: "2.9",
+        url: "https://github.com/jenniferlu717/Bracken/archive/refs/tags/v2.9.tar.gz",
+        checksum: "sha512:ada224731d476e57d2f3ebc9b77582dc5b4dcefe69929368ccc555e78128cb2dce6585f5290417eb1a7edb71b74d0571860874deb440f22078a7c6221463a5b6"
+      }
+  include_tasks:
+    file: 'bracken.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - bracken
+
 
 # HISAT2
 

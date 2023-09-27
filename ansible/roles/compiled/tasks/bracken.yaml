@@ -1,0 +1,56 @@
+- name: Install Bracken
+  vars:
+    bracken_dir: "{{ bio_dir }}/bracken"
+    bracken_module_dir: "{{ bio_modules }}/bracken"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ bracken_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/Bracken-{{ version_number }}"
+  tags:
+    - never
+    - bracken-{{ item.version_number }}
+  block:
+    - name: Install Bracken {{ version_number }}
+      block:
+        - name: Download and install Bracken {{ version_number }}
+          block:
+            - name: Download Bracken {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ bio_src }}/bracken-{{ version_number }}.tar.gz"
+                checksum: "{{ checksum }}"
+            - name: Unzip Bracken {{ version_number }}
+              unarchive:
+                src: "{{ bio_src }}/bracken-{{ version_number }}.tar.gz"
+                dest: "/dev/shm/"
+                creates: "{{ unzipdir }}"
+            - name: Ensure bracken dir exists
+              file:
+                  path: "{{ bracken_dir }}"
+                  state: directory
+                  mode: u=rwx,g=rx,o=rx
+            - name: Move Bracken from {{ unzipdir }} to {{ install_dir }}
+              command:
+                cmd: "mv {{ unzipdir }} {{ install_dir }}"
+              args:
+                creates: "{{ install_dir }}"
+            - name: Build Bracken {{ version_number }}
+              command:
+                cmd: "./install_bracken.sh"
+              args:
+                chdir: "{{ install_dir }}"
+                creates: "{{ install_dir }}/bracken"
+
+
+    - name: Install Bracken {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ bracken_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install bracken module file
+          template:
+            src: bracken.lua
+            dest: "{{ bracken_module_dir }}/{{ version_number }}.lua"
