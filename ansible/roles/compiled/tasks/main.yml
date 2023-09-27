@@ -1657,6 +1657,20 @@
       - never
       - bracken
 
+- name: Install HISAT2
+  vars:
+    versions:
+      - {
+        version_number: "2.2.1",
+        url: "https://cloud.biohpc.swmed.edu/index.php/s/oTtGWbWjaxsQ2Ho/download",
+        checksum: "sha512:e2b43f6f55c8d8e5a46648cf86ad4af004671ec859fcca0c52edc392bdf6f03094f4de41b1a051a6866cf4e48c9e61e9f26cd145957eeacf999ce0c0815f2120"
+      }
+  include_tasks:
+    file: 'hisat2.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - hisat2
 
 # HISAT2
 
