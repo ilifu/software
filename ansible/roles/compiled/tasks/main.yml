@@ -1672,8 +1672,19 @@
       - never
       - hisat2
 
-# HISAT2
-
-# LaTeX
+- name: Install LaTeX
+  vars:
+    versions:
+      - {
+          texlive_install_file: "texlive/install-tl-unx.2023.tar.gz",
+          texlive_profile: "texlive/texlive.profile.2023",
+          version_number: "20230927"
+      }
+  include_tasks:
+    file: 'latex.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - latex
 
 # Mtoolbox
