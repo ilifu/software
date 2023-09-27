@@ -362,6 +362,11 @@
         url: "https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh",
         checksum: "sha512:f38b3ffc5d8bccbbb1b9c0538bc608043013c41a1be32b3992b12bf043f7ef0c0cd75469b7dc672f9b544d1095cd7896de5fa8aabd60f2cccaec1dd07a638baa"
       }
+      - {
+          version_number: "2023.07",
+          url: "https://repo.anaconda.com/archive/Anaconda3-2023.07-2-Linux-x86_64.sh",
+          checksum: "sha512:2d9250848f92ac38acb7a4b4699bd01252eefaeeb17a5ca489bb06d06a89e02681fe3944ccf17cb92e07261e96d6b96cb9530d27a2d8d5cab37df44734aef492"
+      }
   include_tasks:
     file: anaconda.yaml
   loop: "{{ anaconda_versions }}"
@@ -1606,3 +1611,69 @@
   tags:
     - never
     - cnvkit
+
+- name: Install Mamba
+  vars:
+    mamba_versions:
+      - {
+        version_number: "23.3.1-0",
+        url: "https://github.com/conda-forge/miniforge/releases/download/23.3.1-0/Mambaforge-23.3.1-0-Linux-x86_64.sh",
+        checksum: "sha512:45debde31bce3a124057148dba18143a6a83446556fb05d2910d54f5058767f1c2d1a1bb658d5fc7ef93606111c00af09497c569eb6d3629c654235cf3190fae"
+      }
+  include_tasks:
+    file: mamba.yaml
+  loop: "{{ mamba_versions }}"
+  tags:
+    - never
+    - mamba
+    -
+- name: Install Kraken2
+  vars:
+    versions:
+      - {
+        version_number: "2.1.3",
+        url: "https://github.com/DerrickWood/kraken2/archive/refs/tags/v2.1.3.tar.gz",
+        checksum: "sha512:2365cdcff3d955bcb83bb2cd942c9f22757b80ed568b187835cfb9d0516973b652a6fa8c8ff3ebadbd2c78c125046fd74434524281c29e77a09397103a293835"
+      }
+  include_tasks:
+    file: 'kraken2.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - kraken2
+
+- name: Install Bracken
+  vars:
+    versions:
+      - {
+        version_number: "2.9",
+        url: "https://github.com/jenniferlu717/Bracken/archive/refs/tags/v2.9.tar.gz",
+        checksum: "sha512:ada224731d476e57d2f3ebc9b77582dc5b4dcefe69929368ccc555e78128cb2dce6585f5290417eb1a7edb71b74d0571860874deb440f22078a7c6221463a5b6"
+      }
+  include_tasks:
+    file: 'bracken.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - bracken
+
+- name: Install HISAT2
+  vars:
+    versions:
+      - {
+        version_number: "2.2.1",
+        url: "https://cloud.biohpc.swmed.edu/index.php/s/oTtGWbWjaxsQ2Ho/download",
+        checksum: "sha512:e2b43f6f55c8d8e5a46648cf86ad4af004671ec859fcca0c52edc392bdf6f03094f4de41b1a051a6866cf4e48c9e61e9f26cd145957eeacf999ce0c0815f2120"
+      }
+  include_tasks:
+    file: 'hisat2.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - hisat2
+
+# HISAT2
+
+# LaTeX
+
+# Mtoolbox

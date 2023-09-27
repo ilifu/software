@@ -1,0 +1,42 @@
+---
+- name: Install Mamba {{ item.version_number }}
+  vars:
+    mamba_dir: "{{ common_dir }}/mamba"
+    mamba_module_dir: "{{ common_modules }}/mamba"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ mamba_dir }}/{{ version_number }}"
+    mamba_url: "{{ item.url }}"
+  tags:
+    - never
+    - mamba{{ item.version_number }}
+
+  block:
+    - name: Download, and install Mamba {{ version_number }}
+      block:
+        - name: Download Mamba {{ version_number }} from {{ mamba_url }}
+          get_url:
+            url: "{{ mamba_url }}"
+            dest: "{{ common_src }}/Mamba-{{ version_number }}-Linux-x86_64.sh"
+            checksum: "{{ checksum }}"
+            mode: u=rx,g=r,o=r
+        - name: Run Mamba {{ version_number }} installer – {{ install_dir }}
+          command: "/usr/bin/bash {{ common_src }}/Mamba-{{ version_number }}-Linux-x86_64.sh -b -f -p {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}"
+        - name: Add mambarc
+          template:
+            src: anaconda.rc
+            dest: "{{ install_dir }}/mambarc"
+
+    - name: Install Mamba {{ version_number }} module to {{ mamba_module_dir }}
+      block:
+        - name: Check module dir {{ mamba_module_dir }}
+          file:
+            path: "{{ mamba_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Mamba module file to {{ mamba_module_dir }}/{{ version_number }}.lua
+          template:
+            src: mamba.lua
+            dest: "{{ mamba_module_dir }}/{{ version_number }}.lua"
