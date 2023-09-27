@@ -26,7 +26,7 @@
             dest: "/dev/shm"
             creates: "/dev/shm/install-tl-{{ item.version_number }}"
         - name: Install texlive using profile
-          command: "./install-tl --profile=texlive.profile"
+          command: "./install-tl --profile=../texlive.profile"
           args:
               chdir: "/dev/shm/install-tl-{{ item.version_number }}"
               creates: "/dev/shm/install-tl-{{ item.version_number }}/texlive"
