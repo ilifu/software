@@ -1678,7 +1678,8 @@
       - {
           texlive_install_file: "texlive/install-tl-unx.2023.tar.gz",
           texlive_profile: "texlive/texlive.profile.2023",
-          version_number: "20230927"
+          version_number: "20230927",
+          short_version: "2023",
       }
   include_tasks:
     file: 'latex.yaml'

@@ -1,10 +1,12 @@
 - name: Install LaTeX
   vars:
-    latex_dir: "{{ common_dir }}/latex"
+    latex_dir: "{{ common_dir }}/texlive"
     latex_module_dir: "{{ common_modules }}/latex"
     texlive_install_file: "{{ item.texlive_install_file }}"
     texlive_profile: "{{ item.texlive_profile }}"
     version_number: "{{ item.version_number }}"
+    short_version: "{{ item.short_version }}"
+    install_dir: "{{ latex_dir }}/{{ short_version }}"
   tags:
     - never
     - latex-{{ item.version_number }}
@@ -24,19 +26,19 @@
           unarchive:
             src: "/dev/shm/install-tl-unx.tar.gz"
             dest: "/dev/shm"
-            creates: "/dev/shm/install-tl-{{ item.version_number }}"
+            creates: "/dev/shm/install-tl-{{ version_number }}"
         - name: Install texlive using profile
           command: "./install-tl --profile=../texlive.profile"
           args:
-              chdir: "/dev/shm/install-tl-{{ item.version_number }}"
-              creates: "/dev/shm/install-tl-{{ item.version_number }}/texlive"
+              chdir: "/dev/shm/install-tl-{{ version_number }}"
+              creates: "{{ install_dir }}/bin/x86_64-linux/latex"
 
-#    - name: Check module dir
-#      file:
-#        path: "{{ latex_module_dir }}"
-#        state: directory
-#        mode: u=rwx,g=rwx,o=rx
-#    - name: Install latex module file
-#      template:
-#        src: latex.lua
-#        dest: "{{ latex_module_dir }}/{{ version_number }}.lua"
+    - name: Check latex module dir
+      file:
+        path: "{{ latex_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install latex module file
+      template:
+        src: latex.lua
+        dest: "{{ latex_module_dir }}/texlive{{ short_version }}.lua"
