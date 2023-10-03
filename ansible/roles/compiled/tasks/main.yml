@@ -1356,6 +1356,11 @@
          url: "https://github.com/nextflow-io/nextflow/releases/download/v22.10.7/nextflow-22.10.7-all",
          checksum: "sha512:478f215e233de41bb68b22c4dab58eaa7c574f8ec26f6b74b82e583928bbf0d3679972c1f4bc09fadc64deeac9e00615178581dd8c698d062d43e69dc56971c3"
       }
+      - {
+        version_number: "23.04.4",
+        url: "https://github.com/nextflow-io/nextflow/releases/download/v23.04.4/nextflow-23.04.4-all",
+        checksum: "sha512:90712d34ddedc9fae5fe75bc78bb333b6b3da864a089489df380ee313fbf312dd28d3094bc2ac67472f9fafb854d2bba2ff8f8dbafc01b6ef176ad8ea469b4f3"
+      }
   include_tasks:
     file: 'nextflow.yaml'
   loop: "{{ versions }}"
@@ -1687,5 +1692,22 @@
   tags:
       - never
       - latex
+
+- name: Install cromwell and womtool
+  vars:
+    versions:
+      - {
+          version_number: "86",
+          cromwell_url: "https://github.com/broadinstitute/cromwell/releases/download/86/cromwell-86.jar",
+          cromwell_checksum: "sha512:1024d3c4e3501529f6bae6a96cc112baa63007a44fbfd6133f85c5b52803580d28c55fcc4da34589c8678006ba3b3037673142e00dc2661902c0838e6ace2cf2",
+          womtool_url: "https://github.com/broadinstitute/cromwell/releases/download/86/womtool-86.jar",
+          womtool_checksum: "sha512:606a68edb74e91a380f8fdf1408f28802f6f4081d3f4ed2a80ffb5ff7cbb5b11d8a320e02be40eda3d349b41ff7307687c94a6189d5cf8471f3bd850a391a1f2",
+      }
+  include_tasks:
+    file: 'cromwell.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - cromwell
 
 # Mtoolbox

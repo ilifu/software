@@ -1,0 +1,64 @@
+---
+- name: Install Cromwell {{ item.version_number }}
+  vars:
+    cromwell_dir: "{{ common_dir }}/cromwell"
+    cromwell_module_dir: "{{ common_modules }}/cromwell"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ cromwell_dir }}/{{ item.version_number }}"
+    version_number: "{{ item.version_number }}"
+    cromwell_url: "{{ item.cromwell_url }}"
+    cromwell_checksum: "{{ item.cromwell_checksum }}"
+    womtool_url: "{{ item.womtool_url }}"
+    womtool_checksum: "{{ item.womtool_checksum }}"
+  tags:
+    - never
+    - cromwell{{ item.version_number }}
+  block:
+    - name: Download, compile and install Cromwell {{ version_number }}
+      block:
+        - name: Ensure cromwell directory exists
+          file:
+            path: "{{ install_dir }}"
+            state: directory
+            mode: u=rwx,g=rx,o=rx
+        - name: Download Cromwell/Womtool {{ version_number }}
+          get_url:
+              url: "{{ tool.url }}"
+              dest: "{{ install_dir }}/{{ tool.name }}"
+              checksum: "{{ tool.checksum }}"
+              mode: u=rw,g=r,o=r
+          with_items:
+            - { url: "{{ cromwell_url }}", checksum: "{{ cromwell_checksum }}", name: "cromwell-{{ version_number }}.jar" }
+            - { url: "{{ womtool_url }}", checksum: "{{ womtool_checksum }}", name: "womtool-{{ version_number }}.jar" }
+          loop_control:
+            loop_var: tool
+            label: "{{ tool.name }}"
+        - name: Create configuration file
+          template:
+            src: cromwell_slurm.conf
+            dest: "{{ install_dir }}/slurm.conf"
+        - name: Create Cromwell/Womtool binaries
+          copy:
+            dest: "{{ install_dir }}/{{ tool.name }}"
+            mode: u=rwx,g=rx,o=rx
+            content: |
+                #!/bin/bash
+                java -Dconfig.file={{ install_dir }}/slurm.conf -jar {{ install_dir }}/{{ tool.jarfile }} "$@"
+          with_items:
+            - { jarfile: "cromwell-{{ version_number }}.jar", name: "cromwell" }
+            - { jarfile: "womtool-{{ version_number }}.jar", name: "womtool" }
+          loop_control:
+            loop_var: tool
+            label: "{{ tool.name }}"
+
+    - name: Install Cromwell {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ cromwell_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Cromwell module file
+          template:
+            src: cromwell.lua
+            dest: "{{ cromwell_module_dir }}/{{ version_number }}.lua"
