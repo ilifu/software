@@ -36,8 +36,7 @@
         - name: Run mtoolbox {{ version_number }} installation
           command: "./install.sh"
           args:
-            chdir: "{{ install_dir }}"
-
+            creates: "{{ install_dir }}/MToolBox/setup.sh"
 
     - name: Install mtoolbox {{ version_number }} module
       block:
