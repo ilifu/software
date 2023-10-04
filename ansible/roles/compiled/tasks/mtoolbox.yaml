@@ -38,7 +38,6 @@
           args:
             creates: "{{ install_dir }}/MToolBox/setup.sh"
 
-
     - name: Install mtoolbox {{ version_number }} module
       block:
         - name: Check module dir {{ mtoolbox_module_dir }}
