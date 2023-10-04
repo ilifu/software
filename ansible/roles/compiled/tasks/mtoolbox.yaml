@@ -1,0 +1,52 @@
+---
+- name: Install mtoolbox {{ item.version_number }}
+  vars:
+    mtoolbox_dir: "{{ bio_dir }}/mtoolbox"
+    mtoolbox_module_dir: "{{ bio_modules }}/mtoolbox"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ mtoolbox_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/MToolBox-v{{ version_number }}"
+  tags:
+    - never
+    - mtoolbox{{ item.version_number }}
+
+  block:
+    - name: Download and install mtoolbox {{ version_number }}
+      block:
+        - name: Download mtoolbox {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_dir }}/src//mtoolbox-{{ version_number }}.tar.gz"
+            checksum: "{{ checksum }}"
+        - name: Ensure mtoolbox dir exists
+          file:
+            path: "{{ mtoolbox_dir }}"
+            state: directory
+        - name: Uncompress mtoolbox to {{ unzip_dir }}
+          unarchive:
+            src: "{{  bio_dir }}/src/mtoolbox-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Move uncompressed mtoolbox from {{ unzip_dir }} to {{ install_dir }}
+          command: "mv {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}"
+        - name: Run mtoolbox {{ version_number }} installation
+          command: "./install.sh"
+          args:
+            chdir: "{{ install_dir }}"
+
+
+    - name: Install mtoolbox {{ version_number }} module
+      block:
+        - name: Check module dir {{ mtoolbox_module_dir }}
+          file:
+            path: "{{ mtoolbox_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install mtoolbox {{ version_number }} module file
+          template:
+            src: mtoolbox.lua
+            dest: "{{ mtoolbox_module_dir }}/{{ version_number }}.lua"
