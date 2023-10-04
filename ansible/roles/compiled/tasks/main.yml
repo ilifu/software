@@ -1710,4 +1710,17 @@
       - never
       - cromwell
 
-# Mtoolbox
+- name: Install mtoolbox
+  vars:
+    versions:
+      - {
+        version_number: "1.2.1.1",
+        url: "https://github.com/ilifu/MToolBox/releases/download/1.2.1.1/MToolBox-v1.2.1.1.tar.gz",
+        checksum: "sha512:a7d608773b3f068a439a2bac667e6cb23c146624b3b8656c72fc0c9a0c859f2d2cede1405e31158f31be2604690689d344fb3e1ba73a3d1e8f5b7bb2039079d2"
+      }
+  include_tasks:
+    file: 'mtoolbox.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - mtoolbox
