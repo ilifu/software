@@ -43,7 +43,7 @@
             mode: u=rwx,g=rx,o=rx
             content: |
                 #!/bin/bash
-                java {% if tool.name=="cromwell" %}-Dconfig.file={{ install_dir }}/slurm.conf{% endif %}-jar {{ install_dir }}/{{ tool.jarfile }} "$@"
+                java {% if tool.name=="cromwell" %}-Dconfig.file={{ install_dir }}/slurm.conf {% endif %}-jar {{ install_dir }}/{{ tool.jarfile }} "$@"
           with_items:
             - { jarfile: "cromwell-{{ version_number }}.jar", name: "cromwell" }
             - { jarfile: "womtool-{{ version_number }}.jar", name: "womtool" }
