@@ -1802,3 +1802,21 @@
   tags:
       - never
       - mummer
+
+- name: Install ReferenceSeeker
+  vars:
+    versions:
+      - {
+        version_number: "1.8.0",
+        url: "https://github.com/oschwengers/referenceseeker/archive/refs/tags/v1.8.0.tar.gz",
+        checksum: "sha256:84a6586d90d8f805d41836dbc10140da02da5d4bac60828de8667848c1a8730c",
+        python_path: "/software/common/python/3.9.16",
+        mummer_module: "mummer/4.0.0rc1",
+        mash_module: "mash/2.3",
+      }
+  include_tasks:
+    file: 'referenceseeker.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - referenceseeker
