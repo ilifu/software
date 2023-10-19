@@ -1787,3 +1787,18 @@
   tags:
       - never
       - seqtk
+
+- name: Install MUMmer 4
+  vars:
+    versions:
+      - {
+        version_number: "4.0.0rc1",
+        url: "https://github.com/mummer4/mummer/releases/download/v4.0.0rc1/mummer-4.0.0rc1.tar.gz",
+        checksum: "sha256:85006adb2d6539c2f738c3e3bb14b58bb6f62cd6c6ca5ede884a87ae76e07d1d"
+      }
+  include_tasks:
+    file: 'mummer4.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - mummer
