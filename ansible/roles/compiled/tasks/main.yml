@@ -1772,3 +1772,18 @@
   tags:
       - never
       - snpsites
+
+- name: Install seqtk
+  vars:
+    versions:
+      - {
+        version_number: "1.4",
+        url: "https://github.com/lh3/seqtk/archive/refs/tags/v1.4.tar.gz",
+        checksum: "sha256:d124604ec24f29ed14ce127426ab90e0f3a2c0280c80d1a3ff8b1c09feede19c"
+      }
+  include_tasks:
+    file: 'seqtk.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - seqtk
