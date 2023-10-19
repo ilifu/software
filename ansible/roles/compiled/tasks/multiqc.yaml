@@ -1,0 +1,56 @@
+---
+- name: Install MultiQC
+  vars:
+    multiqc_dir: "{{ bio_dir }}/multiqc"
+    multiqc_module_dir: "{{ bio_modules }}/multiqc"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ multiqc_dir }}/{{ item.version_number }}"
+    python_location: "{{ item.python_location }}"
+    version_number: "{{ item.version_number }}"
+    pipfile_prefix: "Pipfiles/multiqc.{{ version_number }}"
+    url: "{{ item.url }}"
+  tags:
+    - never
+    - multiqc{{ item.version_number }}
+
+  block:
+    - name: Create multiqc directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: yes
+    - name: Copy Pipfiles
+      copy:
+        src: "{{ pipfiles.src }}"
+        dest: "{{ pipfiles.dest }}"
+      with_items:
+        - {
+            src: "{{ pipfile_prefix }}.Pipfile",
+            dest: "{{ install_dir }}/Pipfile"
+          }
+        - {
+            src: "{{ pipfile_prefix }}.Pipfile.lock",
+            dest: "{{ install_dir }}/Pipfile.lock"
+          }
+      loop_control:
+        loop_var: pipfiles
+
+    - name: Create Virtual Environment
+      command: "{{ python_location }}/bin/pipenv sync --python {{ python_location }}/bin/python"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv"
+      environment:
+        PIPENV_VENV_IN_PROJECT: "1"
+        PIPENV_IGNORE_VIRTUALENVS: "1"
+
+    - name: "Create multiqc module directory {{ multiqc_module_dir }}"
+      file:
+          path: "{{ multiqc_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install multiqc module file"
+      template:
+        src: multiqc.lua
+        dest: "{{ multiqc_module_dir }}/{{ version_number }}.lua"
