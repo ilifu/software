@@ -1,0 +1,55 @@
+- name: Install snp-sites
+  vars:
+    snpsites_dir: "{{ bio_dir }}/snpsites"
+    snpsites_module_dir: "{{ bio_modules }}/snpsites"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ snpsites_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/snp-sites-{{ version_number }}"
+  tags:
+    - never
+    - snpsites{{ item.version_number }}
+  block:
+    - name: Install snp-sites {{ version_number }}
+      block:
+        - name: Download, compile and install snp-sites {{ version_number }}
+          block:
+            - name: Download snp-sites {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ bio_src }}/snpsites-{{ version_number }}.tar.gz"
+                checksum: "{{ checksum }}"
+            - name: Unzip snp-sites {{ version_number }}
+              unarchive:
+                src: "{{ bio_src }}/snpsites-{{ version_number }}.tar.gz"
+                dest: "/dev/shm/"
+                creates: "{{ unzipdir }}"
+            - name: Run autoreconf for snp-sites {{ version_number }}
+              command: autoreconf -i -f
+              args:
+                chdir: "{{ unzipdir }}"
+            - name: Configure snp-sites {{ version_number }}
+              command: ./configure --prefix={{ install_dir }}
+              args:
+                chdir: "{{ unzipdir }}"
+            - name: Make snp-sites {{ version_number }}
+              command: make -j {{ ansible_processor_vcpus }}
+              args:
+                chdir: "{{ unzipdir }}"
+            - name: Install snp-sites
+              command: make install
+              args:
+                  chdir: "{{ unzipdir }}"
+
+    - name: Install snp-sites {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ snpsites_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install snp-sites module file
+          template:
+            src: snpsites.lua
+            dest: "{{ snpsites_module_dir }}/{{ version_number }}.lua"

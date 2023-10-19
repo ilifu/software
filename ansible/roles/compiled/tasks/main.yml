@@ -1757,3 +1757,18 @@
   tags:
       - never
       - snpdists
+
+- name: Install snp-sites
+  vars:
+    versions:
+      - {
+        version_number: "2.5.1",
+        url: "https://github.com/sanger-pathogens/snp-sites/archive/refs/tags/v2.5.1.tar.gz",
+        checksum: "sha256:913f79302e5d3127aea382756abc9ffeb05e26ce00022f43a6ea16a55cdd7a7e"
+      }
+  include_tasks:
+    file: 'snpsites.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - snpsites
