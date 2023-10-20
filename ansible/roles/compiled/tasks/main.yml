@@ -1816,7 +1816,7 @@
       }
     databases:
       - {
-          name: "viruses",
+          name: "viral-refseq",
           url: "https://zenodo.org/record/4415843/files/viral-refseq.tar.gz",
           checksum: "sha512:a5b1fca45999bd5bc07725395bbe1921a2b10612cabc275a0783ac2281de220cf61b1ca7148020167b7f9a657d29655a848abe33da0ae97222c55983bf03c40f"
       }

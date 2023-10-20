@@ -54,14 +54,34 @@
               loop_control:
                 loop_var: pipfiles
             - name: Create virtual environment using pipenv
-              command: "{{ python_path }}/bin/pipenv sync"
+              command: "{{ python_path }}/bin/pipenv sync --python {{ python_path }}/bin/python3"
               args:
                   chdir: "{{ install_dir }}"
                   creates: "{{ install_dir }}/.venv"
               environment:
                   PIPENV_VENV_IN_PROJECT: "1"
                   PIPENV_IGNORE_VIRTUALENVS: "1"
-
+            - name: Ensure DB directory exists
+              file:
+                path: "{{ referenceseeker_dir }}/DBs"
+                state: directory
+                mode: u=rwx,g=rwx,o=rx
+            - name: Download databases
+              get_url:
+                url: "{{ db.url }}"
+                dest: "{{ referenceseeker_dir }}/DBs/{{ db.name }}.tar.gz"
+                checksum: "{{ db.checksum }}"
+              with_items: "{{ databases }}"
+              loop_control:
+                  loop_var: db
+            - name: Unzip databases
+              unarchive:
+                  src: "{{ referenceseeker_dir }}/DBs/{{ db.name }}.tar.gz"
+                  dest: "{{ referenceseeker_dir }}/DBs/"
+                  creates: "{{ referenceseeker_dir }}/DBs/{{ db.name }}"
+              with_items: "{{ databases }}"
+              loop_control:
+                  loop_var: db
 
     - name: Install ReferenceSeeker {{ version_number }} module
       block:
