@@ -697,6 +697,11 @@
         url: "https://developer.download.nvidia.com/compute/cuda/12.2.0/local_installers/cuda_12.2.0_535.54.03_linux.run",
         checksum: "sha256:ecf3d2afadcbac029f0f4505785810d52d006e4b87ba79ff3f984336a2bbf518"
       }
+      - {
+          version_number: "11.8.0_520.61.05",
+          url: "https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda_11.8.0_520.61.05_linux.run",
+          checksum: "sha256:9223c4af3aebe4a7bbed9abd9b163b03a1b34b855fbc2b4a0d1b706ac09a5a16"
+      }
 #      - {
 #        version_number: "11.7.0_515.43.04",
 #        url: "https://developer.download.nvidia.com/compute/cuda/11.7.0/local_installers/cuda_11.7.0_515.43.04_linux.run",
