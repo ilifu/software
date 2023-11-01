@@ -1,0 +1,49 @@
+---
+- name: Install cudnn {{ item.version_number }}
+  vars:
+    cudnn_dir: "{{ common_dir }}/cudnn"
+    cudnn_module_dir: "{{ common_modules }}/cudnn"
+    version_number: "{{ item.version_number }}"
+    major_version: "{{ version_number.split('.')[0] }}"
+    minor_version: "{{ version_number.split('.')[1] }}"
+    major_minor: "{{ major_version }}.{{ minor_version }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ cudnn_dir }}/cudnn-linux-x86_64-{{ version_number }}-archive"
+    cudnn_url: "{{ item.url }}"
+  tags:
+    - never
+    - cudnn{{ item.version_number }}
+
+  block:
+    - name: Download, and install cudnn {{ major_minor }}
+      block:
+        - name: Download cudnn {{ major_minor }} from {{ cudnn_url }}
+          get_url:
+            url: "{{ cudnn_url }}"
+            dest: "{{ common_src }}/cudnn_{{ version_number }}.tar.xz"
+            checksum: "{{ checksum }}"
+            mode: u=rx,g=r,o=r
+        - name: Ensure directory {{ cudnn_dir }} exists
+          file:
+            path: "{{ cudnn_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Uncompress cuDNN {{ version_number }} to {{ cudnn_dir }}
+          unarchive:
+            src: "{{ common_src }}/cudnn_{{ version_number }}.tar.xz"
+            dest: "{{ cudnn_dir }}"
+            remote_src: yes
+            creates: "{{ install_dir }}"
+            extra_opts: [--strip-components=1]
+
+    - name: Install cudnn {{ version_number }} module to {{ cudnn_module_dir }}
+      block:
+        - name: Check module dir {{ cudnn_module_dir }}
+          file:
+            path: "{{ cudnn_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install cudnn module file to {{ cudnn_module_dir }}/{{ version_number }}.lua
+          template:
+            src: cudnn.lua
+            dest: "{{ cudnn_module_dir }}/{{ version_number }}.lua"
