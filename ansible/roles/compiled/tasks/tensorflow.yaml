@@ -12,7 +12,7 @@
     install_dir: "{{ tensorflow_dir }}/{{ tensorflow_version }}_cuda{{ cuda_version }}_cudnn{{ cudnn_version }}"
   tags:
     - never
-    - tensorfow{{ item.tensorflow_version }}
+    - tensorflow{{ item.tensorflow_version }}
   block:
     - name: Ensure installation directory {{ install_dir }} exists
       file:
