@@ -18,6 +18,8 @@ local cupti_lib = pathJoin(cupti_dir, "lib64")
 local cupti_include = pathJoin(cupti_dir, "include")
 
 setenv('CUDA_PATH', cuda_dir)
+setenv('CUDA_DIR', cuda_dir)
+setenv('XLA_FLAGS=', '--xla_gpu_cuda_data_dir={{ install_dir }}/cuda')
 prepend_path('PATH', cuda_bin_dir)
 prepend_path('LD_LIBRARY_PATH', cuda_lib_dir)
 prepend_path('LIBRARY_PATH', cuda_lib_dir)
