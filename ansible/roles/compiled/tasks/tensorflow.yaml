@@ -66,6 +66,20 @@
           label: "{{ filename.path | basename }}"
           loop_var: filename
 
+    - name: Create virtual environment with tensorflow {{ tensorflow_version }}
+      pip:
+        name: "tensorflow[and-cuda]=={{ tensorflow_version }}"
+        virtualenv: "{{ install_dir }}/.venv"
+        virtualenv_command: "{{ python_dir }}/bin/virtualenv"
+        virtualenv_python: "{{ python_dir }}/bin/python3"
+        virtualenv_site_packages: yes
+        state: present
+      environment:
+        CUDA_PATH: "{{ install_dir }}/cuda"
+        LD_LIBRARY_PATH: "{{ install_dir }}/cuda/lib64:{{ install_dir }}/cuda/extras/CUPTI/lib64"
+        LIBRARY_PATH: "{{ install_dir }}/cuda/lib64:{{ install_dir }}/cuda/extras/CUPTI/lib64"
+        INCLUDE: "{{ install_dir }}/cuda/include:{{ install_dir }}/cuda/extras/CUPTI/include"
+
 
 
 #    - name: Install cudnn {{ version_number }} module to {{ cudnn_module_dir }}
