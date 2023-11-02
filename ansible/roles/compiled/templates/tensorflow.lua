@@ -1,10 +1,10 @@
 -- -*- lua -*-
 help([[
-This module configures cuda {{ version_number }} for use
+This module configures tensorflow {{ tensorflow_version }} with cuda {{ cuda_version }} and cuDNN {{ cudnn_version }}
 ]])
-whatis("Version: {{ version_number }}")
-whatis("Keywords: cuda")
-whatis("Description: cuda {{ version_number }}")
+whatis("Version: {{ tensorflow_version }}")
+whatis("Keywords: cuda, cudnn, tensorflow")
+whatis("Description: tensorflor {{ tensorflow_version }}")
 
 local cuda_dir = "{{ install_dir }}/cuda"
 local cuda_bin_dir = pathJoin(cuda_dir, "bin")
