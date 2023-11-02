@@ -18,6 +18,9 @@ local cupti_lib = pathJoin(cupti_dir, "lib64")
 local cupti_include = pathJoin(cupti_dir, "include")
 
 setenv('CUDA_PATH', cuda_dir)
+setenv('CUDA_DIR', cuda_dir)
+setenv('XLA_FLAGS=', cuda_dir)
+
 prepend_path('PATH', bin_dir)
 prepend_path('LD_LIBRARY_PATH', lib_dir)
 prepend_path('LIBRARY_PATH', lib_dir)
