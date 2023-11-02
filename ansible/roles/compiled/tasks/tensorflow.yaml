@@ -1,15 +1,15 @@
 ---
 - name: Create TensorFlow environment
   vars:
-    tensorflow_version: "{{ item.tensorflow_version }}",
-    cuda_version: "{{ item.cuda_version }}",
-    cudnn_version: "{{ item.cudnn_version }}",
-    python_dir: "{{ item.python_dir }}",
-    cuda_dir: "{{ item.cuda_dir }}",
-    cudnn_dir: "{{ item.cudnn_dir }}",
-    tensorflow_dir: "{{ common_dir }}/tensorflow",
-    tensorflow_module_dir: "{{ common_modules }}/tensorflow",
-    install_dir: "{{ tensorflow_dir }}/{{ tensorflow_version }}_cuda{{ cuda_version }}_cudnn{{ cudnn_version }}",
+    tensorflow_version: "{{ item.tensorflow_version }}"
+    cuda_version: "{{ item.cuda_version }}"
+    cudnn_version: "{{ item.cudnn_version }}"
+    python_dir: "{{ item.python_dir }}"
+    cuda_dir: "{{ item.cuda_dir }}"
+    cudnn_dir: "{{ item.cudnn_dir }}"
+    tensorflow_dir: "{{ common_dir }}/tensorflow"
+    tensorflow_module_dir: "{{ common_modules }}/tensorflow"
+    install_dir: "{{ tensorflow_dir }}/{{ tensorflow_version }}_cuda{{ cuda_version }}_cudnn{{ cudnn_version }}"
   tags:
     - never
     - tensorfow{{ item.tensorflow_version }}
