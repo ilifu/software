@@ -759,8 +759,6 @@
     - never
     - cudnn
 
-#- name: Create low
-
 - name: Install PerlBrew
   include_tasks:
     file: perlbrew.yaml
@@ -768,23 +766,7 @@
     - never
     - perlbrew
 
-- name: Install PerlTensorFlow environment
-#  vars:
-#    versions:
-#      - {
-#          tensorflow_version: "2.13.1",
-#          cuda_version: "11.8.0",
-#          cudnn_version: "8.6.0",
-#          python_dir: "/software/common/python/3.11.2",
-#          cuda_dir: "/software/common/cuda/11.8.0_520.61.05",
-#          cudnn_dir: "/software/common/cudnn/cudnn-linux-x86_64-8.6.0.163_cuda11-archive",
-#      }
-#  include_tasks:
-#    file: tensorflow.yaml
-#  loop: "{{ versions }}"
-#  tags:
-#      - never
-#      - tensorf
+- name: Install Perl
   vars:
     perl_versions:
       - {
