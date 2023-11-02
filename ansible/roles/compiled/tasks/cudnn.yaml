@@ -34,7 +34,6 @@
             dest: "{{ cudnn_dir }}"
             remote_src: yes
             creates: "{{ install_dir }}"
-            extra_opts: [--strip-components=1]
 
     - name: Install cudnn {{ version_number }} module to {{ cudnn_module_dir }}
       block:
