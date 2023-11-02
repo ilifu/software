@@ -51,6 +51,20 @@
       loop_control:
         label: "{{ filename.path | basename }}"
         loop_var: filename
+    - name: Find cudnn lib files
+      find:
+          paths: "{{ cudnn_dir }}/lib"
+          file_type: any
+      register: cudnn_lib_files
+    - name: Create symbolic links for cudnn/lib files in {{ install_dir }}/cuda/lib64
+      file:
+          src: "{{ filename.path }}"
+          dest: "{{ install_dir }}/cuda/lib64/{{ filename.path | basename }}"
+          state: link
+      with_items: "{{ cudnn_lib_files.files }}"
+      loop_control:
+          label: "{{ filename.path | basename }}"
+          loop_var: filename
 
 
 
