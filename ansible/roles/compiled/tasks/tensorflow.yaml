@@ -68,7 +68,8 @@
 
     - name: Create virtual environment with tensorflow {{ tensorflow_version }}
       pip:
-        name: "tensorflow[and-cuda]=={{ tensorflow_version }}"
+        name:
+          - "tensorflow[and-cuda]=={{ tensorflow_version }}"
         virtualenv: "{{ install_dir }}/"
         virtualenv_command: "{{ python_dir }}/bin/virtualenv"
         virtualenv_python: "{{ python_dir }}/bin/python3"
