@@ -81,16 +81,14 @@
         LIBRARY_PATH: "{{ install_dir }}/cuda/lib64:{{ install_dir }}/cuda/extras/CUPTI/lib64"
         INCLUDE: "{{ install_dir }}/cuda/include:{{ install_dir }}/cuda/extras/CUPTI/include"
 
-
-
-#    - name: Install cudnn {{ version_number }} module to {{ cudnn_module_dir }}
-#      block:
-#        - name: Check module dir {{ cudnn_module_dir }}
-#          file:
-#            path: "{{ cudnn_module_dir }}"
-#            state: directory
-#            mode: u=rwx,g=rwx,o=rx
-#        - name: Install cudnn module file to {{ cudnn_module_dir }}/{{ version_number }}.lua
-#          template:
-#            src: cudnn.lua
-#            dest: "{{ cudnn_module_dir }}/{{ version_number }}.lua"
+    - name: Install tensorflow module file to {{ tensorflow_module_dir }}/{{ tensorflow_version }}.lua
+      block:
+        - name: Check module dir {{ tensorflow_module_dir }}
+          file:
+            path: "{{ tensorflow_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install tensorflow module file to {{ tensorflow_module_dir }}/{{ tensorflow_version }}.lua
+          template:
+            src: tensorflow.lua
+            dest: "{{ tensorflow_module_dir }}/{{ tensorflow_version }}.lua"
