@@ -1,0 +1,49 @@
+---
+- name: Install gfaffix {{ item.version_number }}
+  vars:
+    gfaffix_dir: "{{ common_dir }}/gfaffix"
+    gfaffix_module_dir: "{{ common_modules }}/gfaffix"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ gfaffix_dir }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    cargo_dir: "{{ item.cargo_dir }}"
+    unzip_dir: "/dev/shm/GFAffix-{{ version_number }}"
+  tags:
+    - never
+    - gfaffix
+
+  block:
+    - name: Download and install gfaffix ({{ version_number }})
+      block:
+        - name: Download gfaffix {{ version_number }} source
+          get_url:
+              url: "{{ url }}"
+              dest: "{{ common_src }}/gfaffix-{{ version_number }}.tar.gz"
+              mode: "ug=rwx,o=rx"
+              force: yes
+        - name: Uncompress GFAffix
+          unarchive:
+              src: "{{ common_src }}/gfaffix-{{ version_number }}.tar.gz"
+              dest: "/dev/shm"
+              remote_src: yes
+              creates: "{{ unzip_dir }}"
+        - name: Run cargo install for gfaffix {{ version_number }}
+          command: "cargo install --path . --root {{ install_dir }}"
+          args:
+              chdir: "{{ unzip_dir }}"
+              creates: "{{ install_dir }}/bin/gfaffix"
+          environment:
+              PATH: "{{ cargo_dir }}/bin:{{ ansible_env.PATH | default('') }}"
+
+    - name: Install GFAffix {{ version_number }} module
+      block:
+        - name: Check module dir {{ gfaffix_module_dir }}
+          file:
+            path: "{{ gfaffix_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install gfaffix module file
+          template:
+            src: gfaffix.lua
+            dest: "{{ gfaffix_module_dir }}/{{ version_number }}.lua"

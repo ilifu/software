@@ -1834,9 +1834,23 @@
       - never
       - smoothxg
 
-#
-#- name: GFAffix
-#
+
+- name: GFAffix
+  vars:
+    versions:
+      - {
+        version_number: "0.1.5b",
+        url: "https://github.com/marschall-lab/GFAffix/archive/refs/tags/0.1.5b.tar.gz",
+        checksum: "sha512:6c1397569bdfc87e7ca928d9d6555f9db110b484e1965314c24abf3797a8520bbde0fd0dfa7368803da2961f1114f08118d5d721e1ab8c6cc9d039cb686f6d89",
+        cargo_dir: "/software/common/rustup/.cargo"
+      }
+  include_tasks:
+    file: 'gfaffix.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - gfaffix
+
 #- name: vcfbub
 #
 #- name: vcflib
