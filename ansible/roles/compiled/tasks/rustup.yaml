@@ -1,0 +1,41 @@
+---
+- name: Install rustup {{ item.version_number }}
+  vars:
+    rustup_dir: "{{ common_dir }}/rustup"
+    rustup_module_dir: "{{ common_modules }}/rustup"
+    install_dir: "{{ rustup_dir }}"
+  tags:
+    - never
+    - rustup
+
+  block:
+    - name: Download and install rustup ({{ version_number }})
+      block:
+        - name: Download rustup installer
+          get_url:
+              url: "https://sh.rustup.rs"
+              dest: "{{ common_src }}/rustup-init.sh"
+              mode: "ug=rwx,o=rx"
+              force: yes
+        - name: Run rustup installer
+          command: "./rustup-init.sh -y --no-modify-path --default-toolchain stable --profile default"
+          args:
+              chdir: "{{ common_src }}"
+          environment:
+              RUSTUP_HOME: "{{ rustup_dir }}/.rustup"
+              CARGO_HOME: "{{ rustup_dir }}/.cargo"
+        - name: Set rustup default stable
+          command: "{{ rustup_dir }}/.cargo/bin/rustup default stable"
+
+
+    - name: Install rustup module
+      block:
+        - name: Check module dir {{ rustup_module_dir }}
+          file:
+            path: "{{ rustup_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install rustup module file
+          template:
+            src: rustup.lua
+            dest: "{{ rustup_module_dir }}/default.lua"

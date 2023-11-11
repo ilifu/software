@@ -1773,6 +1773,13 @@
       - never
       - zstd
 
+- name: Install rustup
+  include_tasks:
+    file: 'rustup.yaml'
+  tags:
+    - never
+    - rustup
+
 - name: Install wfmash
   vars:
     versions:
