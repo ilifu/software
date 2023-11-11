@@ -1778,7 +1778,21 @@
     - never
     - wfmash
 
-#- name: seqwish
+- name: seqwish
+  vars:
+    versions:
+      - {
+          version_number: "0.7.9-2",
+          git_commit: 'f44b402f0c2e02988d431d9b2e5eba9727cf93a9',
+          jemalloc_dir: '/software/common/jemalloc/5.3.0',
+          jemalloc_module: 'jemalloc/5.3.0'
+      }
+  include_tasks:
+    file: 'seqwish.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - seqwish
 #
 #- name: smoothxg
 #

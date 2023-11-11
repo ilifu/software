@@ -29,11 +29,10 @@
               recursive: true
               track_submodules: true
               force: true
-#        - name: Add INCLUDE to CMakeLists.txt
-#          lineinfile:
-#            path: "{{ bio_src }}/wfmash/CMakeLists.txt"
-#            line: "include_directories($ENV{INCLUDE})"
-#            insertafter: "^project.*"
+        - name: Run git submodule update
+          shell: "/usr/bin/git submodule update --init --recursive"
+          args:
+            chdir: "{{ bio_src }}/seqwish"
 
         - name: Ensure wfmash dir exists
           file:
@@ -42,7 +41,7 @@
             recurse: yes
 
         - name: Run cmake
-          shell: "/usr/bin/cmake -H. -DCMAKE_BUILD_TYPE=Generic -DEXTRA_FLAGS='-Ofast' -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -Bbuild ."
+          shell: "/usr/bin/cmake -H. -DCMAKE_BUILD_TYPE=Generic -DEXTRA_FLAGS='-march=native -Ofast' -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -Bbuild ."
           args:
             chdir: "{{ bio_src }}/wfmash"
           environment:
