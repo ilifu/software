@@ -1809,13 +1809,23 @@
       - never
       - seqwish
 
-#- name: smoothxg
-#  vars:
-#    versions:
-#      - {
-#
-#
-#      }
+- name: smoothxg
+  vars:
+    versions:
+      - {
+        version_number: "0.7.2-4",
+        git_commit: 'aaa0b283e13ca57c4e6e4e67a03451925f5342f1',
+        zstd_dir: '/software/common/zstd/1.5.5',
+        zstd_module: 'zstd/1.5.5',
+        jemalloc_dir: '/software/common/jemalloc/5.3.0',
+        jemalloc_module: 'jemalloc/5.3.0'
+      }
+  include_tasks:
+    file: 'smoothxg.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - smoothxg
 
 #
 #- name: GFAffix
