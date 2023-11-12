@@ -1851,8 +1851,21 @@
       - never
       - gfaffix
 
-#- name: vcfbub
-#
+- name: vcfbub
+  vars:
+    versions:
+      - {
+          version_number: "0.1.0",
+          git_commit: "26a1f0cb216a423f8547c4ad0e0ce38cb9d324b9"
+      }
+    cargo_dir: "/software/common/rustup/.cargo"
+  include_tasks:
+    file: 'vcfbub.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - vcfbub
+
 #- name: vcflib
 #
 #- name: fastix
