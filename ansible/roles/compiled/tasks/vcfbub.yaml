@@ -11,7 +11,7 @@
     cargo_dir: "{{ item.cargo_dir }}"
   tags:
     - never
-    - vcfbub
+    - vcfbub{{ item.version_number }}
   block:
     - name: Download and install vcfbub ({{ version_number }})
       block:
