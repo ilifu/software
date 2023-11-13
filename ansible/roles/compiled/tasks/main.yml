@@ -1866,6 +1866,20 @@
       - never
       - vcfbub
 
+- name: Install Dorado
+  vars:
+    versions:
+        - {
+          version_number: "0.4.2",
+          url: "https://cdn.oxfordnanoportal.com/software/analysis/dorado-0.4.2-linux-x64.tar.gz",
+          }
+  include_tasks:
+    file: 'dorado.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - dorado
+
 #- name: vcflib
 #
 #- name: fastix

@@ -1,0 +1,40 @@
+---
+- name: Install dorado {{ item.version_number }}
+  vars:
+    dorado_dir: "{{ bio_dir }}/dorado"
+    dorado_module_dir: "{{ bio_modules }}/dorado"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ dorado_dir }}/{{ version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    cargo_dir: "{{ item.cargo_dir }}"
+  tags:
+    - never
+    - dorado
+  block:
+    - name: Download and install dorado ({{ version_number }})
+      block:
+        - name: Download dorado {{ version_number }} source
+          get_url:
+              url: "{{ url }}"
+              dest: "{{ bio_src }}/dorado-{{ version_number }}.tar.gz"
+              mode: "ug=rwx,o=rx"
+              force: yes
+        - name: Uncompress dorado
+          unarchive:
+              src: "{{ bio_src }}/dorado-{{ version_number }}.tar.gz"
+              dest: "{{ dorado_dir }}"
+              remote_src: yes
+              creates: "{{ bio_src }}/dorado-{{ version_number }}"
+
+#    - name: Install dorado {{ version_number }} module
+#      block:
+#        - name: Check module dir {{ dorado_module_dir }}
+#          file:
+#            path: "{{ dorado_module_dir }}"
+#            state: directory
+#            mode: u=rwx,g=rwx,o=rx
+#        - name: Install dorado module file
+#          template:
+#            src: dorado.lua
+#            dest: "{{ dorado_module_dir }}/{{ version_number }}.lua"
