@@ -32,7 +32,7 @@
         - name: Run git submodule update
           shell: "/usr/bin/git submodule update --init --recursive"
           args:
-            chdir: "{{ bio_src }}/seqwish"
+            chdir: "{{ bio_src }}/wfmash"
 
         - name: Ensure wfmash dir exists
           file:
