@@ -1896,6 +1896,21 @@
       - never
       - gfastats
 
+- name: Install seqkit
+  vars:
+    versions:
+      - {
+        version_number: "2.6.0",
+        url: "https://github.com/shenwei356/seqkit/releases/download/v2.6.0/seqkit_linux_amd64.tar.gz",
+          checksum: "sha512:b9d805a7ebc2f2b47aac51b632aa2868a920d0bb375535d9a660e0a197092460727ff353d208bd899e4c1a710a5df003d6da94324e8bb016175ee6dbf584a18d"
+      }
+  include_tasks:
+    file: 'seqkit.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - seqkit
+
 #- name: vcflib
 #
 #- name: fastix
