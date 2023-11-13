@@ -10,7 +10,7 @@
     cargo_dir: "{{ item.cargo_dir }}"
   tags:
     - never
-    - dorado
+    - dorado{{ item.version_number }}
   block:
     - name: Download and install dorado ({{ version_number }})
       block:
@@ -19,7 +19,12 @@
               url: "{{ url }}"
               dest: "{{ bio_src }}/dorado-{{ version_number }}.tar.gz"
               mode: "ug=rwx,o=rx"
-              force: yes
+              checksum: "{{ checksum }}"
+        - name: Ensure dorado dir exists {{ dorado_dir }} exists
+          file:
+            path: "{{ dorado_dir }}"
+            state: directory
+            recurse: yes
         - name: Uncompress dorado
           unarchive:
               src: "{{ bio_src }}/dorado-{{ version_number }}.tar.gz"
