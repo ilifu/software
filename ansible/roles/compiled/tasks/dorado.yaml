@@ -4,7 +4,7 @@
     dorado_dir: "{{ bio_dir }}/dorado"
     dorado_module_dir: "{{ bio_modules }}/dorado"
     version_number: "{{ item.version_number }}"
-    install_dir: "{{ dorado_dir }}/{{ version_number }}"
+    install_dir: "{{ dorado_dir }}/dorado-{{ version_number }}-linux-x64"
     url: "{{ item.url }}"
     checksum: "{{ item.checksum }}"
     cargo_dir: "{{ item.cargo_dir }}"
@@ -30,16 +30,16 @@
               src: "{{ bio_src }}/dorado-{{ version_number }}.tar.gz"
               dest: "{{ dorado_dir }}"
               remote_src: yes
-              creates: "{{ bio_src }}/dorado-{{ version_number }}"
+              creates: "{{ install_dir }}"
 
-#    - name: Install dorado {{ version_number }} module
-#      block:
-#        - name: Check module dir {{ dorado_module_dir }}
-#          file:
-#            path: "{{ dorado_module_dir }}"
-#            state: directory
-#            mode: u=rwx,g=rwx,o=rx
-#        - name: Install dorado module file
-#          template:
-#            src: dorado.lua
-#            dest: "{{ dorado_module_dir }}/{{ version_number }}.lua"
+    - name: Install dorado {{ version_number }} module
+      block:
+        - name: Check module dir {{ dorado_module_dir }}
+          file:
+            path: "{{ dorado_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install dorado module file
+          template:
+            src: dorado.lua
+            dest: "{{ dorado_module_dir }}/{{ version_number }}.lua"
