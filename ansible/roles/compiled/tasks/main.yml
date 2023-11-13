@@ -1911,6 +1911,21 @@
       - never
       - seqkit
 
+- name: Install chopper
+  vars:
+    versions:
+      - {
+          version_number: 0.7.0,
+          url: "https://github.com/wdecoster/chopper/releases/download/v0.7.0/chopper-linux.zip",
+          checksum: "sha512:dc35520abeaa62ccdbd8c58d2a87265fe5ed47fe78829bc3371cef57af44453c402966591695123622403537e840f278e994ae1b0125535242181549cbb9a4d8"
+      }
+  include_tasks:
+    file: 'chopper.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - chopper
+
 #- name: vcflib
 #
 #- name: fastix

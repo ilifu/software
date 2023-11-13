@@ -1,0 +1,52 @@
+---
+- name: Install chopper {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    chopper_dir: "{{ bio_dir }}/chopper"
+    chopper_module_dir: "{{ bio_modules }}/chopper"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ chopper_dir }}/{{ version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+  tags:
+    - never
+    - chopper{{ item.version_number }}
+
+  block:
+    - name: Download and install chopper ({{ version_number }})
+      block:
+        - name: Download chopper
+          get_url:
+              url: "{{ url }}"
+              dest: "{{ bio_src }}/chopper-linux-{{ version_number }}.zip"
+              mode: "ug=rwx,o=rx"
+              checksum: "{{ checksum }}"
+        - name: Ensure installation directory {{ install_dir }} exists
+          file:
+            path: "{{ install_dir }}"
+            state: directory
+            recurse: yes
+        - name: Uncompress chopper
+          unarchive:
+            src: "{{ bio_src }}/chopper-linux-{{ version_number }}.zip"
+            dest: "{{ install_dir }}"
+            remote_src: yes
+            creates: "{{ install_dir }}/chopper"
+        - name: Make chopper executable
+          file:
+              path: "{{ install_dir }}/chopper"
+              state: file
+              mode: u=rwx,g=rwx,o=rx
+
+
+    - name: Install chopper {{ version_number }} module
+      block:
+        - name: Check module dir {{ chopper_module_dir }}
+          file:
+            path: "{{ chopper_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install chopper {{ version_number }} module file
+          template:
+            src: chopper.lua
+            dest: "{{ chopper_module_dir }}/{{ version_number }}.lua"
