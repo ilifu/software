@@ -8,6 +8,8 @@
     install_dir: "{{ chopper_dir }}/{{ version_number }}"
     url: "{{ item.url }}"
     checksum: "{{ item.checksum }}"
+    unzipdir: "/dev/shm/chopper-{{ version_number }}"
+    cargo_dir: "{{ item.cargo_dir }}"
   tags:
     - never
     - chopper{{ item.version_number }}
@@ -18,26 +20,22 @@
         - name: Download chopper
           get_url:
               url: "{{ url }}"
-              dest: "{{ bio_src }}/chopper-linux-{{ version_number }}.zip"
+              dest: "{{ bio_src }}/chopper-{{ version_number }}.tar.gz"
               mode: "ug=rwx,o=rx"
               checksum: "{{ checksum }}"
-        - name: Ensure installation directory {{ install_dir }} exists
-          file:
-            path: "{{ install_dir }}"
-            state: directory
-            recurse: yes
         - name: Uncompress chopper
           unarchive:
-            src: "{{ bio_src }}/chopper-linux-{{ version_number }}.zip"
-            dest: "{{ install_dir }}"
+            src: "{{ bio_src }}/chopper-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
             remote_src: yes
-            creates: "{{ install_dir }}/chopper"
-        - name: Make chopper executable
-          file:
-              path: "{{ install_dir }}/chopper"
-              state: file
-              mode: u=rwx,g=rwx,o=rx
-
+            creates: "{{ unzipdir }}"
+        - name: Compile chopper using rust
+          command: "cargo install --path . --root {{ install_dir }}"
+          args:
+              chdir: "{{ unzipdir }}"
+              creates: "{{ install_dir }}/bin/chopper"
+          environment:
+              PATH: "{{ cargo_dir }}/bin:{{ ansible_env.PATH | default('') }}"
 
     - name: Install chopper {{ version_number }} module
       block:

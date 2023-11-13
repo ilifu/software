@@ -1916,8 +1916,9 @@
     versions:
       - {
           version_number: 0.7.0,
-          url: "https://github.com/wdecoster/chopper/releases/download/v0.7.0/chopper-linux.zip",
-          checksum: "sha512:dc35520abeaa62ccdbd8c58d2a87265fe5ed47fe78829bc3371cef57af44453c402966591695123622403537e840f278e994ae1b0125535242181549cbb9a4d8"
+          url: "https://github.com/wdecoster/chopper/archive/refs/tags/v0.7.0.tar.gz",
+          checksum: "sha512:54de8a9b34b7d335f578d9bac873015bddcd5641d92ea2dd4c3fd9985f15adf9c6f7942b2b26a1f3861a30d7a2fbc15f49626b65f2d3835987f3194eea82435b",
+          cargo_dir: "/software/common/rustup/.cargo"
       }
   include_tasks:
     file: 'chopper.yaml'
