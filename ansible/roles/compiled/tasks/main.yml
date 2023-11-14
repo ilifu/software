@@ -1998,6 +1998,21 @@
       - never
       - merqury
 
+- name: Install nanocomp
+  vars:
+    versions:
+      - {
+        version_number: "1.23.1",
+        python_location: "/software/common/python/3.12.0",
+        python_module: "python/3.12.0",
+      }
+  include_tasks:
+    file: 'nanocomp.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - nanocomp
+
 
 
 #- name: vcflib
