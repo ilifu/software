@@ -1952,6 +1952,21 @@
       - never
       - meryl
 
+- name: Install bedtools
+  vars:
+    versions:
+      - {
+          version_number: "2.31.1",
+          url: "https://github.com/arq5x/bedtools2/archive/refs/tags/v2.31.1.tar.gz",
+          checksum: "sha256:79a1ba318d309f4e74bfa74258b73ef578dccb1045e270998d7fe9da9f43a50e"
+        }
+  include_tasks:
+    file: 'bedtools.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - bedtools
+
 - name: Install merqury
   vars:
     versions:

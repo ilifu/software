@@ -1,0 +1,54 @@
+---
+- name: Install bedtools {{ item.version_number }}
+  vars:
+    bedtools_dir: "{{ bio_dir }}/bedtools"
+    bedtools_module_dir: "{{ bio_modules }}/bedtools"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ bedtools_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/bedtools2-{{ version_number }}"
+  tags:
+    - never
+    - bedtools{{ item.version_number }}
+
+  block:
+    - name: Download and install bedtools {{ version_number }}
+      block:
+        - name: Download bedtools {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{  bio_dir }}/src/bedtools-{{ version_number }}.tar.gz"
+            checksum: "{{ checksum }}"
+        - name: Ensure bedtools dir exists
+          file:
+            path: "{{ install_dir }}"
+            state: directory
+        - name: Uncompress bedtools to {{ unzip_dir }}
+          unarchive:
+            src: "{{  bio_dir }}/src/bedtools-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Make bedtools {{ version_number }}
+          make:
+            chdir: "{{ unzip_dir }}"
+          environment:
+            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+        - name: Copy bedtools {{ version_number }} binaries to {{ install_dir }}
+          copy:
+              src: "{{ unzip_dir }}/bin/"
+              dest: "{{ install_dir }}"
+              remote_src: yes
+              force: yes
+
+    - name: Install bedtools {{ version_number }} module
+      block:
+        - name: Check module dir {{ bedtools_module_dir }}
+          file:
+            path: "{{ bedtools_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install bedtools {{ version_number }} module file
+          template:
+            src: bedtools.lua
+            dest: "{{ bedtools_module_dir }}/{{ version_number }}.lua"
