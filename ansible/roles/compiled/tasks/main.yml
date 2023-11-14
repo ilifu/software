@@ -1935,6 +1935,12 @@
           checksum: "sha512:54de8a9b34b7d335f578d9bac873015bddcd5641d92ea2dd4c3fd9985f15adf9c6f7942b2b26a1f3861a30d7a2fbc15f49626b65f2d3835987f3194eea82435b",
           cargo_dir: "/software/common/rustup/.cargo"
       }
+      - {
+        version_number: 0.6.0,
+        url: "https://github.com/wdecoster/chopper/archive/refs/tags/v0.6.0.tar.gz",
+        checksum: "sha512:c03458fd5b234eb51ccdd9a895f74224517c2b6c9d8bf4ad6cbb6bf27809a620912f56fd5deeac4d3e82e417b73f365cb97874b497fee091c552d8303640a232",
+        cargo_dir: "/software/common/rustup/.cargo"
+      }
   include_tasks:
     file: 'chopper.yaml'
   loop: "{{ versions }}"
