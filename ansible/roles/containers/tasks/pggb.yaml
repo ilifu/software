@@ -48,6 +48,7 @@
             - { name: "pggb" }
             - { name: "samtools" }
             - { name: "bedtools" }
+            - { name: "vcfwave" }
           loop_control:
             loop_var: pggb_binary
 
