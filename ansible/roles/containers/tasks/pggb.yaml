@@ -1,0 +1,46 @@
+- name: Create pggb container
+  vars:
+    checksum: "{{ item.checksum }}"
+    container_name: "pggb"
+    container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+    pggb_module_dir: "{{ bio_modules }}/pggb"
+    pggb_binary_dir: "{{ bio_container_dir }}/pggb"
+  tags:
+    - "pggb"
+    - never
+  block:
+    - name: Create pggb {{ version_number }} container
+      block:
+        - name: Copy singularity definition file
+          template:
+              src: "pggb.def"
+              dest: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
+        - name: Build singularity container
+          command: "{{ singularity }} build {{ container_image }} {{ bio_container_recipe_dir }}/{{ container_name }}.def"
+          args:
+              creates: "{{ container_image }}"
+          become: true
+          environment:
+              SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"
+        - name: Ensure pggb binary directory exists
+          file:
+            path: "{{ pggb_binary_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Create pggb binary
+          template:
+            src: "pggb.sh"
+            dest: "{{ pggb_binary_dir }}/pggb"
+            mode: 0755
+
+    - name: Install pggb {{ container_name }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ pggb_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install pggb module file
+          template:
+            src: pggb.lua
+            dest: "{{ pggb_module_dir }}/default.lua"
