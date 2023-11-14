@@ -8,7 +8,7 @@
     install_dir: "{{ R_dir }}/{{ version_number }}"
     unzipdir: "/dev/shm/R-{{ version_number }}"
     build_dir: "{{ unzipdir }}/build"
-    r_packages: '"data.table","devtools","DBI","mgcv","nlme","pacman","rmarkdown","Rcpp","shiny","tidyverse","xtable","biocManager"'
+    r_packages: '"argparse","data.table","devtools","DBI","mgcv","nlme","pacman","rmarkdown","Rcpp","scales","shiny","tidyverse","xtable","biocManager"'
   tags:
     - never
     - R{{ item.version_number }}
