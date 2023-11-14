@@ -34,6 +34,20 @@
             mode: 0755
           loop:
             - { name: "pggb" }
+            - { name: "wfmash" }
+            - { name: "seqwish" }
+            - { name: "smoothxg" }
+            - { name: "odgi" }
+            - { name: "gfaffix" }
+            - { name: "vg" }
+            - { name: "multiqc" }
+            - { name: "vcfbub" }
+            - { name: "vcflib" }
+            - { name: "fastix" }
+            - { name: "pafplot" }
+            - { name: "pggb" }
+            - { name: "samtools" }
+            - { name: "bedtools" }
           loop_control:
             loop_var: pggb_binary
 
