@@ -1,0 +1,48 @@
+---
+- name: Install meryl {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    meryl_dir: "{{ bio_dir }}/meryl"
+    meryl_module_dir: "{{ bio_modules }}/meryl"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ meryl_dir }}/meryl-{{ version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+  tags:
+    - never
+    - meryl{{ item.version_number }}
+
+  block:
+    - name: Download and install meryl ({{ version_number }})
+      block:
+        - name: Download meryl
+          get_url:
+              url: "{{ url }}"
+              dest: "{{ bio_src }}/meryl-{{ version_number }}.Linux-amd64.tar.xz"
+              mode: "ug=rwx,o=rx"
+              checksum: "{{ checksum }}"
+        - name: Ensure meryl directory {{ install_dir }} exists
+          file:
+            path: "{{ meryl_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Uncompress meryl
+          unarchive:
+            src: "{{ bio_src }}/meryl-{{ version_number }}.Linux-amd64.tar.xz"
+            dest: "{{ meryl_dir }}"
+            remote_src: yes
+            creates: "{{ install_dir }}/bin/meryl"
+
+
+    - name: Install meryl {{ version_number }} module
+      block:
+        - name: Check module dir {{ meryl_module_dir }}
+          file:
+            path: "{{ meryl_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install meryl {{ version_number }} module file
+          template:
+            src: meryl.lua
+            dest: "{{ meryl_module_dir }}/{{ version_number }}.lua"

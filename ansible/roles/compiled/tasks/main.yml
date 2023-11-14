@@ -1927,6 +1927,38 @@
       - never
       - chopper
 
+- name: Install Meryl
+  vars:
+    versions:
+      - {
+          version_number: "1.4.1",
+          url: "https://github.com/marbl/meryl/releases/download/v1.4.1/meryl-1.4.1.Linux-amd64.tar.xz",
+          checksum: "sha256:fe5e81f97994461bd30adab98359b17aebcd6853afd1afe27c609fa6d27ec9ec"
+          }
+  include_tasks:
+    file: 'meryl.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - meryl
+
+- name: Install merqury
+  vars:
+    versions:
+      - {
+        version_number: "1.3",
+        url: "https://github.com/marbl/merqury/archive/refs/tags/v1.3.tar.gz",
+        checksum: "sha256:b6e3f54a6fe30acfe6f2b15ebc26a103a51980adfc03522e712a2baa5e79131a"
+      }
+  include_tasks:
+    file: 'merqury.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - merqury
+
+
+
 #- name: vcflib
 #
 #- name: fastix
