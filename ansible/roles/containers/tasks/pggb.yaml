@@ -27,11 +27,15 @@
             path: "{{ pggb_binary_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Create pggb binary
+        - name: Create pggb binaries
           template:
             src: "pggb.sh"
-            dest: "{{ pggb_binary_dir }}/pggb"
+            dest: "{{ pggb_binary_dir }}/{{ pggb_binary.name }}"
             mode: 0755
+          loop:
+            - { name: "pggb" }
+          loop_control:
+            loop_var: pggb_binary
 
     - name: Install pggb {{ container_name }} module
       block:
