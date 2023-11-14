@@ -265,3 +265,10 @@
   tags:
     - never
     - diann
+
+- name: Create gnuplot container
+  include_tasks:
+    file: gnuplot.yaml
+  tags:
+    - never
+    - gnuplot
