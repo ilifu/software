@@ -41,10 +41,10 @@
         dest: "{{ R_binary_dir }}/{{ binary.name }}"
         mode: 0755
       with_items:
-        - { name: "R", template: "R.sh"}
-        - { name: "Rscript", template: "Rscript.sh"}
-        - { name: "RStudio", template: "RStudio.sh"}
-        - { name: "rstudio", template: "RStudio.sh"}
+        - { name: "R", template: "R.sh" }
+        - { name: "Rscript", template: "Rscript.sh" }
+        - { name: "RStudio", template: "RStudio.sh" }
+        - { name: "rstudio", template: "RStudio.sh" }
       loop_control:
         loop_var: binary
 #          environment:
