@@ -2,7 +2,7 @@
 help([[
 This module configures {{ container_name }}
 ]])
-whatis("Version: item.rstudio_version")
+whatis("Version: {{ item.rstudio_version }}")
 whatis("Keywords: R, RStudio, Rscript")
 whatis("Description: RStudio container")
 
