@@ -1,0 +1,10 @@
+Bootstrap: docker
+From: pangenome/pggb:latest
+
+%labels
+  Maintainer Dane Kennedy
+  Version 0.1
+  pggb
+
+%help
+  The PanGenome Graph Builder (PGGB) is a tool for building a pangenome variation graphs from a set of input sequences.

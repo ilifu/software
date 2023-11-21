@@ -1,0 +1,84 @@
+---
+- name: Install wfmash {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    wfmash_dir: "{{ bio_dir }}/wfmash"
+    wfmash_module_dir: "{{ bio_modules }}/wfmash"
+    version_number: "{{ item.version_number }}"
+    git_commit: "{{ item.git_commit }}"
+    install_dir: "{{ wfmash_dir }}/{{ version_number }}"
+    htslib: "{{ item.htslib_dir }}"
+    htslib_module: "{{ item.htslib_module }}"
+    libgsl: "{{ item.gsl_dir }}"
+    libgsl_module: "{{ item.gsl_module }}"
+    jemalloc: "{{ item.jemalloc_dir }}"
+    jemalloc_module: "{{ item.jemalloc_module }}"
+  tags:
+    - never
+    - wfmash{{ item.version_number }}
+
+  block:
+    - name: Download and install wfmash ({{ version_number }})
+      block:
+        - name: Clone wfmash repo
+          git:
+              clone: true
+              repo: https://github.com/waveygang/wfmash.git
+              dest: "{{ bio_src }}/wfmash"
+              version: "{{ git_commit }}"
+              recursive: true
+              track_submodules: true
+              force: true
+        - name: Run git submodule update
+          shell: "/usr/bin/git submodule update --init --recursive"
+          args:
+            chdir: "{{ bio_src }}/wfmash"
+
+        - name: Ensure wfmash dir exists
+          file:
+            path: "{{ wfmash_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Run cmake
+          shell: "/usr/bin/cmake -H. -DCMAKE_BUILD_TYPE=Generic -DEXTRA_FLAGS='-march=native -Ofast' -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -Bbuild ."
+          args:
+            chdir: "{{ bio_src }}/wfmash"
+          environment:
+            PATH: "{{ htslib }}/bin:{{ libgsl }}/bin:{{ ansible_env.PATH }}"
+            LD_LIBRARY_PATH: "{{ htslib }}/lib:{{ libgsl }}/lib:{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ htslib }}/lib:{{ libgsl }}/lib:{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            C_INCLUDE: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            CPATH: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            PKG_CONFIG_PATH: "{{ htslib }}/lib/pkgconfig:{{ libgsl }}/lib/pkgconfig:{{ jemalloc }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+
+        - name: Run cmake build
+          shell: "/usr/bin/cmake --build build -- -j {{ ansible_processor_vcpus }}"
+          args:
+            chdir: "{{ bio_src }}/wfmash"
+          environment:
+            PATH: "{{ htslib }}/bin:{{ libgsl }}/bin:{{ ansible_env.PATH }}"
+            LD_LIBRARY_PATH: "{{ htslib }}/lib:{{ libgsl }}/lib:{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ htslib }}/lib:{{ libgsl }}/lib:{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            C_INCLUDE: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            CPATH: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            PKG_CONFIG_PATH: "{{ htslib }}/lib/pkgconfig:{{ libgsl }}/lib/pkgconfig:{{ jemalloc }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+
+        - name: Run make install
+          make:
+            chdir: "{{ bio_src }}/wfmash/build"
+            target: install
+
+    - name: Install wfmash {{ version_number }} module
+      block:
+        - name: Check module dir {{ wfmash_module_dir }}
+          file:
+            path: "{{ wfmash_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install wfmash {{ version_number }} module file
+          template:
+            src: wfmash.lua
+            dest: "{{ wfmash_module_dir }}/{{ version_number }}.lua"

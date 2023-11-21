@@ -1,0 +1,78 @@
+---
+- name: Install seqwish {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    seqwish_dir: "{{ bio_dir }}/seqwish"
+    seqwish_module_dir: "{{ bio_modules }}/seqwish"
+    version_number: "{{ item.version_number }}"
+    git_commit: "{{ item.git_commit }}"
+    install_dir: "{{ seqwish_dir }}/{{ version_number }}"
+    jemalloc: "{{ item.jemalloc_dir }}"
+    jemalloc_module: "{{ item.jemalloc_module }}"
+  tags:
+    - never
+    - seqwish{{ item.version_number }}
+
+  block:
+    - name: Download and install seqwish ({{ version_number }})
+      block:
+        - name: Clone seqwish repo
+          git:
+              clone: true
+              repo: https://github.com/ekg/seqwish.git
+              dest: "{{ bio_src }}/seqwish"
+              version: "{{ git_commit }}"
+              recursive: true
+              track_submodules: true
+              force: true
+        - name: Run git submodule update
+          shell: "/usr/bin/git submodule update --init --recursive"
+          args:
+            chdir: "{{ bio_src }}/seqwish"
+
+        - name: Ensure seqwish dir exists
+          file:
+            path: "{{ seqwish_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Run cmake
+          shell: "/usr/bin/cmake -H. -DCMAKE_BUILD_TYPE=Generic -DEXTRA_FLAGS='-march=native -Ofast' -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -Bbuild ."
+          args:
+            chdir: "{{ bio_src }}/seqwish"
+          environment:
+            LD_LIBRARY_PATH: "{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            C_INCLUDE: "{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            CPATH: "{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+
+        - name: Run cmake build
+          shell: "/usr/bin/cmake --build build -- -j {{ ansible_processor_vcpus }}"
+          args:
+            chdir: "{{ bio_src }}/seqwish"
+          environment:
+            LD_LIBRARY_PATH: "{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            C_INCLUDE: "{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            CPATH: "{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+
+        - name: Run make install
+          make:
+            chdir: "{{ bio_src }}/seqwish/build"
+            target: install
+
+    - name: Install seqwish {{ version_number }} module
+      block:
+        - name: Check module dir {{ seqwish_module_dir }}
+          file:
+            path: "{{ seqwish_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install seqwish {{ version_number }} module file
+          template:
+            src: seqwish.lua
+            dest: "{{ seqwish_module_dir }}/{{ version_number }}.lua"

@@ -1,0 +1,62 @@
+Bootstrap: debootstrap
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+OSVersion: focal
+
+%labels
+  Maintainer Dane Kennedy
+  Version 0.1
+
+%help
+  Basic Ubuntu 20.04 container with gnuplot
+
+%environment
+  export SOFTWARE_PATH=/software
+  export PATH=${SOFTWARE_PATH}/bin:${PATH}
+  export LC_ALL=C
+  unset XDG_RUNTIME_DIR
+
+%post
+  # Create Installation Directories and export paths. This is needed as part of post.
+  # %environment scriptlet does not define these paths during %post, only after.
+  mkdir -p /software
+  export SOFTWARE_PATH=/software
+  export DEBIAN_FRONTEND=noninteractive
+  # Update apt
+
+  apt-get update
+  apt-get update -y && apt-get dist-upgrade -y
+
+  apt-get install software-properties-common -y
+  apt-add-repository universe
+
+  apt-get update
+  apt-get install -y gnuplot locales
+
+  # Configure locale
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  echo "en_ZA.UTF-8 UTF-8" >> /etc/locale.gen
+  locale-gen en_US.utf8 en_ZA.utf8
+  /usr/sbin/update-locale LANG=en_ZA.UTF-8
+  export LC_ALL=en_ZA.UTF-8
+  export LANG=en_ZA.UTF-8
+
+  # Configure timezone
+    echo "Africa/Johannesburg" > /etc/timezone
+    dpkg-reconfigure --frontend noninteractive tzdata
+
+  # Create /users to bind home directories into the container.
+  mkdir -p \
+    /carta_share \
+    /cbio \
+    /cchem \
+    /data \
+    /idia \
+    /ilifu \
+    /scratch \
+    /scratch3 \
+    /software \
+    /users \
+
+  # Cleanup the container
+  apt-get clean
+  apt-get autoclean

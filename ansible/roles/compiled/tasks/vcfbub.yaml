@@ -1,0 +1,43 @@
+---
+- name: Install vcfbub {{ item.version_number }}
+  vars:
+    vcfbub_dir: "{{ bio_dir }}/vcfbub"
+    vcfbub_module_dir: "{{ bio_modules }}/vcfbub"
+    git_commit: "{{ item.git_commit }}"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ vcfbub_dir }}/{{ version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    cargo_dir: "{{ item.cargo_dir }}"
+  tags:
+    - never
+    - vcfbub{{ item.version_number }}
+  block:
+    - name: Download and install vcfbub ({{ version_number }})
+      block:
+        - name: git clone vcfbub repository
+          git:
+              clone: true
+              repo: "https://github.com/pangenome/vcfbub"
+              version: "{{ git_commit }}"
+              dest: "{{ bio_src }}/vcfbub"
+              force: true
+        - name: Run cargo install for vcfbub {{ version_number }}
+          command: "cargo install --path . --root {{ install_dir }}"
+          args:
+              chdir: "{{ bio_src }}/vcfbub"
+              creates: "{{ install_dir }}/bin/vcfbub"
+          environment:
+              PATH: "{{ cargo_dir }}/bin:{{ ansible_env.PATH | default('') }}"
+
+    - name: Install vcfbub {{ version_number }} module
+      block:
+        - name: Check module dir {{ vcfbub_module_dir }}
+          file:
+            path: "{{ vcfbub_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install vcfbub module file
+          template:
+            src: vcfbub.lua
+            dest: "{{ vcfbub_module_dir }}/{{ version_number }}.lua"

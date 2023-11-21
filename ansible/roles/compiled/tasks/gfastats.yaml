@@ -1,0 +1,58 @@
+---
+- name: Install gfastats {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    gfastats_dir: "{{ bio_dir }}/gfastats"
+    gfastats_module_dir: "{{ bio_modules }}/gfastats"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ gfastats_dir }}/{{ version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    unzipdir: "/dev/shm/gfastats"
+  tags:
+    - never
+    - gfastats{{ item.version_number }}
+
+  block:
+    - name: Download and install gfastats ({{ version_number }})
+      block:
+        - name: Download gfastats
+          get_url:
+              url: "{{ url }}"
+              dest: "{{ bio_src }}/gfastats.v{{ version_number }}.tar.gz"
+              mode: "ug=rwx,o=rx"
+              checksum: "{{ checksum }}"
+        - name: Uncompress gfastats
+          unarchive:
+            src: "{{ bio_src }}/gfastats.v{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzipdir }}"
+        - name: Run make
+          make:
+              chdir: "{{ unzipdir }}"
+          environment:
+            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+        - name: Ensure installation directory {{ install_dir }} exists
+          file:
+            path: "{{ install_dir }}"
+            state: directory
+            recurse: yes
+        - name: Copy binary to installation directory
+          copy:
+              src: "{{ unzipdir }}/build/bin/gfastats"
+              dest: "{{ install_dir }}/gfastats"
+              mode: u=rwx,g=rwx,o=rx
+              remote_src: yes
+
+    - name: Install gfastats {{ version_number }} module
+      block:
+        - name: Check module dir {{ gfastats_module_dir }}
+          file:
+            path: "{{ gfastats_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install gfastats {{ version_number }} module file
+          template:
+            src: gfastats.lua
+            dest: "{{ gfastats_module_dir }}/{{ version_number }}.lua"

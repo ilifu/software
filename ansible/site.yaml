@@ -4,6 +4,7 @@
   become: false
   roles:
     - all
+
 - name: Import compiled playbook
   become: false
   hosts: all

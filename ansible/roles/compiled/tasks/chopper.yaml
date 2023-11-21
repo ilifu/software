@@ -1,0 +1,50 @@
+---
+- name: Install chopper {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    chopper_dir: "{{ bio_dir }}/chopper"
+    chopper_module_dir: "{{ bio_modules }}/chopper"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ chopper_dir }}/{{ version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    unzipdir: "/dev/shm/chopper-{{ version_number }}"
+    cargo_dir: "{{ item.cargo_dir }}"
+  tags:
+    - never
+    - chopper{{ item.version_number }}
+
+  block:
+    - name: Download and install chopper ({{ version_number }})
+      block:
+        - name: Download chopper
+          get_url:
+              url: "{{ url }}"
+              dest: "{{ bio_src }}/chopper-{{ version_number }}.tar.gz"
+              mode: "ug=rwx,o=rx"
+              checksum: "{{ checksum }}"
+        - name: Uncompress chopper
+          unarchive:
+            src: "{{ bio_src }}/chopper-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzipdir }}"
+        - name: Compile chopper using rust
+          command: "cargo install --path . --root {{ install_dir }}"
+          args:
+              chdir: "{{ unzipdir }}"
+              creates: "{{ install_dir }}/bin/chopper"
+          environment:
+              PATH: "{{ cargo_dir }}/bin:{{ ansible_env.PATH | default('') }}"
+
+    - name: Install chopper {{ version_number }} module
+      block:
+        - name: Check module dir {{ chopper_module_dir }}
+          file:
+            path: "{{ chopper_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install chopper {{ version_number }} module file
+          template:
+            src: chopper.lua
+            dest: "{{ chopper_module_dir }}/{{ version_number }}.lua"

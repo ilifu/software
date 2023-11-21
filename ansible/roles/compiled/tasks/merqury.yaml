@@ -1,0 +1,48 @@
+---
+- name: Install merqury {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    merqury_dir: "{{ bio_dir }}/merqury"
+    merqury_module_dir: "{{ bio_modules }}/merqury"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ merqury_dir }}/merqury-{{ version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+  tags:
+    - never
+    - merqury{{ item.version_number }}
+
+  block:
+    - name: Download and install merqury ({{ version_number }})
+      block:
+        - name: Download merqury
+          get_url:
+              url: "{{ url }}"
+              dest: "{{ bio_src }}/merqury-v{{ version_number }}.tar.xg"
+              mode: "ug=rwx,o=rx"
+              checksum: "{{ checksum }}"
+        - name: Ensure merqury directory {{ install_dir }} exists
+          file:
+            path: "{{ merqury_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Uncompress merqury
+          unarchive:
+            src: "{{ bio_src }}/merqury-v{{ version_number }}.tar.xg"
+            dest: "{{ merqury_dir }}"
+            remote_src: yes
+            creates: "{{ install_dir }}/merqury.sh"
+
+
+    - name: Install merqury {{ version_number }} module
+      block:
+        - name: Check module dir {{ merqury_module_dir }}
+          file:
+            path: "{{ merqury_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install merqury {{ version_number }} module file
+          template:
+            src: merqury.lua
+            dest: "{{ merqury_module_dir }}/{{ version_number }}.lua"

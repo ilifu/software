@@ -436,6 +436,11 @@
         checksum: "sha256:8dd0bf24f1023c6f618c3b317383d291b4a494f40d73b983ac22ffea99e4ba99",
         url: "https://cran.r-project.org/src/base/R-4/R-4.3.1.tar.gz",
       }
+      - {
+        version_number: "4.3.2",
+        checksum: "sha256:b3f5760ac2eee8026a3f0eefcb25b47723d978038eee8e844762094c860c452a",
+        url: "https://cran.r-project.org/src/base/R-4/R-4.3.2.tar.gz",
+      }
   include_tasks:
     file: R.yaml
   loop: "{{ R_versions }}"
@@ -597,6 +602,11 @@
           url: "https://github.com/samtools/samtools/releases/download/1.17/samtools-1.17.tar.bz2",
           checksum: "sha256:3adf390b628219fd6408f14602a4c4aa90e63e18b395dad722ab519438a2a729"
       }
+      - {
+        version_number: "1.18",
+        url: "https://github.com/samtools/samtools/releases/download/1.18/samtools-1.18.tar.bz2",
+        checksum: "sha256:d686ffa621023ba61822a2a50b70e85d0b18e79371de5adb07828519d3fc06e1"
+      }
   include_tasks:
     file: samtools.yaml
   loop: "{{ samtools_versions }}"
@@ -616,6 +626,11 @@
           version_number: "1.17",
           url: "https://github.com/samtools/htslib/releases/download/1.17/htslib-1.17.tar.bz2",
           checksum: "sha256:763779288c40f07646ec7ad98b96c378c739171d162ad98398868783b721839f"
+      }
+      - {
+          version_number: "1.18",
+          url: "https://github.com/samtools/htslib/releases/download/1.18/htslib-1.18.tar.bz2",
+          checksum: "sha256:f1ab53a593a2320a1bfadf4ef915dae784006c5b5c922c8a8174d7530a9af18f"
       }
   include_tasks:
     file: htslib.yaml
@@ -1325,7 +1340,7 @@
       - {
         version_number: "2.7.1",
         checksum: "sha512:3300a748b63b583374701d5ae2a9db7349d0de51061a9f98e7c145b2f7de9710b3ad58b3318d0be2a9a287ace4cc5735bb9348cdf48075b98c1f6cc1029df131",
-        url: "https://mirror.ibcp.fr/pub/gnu/gsl/gsl-2.7.1.tar.gz",
+        url: "https://mirror.ihost.md/gnu/gsl/gsl-2.7.1.tar.gz",
       }
   include_tasks:
     file: 'gsl.yaml'
@@ -1742,3 +1757,268 @@
   tags:
       - never
       - multiqc
+
+- name: Install jemalloc
+  vars:
+    versions:
+      - {
+        version_number: "5.3.0",
+        url: "https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2",
+        checksum: "sha256:2db82d1e7119df3e71b7640219b6dfe84789bc0537983c3b7ac4f7189aecfeaa"
+      }
+  include_tasks:
+    file: 'jemalloc.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - jemalloc
+
+- name: Install Zstandard (zstd)
+  vars:
+    versions:
+      - {
+        version_number: "1.5.5",
+        url: "https://github.com/facebook/zstd/releases/download/v1.5.5/zstd-1.5.5.tar.gz",
+        checksum: "sha256:9c4396cc829cfae319a6e2615202e82aad41372073482fce286fac78646d3ee4"
+      }
+  include_tasks:
+    file: 'zstd.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - zstd
+
+- name: Install rustup
+  include_tasks:
+    file: 'rustup.yaml'
+  tags:
+    - never
+    - rustup
+
+- name: Install wfmash
+  vars:
+    versions:
+      - {
+          version_number: "0.12.0",
+          git_commit: 'bcfbc14eff4874cda59c66a678fb7d69a31671c5',
+          htslib_module: 'htslib/1.17',
+          htslib_dir: '/software/bio/htslib/1.17',
+          gsl_dir: '/software/common/libgsl/2.7.1',
+          gsl_module: 'libgsl/2.7.1',
+          jemalloc_dir: '/software/common/jemalloc/5.3.0',
+          jemalloc_module: 'jemalloc/5.3.0'
+      }
+  include_tasks:
+    file: 'wfmash.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - wfmash
+
+- name: seqwish
+  vars:
+    versions:
+      - {
+          version_number: "0.7.9-2",
+          git_commit: 'f44b402f0c2e02988d431d9b2e5eba9727cf93a9',
+          jemalloc_dir: '/software/common/jemalloc/5.3.0',
+          jemalloc_module: 'jemalloc/5.3.0'
+      }
+  include_tasks:
+    file: 'seqwish.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - seqwish
+
+- name: smoothxg
+  vars:
+    versions:
+      - {
+        version_number: "0.7.2-4",
+        git_commit: 'aaa0b283e13ca57c4e6e4e67a03451925f5342f1',
+        zstd_dir: '/software/common/zstd/1.5.5',
+        zstd_module: 'zstd/1.5.5',
+        jemalloc_dir: '/software/common/jemalloc/5.3.0',
+        jemalloc_module: 'jemalloc/5.3.0'
+      }
+  include_tasks:
+    file: 'smoothxg.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - smoothxg
+
+
+- name: GFAffix
+  vars:
+    versions:
+      - {
+        version_number: "0.1.5b",
+        url: "https://github.com/marschall-lab/GFAffix/archive/refs/tags/0.1.5b.tar.gz",
+        checksum: "sha512:6c1397569bdfc87e7ca928d9d6555f9db110b484e1965314c24abf3797a8520bbde0fd0dfa7368803da2961f1114f08118d5d721e1ab8c6cc9d039cb686f6d89",
+        cargo_dir: "/software/common/rustup/.cargo"
+      }
+  include_tasks:
+    file: 'gfaffix.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - gfaffix
+
+- name: vcfbub
+  vars:
+    versions:
+      - {
+          version_number: "0.1.0",
+          git_commit: "26a1f0cb216a423f8547c4ad0e0ce38cb9d324b9"
+      }
+    cargo_dir: "/software/common/rustup/.cargo"
+  include_tasks:
+    file: 'vcfbub.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - vcfbub
+
+- name: Install Dorado
+  vars:
+    versions:
+        - {
+          version_number: "0.4.2",
+          url: "https://cdn.oxfordnanoportal.com/software/analysis/dorado-0.4.2-linux-x64.tar.gz",
+          checksum: "sha512:1d437b45476ee49aa8fba04d0275ff3a4afadb978c1541d5f71d99f03bdc4ed16d14b1527251ad8ba53c1ab6600d3452ced599352552c620ca05c284cd1eca2f"
+          }
+  include_tasks:
+    file: 'dorado.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - dorado
+
+- name: Install gfastats
+  vars:
+    versions:
+      - {
+          version_number: "1.3.6",
+          url: "https://github.com/vgl-hub/gfastats/releases/download/v1.3.6/gfastats.v1.3.6.tar.gz",
+          checksum: "sha512:c6d56e98b3117462b89ba75c951004bca9a2b252655f7afd8de7d5c975c6d97a4d2db26fde14f608742b32893ba9ede12d2f53750e23e720090e91ee66d53543"
+      }
+  include_tasks:
+    file: 'gfastats.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - gfastats
+
+- name: Install seqkit
+  vars:
+    versions:
+      - {
+        version_number: "2.6.0",
+        url: "https://github.com/shenwei356/seqkit/releases/download/v2.6.0/seqkit_linux_amd64.tar.gz",
+          checksum: "sha512:b9d805a7ebc2f2b47aac51b632aa2868a920d0bb375535d9a660e0a197092460727ff353d208bd899e4c1a710a5df003d6da94324e8bb016175ee6dbf584a18d"
+      }
+  include_tasks:
+    file: 'seqkit.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - seqkit
+
+- name: Install chopper
+  vars:
+    versions:
+      - {
+          version_number: 0.7.0,
+          url: "https://github.com/wdecoster/chopper/archive/refs/tags/v0.7.0.tar.gz",
+          checksum: "sha512:54de8a9b34b7d335f578d9bac873015bddcd5641d92ea2dd4c3fd9985f15adf9c6f7942b2b26a1f3861a30d7a2fbc15f49626b65f2d3835987f3194eea82435b",
+          cargo_dir: "/software/common/rustup/.cargo"
+      }
+      - {
+        version_number: 0.6.0,
+        url: "https://github.com/wdecoster/chopper/archive/refs/tags/v0.6.0.tar.gz",
+        checksum: "sha512:c03458fd5b234eb51ccdd9a895f74224517c2b6c9d8bf4ad6cbb6bf27809a620912f56fd5deeac4d3e82e417b73f365cb97874b497fee091c552d8303640a232",
+        cargo_dir: "/software/common/rustup/.cargo"
+      }
+  include_tasks:
+    file: 'chopper.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - chopper
+
+- name: Install Meryl
+  vars:
+    versions:
+      - {
+          version_number: "1.4.1",
+          url: "https://github.com/marbl/meryl/releases/download/v1.4.1/meryl-1.4.1.Linux-amd64.tar.xz",
+          checksum: "sha256:fe5e81f97994461bd30adab98359b17aebcd6853afd1afe27c609fa6d27ec9ec"
+          }
+      - {
+          version_number: "1.3",
+          url: "https://github.com/marbl/meryl/releases/download/v1.3/meryl-1.3.Linux-amd64.tar.xz",
+          checksum: "sha256:e7740ac6e20373dcb1b417e79a6f6e76764ab368d63ac4f520cc3bbae81f9734"
+      }
+  include_tasks:
+    file: 'meryl.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - meryl
+
+- name: Install bedtools
+  vars:
+    versions:
+      - {
+          version_number: "2.31.1",
+          url: "https://github.com/arq5x/bedtools2/archive/refs/tags/v2.31.1.tar.gz",
+          checksum: "sha256:79a1ba318d309f4e74bfa74258b73ef578dccb1045e270998d7fe9da9f43a50e"
+        }
+  include_tasks:
+    file: 'bedtools.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - bedtools
+
+- name: Install merqury
+  vars:
+    versions:
+      - {
+        version_number: "1.3",
+        url: "https://github.com/marbl/merqury/archive/refs/tags/v1.3.tar.gz",
+        checksum: "sha256:b6e3f54a6fe30acfe6f2b15ebc26a103a51980adfc03522e712a2baa5e79131a"
+      }
+  include_tasks:
+    file: 'merqury.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - merqury
+
+- name: Install nanocomp
+  vars:
+    versions:
+      - {
+        version_number: "1.23.1",
+        python_location: "/software/common/python/3.12.0",
+        python_module: "python/3.12.0",
+      }
+  include_tasks:
+    file: 'nanocomp.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - nanocomp
+
+
+
+#- name: vcflib
+#
+#- name: fastix
+#
+#- name: pafplot
+#
+#- name: pggb

@@ -1,9 +1,9 @@
 -- -*- lua -*-
 help([[
-This module configures libgsl {{ version_number }} for use
+This module configures jemalloc {{ version_number }} for use
 ]])
 whatis("Version: {{ version_number }}")
-whatis("Keywords: gsl, libgsl")
+whatis("Keywords: gsl, jemalloc")
 whatis("Description: Gnu Scientific Library {{ version_number }}")
 
 prepend_path('PATH', "{{ install_dir }}/bin")
@@ -15,4 +15,3 @@ prepend_path('C_INCLUDE_PATH', "{{ install_dir }}/include")
 prepend_path('INCLUDE', "{{ install_dir }}/include")
 prepend_path('CPATH', "{{ install_dir }}/include")
 prepend_path('PKG_CONFIG_PATH', "{{ install_dir }}/lib/pkgconfig")
-
