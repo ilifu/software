@@ -1,0 +1,938 @@
+---
+# tasks file for compiled common
+- name: Install openjdks
+  vars:
+    openjdk_versions:
+      - {
+        version_number: "14.0.1",
+        checksum: "sha256:22ce248e0bd69f23028625bede9d1b3080935b68d011eaaf9e241f84d6b9c4cc",
+        url: "https://download.java.net/java/GA/jdk14.0.1/664493ef4a6946b186ff29eb326336a2/7/GPL/openjdk-14.0.1_linux-x64_bin.tar.gz",
+      }
+      - {
+        version_number: "17.0.2",
+        checksum: "sha256:0022753d0cceecacdd3a795dd4cea2bd7ffdf9dc06e22ffd1be98411742fbb44",
+        url: "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz",
+      }
+      - {
+        version_number: "18.0.2",
+        checksum: "sha256:cf06f41a3952038df0550e8cbc2baf0aa877c3ba00cca0dd26f73134f8baf0e6",
+        url: "https://download.java.net/java/GA/jdk18.0.2/f6ad4b4450fd4d298113270ec84f30ee/9/GPL/openjdk-18.0.2_linux-x64_bin.tar.gz",
+      }
+  include_tasks:
+    file: openjdk.yaml
+  loop: "{{ openjdk_versions }}"
+  tags:
+    - never
+    - openjdk
+
+- name: Install Java Runtime Environment
+  vars:
+    jre_versions:
+      - {
+        version_number: "1.8.0_261",
+        checksum: "sha256:53e33ba35b1a8b799e1be943155c7b3c56a56a82956ddcf5d774325eca1df812",
+        url: "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=242980_a4634525489241b9a9e1aa73d9e118e6",
+        filename: "jre-8u261-linux-x64.tar",
+      }
+  include_tasks:
+    file: jre.yaml
+  loop: "{{ jre_versions }}"
+  tags:
+    - never
+    - jre
+
+- name: Install nodejs
+  vars:
+    versions:
+      - {
+        version_number: "18.13.0",
+        checksum: "sha256:7f5d6922a91986ef059ba8a4396aa435440adacfe6fc6fab60a857c8f2cf5e7a",
+        url: "https://nodejs.org/dist/v18.13.0/node-v18.13.0-linux-x64.tar.xz",
+      }
+      - {
+        version_number: "19.4.0",
+        checksum: "sha256:2f3b7a02e41eeda113326370f51bd1d2a54de6b8a3628b0d36623c40ca4db783",
+        url: "https://nodejs.org/dist/v19.4.0/node-v19.4.0-linux-x64.tar.xz"
+      }
+  include_tasks:
+    file: nodejs.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - nodejs
+
+- name: Install OpenBLAS
+  vars:
+    openblas_versions:
+      - {
+        version_number: 0.3.9,
+        checksum: "sha256:17d4677264dfbc4433e97076220adc79b050e4f8a083ea3f853a53af253bc380",
+      }
+  include_tasks:
+    file: openblas.yaml
+  loop: "{{ openblas_versions }}"
+  tags:
+    - never
+    - openblas
+
+- name: Install LAPACK
+  vars:
+    lapack_versions:
+      - {
+        version_number: 3.9.0,
+        checksum: "sha256:106087f1bb5f46afdfba7f569d0cbe23dacb9a07cd24733765a0e89dbe1ad573",
+      }
+  include_tasks:
+    file: lapack.yaml
+  loop: "{{ lapack_versions }}"
+  tags:
+    - never
+    - lapack
+
+- name: Install Apache Maven
+  vars:
+    apache_maven_versions:
+      - {
+        version_number: 3.6.3,
+        checksum: "sha512:c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0"
+      }
+  include_tasks:
+    file: apache_maven.yaml
+  loop: "{{ apache_maven_versions }}"
+  tags:
+    - never
+    - maven
+
+- name: Install Apache Hadoop
+  vars:
+    apache_hadoop_versions:
+      - {
+        version_number: 3.2.1,
+        checksum: "sha512:d62709c3d7144fcaafc60e18d0fa03d7d477cc813e45526f3646030cd87dbf010aeccf3f4ce795b57b08d2884b3a55f91fe9d74ac144992d2dfe444a4bbf34ee"
+      }
+  include_tasks:
+    file: apache_hadoop.yaml
+  loop: "{{ apache_hadoop_versions }}"
+  tags:
+    - never
+    - hadoop
+
+- name: Install Apache Spark
+  vars:
+    apache_spark_versions:
+      - {
+        version_number: 2.4.5,
+        checksum: "sha512:48B931F5A2614C8B72BA26C0B77B2DD837EE6F6BC352BF41F4D018FDB8D20FAA74FD40730B418EF7FFD5BBCE335756CFB782F6A6F571FC35F5874BFC2CE7C277"
+      }
+  include_tasks:
+    file: apache_spark.yaml
+  loop: "{{ apache_spark_versions }}"
+  tags:
+    - never
+    - spark
+
+- name: Install UCX
+  vars:
+    ucx_versions:
+      - {
+        version_number: "1.9.0",
+        url: "https://github.com/openucx/ucx/releases/download/v1.9.0/ucx-1.9.0.tar.gz",
+        checksum: "sha256:a7a2c8841dc0d5444088a4373dc9b9cc68dbffcd917c1eba92ca8ed8e5e635fb",
+      }
+      - {
+        version_number: "1.13.0",
+        cuda_root: "/software/common/cuda/11.6.0_510.39.01",
+      }
+  include_tasks:
+    file: ucx.yaml
+  loop: "{{ ucx_versions }}"
+  tags:
+    - never
+    - ucx
+
+
+- name: Install openmpis
+  vars:
+    openmpi_versions:
+      - {
+        version_number: "4.1.5",
+        checksum: "sha256:a640986bc257389dd379886fdae6264c8cfa56bc98b71ce3ae3dfbd8ce61dbe3",
+        url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.5.tar.bz2",
+        ucx_version: "1.13.0",
+        singularity_version: "3.11.3",
+        cuda_root: "/software/common/cuda/12.2.0_535.54.03",
+      }
+      - {
+        version_number: "4.1.4",
+        checksum: "sha256:92912e175fd1234368c8730c03f4996fe5942e7479bb1d10059405e7f2b3930d",
+        url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.4.tar.bz2",
+        ucx_version: "1.13.0",
+        singularity_version: "3.9.1",
+        cuda_root: "/software/common/cuda/11.6.0_510.39.01",
+      }
+      - {
+        version_number: "4.1.0",
+        checksum: "sha256:73866fb77090819b6a8c85cb8539638d37d6877455825b74e289d647a39fd5b5",
+        url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.0.tar.bz2",
+        ucx_version: "1.9.0",
+      }
+      - {
+        version_number: "4.0.5",
+        checksum: "sha256:c58f3863b61d944231077f344fe6b4b8fbb83f3d1bc93ab74640bf3e5acac009",
+        url: "https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.5.tar.bz2",
+        ucx_version: "1.9.0",
+      }
+      - {
+        version_number: "4.0.3",
+        checksum: "sha256:1402feced8c3847b3ab8252165b90f7d1fa28c23b6b2ca4632b6e4971267fd03",
+        url: "https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.3.tar.bz2",
+        ucx_version: "1.9.0",
+      }
+      - {
+        version_number: "3.1.6",
+        checksum: "sha256:50131d982ec2a516564d74d5616383178361c2f08fdd7d1202b80bdf66a0d279",
+        url: "https://download.open-mpi.org/release/open-mpi/v3.1/openmpi-3.1.6.tar.bz2",
+        ucx_version: "1.9.0",
+      }
+      - {
+        version_number: "2.1.6",
+        checksum: "sha1:7a1d7f1b7efe2258bda3929b8b1729bfb7a51f08",
+        url: "https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.6.tar.bz2",
+        ucx_version: "1.9.0",
+      }
+      - {
+        version_number: "2.1.1",
+        checksum: "sha1:3aaee35c17b6ef02f4cee274f2670d5b7b2c968a",
+        url: "https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.1.tar.bz2",
+        ucx_version: "1.9.0",
+      }
+  include_tasks:
+    file: openmpi.yaml
+  loop: "{{ openmpi_versions }}"
+  tags:
+    - never
+    - openmpi
+
+- name: Install mpich
+  vars:
+    mpich_versions:
+      - {
+        version_number: "3.3a2",
+        checksum: "sha256:5d408e31917c5249bf5e35d1341afc34928e15483473dbb4e066b76c951125cf",
+        url: "https://www.mpich.org/static/downloads/3.3a2/mpich-3.3a2.tar.gz",
+        hwloc_version: "1.11.13"
+      }
+  include_tasks:
+    file: mpich.yaml
+  loop: "{{ mpich_versions }}"
+  tags:
+    - never
+    - mpich
+
+
+- name: Install hwloc
+  vars:
+    hwloc_versions:
+      - {
+        version_number: "1.11.13",
+        url: "https://download.open-mpi.org/release/hwloc/v1.11/hwloc-1.11.13.tar.gz",
+        checksum: "sha1:e3384557e6b4aca110209f8cb45a8f604e993d53",
+      }
+  include_tasks:
+    file: hwloc.yaml
+  loop: "{{ hwloc_versions }}"
+  tags:
+    - never
+    - hwloc
+
+
+- name: Install pythons
+  vars:
+    python_versions:
+      - {
+        version_number: "2.7.18",
+        checksum: "sha256:b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43"
+      }
+      - {
+        version_number: "3.6.15",
+        checksum: "md5:bc04aa6c2a1a172a35012abd668538cd"
+      }
+      - {
+        version_number: "3.7.7",
+        checksum: "sha256:06a0a9f1bf0d8cd1e4121194d666c4e28ddae4dd54346de6c343206599f02136"
+      }
+      - {
+        version_number: "3.7.16",
+        checksum: "md5:df3b8ad6e2ab8f198d65ecf68816bf42"
+      }
+      - {
+        version_number: "3.8.2",
+        checksum: "sha256:2646e7dc233362f59714c6193017bb2d6f7b38d6ab4a0cb5fbac5c36c4d845df"
+      }
+      - {
+        version_number: "3.8.3",
+        checksum: "sha256:dfab5ec723c218082fe3d5d7ae17ecbdebffa9a1aea4d64aa3a2ecdd2e795864"
+      }
+      - {
+        version_number: "3.8.6",
+        checksum: "sha256:a9e0b79d27aa056eb9cce8d63a427b5f9bab1465dee3f942dcfdb25a82f4ab8a"
+      }
+      - {
+        version_number: "3.8.16",
+        checksum: "md5:621ac153586a3152e2ab7d3a8614df9a"
+      }
+      - {
+        version_number: "3.9.0",
+        checksum: "sha256:9c73e63c99855709b9be0b3cc9e5b072cb60f37311e8c4e50f15576a0bf82854"
+      }
+      - {
+        version_number: "3.9.4",
+        checksum: "sha256:4b0e6644a76f8df864ae24ac500a51bbf68bd098f6a173e27d3b61cdca9aa134"
+      }
+      - {
+        version_number: "3.9.7",
+        checksum: "sha256:f8145616e68c00041d1a6399b76387390388f8359581abc24432bb969b5e3c57"
+      }
+      - {
+        version_number: "3.9.12",
+        checksum: "sha256:2cd94b20670e4159c6d9ab57f91dbf255b97d8c1a1451d1c35f4ec1968adf971"
+      }
+      - {
+        version_number: "3.9.16",
+        checksum: "md5:5738c204eecc375e29751cb2176fc9cc"
+      }
+      - {
+        version_number: "3.10.0",
+        checksum: "md5:3e7035d272680f80e3ce4e8eb492d580"
+      }
+      - {
+        version_number: "3.10.1",
+        checksum: "md5:789210934745a65247a3ebf5da9adb64"
+      }
+      - {
+        version_number: "3.10.4",
+        checksum: "sha256:80bf925f571da436b35210886cf79f6eb5fa5d6c571316b73568343451f77a19"
+      }
+      - {
+        version_number: "3.10.9",
+        checksum: "md5:dc8c0f274b28ee9e95923d20cfc364c9"
+      }
+      - {
+        version_number: "3.11.0",
+        checksum: "md5:fe92acfa0db9b9f5044958edb451d463"
+      }
+      - {
+        version_number: "3.11.1",
+        checksum: "md5:4efe92adf28875c77d3b9b2e8d3bc44a"
+      }
+      - {
+        version_number: "3.11.2",
+        checksum: "md5:a957cffb58a89303b62124896881950b"
+      }
+      - {
+          version_number: "3.12.0",
+          checksum: "md5:f6f4616584b23254d165f4db90c247d6"
+      }
+    pip_packages:
+      - pip
+      - pipenv
+      - ipython
+      - ipykernel
+      - ldap3
+      - virtualenv
+  include_tasks:
+    file: python.yaml
+  loop: "{{ python_versions }}"
+  tags:
+    - never
+    - python
+
+- name: Install Anacondas
+  vars:
+    anaconda_versions:
+      - {
+        version_number: "2020.07",
+        url: "https://repo.anaconda.com/archive/Anaconda3-2020.07-Linux-x86_64.sh",
+        checksum: "sha512:ed810aaf6c08e8e50d4031958e396740d4e1e9994309c43e19f7cd5e8ef71f26d37296a7ad7bee5d863f9122a690f72f212a9b5cd40727eb40a111bb5bd9a7a5"
+      }
+      - {
+        version_number: "2021.05",
+        url: "https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh",
+        checksum: "sha512:e1126ffc8c35b4d22959a3fd50282a3e1e7e31471f2d1d2996d9948ed44550d76a94fcecaeebad5cbd7a1b8aeaa1b8f8abaf78672634424ec00fd269ad08cf2d"
+      }
+      - {
+        version_number: "2021.11",
+        url: "https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh",
+        checksum: "sha512:f38b3ffc5d8bccbbb1b9c0538bc608043013c41a1be32b3992b12bf043f7ef0c0cd75469b7dc672f9b544d1095cd7896de5fa8aabd60f2cccaec1dd07a638baa"
+      }
+      - {
+          version_number: "2023.07",
+          url: "https://repo.anaconda.com/archive/Anaconda3-2023.07-2-Linux-x86_64.sh",
+          checksum: "sha512:2d9250848f92ac38acb7a4b4699bd01252eefaeeb17a5ca489bb06d06a89e02681fe3944ccf17cb92e07261e96d6b96cb9530d27a2d8d5cab37df44734aef492"
+      }
+  include_tasks:
+    file: anaconda.yaml
+  loop: "{{ anaconda_versions }}"
+  tags:
+    - never
+    - anaconda
+
+- name: Install Rs
+  vars:
+    R_versions:
+      - {
+        version_number: "4.0.0",
+        checksum: "sha256:06beb0291b569978484eb0dcb5d2339665ec745737bdfb4e873e7a5a75492940",
+        url: "https://cran.r-project.org/src/base/R-4/R-4.0.0.tar.gz",
+      }
+      - {
+        version_number: "4.0.2",
+        checksum: "sha256:d3bceab364da0876625e4097808b42512395fdf41292f4915ab1fd257c1bbe75",
+        url: "https://cran.r-project.org/src/base/R-4/R-4.0.2.tar.gz",
+      }
+      - {
+        version_number: "4.0.3",
+        checksum: "sha256:09983a8a78d5fb6bc45d27b1c55f9ba5265f78fa54a55c13ae691f87c5bb9e0d",
+        url: "https://cran.r-project.org/src/base/R-4/R-4.0.3.tar.gz",
+      }
+      - {
+        version_number: "4.1.0",
+        checksum: "sha256:e8e68959d7282ca147360fc9644ada9bd161bab781bab14d33b8999a95182781",
+        url: "https://cran.r-project.org/src/base/R-4/R-4.1.0.tar.gz",
+      }
+      - {
+        version_number: "4.1.1",
+        checksum: "sha256:515e03265752257d0b7036f380f82e42b46ed8473f54f25c7b67ed25bbbdd364",
+        url: "https://cran.r-project.org/src/base/R-4/R-4.1.1.tar.gz",
+      }
+      - {
+        version_number: "4.2.0",
+        checksum: "sha256:38eab7719b7ad095388f06aa090c5a2b202791945de60d3e2bb0eab1f5097488",
+        url: "https://cran.r-project.org/src/base/R-4/R-4.2.0.tar.gz",
+      }
+      - {
+        version_number: "4.2.2",
+        checksum: "sha256:0ff62b42ec51afa5713caee7c4fde7a0c45940ba39bef8c5c9487fef0c953df5",
+        url: "https://cran.r-project.org/src/base/R-4/R-4.2.2.tar.gz",
+      }
+      - {
+        version_number: "4.3.1",
+        checksum: "sha256:8dd0bf24f1023c6f618c3b317383d291b4a494f40d73b983ac22ffea99e4ba99",
+        url: "https://cran.r-project.org/src/base/R-4/R-4.3.1.tar.gz",
+      }
+      - {
+        version_number: "4.3.2",
+        checksum: "sha256:b3f5760ac2eee8026a3f0eefcb25b47723d978038eee8e844762094c860c452a",
+        url: "https://cran.r-project.org/src/base/R-4/R-4.3.2.tar.gz",
+      }
+  include_tasks:
+    file: R.yaml
+  loop: "{{ R_versions }}"
+  tags:
+    - never
+    - R
+
+- name: Install Go
+  vars:
+    go_versions:
+      - {
+        version_number: "1.16.3",
+        checksum: "sha256:951a3c7c6ce4e56ad883f97d9db74d3d6d80d5fec77455c6ada6c1f7ac4776d2",
+        url: "https://golang.org/dl/go1.16.3.linux-amd64.tar.gz",
+      }
+      - {
+        version_number: "1.17.3",
+        checksum: "sha256:550f9845451c0c94be679faf116291e7807a8d78b43149f9506c1b15eb89008c",
+        url: "https://golang.org/dl/go1.17.3.linux-amd64.tar.gz",
+      }
+      - {
+        version_number: "1.18.4",
+        checksum: "sha256:c9b099b68d93f5c5c8a8844a89f8db07eaa58270e3a1e01804f17f4cf8df02f5",
+        url: "https://golang.org/dl/go1.18.4.linux-amd64.tar.gz",
+      }
+      - {
+        version_number: "1.20.4",
+        checksum: "sha256:698ef3243972a51ddb4028e4a1ac63dc6d60821bf18e59a807e051fee0a385bd",
+        url: "https://golang.org/dl/go1.20.4.linux-amd64.tar.gz",
+      }
+  include_tasks:
+    file: golang.yaml
+  loop: "{{ go_versions }}"
+  tags:
+    - never
+    - golang
+
+- name: Install singularity
+  vars:
+    singularity_versions:
+      - {
+        version_number: "3.8.0",
+        checksum: "sha256:5fa2c0e7ef2b814d8aa170826b833f91e5031a85d85cd1292a234e6c55da1be1",
+        url: "https://github.com/sylabs/singularity/releases/download/v3.8.0/singularity-ce-3.8.0.tar.gz",
+        go_location: "{{ common_dir }}/golang/1.16.3/bin"
+      }
+      - {
+        version_number: "3.8.3",
+        checksum: "sha256:9ecb6f01f1a3f2cd8d0f73d9806201ec1b25b23c9722d374a6430eeba0785981",
+        url: "https://github.com/sylabs/singularity/releases/download/v3.8.3/singularity-ce-3.8.3.tar.gz",
+        go_location: "{{ common_dir }}/golang/1.16.3/bin"
+      }
+      - {
+        version_number: "2.6.1",
+        checksum: "sha256:f38d46a225e8368eb4693137806d2dc96e925a50bdf7f6983662848831041df2"
+      }
+      - {
+        version_number: "3.9.0",
+        checksum: "sha256:3569928cbd907fe90c52f6a809f5f8e99f597237c5a25a9dce07e3efb3b1447a",
+        url: "https://github.com/sylabs/singularity/releases/download/v3.9.0/singularity-ce-3.9.0.tar.gz",
+        go_location: "{{ common_dir }}/golang/1.16.3/bin"
+      }
+      - {
+        version_number: "3.9.1",
+        checksum: "sha256:1ba3bb1719a420f48e9b0a6afdb5011f6c786d0f107ef272528c632fff9fd153",
+        url: "https://github.com/sylabs/singularity/releases/download/v3.9.1/singularity-ce-3.9.1.tar.gz",
+        go_location: "{{ common_dir }}/golang/1.17.3/bin"
+      }
+      - {
+        version_number: "3.10.1",
+        checksum: "sha256:e3af12edc0260bc3a3a481459a3a4457de9235025e6b37288da80e3cdc011a7a",
+        url: "https://github.com/sylabs/singularity/releases/download/v3.10.1/singularity-ce-3.10.1.tar.gz",
+        go_location: "{{ common_dir }}/golang/1.18.4/bin"
+      }
+      - {
+          version_number: "3.11.3",
+          checksum: "sha256:a77ede063fd115f85f98f82d2e30459b5565db7d098665497bcd684bf8edaec9",
+          url: "https://github.com/sylabs/singularity/releases/download/v3.11.3/singularity-ce-3.11.3.tar.gz",
+          go_location: "{{ common_dir }}/golang/1.20.4/bin"
+      }
+  include_tasks:
+    file: singularity.yaml
+  loop: "{{ singularity_versions }}"
+  tags:
+    - never
+    - singularity
+
+- name: Install monos
+  vars:
+    mono_versions:
+      - {
+        version_number: "6.8.0.123",
+        url: "https://download.mono-project.com/sources/mono/mono-6.8.0.123.tar.xz",
+        checksum: "sha256:e2e42d36e19f083fc0d82f6c02f7db80611d69767112af353df2f279744a2ac5",
+      }
+  include_tasks:
+    file: mono.yaml
+  loop: "{{ mono_versions }}"
+  tags:
+    - never
+    - mono
+
+- name: Install DRMAA for Slurm
+  vars:
+    drmaa_slurm_versions:
+      - {
+        version_number: "1.1.1",
+        url: "https://github.com/natefoo/slurm-drmaa/releases/download/1.1.1/slurm-drmaa-1.1.1.tar.gz",
+        checksum: "sha512:be3b93090eb94aa4a32f4bb6960d5455ab7c0869a719b1cd00c33db066a7c6e4290bbd1dc468488ee0d8ac68a5d4829812593893341f9cc65c5bffa43bb15487",
+      }
+  include_tasks:
+    file: slurm-drmaa.yaml
+  loop: "{{ drmaa_slurm_versions }}"
+  tags:
+    - never
+    - drmaa
+
+- name: Install Cuda
+  vars:
+    cuda_versions:
+      - {
+        version_number: "12.2.0_535.54.03",
+        url: "https://developer.download.nvidia.com/compute/cuda/12.2.0/local_installers/cuda_12.2.0_535.54.03_linux.run",
+        checksum: "sha256:ecf3d2afadcbac029f0f4505785810d52d006e4b87ba79ff3f984336a2bbf518"
+      }
+      - {
+        version_number: "11.6.0_510.39.01",
+        url: "https://developer.download.nvidia.com/compute/cuda/11.6.0/local_installers/cuda_11.6.0_510.39.01_linux.run",
+        checksum: "md5:685ef40564b829eb8e6892563e9d8b80"
+      }
+      - {
+        version_number: "11.4.2_470.57.02",
+        url: "https://developer.download.nvidia.com/compute/cuda/11.4.2/local_installers/cuda_11.4.2_470.57.02_linux.run",
+        checksum: "sha256:bbd87ca0e913f837454a796367473513cddef555082e4d86ed9a38659cc81f0a"
+      }
+      - {
+        version_number: "11.0.2_450.51.05",
+        url: "http://developer.download.nvidia.com/compute/cuda/11.0.2/local_installers/cuda_11.0.2_450.51.05_linux.run",
+        checksum: "sha256:48247ada0e3f106051029ae8f70fbd0c238040f58b0880e55026374a959a69c1"
+      }
+      - {
+        version_number: "10.2.89_440.33.01",
+        url: "http://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run",
+        checksum: "md5:3d816c583759efa8567a92c1a2af90db",
+      }
+      - {
+        version_number: "10.1.243_418.87.00",
+        url: "http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_418.87.00_linux.run",
+        checksum: "md5:a71f703ed688eeca637dc27df714e854",
+      }
+      - {
+        version_number: "10.0.130_410.48",
+        url: "https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux",
+        checksum: "md5:9375304c8dc8d42e7f9a9ae37e80b42b",
+      }
+  include_tasks:
+    file: cuda.yaml
+  loop: "{{ cuda_versions }}"
+  tags:
+    - never
+    - cuda
+
+- name: Install PerlBrew
+  include_tasks:
+    file: perlbrew.yaml
+  tags:
+    - never
+    - perlbrew
+
+- name: Install Perl
+  vars:
+    perl_versions:
+      - {
+        version_number: "5.33.0",
+      }
+      - {
+        version_number: "5.24.4",
+      }
+    cpan_modules:
+      - CPAN::DistnameInfo
+      - inc::latest
+      - Log::Log4perl
+      - Spiffy
+      - Test::YAML
+      - Test::Deep
+      - YAML
+      - Archive::Zip
+      - DBD::MySQL
+      - DBI
+      - Module::Build
+      - CPAN::Meta
+      - DB_File
+      - XML::DOM::XPath
+      - JSON
+      - Set::IntervalTree
+      - Test::Pod
+      - Test::Pod::Coverage
+      - XML::DOM::XPath
+      - Bio::DB::BioFetch
+      - Bio::SeqFeature::Lite
+      - Bio::DB:HTS
+  include_tasks:
+    file: perl.yaml
+  loop: "{{ perl_versions }}"
+  tags:
+    - never
+    - perl
+
+- name: Install ruby
+  vars:
+    ruby_versions:
+      - {
+        version_number: "2.6.6",
+        url: "https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.6.tar.gz",
+        checksum: "sha256:364b143def360bac1b74eb56ed60b1a0dca6439b00157ae11ff77d5cd2e92291",
+      }
+  include_tasks:
+    file: ruby.yaml
+  loop: "{{ ruby_versions }}"
+  tags:
+    - never
+    - ruby
+
+- name: Install julia
+  vars:
+    julia_versions:
+      - {
+        full_version_number: "1.5.3",
+        major_minor_version_number: "1.5.3",
+        url: "https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.3-linux-x86_64.tar.gz",
+        checksum: "sha256:f190c938dd6fed97021953240523c9db448ec0a6760b574afd4e9924ab5615f1",
+      }
+  include_tasks:
+    file: julia.yaml
+  loop: "{{ julia_versions }}"
+  tags:
+    - never
+    - julia
+
+- name: Install HomeBrew and homebrew software
+  vars:
+    software_list:
+      - brewsci/bio/treepl
+      - brewsci/bio/vcflib
+  include_tasks:
+    file: homebrew.yaml
+  tags:
+    - never
+    - homebrew
+
+
+
+- name: Install dotnet
+  vars:
+    dotnet_versions:
+      - {
+        version_number: "5.0.301",
+        url: "https://download.visualstudio.microsoft.com/download/pr/e1c236ec-c392-4eaa-a846-c600c82bb7f6/b13bd8b69f875f87cf83fc6f5457bcdf/dotnet-sdk-5.0.301-linux-x64.tar.gz",
+        checksum: "sha512:81cd7a3550a262d5c907030677429fa9a1cb515071274931ab760bd8bb2a14f40c9384c8757e1c1aa681b1de22035f16bf20b41ed208becd054cc9bb1f620322",
+      }
+  include_tasks:
+    file: dotnet.yaml
+  loop: "{{ dotnet_versions }}"
+  tags:
+    - never
+    - dotnet
+
+- name: Install githubcli
+  vars:
+    githubcli_versions:
+      - {
+          version_number: "2.0.0",
+          url: "https://github.com/cli/cli/releases/download/v2.0.0/gh_2.0.0_linux_amd64.tar.gz",
+          checksum: "sha512:aadcb431d719f89dd8c6b5ee22f099b919a2f10fd24583fce2824d10032678fa1e194c9eb23843730c57336e108ba9f5dbf281422af7e554ff5a7c5d61e90723"
+      }
+  include_tasks:
+    file: githubcli.yaml
+  loop: "{{ githubcli_versions }}"
+  tags:
+    - never
+    - githubcli
+
+- name: Install graphviz
+  vars:
+    graphviz_versions:
+      - {
+          version_number: "2.49.1",
+          url: "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/2.49.1/graphviz-2.49.1.tar.gz",
+          checksum: "sha256:ba1aa7a209025cb3fc5aca1f2c0114e18ea3ad29c481d75e4d445ad44e0fb0f7"
+      }
+  include_tasks:
+    file: graphviz.yaml
+  loop: "{{ graphviz_versions }}"
+  tags:
+    - never
+    - graphviz
+
+- name: Install Pandoc
+  vars:
+    pandoc_versions:
+      - {
+        version_number: "2.18",
+        checksum: "sha256:103df36dc21081b7205d763ef7705e340eb0ea7e18694239b328a549892cc007",
+        url: "https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-linux-amd64.tar.gz",
+      }
+  include_tasks:
+    file: pandoc.yaml
+  loop: "{{ pandoc_versions }}"
+  tags:
+    - never
+    - pandoc
+
+- name: Install rclone
+  vars:
+    versions:
+      - {
+        version_number: "1.60.1",
+        checksum: "sha512:fabfe4913f25496c612f4b63a4ecbd5149c2a69eef2f12b0e916589dc7ef764c4722f7d114e1108687369b63b436606d54eb3b94622d215d885c7dcff0a12417",
+        url: "https://downloads.rclone.org/v1.60.1/rclone-v1.60.1-linux-amd64.zip",
+        creates: 'rclone-v1.60.1-linux-amd64'
+      }
+  include_tasks:
+    file: 'rclone.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - rclone
+
+- name: Install neovim
+  vars:
+    versions:
+      - {
+        version_number: "0.8.2",
+        checksum: "sha256:27aef92fba0d3f51ebb8b98f3689895f9bbe48f11b74920d89280bc58fbe8e28",
+        url: "https://github.com/neovim/neovim/releases/download/v0.8.2/nvim-linux64.tar.gz",
+      }
+  include_tasks:
+    file: 'neovim.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - neovim
+
+- name: Install Gnu Scientific Library (libgsl)
+  vars:
+    versions:
+      - {
+        version_number: "2.7.1",
+        checksum: "sha512:3300a748b63b583374701d5ae2a9db7349d0de51061a9f98e7c145b2f7de9710b3ad58b3318d0be2a9a287ace4cc5735bb9348cdf48075b98c1f6cc1029df131",
+        url: "https://mirror.ihost.md/gnu/gsl/gsl-2.7.1.tar.gz",
+      }
+  include_tasks:
+    file: 'gsl.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - gsl
+
+- name: Install NextFlow
+  vars:
+    java_module: "java/openjdk-18.0.2"
+    versions:
+      - {
+         version_number: "22.10.7",
+         url: "https://github.com/nextflow-io/nextflow/releases/download/v22.10.7/nextflow-22.10.7-all",
+         checksum: "sha512:478f215e233de41bb68b22c4dab58eaa7c574f8ec26f6b74b82e583928bbf0d3679972c1f4bc09fadc64deeac9e00615178581dd8c698d062d43e69dc56971c3"
+      }
+      - {
+        version_number: "23.04.4",
+        url: "https://github.com/nextflow-io/nextflow/releases/download/v23.04.4/nextflow-23.04.4-all",
+        checksum: "sha512:90712d34ddedc9fae5fe75bc78bb333b6b3da864a089489df380ee313fbf312dd28d3094bc2ac67472f9fafb854d2bba2ff8f8dbafc01b6ef176ad8ea469b4f3"
+      }
+  include_tasks:
+    file: 'nextflow.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - nextflow
+
+- name: Install rust
+  vars:
+    versions:
+      - {
+        version_number: "1.68.0",
+        url: "https://static.rust-lang.org/dist/rust-1.68.0-x86_64-unknown-linux-gnu.tar.gz",
+        checksum: "sha512:b696c6c00608433360e606f9697112c6ef5b7b35b870aa5ff759594a754035b0b4a1e69c42f7cc012f2121f7ae8ff22905555ddc3aa7bbb56fda62667ecde6ea"
+      }
+  include_tasks:
+    file: 'rust.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - rust
+
+- name: Install fzf
+  vars:
+    versions:
+      - {
+        version_number: "0.42.0",
+        url: "https://github.com/junegunn/fzf/releases/download/0.42.0/fzf-0.42.0-linux_amd64.tar.gz",
+        checksum: "sha256:e1c28b67b9199c329280598b4f344ac943dd3d31ee04f351d89084933a8efed7"
+      }
+  include_tasks:
+    file: 'fzf.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - fzf
+
+- name: Install cmake
+  vars:
+      versions:
+      - {
+        version_number: "3.27.0",
+        url: "https://github.com/Kitware/CMake/releases/download/v3.27.0/cmake-3.27.0-linux-x86_64.tar.gz",
+        checksum: "sha256:89c7e74d29f442e4734954310e09dd12d13636991f2d90d0ed1bececb8bf9b9c"
+      }
+  include_tasks:
+    file: 'cmake.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - cmake
+
+- name: Install Mamba
+  vars:
+    mamba_versions:
+      - {
+        version_number: "23.3.1-0",
+        url: "https://github.com/conda-forge/miniforge/releases/download/23.3.1-0/Mambaforge-23.3.1-0-Linux-x86_64.sh",
+        checksum: "sha512:45debde31bce3a124057148dba18143a6a83446556fb05d2910d54f5058767f1c2d1a1bb658d5fc7ef93606111c00af09497c569eb6d3629c654235cf3190fae"
+      }
+  include_tasks:
+    file: mamba.yaml
+  loop: "{{ mamba_versions }}"
+  tags:
+    - never
+    - mamba
+
+- name: Install LaTeX
+  vars:
+    versions:
+      - {
+          texlive_install_file: "texlive/install-tl-unx.2023.tar.gz",
+          texlive_profile: "texlive/texlive.profile.2023",
+          version_number: "20230927",
+          short_version: "2023",
+      }
+  include_tasks:
+    file: 'latex.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - latex
+
+- name: Install cromwell and womtool
+  vars:
+    versions:
+      - {
+          version_number: "86",
+          cromwell_url: "https://github.com/broadinstitute/cromwell/releases/download/86/cromwell-86.jar",
+          cromwell_checksum: "sha512:1024d3c4e3501529f6bae6a96cc112baa63007a44fbfd6133f85c5b52803580d28c55fcc4da34589c8678006ba3b3037673142e00dc2661902c0838e6ace2cf2",
+          womtool_url: "https://github.com/broadinstitute/cromwell/releases/download/86/womtool-86.jar",
+          womtool_checksum: "sha512:606a68edb74e91a380f8fdf1408f28802f6f4081d3f4ed2a80ffb5ff7cbb5b11d8a320e02be40eda3d349b41ff7307687c94a6189d5cf8471f3bd850a391a1f2",
+      }
+  include_tasks:
+    file: 'cromwell.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - cromwell
+
+- name: Install jemalloc
+  vars:
+    versions:
+      - {
+        version_number: "5.3.0",
+        url: "https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2",
+        checksum: "sha256:2db82d1e7119df3e71b7640219b6dfe84789bc0537983c3b7ac4f7189aecfeaa"
+      }
+  include_tasks:
+    file: 'jemalloc.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - jemalloc
+
+- name: Install Zstandard (zstd)
+  vars:
+    versions:
+      - {
+        version_number: "1.5.5",
+        url: "https://github.com/facebook/zstd/releases/download/v1.5.5/zstd-1.5.5.tar.gz",
+        checksum: "sha256:9c4396cc829cfae319a6e2615202e82aad41372073482fce286fac78646d3ee4"
+      }
+  include_tasks:
+    file: 'zstd.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - zstd
+
+- name: Install rustup
+  include_tasks:
+    file: 'rustup.yaml'
+  tags:
+    - never
+    - rustup
+
+
+
