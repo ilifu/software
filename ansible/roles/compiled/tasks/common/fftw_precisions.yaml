@@ -1,0 +1,42 @@
+- name: Install it
+  vars:
+    name: {{ precision.name }}
+    flags: "{{ precision.flags }} {{ common_flags }}"
+    install_dir: "{{ fftw_dir }}/{{ version_number }}-{{ name }}"
+  block:
+    - name: Check for Makefile
+      stat:
+          path: "{{ build_dir }}/Makefile"
+      register: makefile
+    - name: Clean if Makefile exists
+      make:
+          chdir: "{{ build_dir }}"
+          target: clean
+      when: makefile.stat.exists
+    - name: Run fftw {{ version_number }} configure
+      command: "../configure --prefix={{ install_dir }} {{flags }}"
+      args:
+        chdir: "{{ build_dir }}"
+        creates: "{{ build_dir }}/Makefile"
+    - name: Build fftw {{ version_number }}
+      make:
+        chdir: "{{ build_dir }}"
+      environment:
+        MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+    - name: Install fftw {{ version_number }}
+      make:
+        chdir: "{{ build_dir }}"
+        target: install
+
+
+    - name: Install fftw {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ fftw_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install fftw {{ version_number }} module file
+          template:
+            src: fftw.lua
+            dest: "{{ fftw_module_dir }}/{{ version_number }}-{{ name }}.lua"

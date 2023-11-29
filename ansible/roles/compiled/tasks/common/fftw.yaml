@@ -1,0 +1,38 @@
+- name: Install fftw
+  vars:
+    fftw_dir: "{{ common_dir }}/fftw"
+    fftw_module_dir: "{{ common_modules }}/fftw"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ fftw_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/fftw-{{ version_number }}"
+    build_dir: "{{ unzipdir }}/build"
+  tags:
+    - never
+    - fftw{{ item.version_number }}
+  block:
+    - name: Install fftw {{ version_number }}
+      block:
+        - name: Download, compile and install fftw {{ version_number }}
+          block:
+            - name: Download fftw {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ common_src }}/fftw-{{ version_number }}.tar.gz"
+                checksum: "{{ checksum }}"
+            - name: Unzip fftw {{ version_number }}
+              unarchive:
+                src: "{{ common_src }}/fftw-{{ version_number }}.tar.gz"
+                dest: "/dev/shm/"
+                creates: "{{ unzipdir }}"
+            - name: Make fftw {{ version_number }} build directory
+              file:
+                path: "{{ build_dir }}"
+                state: directory
+            - name: Build different precisions of fftw
+              include_tasks: "fftw_precisions.yaml"
+              loop: "{{ precisions }}"
+              loop_control:
+                loop_var: precision
+
