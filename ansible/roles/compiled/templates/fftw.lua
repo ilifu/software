@@ -4,7 +4,7 @@ This module configures fftw {{ version_number }}-{{ name }} for use
 ]])
 whatis("Version: {{ version_number }}")
 whatis("Keywords: fftw, {{ name }}")
-whatis("Description: fftw {{ version_number }} {{  }} precision")
+whatis("Description: fftw {{ version_number }} {{ name }} precision")
 
 prepend_path('PATH', "{{ install_dir }}/bin")
 prepend_path('LD_LIBRARY_PATH', "{{ install_dir }}/lib")

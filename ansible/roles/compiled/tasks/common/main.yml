@@ -976,10 +976,10 @@
         mpi_dir: "/opt/common/openmpi/4.1.5",
       }
     precisions:
-      - { name: "single", flags: "--enable-float --enable-shared --enable-threads --enable-omp --enable-mpi --enable-sse2 --enable-sse --enable-avx --enable-avx2" }
-      - { name: "double", flags: "--enable-shared --enable-threads --enable-omp --enable-mpi --enable-sse2 --enable-avx --enable-avx2" }
-      - { name: "long-double", flags: "--enable-long-double --enable-shared --enable-threads --enable-omp --enable-mpi --enable-sse2 --enable-avx --enable-avx2" }
-      - { name: "quad", flags: "--enable-quad-precision --enable-shared --enable-threads --enable-omp --enable-mpi --enable-sse2 --enable-avx --enable-avx2" }
+      - { name: "single", flags: "--enable-float --enable-shared --enable-threads --enable-openmp --enable-mpi --enable-sse2 --enable-sse --enable-avx --enable-avx2" }
+      - { name: "double", flags: "--enable-shared --enable-threads --enable-openmp --enable-mpi --enable-sse2 --enable-avx --enable-avx2" }
+      - { name: "long-double", flags: "--enable-long-double --enable-shared --enable-threads --enable-openmp --enable-mpi --enable-avx2" }
+      - { name: "quad", flags: "--enable-quad-precision --enable-shared --enable-threads --enable-openmp --enable-mpi --enable-avx --enable-avx2" }
   include_tasks:
     file: 'fftw.yaml'
   loop: "{{ versions }}"
