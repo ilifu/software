@@ -40,7 +40,7 @@
             path: "{{ fftw_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install fftw {{ version_number }} module file
+        - name: Install fftw {{ version_number }}-{{ name }} module file
           template:
             src: fftw.lua
             dest: "{{ fftw_module_dir }}/{{ version_number }}-{{ name }}.lua"
