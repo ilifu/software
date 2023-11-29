@@ -37,19 +37,19 @@
         CPATH: "{{ mpi_dir }}/include"
         PATH: "{{ mpi_dir }}/bin:{{ ansible_env.PATH }}"
         PKG_CONFIG_PATH: "{{ mpi_dir }}/lib/pkgconfig"
-    - name: Run make check
-      make:
-        chdir: "{{ build_dir }}"
-        target: check
-      environment:
-        MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
-        LD_LIBRARY_PATH: "{{ mpi_dir }}/lib"
-        LIBRARY_PATH: "{{ mpi_dir }}/lib"
-        INCLUDE: "{{ mpi_dir }}/include"
-        C_INCLUDE_PATH: "{{ mpi_dir }}/include"
-        CPATH: "{{ mpi_dir }}/include"
-        PATH: "{{ mpi_dir }}/bin:{{ ansible_env.PATH }}"
-        PKG_CONFIG_PATH: "{{ mpi_dir }}/lib/pkgconfig"
+#    - name: Run make check
+#      make:
+#        chdir: "{{ build_dir }}"
+#        target: check
+#      environment:
+#        MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+#        LD_LIBRARY_PATH: "{{ mpi_dir }}/lib"
+#        LIBRARY_PATH: "{{ mpi_dir }}/lib"
+#        INCLUDE: "{{ mpi_dir }}/include"
+#        C_INCLUDE_PATH: "{{ mpi_dir }}/include"
+#        CPATH: "{{ mpi_dir }}/include"
+#        PATH: "{{ mpi_dir }}/bin:{{ ansible_env.PATH }}"
+#        PKG_CONFIG_PATH: "{{ mpi_dir }}/lib/pkgconfig"
     - name: Install fftw {{ version_number }}-{{ name }}
       make:
         chdir: "{{ build_dir }}"

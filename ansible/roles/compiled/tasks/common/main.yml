@@ -963,11 +963,13 @@
 - name: Install fftw
   vars:
     versions:
-#      - {
-#        version_number: "3.3.8",
-#        url: "http://www.fftw.org/fftw-3.3.8.tar.gz",
-#        checksum: "sha256:6113262f6e92c5bd474f2875fa1b01054c4ad5040f6b0da7c03c98821d9ae303"
-#      }
+      - {
+        version_number: "3.3.8",
+        url: "http://www.fftw.org/fftw-3.3.8.tar.gz",
+        checksum: "sha256:6113262f6e92c5bd474f2875fa1b01054c4ad5040f6b0da7c03c98821d9ae303",
+        mpi_module: "openmpi/4.1.5",
+        mpi_dir: "/software/common/openmpi/4.1.5",
+      }
       - {
         version_number: "3.3.10",
         url: "http://www.fftw.org/fftw-3.3.10.tar.gz",
@@ -979,7 +981,7 @@
       - { name: "single", flags: "--enable-float --enable-shared --enable-threads --enable-openmp --enable-mpi --enable-sse2 --enable-sse --enable-avx --enable-avx2" }
       - { name: "double", flags: "--enable-shared --enable-threads --enable-openmp --enable-mpi --enable-sse2 --enable-avx --enable-avx2" }
       - { name: "long-double", flags: "--enable-long-double --enable-shared --enable-threads --enable-openmp --enable-mpi" }
-      - { name: "quad", flags: "--enable-quad-precision --enable-shared --enable-threads --enable-openmp" }
+#      - { name: "quad", flags: "--enable-quad-precision --enable-shared --enable-threads --enable-openmp" }
   include_tasks:
     file: 'fftw.yaml'
   loop: "{{ versions }}"
