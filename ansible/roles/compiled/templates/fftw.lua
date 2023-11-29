@@ -1,10 +1,10 @@
 -- -*- lua -*-
 help([[
-This module configures fftw {{ version_number }} for use
+This module configures fftw {{ version_number }}-{{ name }} for use
 ]])
 whatis("Version: {{ version_number }}")
-whatis("Keywords: fftw")
-whatis("Description: fftw {{ version_number }}")
+whatis("Keywords: fftw, {{ name }}")
+whatis("Description: fftw {{ version_number }} {{  }} precision")
 
 prepend_path('PATH', "{{ install_dir }}/bin")
 prepend_path('LD_LIBRARY_PATH', "{{ install_dir }}/lib")
