@@ -973,13 +973,13 @@
         url: "http://www.fftw.org/fftw-3.3.10.tar.gz",
         checksum: "sha256:56c932549852cddcfafdab3820b0200c7742675be92179e59e6215b340e26467",
         mpi_module: "openmpi/4.1.5",
-        mpi_dir: "/opt/common/openmpi/4.1.5",
+        mpi_dir: "/software/common/openmpi/4.1.5",
       }
     precisions:
       - { name: "single", flags: "--enable-float --enable-shared --enable-threads --enable-openmp --enable-mpi --enable-sse2 --enable-sse --enable-avx --enable-avx2" }
       - { name: "double", flags: "--enable-shared --enable-threads --enable-openmp --enable-mpi --enable-sse2 --enable-avx --enable-avx2" }
-      - { name: "long-double", flags: "--enable-long-double --enable-shared --enable-threads --enable-openmp --enable-mpi --enable-avx2" }
-      - { name: "quad", flags: "--enable-quad-precision --enable-shared --enable-threads --enable-openmp --enable-mpi --enable-avx --enable-avx2" }
+      - { name: "long-double", flags: "--enable-long-double --enable-shared --enable-threads --enable-openmp --enable-mpi" }
+      - { name: "quad", flags: "--enable-quad-precision --enable-shared --enable-threads --enable-openmp" }
   include_tasks:
     file: 'fftw.yaml'
   loop: "{{ versions }}"

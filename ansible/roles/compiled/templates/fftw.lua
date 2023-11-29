@@ -6,6 +6,10 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: fftw, {{ name }}")
 whatis("Description: fftw {{ version_number }} {{ name }} precision")
 
+{% if name != 'quad' %}
+load("{{ mpi_module }}")
+{% endif %}
+
 prepend_path('PATH', "{{ install_dir }}/bin")
 prepend_path('LD_LIBRARY_PATH', "{{ install_dir }}/lib")
 prepend_path('LIBRARY_PATH', "{{ install_dir }}/lib")

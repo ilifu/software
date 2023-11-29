@@ -8,6 +8,8 @@
     install_dir: "{{ fftw_dir }}/{{ version_number }}"
     unzipdir: "/dev/shm/fftw-{{ version_number }}"
     build_dir: "{{ unzipdir }}/build"
+    mpi_dir: "{{ item.mpi_dir }}"
+    mpi_module: "{{ item.mpi_module }}"
   tags:
     - never
     - fftw{{ item.version_number }}
