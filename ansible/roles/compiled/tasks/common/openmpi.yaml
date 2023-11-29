@@ -33,8 +33,15 @@
               file:
                 path: "{{ build_dir }}"
                 state: directory
-            - name: Run OpenMPI {{ version_number }} configure
-              command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity={{ singularity_dir }} --with-ucx={{ ucx_dir }} --with-cuda={{ cuda_root }} --with-pmi=/opt/slurm --with-pmi-libdir=/opt/slurm/lib"
+            - name: Run OpenMPI {{ version_number }} configure ( 4.1.4 and below )
+              when: item.version_number < "4.1.5"
+              command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity={{ singularity_dir }} --with-ucx={{ ucx_dir }} --with-cuda={{ cuda_root }} --with-pmix=/opt/slurm --with-pmi-libdir=/opt/slurm/lib"
+              args:
+                chdir: "{{ build_dir }}"
+                creates: "{{ build_dir }}/Makefile"
+            - name: Run OpenMPI {{ version_number }} configure ( 4.1.5 and above )
+              when: item.version_number >= "4.1.5"
+              command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity={{ singularity_dir }} --with-ucx={{ ucx_dir }} --with-cuda={{ cuda_root }} --with-pmix={{ item.pmix }} --with-pmix-libdir={{ item.pmix }}/lib"
               args:
                 chdir: "{{ build_dir }}"
                 creates: "{{ build_dir }}/Makefile"
