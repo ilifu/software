@@ -1,2 +1,17 @@
 ---
 # tasks file for compiled astro
+
+- name: Install calceph
+  vars:
+    versions:
+      - {
+        version_number: "2.3.2",
+        url: "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-2.3.2.tar.gz",
+        checksum: "sha256:047c41465605ce48859599136683241ce4b469614619d925d4967b1dd9013d26",
+      }
+  include_tasks:
+    file: 'calceph.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - calceph
