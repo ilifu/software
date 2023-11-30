@@ -82,6 +82,14 @@
         version_number: 3.9.0,
         checksum: "sha256:106087f1bb5f46afdfba7f569d0cbe23dacb9a07cd24733765a0e89dbe1ad573",
       }
+      - {
+       version_number: 3.10.1,
+       checksum: "sha256:cd005cd021f144d7d5f7f33c943942db9f03a28d110d6a3b80d718a295f7f714"
+      }
+      - {
+          version_number: 3.12.0,
+          checksum: "sha256:eac9570f8e0ad6f30ce4b963f4f033f0f643e7c3912fc9ee6cd99120675ad48b"
+      }
   include_tasks:
     file: lapack.yaml
   loop: "{{ lapack_versions }}"
