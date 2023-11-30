@@ -57,5 +57,3 @@
           template:
             src: astro/calceph.lua
             dest: "{{ calceph_module_dir }}/{{ version_number }}.lua"
-
-
