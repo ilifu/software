@@ -1,4 +1,9 @@
 - name: Install calceph
+  environment:
+    MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+    FFLAGS: "-fallow-argument-mismatch"
+    CC: "gcc-10"
+    FC: "gfortran-10"
   vars:
     calceph_dir: "{{ astro_dir }}/calceph"
     calceph_module_dir: "{{ astro_modules }}/calceph"
@@ -32,14 +37,9 @@
       args:
         chdir: "{{ build_dir }}"
         creates: "{{ build_dir }}/Makefile"
-      environment:
-        FFLAGS: "-fallow-argument-mismatch"
     - name: Build calceph {{ version_number }}
       make:
         chdir: "{{ build_dir }}"
-      environment:
-        MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
-        FFLAGS: "-fallow-argument-mismatch"
 
     - name: Install calceph {{ version_number }}
       make:
