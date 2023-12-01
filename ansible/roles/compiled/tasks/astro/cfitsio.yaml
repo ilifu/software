@@ -6,7 +6,7 @@
     version_number: "{{ item.version_number }}"
     checksum: "{{ item.checksum }}"
     install_dir: "{{ cfitsio_dir }}/{{ version_number }}"
-    unzipdir: "/dev/shm/cfitsio{% if '3.' not in version_number %}-{{ version_number }}{% endif %}"
+    unzipdir: "/dev/shm/cfitsio{% if not version_number.startswith('3.') %}-{{ version_number }}{% endif %}"
   tags:
     - never
     - cfitsio{{ item.version_number }}
