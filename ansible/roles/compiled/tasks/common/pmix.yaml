@@ -1,0 +1,60 @@
+- name: Install pmix
+  vars:
+    pmix_dir: "{{ common_dir }}/pmix"
+    pmix_module_dir: "{{ common_modules }}/pmix"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ pmix_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/pmix-{{ version_number }}"
+    build_dir: "{{ unzipdir }}/build"
+    hwloc: "{{ item.hwloc }}"
+  tags:
+    - never
+    - pmix{{ item.version_number }}
+  block:
+    - name: Install pmix {{ version_number }}
+      block:
+        - name: Download, compile and install pmix {{ version_number }}
+          block:
+            - name: Download pmix {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ common_src }}/pmix-{{ version_number }}.tar.gz"
+                checksum: "{{ checksum }}"
+            - name: Unzip pmix {{ version_number }}
+              unarchive:
+                src: "{{ common_src }}/pmix-{{ version_number }}.tar.gz"
+                dest: "/dev/shm/"
+                creates: "{{ unzipdir }}"
+            - name: Make pmix {{ version_number }} build directory
+              file:
+                path: "{{ build_dir }}"
+                state: directory
+            - name: Run pmix {{ version_number }} configure
+              command: "../configure --prefix={{ install_dir }} --enable-static --with-slurm --with-hwloc={{ hwloc }}"
+              args:
+                chdir: "{{ build_dir }}"
+                creates: "{{ build_dir }}/Makefile"
+            - name: Build pmix {{ version_number }}
+              make:
+                chdir: "{{ build_dir }}"
+              environment:
+                MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+            - name: Install pmix {{ version_number }}
+              make:
+                chdir: "{{ build_dir }}"
+                target: install
+
+
+    - name: Install pmix {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ pmix_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install pmix {{ version_number }} module file
+          template:
+            src: pmix.lua
+            dest: "{{ pmix_module_dir }}/{{ version_number }}.lua"

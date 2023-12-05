@@ -1,2 +1,37 @@
 ---
 # tasks file for compiled astro
+
+- name: Install calceph
+  vars:
+    versions:
+      - {
+        version_number: "2.3.2",
+        url: "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-2.3.2.tar.gz",
+        checksum: "sha256:047c41465605ce48859599136683241ce4b469614619d925d4967b1dd9013d26",
+      }
+  include_tasks:
+    file: 'calceph.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - calceph
+
+- name: Install cfitsio
+  vars:
+    versions:
+      - {
+        version_number: "3.450",
+        url: "https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio3450.tar.gz",
+        checksum: "sha256:bf6012dbe668ecb22c399c4b7b2814557ee282c74a7d5dc704eb17c30d9fb92e"
+      }
+      - {
+        version_number: "4.3.1",
+        url: "https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-4.3.1.tar.gz",
+        checksum: "sha256:47a7c8ee05687be1e1d8eeeb94fb88f060fbf3cd8a4df52ccb88d5eb0f5062be"
+      }
+  include_tasks:
+    file: 'cfitsio.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - cfitsio
