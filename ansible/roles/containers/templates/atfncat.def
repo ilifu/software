@@ -1,0 +1,118 @@
+Bootstrap: localimage
+From:  {{ base_container_image }}
+
+%labels
+  Maintainer Tinus Cloete
+
+%help
+  atfncat container
+  Test Command: psrcat -db_file /software/psrcat/psrcat.db -c "name p0 dm" 0437-4715
+
+%environment
+  export PATH=/software/psrcat:${PATH}
+  export PSRCAT_FILE=/software/psrcat/psrcat.db
+
+%files
+  # pass
+
+%post
+  # Create Installation Directories and export paths. This is needed as part of post.
+  # %environment scriptlet does not define these paths during %post, only after.
+  mkdir -p /software
+  export SOFTWARE_PATH=/software
+  export DEBIAN_FRONTEND=noninteractive
+
+  # Update apt
+  apt-get update
+  apt-get update -y && apt-get dist-upgrade -y
+
+
+  # Install dependencies
+  apt-add-repository universe
+
+  apt-get install software-properties-common -y
+
+  apt-get install -y libc6-dev libmpfr6 libmpc3 libitm1 libatomic1 libtsan0 libquadmath0  
+  apt-get install -y binutils binutils-common binutils-x86-64-linux-gnu libbinutils libctf-nobfd0 libctf0
+
+  # Install utilities
+  apt-get install wget -y
+
+  # Download gcc 4.8 
+  mkdir -p /opt/gcc4.8 && 
+  cd /opt/gcc4.8 &&
+  wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/g++-4.8_4.8.5-4ubuntu8_amd64.deb &&
+  wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/libstdc++-4.8-dev_4.8.5-4ubuntu8_amd64.deb && 
+  wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/gcc-4.8-base_4.8.5-4ubuntu8_amd64.deb &&
+  wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/gcc-4.8_4.8.5-4ubuntu8_amd64.deb &&
+  wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/libgcc-4.8-dev_4.8.5-4ubuntu8_amd64.deb && 
+  wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/cpp-4.8_4.8.5-4ubuntu8_amd64.deb &&
+  wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/libasan0_4.8.5-4ubuntu8_amd64.deb
+   
+  # Install gcc4.8 dependencies
+  cd /opt/gcc4.8 &&
+  dpkg -i ./gcc-4.8_4.8.5-4ubuntu8_amd64.deb ./gcc-4.8-base_4.8.5-4ubuntu8_amd64.deb ./libstdc++-4.8-dev_4.8.5-4ubuntu8_amd64.deb ./cpp-4.8_4.8.5-4ubuntu8_amd64.deb ./libgcc-4.8-dev_4.8.5-4ubuntu8_amd64.deb ./libasan0_4.8.5-4ubuntu8_amd64.deb ./g++-4.8_4.8.5-4ubuntu8_amd64.deb
+
+  # Fix missing packages after gcc4.8 install
+  apt-get install -f -y
+
+  # Check gcc
+  gcc-4.8 -v
+
+  # Download psrcat installation script from ATFN 
+  cd /software &&
+  wget "https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz" &&
+  tar xvf psrcat_pkg.tar.gz &&
+  mv psrcat_tar psrcat
+
+  # # Compile psrcat (not working)
+  # cd /software/psrcat
+  # sed -i "s/gcc /gcc-4.8 /g" makeit
+  # cat makeit
+  # . makeit
+
+  # --------------------------------------------------
+  # Compile psrcat script
+  # (copied from psrcat/makeit file but with gcc-4.8)
+  # --------------------------------------------------
+
+  cd /software/psrcat
+
+  # Cleanup
+  rm -f *.o
+  rm -f libpsrcat.a
+
+  # Compile with gcc-4.8
+  /usr/bin/gcc-4.8 -Wno-implicit-function-declaration -c defineParams.c evalkern.c externalCall.c galcoord_equatorial.c plotParams.c readCatalogue.c displayOutput.c evalwrap.c galcoord_ecliptic.c parseParameters.c wc_strncmp.c
+
+  # Create static libraries
+  ar crv libpsrcat.a defineParams.o evalkern.o externalCall.o galcoord_equatorial.o plotParams.o readCatalogue.o displayOutput.o evalwrap.o galcoord_ecliptic.o parseParameters.o wc_strncmp.o 
+  ranlib libpsrcat.a
+
+  # Compile psrcat
+  /usr/bin/gcc-4.8 -o psrcat psrcat.c -L./ -lpsrcat -lm
+
+  # Clean up psrcat folder 
+  rm -f *.c *.h *.o *.a
+
+  # --------------------------------------------------
+
+  # Create /users to bind home directories into the container.
+  mkdir -p \
+    /carta_share \
+    /cbio \
+    /cchem \
+    /data \
+    /idia \
+    /ilifu \
+    /scratch \
+    /scratch3 \
+    /software \
+    /users \
+
+  # Cleanup the container
+  apt-get clean
+  apt-get autoclean
+
+%test
+  # pass
