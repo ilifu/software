@@ -283,15 +283,15 @@
 - name: Create atfncat container
   vars:
     base_container_name: ubuntu-focal
-  #   versions:
-  #     - {
-  #       version_number : "1.7.1",
-  #       psrcat_url: "https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz",
-  #       psrcat_checksum: "sha256:a3c32d2628684ce64af63fceb2a07b3e492049a144365b36a2b2f8262e305de5"
-  #     }
+    versions:
+      - {
+        psrcat_version_number : "1.7.1",
+        psrcat_url: "https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz",
+        psrcat_checksum_sha256: "042fe9114a2dc81a919daf7b3c4aad7edc36badcaba98c1bf910bdc9a72205a0"
+      }
   include_tasks:
     file: atfncat.yaml
-  # loop: "{{ versions }}"
+  loop: "{{ versions }}"
   tags:
     - never
     - atfncat

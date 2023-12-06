@@ -1,5 +1,8 @@
 - name: Create atfncat container
   vars:
+    psrcat_url: "{{ item.psrcat_url }}"
+    psrcat_version_number: "{{ item.psrcat_version_number }}"
+    psrcat_checksum: "{{ item.psrcat_checksum_sha256 }}"
     base_container_image : "{{ common_container_dir }}/{{ base_container_name }}.sif"
     container_name: "atfncat"
     container_recipe: "{{ astro_container_recipe_dir }}/{{ container_name }}.def"
@@ -26,7 +29,7 @@
           src: "atfncat.def"
           dest: "{{ container_recipe }}"
       - name: Build singularity container
-        command: "{{ singularity }} build {{ container_image }} {{ common_container_recipe_dir }}/{{ container_name }}.def"
+        command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
         args:
             creates: "{{ container_image }}"
         become: true
@@ -53,4 +56,4 @@
       - name: Install atfncat module file
         template:
           src: atfncat.lua
-          dest: "{{ atfncat_module_dir }}/default.lua"
+          dest: "{{ atfncat_module_dir }}/{{ psrcat_version_number}}.lua"
