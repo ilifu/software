@@ -2,10 +2,10 @@
   vars:
     base_container_image : "{{ common_container_dir }}/{{ base_container_name }}.sif"
     container_name: "atfncat"
-    container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
-    container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
-    atfncat_module_dir: "{{ common_modules }}/atfncat"
-    atfncat_binary_dir: "{{ common_container_dir }}/atfncat"
+    container_recipe: "{{ astro_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ astro_container_dir }}/{{ container_name }}.sif"
+    atfncat_module_dir: "{{ astro_modules }}/atfncat"
+    atfncat_binary_dir: "{{ astro_container_dir }}/atfncat"
   tags:
     - "atfncat"
     - never
