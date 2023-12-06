@@ -65,8 +65,22 @@
   vars:
     openblas_versions:
       - {
-        version_number: 0.3.9,
-        checksum: "sha256:17d4677264dfbc4433e97076220adc79b050e4f8a083ea3f853a53af253bc380",
+        version_number: "0.3.9",
+        url: "https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.9/OpenBLAS-0.3.9.tar.gz",
+        checksum: "md5:28cc19a6acbf636f5aab5f10b9a0dfe1",
+        TARGET: "TARGET=SKYLAKEX",
+      }
+      - {
+        version_number: "0.3.20",
+        url: "https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.20/OpenBLAS-0.3.20.tar.gz",
+        checksum: "md5:abfaa43d995046ca4c56ccf14165c93c",
+        TARGET: "TARGET=SKYLAKEX",
+      }
+      - {
+        version_number: "0.3.25",
+        url: "https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.25/OpenBLAS-0.3.25.tar.gz",
+        checksum: "md5:48384e324cd1cdcfbdb0d2e16ca55327",
+        TARGET: "",
       }
   include_tasks:
     file: openblas.yaml
@@ -81,6 +95,14 @@
       - {
         version_number: 3.9.0,
         checksum: "sha256:106087f1bb5f46afdfba7f569d0cbe23dacb9a07cd24733765a0e89dbe1ad573",
+      }
+      - {
+       version_number: 3.10.1,
+       checksum: "sha256:cd005cd021f144d7d5f7f33c943942db9f03a28d110d6a3b80d718a295f7f714"
+      }
+      - {
+          version_number: 3.12.0,
+          checksum: "sha256:eac9570f8e0ad6f30ce4b963f4f033f0f643e7c3912fc9ee6cd99120675ad48b"
       }
   include_tasks:
     file: lapack.yaml
@@ -143,12 +165,32 @@
         version_number: "1.13.0",
         cuda_root: "/software/common/cuda/11.6.0_510.39.01",
       }
+      - {
+        version_number: "1.15.0",
+        cuda_root: "/software/common/cuda/12.2.0_535.54.03",
+      }
   include_tasks:
     file: ucx.yaml
   loop: "{{ ucx_versions }}"
   tags:
     - never
     - ucx
+
+- name: Install PMIx
+  vars:
+    versions:
+      - {
+        version_number: "4.1.1",
+        url: "https://github.com/openpmix/openpmix/releases/download/v4.1.1/pmix-4.1.1.tar.gz",
+        checksum: "sha1:eafc9a349a9dc184a15236320f600b238622029a",
+        hwloc: "/software/common/hwloc/2.9.3"
+      }
+  include_tasks:
+    file: pmix.yaml
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - pmix
 
 
 - name: Install openmpis
@@ -158,9 +200,10 @@
         version_number: "4.1.5",
         checksum: "sha256:a640986bc257389dd379886fdae6264c8cfa56bc98b71ce3ae3dfbd8ce61dbe3",
         url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.5.tar.bz2",
-        ucx_version: "1.13.0",
+        ucx_version: "1.15.0",
         singularity_version: "3.11.3",
         cuda_root: "/software/common/cuda/12.2.0_535.54.03",
+        pmix: "/software/common/pmix/4.1.1",
       }
       - {
         version_number: "4.1.4",
@@ -237,6 +280,11 @@
         version_number: "1.11.13",
         url: "https://download.open-mpi.org/release/hwloc/v1.11/hwloc-1.11.13.tar.gz",
         checksum: "sha1:e3384557e6b4aca110209f8cb45a8f604e993d53",
+      }
+      - {
+          version_number: "2.9.3",
+          url: "https://download.open-mpi.org/release/hwloc/v2.9/hwloc-2.9.3.tar.gz",
+          checksum: "sha256:5985db3a30bbe51234c2cd26ebe4ae9b4c3352ab788b1a464c40c0483bf4de59"
       }
   include_tasks:
     file: hwloc.yaml
@@ -934,5 +982,31 @@
     - never
     - rustup
 
-
-
+- name: Install fftw
+  vars:
+    versions:
+      - {
+        version_number: "3.3.8",
+        url: "http://www.fftw.org/fftw-3.3.8.tar.gz",
+        checksum: "sha256:6113262f6e92c5bd474f2875fa1b01054c4ad5040f6b0da7c03c98821d9ae303",
+        mpi_module: "openmpi/4.1.5",
+        mpi_dir: "/software/common/openmpi/4.1.5",
+      }
+      - {
+        version_number: "3.3.10",
+        url: "http://www.fftw.org/fftw-3.3.10.tar.gz",
+        checksum: "sha256:56c932549852cddcfafdab3820b0200c7742675be92179e59e6215b340e26467",
+        mpi_module: "openmpi/4.1.5",
+        mpi_dir: "/software/common/openmpi/4.1.5",
+      }
+    precisions:
+      - { name: "single", flags: "--enable-float --enable-shared --enable-threads --enable-openmp --enable-mpi --enable-sse2 --enable-sse --enable-avx --enable-avx2" }
+      - { name: "double", flags: "--enable-shared --enable-threads --enable-openmp --enable-mpi --enable-sse2 --enable-avx --enable-avx2" }
+      - { name: "long-double", flags: "--enable-long-double --enable-shared --enable-threads --enable-openmp --enable-mpi" }
+#      - { name: "quad", flags: "--enable-quad-precision --enable-shared --enable-threads --enable-openmp" }
+  include_tasks:
+    file: 'fftw.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - fftw

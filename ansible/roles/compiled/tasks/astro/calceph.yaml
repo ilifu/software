@@ -1,0 +1,59 @@
+- name: Install calceph
+  environment:
+    MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+    FFLAGS: "-fallow-argument-mismatch"
+    CC: "gcc-10"
+    FC: "gfortran-10"
+  vars:
+    calceph_dir: "{{ astro_dir }}/calceph"
+    calceph_module_dir: "{{ astro_modules }}/calceph"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ calceph_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/calceph-{{ version_number }}"
+    build_dir: "{{ unzipdir }}/build"
+  tags:
+    - never
+    - calceph{{ item.version_number }}
+  block:
+    - name: Download calceph {{ version_number }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ astro_src }}/calceph-{{ version_number }}.tar.gz"
+        checksum: "{{ checksum }}"
+    - name: Unzip calceph {{ version_number }}
+      unarchive:
+        src: "{{ astro_src }}/calceph-{{ version_number }}.tar.gz"
+        dest: "/dev/shm/"
+        creates: "{{ unzipdir }}"
+    - name: Make calceph {{ version_number }} build directory
+      file:
+        path: "{{ build_dir }}"
+        state: directory
+
+    - name: Run calceph {{ version_number }} configure
+      command: "../configure --prefix={{ install_dir }}"
+      args:
+        chdir: "{{ build_dir }}"
+        creates: "{{ build_dir }}/Makefile"
+    - name: Build calceph {{ version_number }}
+      make:
+        chdir: "{{ build_dir }}"
+
+    - name: Install calceph {{ version_number }}
+      make:
+        chdir: "{{ build_dir }}"
+        target: install
+
+    - name: Install calceph {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ calceph_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install calceph {{ version_number }} module file
+          template:
+            src: astro/calceph.lua
+            dest: "{{ calceph_module_dir }}/{{ version_number }}.lua"
