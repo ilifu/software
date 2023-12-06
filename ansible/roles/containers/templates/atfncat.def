@@ -6,11 +6,11 @@ From:  {{ base_container_image }}
 
 %help
   atfncat container
-  Test Command: psrcat -db_file /software/psrcat/psrcat.db -c "name p0 dm" 0437-4715
+  Test Command: psrcat -db_file /opt/psrcat/psrcat.db -c "name p0 dm" 0437-4715
 
 %environment
-  export PATH=/software/psrcat:${PATH}
-  export PSRCAT_FILE=/software/psrcat/psrcat.db
+  export PATH=/opt/psrcat:${PATH}
+  export PSRCAT_FILE=/opt/psrcat/psrcat.db
 
 %files
   # pass
@@ -21,6 +21,9 @@ From:  {{ base_container_image }}
   mkdir -p /software
   export SOFTWARE_PATH=/software
   export DEBIAN_FRONTEND=noninteractive
+
+  # reduce teh
+  dpkg-reconfigure debconf -f noninteractive -p critical
 
   # Update apt
   apt-get update
@@ -49,22 +52,26 @@ From:  {{ base_container_image }}
   wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/cpp-4.8_4.8.5-4ubuntu8_amd64.deb &&
   wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/libasan0_4.8.5-4ubuntu8_amd64.deb
 
-  # Install gcc4.8 dependencies
+  # Install gcc4.8 dependencies ( with stdout redirected)
   cd /opt/gcc4.8 &&
-  dpkg -i ./gcc-4.8_4.8.5-4ubuntu8_amd64.deb ./gcc-4.8-base_4.8.5-4ubuntu8_amd64.deb ./libstdc++-4.8-dev_4.8.5-4ubuntu8_amd64.deb ./cpp-4.8_4.8.5-4ubuntu8_amd64.deb ./libgcc-4.8-dev_4.8.5-4ubuntu8_amd64.deb ./libasan0_4.8.5-4ubuntu8_amd64.deb ./g++-4.8_4.8.5-4ubuntu8_amd64.deb
+  dpkg -i ./gcc-4.8_4.8.5-4ubuntu8_amd64.deb ./gcc-4.8-base_4.8.5-4ubuntu8_amd64.deb \
+    ./libstdc++-4.8-dev_4.8.5-4ubuntu8_amd64.deb ./cpp-4.8_4.8.5-4ubuntu8_amd64.deb \
+    ./libgcc-4.8-dev_4.8.5-4ubuntu8_amd64.deb ./libasan0_4.8.5-4ubuntu8_amd64.deb \
+    ./g++-4.8_4.8.5-4ubuntu8_amd64.deb \
+    1>/dev/null
 
   # Fix missing packages after gcc4.8 install
   apt-get install -qq -f -y
 
-  #  Cleanup gcc downloads
+  # Cleanup gcc downloads
   rm -rf /opt/gcc4.8
 
   # Download psrcat installation script from ATFN
-  cd /software &&
-  wget "{{ psrcat_url }}"
+  cd /opt &&
+  wget "{{ url }}"
 
   # Get psrcat checksum.
-  checksum="{{ psrcat_checksum }}"
+  checksum="{{ checksum }}"
 
   # Check psrcat checksum
   if echo "$checksum psrcat_pkg.tar.gz" | sha256sum --check --status ; then
@@ -76,7 +83,10 @@ From:  {{ base_container_image }}
 
   # Extract psrcat
   tar xvf psrcat_pkg.tar.gz &&
-  mv psrcat_tar psrcat
+  mv psrcat_tar psrcat 
+  
+  # Cleanup download 
+  rm -f psrcat_pkg.tar.gz
 
   # # Compile psrcat (not working)
   # cd /software/psrcat
@@ -89,7 +99,7 @@ From:  {{ base_container_image }}
   # (copied from psrcat/makeit file but with gcc-4.8)
   # --------------------------------------------------
 
-  cd /software/psrcat
+  cd /opt/psrcat
 
   # Cleanup
   rm -f *.o

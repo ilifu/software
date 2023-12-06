@@ -1,3 +1,3 @@
 #!/bin/bash
 
-singularity exec {{ container_image }} /software/psrcat/psrcat "$@"
+exec singularity exec --bind /software:/software {{ container_image }} /opt/psrcat/psrcat "$@"
