@@ -1,0 +1,59 @@
+- name: Create atfncat container
+  vars:
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum_sha256 }}"
+    base_container_image : "{{ common_container_dir }}/{{ base_container_name }}.sif"
+    container_name: "atfncat"
+    container_recipe: "{{ astro_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ astro_container_dir }}/{{ container_name }}.sif"
+    atfncat_module_dir: "{{ astro_modules }}/atfncat"
+    atfncat_binary_dir: "{{ astro_container_dir }}/atfncat"
+  tags:
+    - "atfncat"
+    - never
+  block:
+  - name: "Check for existence of {{ base_container_image }} container"
+    stat:
+      path: "{{ base_container_image }}"
+    register: base_container_exists
+  - name: "Missing {{ base_container_image }}"
+    fail:
+      msg: "The container {{ base_container_image }} is missing."
+    when: not base_container_exists.stat.exists
+  - name: Create atfncat container
+    when: base_container_exists.stat.exists
+    block:
+      - name: Copy atfncat recipe  {{ container_recipe }}
+        template:
+          src: "atfncat.def"
+          dest: "{{ container_recipe }}"
+      - name: Build singularity container
+        command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+        args:
+            creates: "{{ container_image }}"
+        become: true
+        environment:
+            SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"
+      - name: Ensure atfncat binary directory exists
+        file:
+          path: "{{ atfncat_binary_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Create atfncat binary
+        template:
+          src: "atfncat.sh"
+          dest: "{{ atfncat_binary_dir }}/psrcat"
+          mode: 0755
+
+  - name: Install {{ container_name }} module
+    block:
+      - name: Check module dir
+        file:
+          path: "{{ atfncat_module_dir }}"
+          state: directory
+          mode: u=rwx,g=rwx,o=rx
+      - name: Install atfncat module file
+        template:
+          src: atfncat.lua
+          dest: "{{ atfncat_module_dir }}/{{ version_number }}.lua"

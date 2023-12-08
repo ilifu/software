@@ -279,3 +279,19 @@
   tags:
     - never
     - pggb
+
+- name: Create atfncat container
+  vars:
+    base_container_name: ubuntu-focal
+    versions:
+      - {
+        version_number : "1.7.1",
+        url: "https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz",
+        checksum_sha256: "042fe9114a2dc81a919daf7b3c4aad7edc36badcaba98c1bf910bdc9a72205a0"
+      }
+  include_tasks:
+    file: atfncat.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - atfncat
