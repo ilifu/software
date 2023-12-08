@@ -807,7 +807,12 @@
       - {
         version_number: "0.8.2",
         checksum: "sha256:27aef92fba0d3f51ebb8b98f3689895f9bbe48f11b74920d89280bc58fbe8e28",
-        url: "https://github.com/neovim/neovim/releases/download/v0.8.2/nvim-linux64.tar.gz",
+        url: "https://github.com/neovim/neovim/releases/download/v0.8.2/nvim-linux64.tar.gz"
+      }
+      - {
+        version_number: "0.9.4",
+        checksum: "sha256:dbf4eae83647ca5c3ce1cd86939542a7b6ae49cd78884f3b4236f4f248e5d447",
+        url: "https://github.com/neovim/neovim/releases/download/v0.9.4/nvim-linux64.tar.gz"
       }
   include_tasks:
     file: 'neovim.yaml'
