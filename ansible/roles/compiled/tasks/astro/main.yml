@@ -37,12 +37,13 @@
       - cfitsio
 
 - name: Install psrxml
-  versions:
-      - {
-        version_number: "1.05",
-        url: "https://github.com/SixByNine/psrxml/archive/refs/heads/master.zip",
-        checksum: "sha256:cdfdf15f3f40c5532a63cf942ea965fbecf39ab4e5cea738caae9a36a53c9e5b"
-      }
+  vars:
+    versions:
+        - {
+          version_number: "1.05",
+          url: "https://github.com/SixByNine/psrxml/archive/refs/heads/master.zip",
+          checksum: "sha256:cdfdf15f3f40c5532a63cf942ea965fbecf39ab4e5cea738caae9a36a53c9e5b"
+        }
   include_tasks:
     file: 'psrxml.yaml'
   loop: "{{ versions}}"

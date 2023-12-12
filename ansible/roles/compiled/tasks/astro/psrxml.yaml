@@ -6,7 +6,7 @@
     version_number: "{{ item.version_number }}"
     checksum: "{{ item.checksum }}"
     install_dir: "{{ psrxml_dir }}/{{ version_number }}"
-    unzipdir: "/dev/shm/psrxml"
+    unzipdir: "/dev/shm/psrxml-master"
   tags:
     - never
     - psrxml{{ item.version_number }}
@@ -23,37 +23,28 @@
         creates: "{{ unzipdir }}"
 
     - name: Run psrxml {{ version_number }} bootstrapping
-      command: "./autoreconf --install --verbose --force"
+      command: "autoreconf --install --verbose --force"
       args:
         chdir: "{{ unzipdir }}"
-
     - name: Run psrxml {{ version_number }} configure
       command: "./configure --prefix={{ install_dir }}"
       args:
         chdir: "{{ unzipdir }}"
-
     - name: Build psrxml {{ version_number }}
       make:
         chdir: "{{ unzipdir }}"
       environment:
         MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
-
     - name: Cleanup psrxml {{ version_number }} build directory
       make:
         chdir: "{{ unzipdir }}"
         target: clean
       environment:
         MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
-
     - name: Install psrxml {{ version_number }}
       make:
         chdir: "{{ unzipdir }}"
         target: install
-
-    - name: Cleanup of psrxml {{ version_number }}
-      make:
-        chdir: "{{ unzipdir }}"
-        target: clean
 
     - name: Install psrxml {{ version_number }} module
       block:
