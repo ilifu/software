@@ -1,17 +1,12 @@
 - name: Install sigproc
-  # environment:
-  #     MAKEFLAGS: "-j {{  ansible_processor_vcpus }}" # todo
-  #     FFLAGS: "-fallow-argument-mismatch"  # todo
-  #     CC: "gcc-10" # check
-  #     FC: "gfortran-10" # check
   vars:
     sigproc_dir: "{{ astro_dir }}/sigproc"
     sigproc_module_dir: "{{ astro_modules }}/sigproc"
     url: "{{ item.url }}"
     version_number: "{{ item.version_number }}"
     checksum: "{{ item.checksum }}"
-    fftw_dir: "{{item.fftw_dir}}",
-    psrxml_dir: "{{item.psrxml_dir}}"
+    fftw_dir: "{{ item.fftw_dir }}"
+    psrxml_dir: "{{ item.psrxml_dir }}"
     install_dir: "{{ sigproc_dir }}/{{ version_number }}"
     unzipdir: "/dev/shm/sigproc-master"
   tags:
@@ -29,34 +24,55 @@
       command: "./bootstrap"
       args:
         chdir: "{{ unzipdir }}"
+
     - name: Setup compiler flags and small fixes
       command: 'sed -i "s/default(none)//" src/inject_pulsar.c'
       args: 
         chdir: "{{unzipdir}}"      
 
     - name: Run sigproc {{ version_number }} configure
-      command: "./configure --prefix={{ install_dir }} --with-psrxml-dir={{psrxml_dir}} --with-fftw-dir={{fftw_dir}}"
+      command: "./configure --prefix={{ install_dir }} --with-psrxml-dir={{ psrxml_dir }} --with-fftw-dir={{ fftw_dir }}"
       args:        
         chdir: "{{ unzipdir }}"
       environment: 
         CFLAGS: "-I{{ fftw_dir }}/include -fallow-argument-mismatch -fcommon"
         FFLAGS: "-I{{ fftw_dir }}/include -fcommon"
 
+    # WARNINGS:
+    # TODO: LOAD MOST OF THESE SOFTWARE
+    # "configure: WARNING: The PSRFITS code will not be compiled",
+    # "configure: WARNING: PGPLOT code will not be compiled",
+    # "configure: WARNING: Please set the PGPLOT_DIR environment variable",
+    # "configure: WARNING: TEMPO2 code will not be compiled",
+    # "configure: WARNING: Please set the TEMPO2 environment variable",
+    # "configure: WARNING: FFTW code will not be compiled",
+    # "configure: WARNING: FFTW multi-threaded code will not be compiled",
+    # "configure: WARNING: \"No FFTW3 found... you will have to use the slower 'singleton' FFT. Specify location with --with-fftw-dir\"",
+    # "configure: WARNING: \"No TEMPO2 found... Cannot build software that depends on T2toolkit or tempo2\"" 
+
+    - name: Cleanup sigproc {{ version_number }} before build
+      make:
+        target: clean
+      args: 
+        chdir: "{{ unzipdir }}"
+
     - name: Build sigproc {{ version_number }}
       make:
         chdir: "{{ unzipdir }}"
       environment:
         MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
-    - name: Cleanup sigproc {{ version_number }} build directory
+
+    - name: Cleanup sigproc {{ version_number }} after build
       make:
-        chdir: "{{ unzipdir }}"
         target: clean
-      environment:
-        MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+      args: 
+        chdir: "{{ unzipdir }}"
+
     - name: Install sigproc {{ version_number }}
       make:
-        chdir: "{{ unzipdir }}"
         target: install
+      args:
+        chdir: "{{ unzipdir }}"
 
     - name: Install sigproc {{ version_number }} module
       block:
@@ -68,4 +84,4 @@
         - name: Install sigproc {{ version_number }} module file
           template:
             src: astro/sigproc.lua
-            dest: "{{ sigproc_module_dir }}/default.lua"
+            dest: "{{ sigproc_module_dir }}/{{ version_number }}.lua"
