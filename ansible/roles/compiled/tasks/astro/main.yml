@@ -50,3 +50,28 @@
   tags:
       - never
       - psrxml
+
+- name: Install sigproc
+  vars:
+    versions:
+      - {
+        version_number: "4.3",
+        # dependencies: [
+        #   "${gcc_mod} 
+        #   ${omp_mod} 
+        #   ${psr_cfitsio_mod} 
+        #   ${psrxml_mod} 
+        #   ${pgplot_mod} 
+        #   ${tempo2_mod} 
+        #   ${fftw_mod}"
+        # ],
+        fftw_module: "fftw/3.3.8-single",
+        fftw_dir: "/software/common/fftw/3.3.8",
+        psrxml_module: "psrxml/1.05",
+        psrxml_dir: "/software/psrxml/1.05"
+      }
+  include_tasks:
+    file: 'sigproc.yaml'
+  tags:
+      - never
+      - sigproc
