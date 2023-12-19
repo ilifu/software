@@ -51,6 +51,26 @@
       - never
       - psrxml
 
+- name: Install pgplot
+  vars:
+    versions:
+      - {
+        version_number: "5.2",
+        # dependencies: [
+        #   ${omp_mod} 
+        # ],
+        url: "ftp://ftp.astro.caltech.edu/pub/pgplot/pgplot5.2.tar.gz",
+        checksum: "TODO",
+        openmpi_module: "openmpi/4.1.5",
+        openmpi_dir: "/software/common/openmpi/4.1.5"
+      }
+  include_tasks:
+    file: 'pgplot.yaml'
+  loop: "{{ versions}}"
+  tags:
+      - never
+      - pgplot
+
 - name: Install sigproc
   vars:
     versions:
