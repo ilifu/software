@@ -4,13 +4,13 @@ source common.build
 
 module purge
 
-set deps = "${gcc_mod} ${omp_mod} ${gsl_mod} ${fftw_mod} ${pgplot_mod} ${sofa_mod} ${cuda_mod} ${imkl_mod}"
+set deps = "${omp_mod} ${gsl_mod} ${fftw_mod} ${pgplot_mod} ${sofa_mod} ${cuda_mod} ${imkl_mod}"
 foreach dep ( $deps )
   module load $dep
 end
-module load $git_mod
+# module load $git_mod
 
-source build.environ
+# source build.environ
 
 set module = "psrdada"
 set source_dir = "${source_base}/${module}"
@@ -23,15 +23,17 @@ pushd $source_dir
 
 # If not hash, always pull latest
 if ( "$1" == "latest" ) then
-  ssh ${ssh_loc} "cd $source_dir; git pull"
+  pushd $source_dir
+  git pull
   set version = `git rev-parse --short HEAD`
 else if ( "$1" == "" ) then
   set version = `git rev-parse --short HEAD`
 else
-  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  cd $source_dir
+  git fetch
   set version = "$1"
   git checkout $version
-  if ( $? != 0 ) then
+  if ( $status != 0 ) then
     echo "GIT Checkout failed, please check version/hash"
     exit 1
   endif
@@ -64,7 +66,7 @@ else
 endif
 
 echo "Configuring ..."
-if ( ! $?EBROOTCUDA  ) then
+if ( ! $statusEBROOTCUDA  ) then
   echo "Without CUDA"
   ${source_dir}/configure --prefix=${install_dir} --with-sofa-dir=$PSRHOME_SOFA_PATH --with-fftw3-dir=$PSRHOME_FFTW_SP_PATH --enable-shared >>& ${build_dir}/build.log
 else
@@ -77,14 +79,14 @@ endif
 
 echo "make  ..."
 make >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "make install ..."
 make install >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make install failed: see ${build_dir}/build.log"
   exit 1
 endif

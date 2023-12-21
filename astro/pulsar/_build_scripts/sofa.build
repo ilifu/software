@@ -13,7 +13,8 @@ if ( -d ${module}/${version} ) then
 endif
 
 if ( ! -f $tar_gz ) then
-  ssh ${ssh_loc} "cd $source_base; wget http://www.iausofa.org/2018_0130_C/$tar_gz"
+  cd $source_base
+  wget http://www.iausofa.org/2018_0130_C/$tar_gz
 endif
 
 if ( ! ( -f $tar_gz ) ) then
@@ -50,21 +51,21 @@ sed -i "s#INSTALL_DIR = HOME#INSTALL_DIR = $install_dir#" makefile
 
 echo "make ..."
 make >& $build_dir/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "ERROR: make failed, see $build_dir/build.log"
   exit 1
 endif
 
 echo "make test ..."
 make test >>&  $build_dir/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "ERROR: make test failed, see $build_dir/build.log"
   exit 1
 endif
 
 echo "make install ..."
 make install >>&  $build_dir/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "ERROR: make install failed, see $build_dir/build.log"
   exit 1
 endif

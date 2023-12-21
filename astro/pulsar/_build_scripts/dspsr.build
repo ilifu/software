@@ -4,12 +4,12 @@ source common.build
 
 module purge
 
-set deps = "${gcc_mod} ${omp_mod} ${cuda_mod} ${psrchive_mod} ${psrdada_mod} ${psr_cfitsio_mod} ${fftw_mod} ${pgplot_mod} ${psrxml_mod}"
+set deps = "${omp_mod} ${cuda_mod} ${psrchive_mod} ${psrdada_mod} ${psr_cfitsio_mod} ${fftw_mod} ${pgplot_mod} ${psrxml_mod}"
 echo $deps
 foreach dep ( $deps )
   module load $dep
 end
-module load ${git_mod}
+# module load ${git_mod}
 
 source build.environ
 
@@ -17,7 +17,8 @@ set module = "dspsr"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $source_dir) then
-  ssh ${ssh_loc} "cd $source_base; git clone git://git.code.sf.net/p/dspsr/code dspsr"
+  pushd $source_base
+  git clone git://git.code.sf.net/p/dspsr/code dspsr
 endif
 
 pushd $source_dir
@@ -32,7 +33,7 @@ else
   ssh ${ssh_loc} "cd $source_dir; git fetch"
   set version = "$1"
   git checkout $version
-  if ( $? != 0 ) then
+  if ( $status != 0 ) then
     echo "GIT Checkout failed, please check version/hash"
     exit 1
   endif
@@ -70,14 +71,14 @@ ${source_dir}/configure --prefix=${install_dir} --with-psrxml-dir=${PSRHOME_PSRX
 
 echo "make -j 64 ..."
 make -j 64 >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "make install ..."
 make install >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make install failed: see ${build_dir}/build.log"
   exit 1
 endif

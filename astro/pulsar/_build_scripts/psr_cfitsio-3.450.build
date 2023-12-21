@@ -4,7 +4,7 @@ source common.build
 
 set module = "psr_cfitsio"
 set version = "3.450"
-set deps = "${gcc_mod} ${omp_ver}"
+set deps = "${omp_ver}"
 
 # setup modules
 module purge
@@ -41,7 +41,7 @@ cd ${build_dir}
 
 echo "Configuring ..."
 ${source_dir}/configure --prefix=${install_dir} >& build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "configure failed: see ${build_dir}/build.log"
   exit 1
 endif
@@ -51,20 +51,20 @@ make clean >>& build.log
 
 echo "Make ..."
 make >>& build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make clean failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "Make shared ..."
 make shared >>& build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make shared failed: see ${build_dir}/build.log"
   exit 1
 endif
 echo "Make install ..."
 make install >>& build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make install failed: see ${build_dir}/build.log"
   exit 1
 endif

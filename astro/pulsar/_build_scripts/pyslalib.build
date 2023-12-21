@@ -4,21 +4,21 @@ source common.build
 
 module purge
 
-set deps = "${gcc_mod} ${omp_mod} ${python_mod} ${numpy_mod}"
+set deps = "${omp_mod} ${python_mod} ${numpy_mod}"
 foreach dep ( $deps )
     echo module load $dep
     module load $dep
 end
-module load ${git_mod}
+# module load ${git_mod}
 
-source build.environ
+# source build.environ
 
 set module = "pyslalib"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $source_dir) then
-    echo "cd $source_base; module load ${gcc_mod} ${git_mod}; git clone https://github.com/scottransom/pyslalib.git"
-    ssh ${ssh_loc} "cd $source_base; module load ${gcc_mod} ${git_mod}; git clone https://github.com/scottransom/pyslalib.git"
+    pushd $source_base
+    git clone https://github.com/scottransom/pyslalib.git
 endif
 
 pushd $source_dir
@@ -26,15 +26,17 @@ pushd $source_dir
 
 # If not hash, always pull latest
 if ( "$1" == "latest" ) then
-  ssh ${ssh_loc} "cd $source_dir; git pull"
+  cd $source_dir
+  git pull
   set version = `git rev-parse --short HEAD`
 else if ( "$1" == "" ) then
   set version = `git rev-parse --short HEAD`
 else
-  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  cd $source_dir
+  git fetch
   set version = "$1"
   git checkout $version
-  if ( $? != 0 ) then
+  if ( $status != 0 ) then
     echo "GIT Checkout failed, please check version/hash"
     exit 1
   endif
@@ -52,9 +54,10 @@ if ( ! -d ${install_dir} ) then
 endif
 
 # generate the poetry virtual environment
-ssh ${ssh_loc} "cd $source_dir; module purge; module load $deps; setenv PIP_REQUIRE_VIRTUALENV no; pip install . --prefix ${build_dir}/"
-# setenv PIP_REQUIRE_VIRTUALENV no
-# pip install . --prefix ${install_dir}/
+# ssh ${ssh_loc} "cd $source_dir; module purge; module load $deps; setenv PIP_REQUIRE_VIRTUALENV no; pip install . --prefix ${build_dir}/"
+cd $source_dir
+setenv PIP_REQUIRE_VIRTUALENV no
+pip install . --prefix ${install_dir}/
 
 rm -r ${install_dir}
 mv ${build_dir} ${install_dir}

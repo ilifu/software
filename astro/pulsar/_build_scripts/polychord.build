@@ -4,35 +4,38 @@ source common.build
 
 module purge
 
-set deps = "${gcc_mod} ${omp_mod} ${python_mod} ${numpy_mod} ${scipy_mod}"
+set deps = "${omp_mod} ${python_mod} ${numpy_mod} ${scipy_mod}"
 foreach dep ( $deps )
   echo module load $dep
   module load $dep
 end
 module load ${git_mod}
 
-source build.environ
+# source build.environ
 
 set module = "polychord"
 set source_dir = "${source_base}/PolyChordLite"
 
 if (! -d $source_dir) then
-  ssh ${ssh_loc} "cd $source_base; module load ${git_mod}; git clone https://github.com/aparthas3112/PolyChordLite.git"
+  pushd $source_base 
+  git clone https://github.com/aparthas3112/PolyChordLite.git
 endif
 
 pushd $source_dir
 
 # If not hash, always pull latest
 if ( "$1" == "latest" ) then
-  ssh ${ssh_loc} "cd $source_dir; git pull origin master"
+  pushd $source_dir
+  git pull origin master
   set version = `git describe --tags`
 else if ( "$1" == "" ) then
   set version = `git describe --tags`
 else
-  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  pushd $source_dir
+  git fetch
   set version = "$1"
   git checkout $version
-  if ( $? != 0 ) then
+  if ( $status != 0 ) then
     echo "GIT Checkout failed, please check version/hash"
     exit 1
   endif
@@ -56,7 +59,7 @@ cd $build_dir
 
 echo "make ..."
 make >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make failed: see ${build_dir}/build.log"
   exit 1
 endif

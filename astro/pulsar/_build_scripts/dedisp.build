@@ -4,12 +4,12 @@ source common.build
 
 module purge
 
-set deps = "${gcc_mod} ${omp_mod} ${cuda_mod}"
+set deps = "${omp_mod} ${cuda_mod}"
 
 foreach dep ( $deps )
   module load $dep
 end
-module load ${git_mod}
+# module load ${git_mod}
 
 source build.environ
 
@@ -17,7 +17,8 @@ set module = "dedisp"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $source_dir) then
-  ssh ${ssh_loc} "cd $source_base; git clone git://github.com/ajameson/dedisp.git"
+  pushd $source_base
+  git clone "git://github.com/ajameson/dedisp.git"
 endif
 
 pushd $source_dir
@@ -32,7 +33,7 @@ else
   ssh ${ssh_loc} "cd $source_dir; git fetch"
   set version = "$1"
   git checkout $version
-  if ( $? != 0 ) then
+  if ( $status != 0 ) then
     echo "GIT Checkout failed, please check version/hash"
     exit 1
   endif
@@ -67,21 +68,21 @@ mkdir -m 0755 -p $install_dir/include
 
 echo "make ..."
 make GPU_ARCH=${cuda_arch} CUDA_PATH=$EBROOTCUDA INSTALL_DIR=$install_dir >>& ${source_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make failed, check ${source_dir}/build.log for errors"
   exit 1
 endif
 
 echo "make install ..."
 make INSTALL_DIR=$install_dir install >>& ${source_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make install failed, check ${source_dir}/build.log for errors"
   exit 1
 endif
 
 echo "make clean"
 make clean >>& ${source_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make clean failed, check ${source_dir}/build.log for errors"
   exit 1
 endif

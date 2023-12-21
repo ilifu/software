@@ -8,7 +8,8 @@ if ( -f psrcat_pkg.tar.gz ) then
 endif
 
 #ssh ${ssh_loc} "cd $source_base; wget http://www.atnf.csiro.au/people/pulsar/psrcat/downloads/psrcat_pkg.tar.gz"
-ssh ${ssh_loc} "cd $source_base; wget https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz"
+cd $source_base
+wget "https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz"
 
 cd $source_base
 

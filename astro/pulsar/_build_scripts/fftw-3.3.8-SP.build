@@ -4,7 +4,7 @@ source common.build
 
 set module = "fftw-SP"
 set version = "3.3.8"
-set deps = "${gcc_mod} ${omp_mod}"
+set deps = "${omp_mod}"
 
 # setup modules
 module purge
@@ -12,7 +12,7 @@ foreach dep ( $deps )
   module load $dep
 end
 
-source build.environ
+# source build.environ
 
 set source_dir = "${source_base}/fftw-3.3.8"
 set build_dir = "${build_base}/${module}/${version}"
@@ -36,7 +36,7 @@ cd ${build_dir}
 
 echo "Configuring ..."
 ${source_dir}/configure --prefix=${install_dir} --enable-shared --enable-float --enable-threads --enable-sse --disable-dependency-tracking >& build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "configure failed: see ${build_dir}/build.log"
   exit 1
 endif
@@ -46,14 +46,14 @@ make clean >>& build.log
 
 echo "Make -j 32 ..."
 make -j 32 >>& build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make clean failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "Make install ..."
 make install >>& build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make clean failed: see ${build_dir}/build.log"
   exit 1
 endif

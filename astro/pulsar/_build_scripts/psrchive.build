@@ -4,20 +4,21 @@ source common.build
 
 module purge
 
-set deps = "${gcc_mod} ${omp_mod} ${psr_cfitsio_mod} ${psrcat_mod} ${atnfcat_mod} ${gsl_mod} ${tempo_mod} ${tempo2_mod} ${fftw_mod} ${pgplot_mod} ${python_mod} ${numpy_mod} ${psrxml_mod} ${splinter_mod} ${swig_mod}"
+set deps = "${omp_mod} ${psr_cfitsio_mod} ${psrcat_mod} ${atnfcat_mod} ${gsl_mod} ${tempo_mod} ${tempo2_mod} ${fftw_mod} ${pgplot_mod} ${python_mod} ${numpy_mod} ${psrxml_mod} ${splinter_mod} ${swig_mod}"
 echo $deps
 foreach dep ( $deps )
   module load $dep
 end
 module load ${git_mod}
 
-source build.environ
+# source build.environ
 
 set module = "psrchive"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $source_dir) then
-  ssh ${ssh_loc}  "cd $source_base; git clone git://git.code.sf.net/p/psrchive/code psrchive"
+  pushd $source_base 
+  git clone git://git.code.sf.net/p/psrchive/code psrchive
 endif
 
 pushd $source_dir
@@ -32,7 +33,7 @@ else
   ssh ${ssh_loc}  "cd $source_dir; git fetch"
   set version = "$1"
   git checkout $version
-  if ( $? != 0 ) then
+  if ( $status != 0 ) then
     echo "GIT Checkout failed, please check version/hash"
     exit 1
   endif
@@ -74,14 +75,14 @@ make clean >>& ${build_dir}/build.log
 
 echo "make -j 32 ..."
 make -j 32 >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "make install ..."
 make install >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make install failed: see ${build_dir}/build.log"
   exit 1
 endif

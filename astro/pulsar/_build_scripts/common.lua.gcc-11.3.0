@@ -1,7 +1,7 @@
 local root = pathJoin("/software/astro/pulsar")
 local version = myModuleVersion()
 local pkgName = myModuleName()
-local pkg = pathJoin(root,"gcc-11.3.0",pkgName,version)
+local pkg = pathJoin(root,pkgName,version)
 append_path("PACKAGES", pkg, " ")
 append_path("PATH", pathJoin(pkg, "bin"))
 append_path("LD_LIBRARY_PATH", pathJoin(pkg, "lib"))

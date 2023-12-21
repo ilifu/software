@@ -4,7 +4,7 @@ source common.build
 
 set module = "calceph"
 set version = "2.3.2"
-set deps = "${gcc_mod} ${omp_mod}"
+set deps = "${omp_mod}"
 
 # setup modules
 module purge
@@ -35,28 +35,28 @@ endif
 echo "Configuring ... with FFLAGS=${FFLAGS}"
 setenv FCFLAGS "${FFLAGS}"
 ${source_dir}/configure --prefix=${install_dir} >& build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "configure failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "Make clean ..."
 make clean >>& build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make clean failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "Make -j 32 ..."
 make -j 1 >>& build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "Make install ..."
 make install >>& build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make install failed: see ${build_dir}/build.log"
   exit 1
 endif

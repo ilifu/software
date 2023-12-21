@@ -4,35 +4,38 @@ source common.build
 
 module purge
 
-set deps = "${gcc_mod} ${omp_mod} ${pgplot_mod} ${psr_cfitsio_mod} ${fftw_mod} ${python_mod} ${numpy_mod} ${scipy_mod} ${astropy_mod} ${pyslalib_mod}"
+set deps = "${omp_mod} ${pgplot_mod} ${psr_cfitsio_mod} ${fftw_mod} ${python_mod} ${numpy_mod} ${scipy_mod} ${astropy_mod} ${pyslalib_mod}"
 foreach dep ( $deps )
   echo module load $dep
   module load $dep
 end
-module load ${git_mod}
+# module load ${git_mod}
 
-source build.environ
+# source build.environ
 
 set module = "presto"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $source_dir) then
-  ssh ${ssh_loc} "cd $source_base; module load ${git_mod}; git clone https://github.com/scottransom/presto.git"
+  pushd $source_base
+  git clone "https://github.com/scottransom/presto.git"
 endif
 
 pushd $source_dir
 
 # If not hash, always pull latest
 if ( "$1" == "latest" ) then
-  ssh ${ssh_loc} "cd $source_dir; git pull origin master"
+  pushd $source_dir
+  git pull origin master
   set version = `git describe --tags`
 else if ( "$1" == "" ) then
   set version = `git describe --tags`
 else
-  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  cd $source_dir
+  git fetch
   set version = "$1"
   git checkout $version
-  if ( $? != 0 ) then
+  if ( $status != 0 ) then
     echo "GIT Checkout failed, please check version/hash"
     exit 1
   endif
@@ -72,28 +75,28 @@ setenv LD_LIBRARY_PATH "${LD_LIBRARY_PATH}:$PRESTO/lib"
 
 echo "make prep ..."
 make prep >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make prep: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "make -j 32 ..."
 make -j 32 >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "make mpi ..."
 make mpi >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make mpi: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "make clean ..."
 make clean >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make clean: see ${build_dir}/build.log"
   exit 1
 endif

@@ -5,33 +5,36 @@ source common.build
 module purge
 
 #set deps = "${gcc_mod} openmpi/3.0.0 qd/2.3.12 calceph/2.3.2 pgplot/5.2 gsl/2.4 fftw-DP/3.3.8 lapack/3.8.0 openblas/0.2.20 tempo2/0759584"
-set deps = "${gcc_mod} ${git_mod} ${omp_mod} ${qd_mod} ${calceph_mod} ${pgplot_mod} ${gsl_mod} ${fftw_dp_mod} ${lapack_mod} ${openblas_mod} ${tempo2_mod} polychord/1.18.2"
+set deps = "${git_mod} ${omp_mod} ${qd_mod} ${calceph_mod} ${pgplot_mod} ${gsl_mod} ${fftw_dp_mod} ${lapack_mod} ${openblas_mod} ${tempo2_mod} polychord/1.18.2"
 foreach dep ( $deps )
   module load $dep
 end
 
-source build.environ
+# source build.environ
 
 set module = "TempoNest_aparthas"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $source_dir ) then
-  ssh ${ssh_loc} "cd $source_base; git clone https://github.com/aparthas3112/TempoNest.git TempoNest_aparthas"
+  cd $source_base
+  git clone https://github.com/aparthas3112/TempoNest.git TempoNest_aparthas
 endif
 
 pushd $source_dir
 
 # If not hash, always pull latest
 if ( "$1" == "latest" ) then
-  ssh ${ssh_loc} "cd $source_dir; ./update"
+  cd $source_dir
+  ./update
   set version = `git rev-parse --short HEAD`
 else if ( "$1" == "" ) then
   set version = `git rev-parse --short HEAD`
 else
-  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  cd $source_dir
+  git fetch
   set version = "$1"
   git checkout $version
-  if ( $? != 0 ) then
+  if ( $status != 0 ) then
     echo "GIT Checkout failed, please check version/hash"
     exit 1
   endif
@@ -78,14 +81,14 @@ ${source_dir}/configure --prefix=${install_dir} --with-blas=openblas >& ${build_
 
 echo "make temponest ..."
 make temponest >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make -j 32 failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "make temponest-install ..."
 make temponest-install >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make install failed: see ${build_dir}/build.log"
   exit 1
 endif

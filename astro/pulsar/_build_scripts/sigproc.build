@@ -4,34 +4,37 @@ source common.build
 
 module purge
 
-set deps = "${gcc_mod} ${omp_mod} ${psr_cfitsio_mod} ${psrxml_mod} ${pgplot_mod} ${tempo2_mod} ${fftw_mod}"
+set deps = "${omp_mod} ${psr_cfitsio_mod} ${psrxml_mod} ${pgplot_mod} ${tempo2_mod} ${fftw_mod}"
 foreach dep ( $deps )
   module load $dep
 end
-module load ${git_mod}
+# module load ${git_mod}
 
-source build.environ
+# source build.environ
 
 set module = "sigproc"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $source_dir) then
-  ssh ${ssh_loc} "cd $source_base; git clone https://github.com/SixByNine/sigproc.git"
+  cd $source_base
+  git clone https://github.com/SixByNine/sigproc.git
 endif
 
 pushd $source_dir
 
 # If not hash, always pull latest
 if ( "$1" == "latest" ) then
-  ssh ${ssh_loc} "cd $source_dir; ./update"
+  cd $source_dir
+  ./update
   set version = `git rev-parse --short HEAD`
 else if ( "$1" == "" ) then
   set version = `git rev-parse --short HEAD`
 else
-  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  cd $source_dir
+  git fetch
   set version = "$1"
   git checkout $version
-  if ( $? != 0 ) then
+  if ( $status != 0 ) then
     echo "GIT Checkout failed, please check version/hash"
     exit 1
   endif
@@ -71,14 +74,14 @@ echo "make clean ..."
 make clean >>& ${build_dir}/build.log
 echo "make -j 32 ..."
 make -j 32  >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "make install ..."
 make install >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make install failed: see ${build_dir}/build.log"
   exit 1
 endif

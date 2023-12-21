@@ -4,7 +4,7 @@ source common.build
 
 module purge
 
-set deps = "${gcc_mod}"
+set deps = ""
 foreach dep ( $deps )
   module load $dep
 end
@@ -15,7 +15,8 @@ set module = "qd"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $source_dir) then
-  ssh ${ssh_loc} "cd $source_base; git clone https://bitbucket.org/njet/qd-library.git qd"
+  cd $source_base
+  git clone https://bitbucket.org/njet/qd-library.git qd
 endif
 
 pushd $source_dir
@@ -52,14 +53,14 @@ make clean >>& ${build_dir}/build.log
 
 echo "make -j 32 ..."
 make -j 32 >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "make install ..."
 make install >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make install failed: see ${build_dir}/build.log"
   exit 1
 endif

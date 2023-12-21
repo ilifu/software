@@ -4,20 +4,21 @@ source common.build
 
 module purge
 
-set deps = "${gcc_mod}"
+set deps = ""
 foreach dep ( $deps )
   module load $dep
 end
-module load ${git_mod}
-module load ${cmake_mod}
+# module load ${git_mod}
+# module load ${cmake_mod}
 
-source build.environ
+# source build.environ
 
 set module = "splinter"
 set source_dir = "${source_base}/${module}"
 
 if ( ! ( -d $source_dir ) ) then
-  ssh ${ssh_loc} "cd $source_base; git clone https://github.com/bgrimstad/splinter.git"
+  pushd $source_base
+  git clone "https://github.com/bgrimstad/splinter.git"
 endif
 
 pushd $source_dir
@@ -33,7 +34,7 @@ else
   ssh ${ssh_loc} "cd $source_dir; git fetch"
   set version = "$1"
   git checkout $version
-  if ( $? != 0 ) then
+  if ( $status != 0 ) then
     echo "GIT Checkout failed, please check version/hash"
     exit 1
   endif
@@ -53,8 +54,9 @@ mkdir -m 0755 -p ${build_dir}
 cd ${build_dir}
 
 echo "Configuring ..."
-cmake ${source_dir} -DCMAKE_INSTALL_PREFIX=${install_dir} -DCMAKE_CXX_FLAGS="${CXXFLAGS} -fPIC" >& build.log
-if ( $? != 0 ) then
+# cmake ${source_dir} -DCMAKE_INSTALL_PREFIX=${install_dir} -DCMAKE_CXX_FLAGS="${CXXFLAGS} -fPIC" >& build.log
+cmake ${source_dir} -DCMAKE_INSTALL_PREFIX=${install_dir} -DCMAKE_CXX_FLAGS="-fPIC" >& build.log
+if ( $status != 0 ) then
   echo "cmake failed: see ${build_dir}/build.log"
   exit 1
 endif
@@ -64,14 +66,14 @@ make clean >>& build.log
 
 echo "Make ..."
 make -j 8 >>& build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make clean failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "Make install ..."
 make install >>& build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make install failed: see ${build_dir}/build.log"
   exit 1
 endif

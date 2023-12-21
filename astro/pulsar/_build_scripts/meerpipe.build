@@ -4,20 +4,21 @@ source common.build
 
 module purge
 
-set deps = "${gcc_mod} ${omp_mod} ${python_mod} ${numpy_mod} ${pandas_mod} ${matplotlib_mod} ${astropy_mod} ${scipy_mod} ${coast_guard_mod} ${scintools_mod} ${psrchive_mod} ${tempo2_mod} ${tempo2_clock_mod} ${psrdb_mod} ${nextflow_mod}"
+set deps = "${omp_mod} ${python_mod} ${numpy_mod} ${pandas_mod} ${matplotlib_mod} ${astropy_mod} ${scipy_mod} ${coast_guard_mod} ${scintools_mod} ${psrchive_mod} ${tempo2_mod} ${tempo2_clock_mod} ${psrdb_mod} ${nextflow_mod}"
 
 foreach dep ( $deps )
   module load $dep
 end
 module load ${git_mod}
 
-source build.environ
+# source build.environ
 
 set module = "meerpipe"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $source_dir) then
-  ssh ${ssh_loc} "cd $source_base; git clone https://github.com/OZGrav/meerpipe.git"
+  pushd $source_base
+  git clone https://github.com/OZGrav/meerpipe.git
 endif
 
 pushd $source_dir
@@ -30,10 +31,11 @@ if ( "$1" == "latest" ) then
 else if ( "$1" == "" ) then
   set version = `git rev-parse --short HEAD`
 else
-  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  pushd $source_dir
+  git fetch
   set version = "$1"
   git checkout $version
-  if ( $? != 0 ) then
+  if ( $status != 0 ) then
     echo "GIT Checkout failed, please check version/hash"
     exit 1
   endif

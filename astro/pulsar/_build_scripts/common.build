@@ -28,8 +28,8 @@ endif
 
 set source_base = "/software/astro/pulsar/_src" # Note: This does not exist - includes patches for pgplot. TODO: Get from Nick.
 set apps_base = "/software/astro/pulsar"
-set build_base = "/dev/shm/pulsar/$gcc_ver"
-set install_base = "$apps_base/$gcc_ver"
+set build_base = "/dev/shm/pulsar"
+set install_base = "$apps_base"
 set lmod_base = "/software/modules/astro/pulsar"
 
 if ( "$SYS_ARCH" == "skylake" ) then
@@ -53,3 +53,6 @@ module unuse /software/modules/astro/pulsar
 
 source common.build.${gcc_ver}
 
+# Clear the undefined enviroment flags (Ilifu) 
+
+env CXXFLAGS ""
