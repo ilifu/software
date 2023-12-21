@@ -1,0 +1,82 @@
+#!/bin/csh
+
+source common.build
+
+# acquire the codebase to determine the software version
+if ( -f psrcat_pkg.tar.gz ) then
+  rm -f psrcat_pkg.tar.gz
+endif
+
+#ssh ${ssh_loc} "cd $source_base; wget http://www.atnf.csiro.au/people/pulsar/psrcat/downloads/psrcat_pkg.tar.gz"
+ssh ${ssh_loc} "cd $source_base; wget https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz"
+
+cd $source_base
+
+if ( -d psrcat_tar ) then
+  rm -rf psrcat_tar
+endif
+if ( -d psrcat ) then
+  rm -rf psrcat
+endif
+
+gunzip -c psrcat_pkg.tar.gz | tar xvf -
+
+mv psrcat_tar psrcat
+
+set module = "psrcat"
+set sw_version = `grep PSRCAT_SOFTWARE_VERSION psrcat/psrcat.h | awk '{print $3}'`
+set version = "${sw_version}"
+set deps = "${gcc_mod}"
+
+# setup modules
+module purge
+foreach dep ( $deps )
+  module load $dep
+end
+
+set source_dir = "${source_base}/psrcat"
+set build_dir = "${build_base}/${module}/${version}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building ${module}/${version}"
+
+pushd $source_dir
+
+# add flag to ignore a multiple definition error for gcc version >9
+sed -i 's&/usr/bin/gcc&/usr/bin/gcc -fcommon&g' makeit
+
+csh makeit
+
+mkdir -m 0755 -p $install_dir/bin
+cp psrcat $install_dir/bin/
+
+rm -f *.o
+
+popd
+
+# setup the lmod file
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -m 0755  -p ${lmod_dir}
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the common template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PSRHOME_PSRCAT_PATH", pkg)' >> $lmod_file
+echo 'setenv("PSRCAT_RUNDIR", "/apps/users/pulsar/common/software/psrcat/")' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end
+
+# cleanup
+rm -f psrcat_pkg.tar.gz
+

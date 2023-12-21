@@ -1,0 +1,148 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+set deps = "${gcc_mod} ${omp_mod} ${pgplot_mod} ${psr_cfitsio_mod} ${fftw_mod} ${python_mod} ${numpy_mod} ${scipy_mod} ${astropy_mod} ${pyslalib_mod}"
+foreach dep ( $deps )
+  echo module load $dep
+  module load $dep
+end
+module load ${git_mod}
+
+source build.environ
+
+set module = "presto"
+set source_dir = "${source_base}/${module}"
+
+if (! -d $source_dir) then
+  ssh ${ssh_loc} "cd $source_base; module load ${git_mod}; git clone https://github.com/scottransom/presto.git"
+endif
+
+pushd $source_dir
+
+# If not hash, always pull latest
+if ( "$1" == "latest" ) then
+  ssh ${ssh_loc} "cd $source_dir; git pull origin master"
+  set version = `git describe --tags`
+else if ( "$1" == "" ) then
+  set version = `git describe --tags`
+else
+  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  set version = "$1"
+  git checkout $version
+  if ( $? != 0 ) then
+    echo "GIT Checkout failed, please check version/hash"
+    exit 1
+  endif
+endif
+
+# set version = "${version}-${gcc_ver}"
+set build_dir = "${source_base}/${module}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building ${module}/${version}, log at $install_dir/build.log"
+
+mkdir -m 0755 -p `dirname $install_dir`
+
+if ( -d $install_dir ) then
+  rm -rf $install_dir
+endif
+
+rsync -a $source_dir/ $install_dir
+
+cd $install_dir/src
+
+setenv PRESTO $install_dir
+setenv PYTHONPATH "${PYTHONPATH}:$PRESTO/lib/${python_small_ver}/site-packages"
+
+# sed -i 's&FFTINC := $(shell pkg-config --cflags fftw3f)&FFTINC := -I${PSRHOME_FFTW_SP_PATH}/include&' Makefile
+# sed -i 's&FFTLINK := $(shell pkg-config --libs fftw3f)&FFTLINK := -L${PSRHOME_FFTW_SP_PATH}/lib -lfftw3f&' Makefile
+# sed -i 's&CFITSIOINC := $(shell pkg-config --cflags cfitsio)&CFITSIOINC := -I$PSRHOME_CFITSIO_PATH/include&' Makefile
+# sed -i 's&CFITSIOLINK := $(shell pkg-config --libs cfitsio)&CFITSIOLINK := -L$PSRHOME_CFITSIO_PATH/lib -lcfitsi&' Makefile
+
+# Add library path to make the internal compilation of libraries work correctly
+setenv LD_LIBRARY_PATH "${LD_LIBRARY_PATH}:$PRESTO/lib"
+
+#make makewisdom
+
+
+echo "make prep ..."
+make prep >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make prep: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make -j 32 ..."
+make -j 32 >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make mpi ..."
+make mpi >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make mpi: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make clean ..."
+make clean >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make clean: see ${build_dir}/build.log"
+  exit 1
+endif
+
+if ( ! ( -d "${install_dir}/lib/${python_small_ver}/site-packages" ) ) then
+  mkdir -p "${install_dir}/lib/${python_small_ver}/site-packages"
+endif
+
+# install python scripts
+cd ../
+sed -i 's/ppgplot_libraries = \["cpgplot", "pgplot", "X11", "png", "m"\]/ppgplot_libraries = ["cpgplot", "pgplot", "X11", "png", "m", "gfortran"]/' setup.py
+echo "s@presto_library_dirs = []@presto_library_dirs = ['${install_base}/${fftw_mod}/lib']@"
+sed -i "s@presto_library_dirs = \[\]@presto_library_dirs = \['${install_base}/${fftw_mod}/lib'\]@" setup.py
+
+sed -i '/install_requires/d' setup.py
+python setup.py install --prefix ${install_dir}
+
+
+popd
+
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -p $lmod_dir
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PSRHOME_PRESTO_PATH",pkg)' >> $lmod_file
+echo 'setenv("PRESTO",pkg)' >> $lmod_file
+echo "append_path('PYTHONPATH',pathJoin(pkg, 'lib', '${python_small_ver}', 'site-packages'))" >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end
+
+# Create a second template that only loads the bare minimum C requirements
+set lmod_file = "${lmod_dir}/${version}_min_path.lua"
+cp common.lua.${gcc_ver} ${lmod_file}
+
+echo 'setenv("PSRHOME_PRESTO_PATH",pkg)' >> $lmod_file
+echo 'setenv("PRESTO",pkg)' >> $lmod_file
+
+set deps = "${pgplot_mod} ${psr_cfitsio_mod} ${fftw_mod}"
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end

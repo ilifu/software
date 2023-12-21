@@ -1,0 +1,84 @@
+#!/bin/csh
+
+source common.build
+
+# acquire the codebase to determine the software version
+if ( -f psrcat_pkg.tar.gz ) then
+  rm -f psrcat_pkg.tar.gz
+endif
+
+cd $source_base
+
+if ( -d psrcat_tar ) then
+  rm -rf psrcat_tar
+endif
+if ( -d psrcat ) then
+  rm -rf psrcat
+endif
+
+if ( "$1" == "latest" ) then
+  ssh ${ssh_loc} "cd $source_base; wget https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz"
+  gunzip -c psrcat_pkg.tar.gz | tar xvf -
+  mv psrcat_tar psrcat
+else if ( "$1" == "" ) then
+  ssh ${ssh_loc} "cd $source_base; wget https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz"
+  gunzip -c psrcat_pkg.tar.gz | tar xvf -
+  mv psrcat_tar psrcat
+else
+  set version = "$1"
+  ssh ${ssh_loc} "cd $source_base; wget https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.v${version}.tar.gz"
+  gunzip -c psrcat_pkg.v${version}.tar.gz | tar xvf -
+  mv psrcat_tar psrcat
+endif
+
+
+set module = "atnfcat"
+set cat_version = `grep CATALOGUE psrcat/psrcat.db | awk '{print $2}'`
+set version = "${cat_version}"
+set deps = ""
+
+# setup modules
+module purge
+foreach dep ( $deps )
+  module load $dep
+end
+
+set source_dir = "${source_base}/psrcat"
+set build_dir = "${build_base}/${module}/${version}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building ${module}/${version}"
+
+pushd $source_dir
+
+mkdir -m 0755 -p $install_dir
+echo cp psrcat.db $install_dir/
+cp psrcat.db $install_dir/
+
+
+popd
+
+# setup the lmod file
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -m 0755  -p ${lmod_dir}
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the common template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PSRCAT_FILE", pathJoin(pkg, "psrcat.db"))' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end
+
+# cleanup
+rm -f psrcat_pkg.tar.gz

@@ -1,0 +1,149 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+set deps = "${gcc_mod} ${omp_mod}"
+foreach dep ( $deps )
+  module load $dep
+end
+
+source build.environ
+
+set module = "pgplot"
+set version = "5.2"
+set source_dir = "${source_base}/${module}"
+
+# always start from a fresh copy, due to patching
+if ( -d $source_dir) then
+  rm -rf $source_dir
+endif
+
+if ( ! -f $source_base/pgplot5.2.tar.gz ) then
+  rm -f $source_base/pgplot5.2.tar.gz
+endif
+
+ssh ${ssh_loc} "cd $source_base; /usr/bin/wget ftp://ftp.astro.caltech.edu/pub/pgplot/pgplot5.2.tar.gz"
+
+pushd $source_base
+tar -xzf pgplot5.2.tar.gz
+rm -f pgplot5.2.tar.gz
+popd
+
+pushd $source_dir/drivers
+patch < /home/pulsar/sources/pgplot_patches/pndriv.patch
+
+cd ..
+patch < /home/pulsar/sources/pgplot_patches/makemake.sharedcpg.patch
+cd sys_linux
+cp g77_gcc.conf psrchive.conf
+
+# change the fortran compiler
+perl -pi -e "s/g77/gfortran/" psrchive.conf
+
+# remove the -u option from FFLAGC
+perl -pi -e 's/-u //' psrchive.conf
+
+# change the location of X11
+perl -pi -e 's|-I/usr/X11R6/include||' psrchive.conf
+perl -pi -e 's|-L/usr/X11R6/lib||' psrchive.conf
+
+popd
+
+set build_dir = "${build_base}/${module}/${version}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building ${module}/${version}"
+
+mkdir -m 0755 -p ${build_dir}
+mkdir -m 0755 -p ${install_dir}
+pushd ${install_dir}
+
+echo "Configuring ..."
+cp ${source_dir}/drivers.list .
+
+# select PNG
+perl -pi -e 's/! PNDRIV/  PNDRIV/' drivers.list
+
+# select Postscript
+perl -pi -e 's/! PSDRIV/  PSDRIV/' drivers.list
+
+# select X windows
+perl -pi -e 's/! XWDRIV/  XWDRIV/' drivers.list
+
+${source_dir}/makemake ${source_dir} linux psrchive
+
+# remove the broken dependency on png.h, etc.
+perl -pi -e 's/^pndriv\.o :/# /' makefile
+
+echo "make ..."
+make >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make cpg ..."
+make cpg  >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make cpg failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make pgxwin_server ..."
+make pgxwin_server  >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make pgxwin_server failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make grfont.dat ..."
+make grfont.dat  >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make grfont.dat failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make clean"
+make clean >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make clean failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make install ..."
+make install >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make install failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make clean"
+make clean >>& ${build_dir}/build.log
+
+popd
+
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -p $lmod_dir
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PGPLOT_DIR",pkg)' >> $lmod_file
+echo 'setenv("PGPLOT_FONT",pathJoin(pkg,"grfont.dat"))' >> $lmod_file
+
+perl -pi -e 's/append_path\("LD_LIBRARY_PATH", pathJoin\(pkg, "lib"\)\)/append_path\("LD_LIBRARY_PATH", pkg\)/' $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end

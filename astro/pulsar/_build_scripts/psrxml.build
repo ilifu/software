@@ -1,0 +1,83 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+set deps = "${gcc_mod} ${omp_mod}"
+foreach dep ( $deps )
+  module load $dep
+end
+module load ${git_mod}
+
+source build.environ
+
+set module = "psrxml"
+set version = "1.01"
+set source_dir = "${source_base}/${module}"
+set build_dir = "${source_base}/${module}" # needs build == source
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+if (! -d $source_dir) then
+  ssh ${ssh_loc} "cd $source_base; git clone https://github.com/SixByNine/psrxml.git"
+endif
+
+pushd $source_dir
+
+
+echo "Building ${module}/${version}"
+
+echo "Bootstrapping ..."
+autoreconf --verbose --install --force >& ${source_dir}/build.log
+
+# create build directory
+mkdir -m 0755 -p ${build_dir}
+pushd ${build_dir}
+
+echo "Configuring ..."
+${source_dir}/configure --prefix=${install_dir} >& ${build_dir}/build.log
+
+echo "make clean ..."
+make clean >>& ${build_dir}/build.log
+
+echo "make ..."
+make >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make install ..."
+make install >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make install failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make clean"
+make clean >>& ${build_dir}/build.log
+
+popd
+
+popd
+
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -p $lmod_dir
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PSRHOME_PSRXML_PATH",pkg)' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end

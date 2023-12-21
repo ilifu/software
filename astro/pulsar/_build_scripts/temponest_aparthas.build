@@ -1,0 +1,118 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+#set deps = "${gcc_mod} openmpi/3.0.0 qd/2.3.12 calceph/2.3.2 pgplot/5.2 gsl/2.4 fftw-DP/3.3.8 lapack/3.8.0 openblas/0.2.20 tempo2/0759584"
+set deps = "${gcc_mod} ${git_mod} ${omp_mod} ${qd_mod} ${calceph_mod} ${pgplot_mod} ${gsl_mod} ${fftw_dp_mod} ${lapack_mod} ${openblas_mod} ${tempo2_mod} polychord/1.18.2"
+foreach dep ( $deps )
+  module load $dep
+end
+
+source build.environ
+
+set module = "TempoNest_aparthas"
+set source_dir = "${source_base}/${module}"
+
+if (! -d $source_dir ) then
+  ssh ${ssh_loc} "cd $source_base; git clone https://github.com/aparthas3112/TempoNest.git TempoNest_aparthas"
+endif
+
+pushd $source_dir
+
+# If not hash, always pull latest
+if ( "$1" == "latest" ) then
+  ssh ${ssh_loc} "cd $source_dir; ./update"
+  set version = `git rev-parse --short HEAD`
+else if ( "$1" == "" ) then
+  set version = `git rev-parse --short HEAD`
+else
+  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  set version = "$1"
+  git checkout $version
+  if ( $? != 0 ) then
+    echo "GIT Checkout failed, please check version/hash"
+    exit 1
+  endif
+endif
+
+set build_dir = "${build_base}/${module}/${version}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building MultiNest"
+
+setenv MULTINEST_DIR "${source_dir}/MultiNest"
+setenv QDINSTALL ${PSRHOME_QD_PATH}
+
+echo "Bootstrapping ..."
+./autogen.sh >& ${source_dir}/build.log
+
+setenv FFLAGS "-fallow-argument-mismatch"
+
+cd MultiNest
+make clean
+make
+cp libnest3.a ../
+cd ..
+
+echo "Building ${module}/${version}"
+
+setenv CXXFLAGS "${CXXFLAGS} -I${PSRHOME_FFTW_DP_PATH}/include"
+setenv LDFLAGS "-L${source_dir} -L${PSRHOME_FFTW_DP_PATH}/lib -L${POLYCHORD_DIR}/lib"
+
+if (-d $build_dir) then
+  rm -rf $build_dir
+endif
+
+mkdir -m 0755 -p $build_dir
+pushd $build_dir
+
+echo "Configuring to install to ${install_dir} ..."
+mkdir -p $install_dir
+setenv LOGIN_ARCH linux_64
+${source_dir}/configure --prefix=${install_dir} --with-blas=openblas >& ${build_dir}/build.log
+#${source_dir}/configure --prefix=${install_dir} >& ${build_dir}/build.log
+
+echo "make temponest ..."
+make temponest >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make -j 32 failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make temponest-install ..."
+make temponest-install >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make install failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+# AJ 2023-10-02 this no longer seems to be necessary
+# echo "renaming temponest plugin from temponest_linux_64_plug.t2 to temponest_linux_plug.t2"
+# mv $TEMPO2/plugins/temponest_linux_64_plug.t2  $TEMPO2/plugins/temponest_linux_plug.t2
+
+echo "make clean"
+make clean >>& ${build_dir}/build.log
+
+popd
+
+popd
+
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -p $lmod_dir
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end

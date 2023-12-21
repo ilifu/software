@@ -1,0 +1,97 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+set deps = "${gcc_mod} ${omp_mod} ${python_mod} ${numpy_mod} ${scipy_mod}"
+foreach dep ( $deps )
+  echo module load $dep
+  module load $dep
+end
+module load ${git_mod}
+
+source build.environ
+
+set module = "polychord"
+set source_dir = "${source_base}/PolyChordLite"
+
+if (! -d $source_dir) then
+  ssh ${ssh_loc} "cd $source_base; module load ${git_mod}; git clone https://github.com/aparthas3112/PolyChordLite.git"
+endif
+
+pushd $source_dir
+
+# If not hash, always pull latest
+if ( "$1" == "latest" ) then
+  ssh ${ssh_loc} "cd $source_dir; git pull origin master"
+  set version = `git describe --tags`
+else if ( "$1" == "" ) then
+  set version = `git describe --tags`
+else
+  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  set version = "$1"
+  git checkout $version
+  if ( $? != 0 ) then
+    echo "GIT Checkout failed, please check version/hash"
+    exit 1
+  endif
+endif
+
+# set version = "${version}-${gcc_ver}"
+set build_dir = "${source_base}/${module}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building ${module}/${version}, log at $install_dir/build.log"
+
+mkdir -m 0755 -p $install_dir
+rsync -a $source_dir/ $build_dir
+
+
+
+cd $build_dir
+
+
+echo "make ..."
+make >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+# Copy files to lib dir
+cp lib/libchord.a lib/libchord.so ${install_dir}/lib/
+
+
+if ( ! ( -d "${install_dir}/lib/${python_small_ver}/site-packages" ) ) then
+  mkdir -p "${install_dir}/lib/${python_small_ver}/site-packages"
+endif
+
+# install python scripts
+setenv PIP_REQUIRE_VIRTUALENV "false"
+pip install . --prefix ${install_dir}
+
+
+popd
+
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -p $lmod_dir
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo "append_path('PYTHONPATH',pathJoin(pkg, 'lib', '${python_small_ver}', 'site-packages'))" >> $lmod_file
+echo 'setenv("POLYCHORD_DIR",pkg)' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+endif

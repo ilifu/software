@@ -1,0 +1,83 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+set deps = "${gcc_mod} java/17.0.4"
+foreach dep ( $deps )
+  module load $dep
+end
+module load ${git_mod}
+
+source build.environ
+
+set module = "nextflow"
+set source_dir = "${source_base}/${module}"
+pushd ${source_dir}
+
+# If not hash, always pull latest
+if ( "$1" == "latest" ) then
+  ssh ${ssh_loc} "cd $source_dir; git pull origin master"
+  set version = `git describe --tags`
+else if ( "$1" == "" ) then
+  set version = `git describe --tags`
+else
+  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  set version = "$1"
+  git checkout $version
+  if ( $? != 0 ) then
+    echo "GIT Checkout failed, please check version/hash"
+    exit 1
+  endif
+endif
+
+# if (! -d $source_dir) then
+#   ssh ${ssh_loc} "cd $source_base; wget -qO- https://get.nextflow.io > nextflow.install"
+# endif
+# pushd $source_base
+# set version = "23.04.1"
+
+
+set build_dir = "${build_base}/${module}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+mkdir -p $build_dir
+
+echo "make  ..."
+make  >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "Installing ${module}/${version}"
+
+if ( ! -d ${install_dir} ) then
+  mkdir -m 0755 -p ${install_dir}
+endif
+
+# This is only going to work once so will need to be automated later
+mv nextflow ${install_dir}/
+
+popd
+
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -p $lmod_dir
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the template
+cp common.lua.${gcc_ver} $lmod_file
+
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end
+echo 'append_path("PATH", pkg)' >> $lmod_file

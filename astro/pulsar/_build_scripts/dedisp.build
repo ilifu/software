@@ -1,0 +1,108 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+set deps = "${gcc_mod} ${omp_mod} ${cuda_mod}"
+
+foreach dep ( $deps )
+  module load $dep
+end
+module load ${git_mod}
+
+source build.environ
+
+set module = "dedisp"
+set source_dir = "${source_base}/${module}"
+
+if (! -d $source_dir) then
+  ssh ${ssh_loc} "cd $source_base; git clone git://github.com/ajameson/dedisp.git"
+endif
+
+pushd $source_dir
+
+# If not hash, always pull latest
+if ( "$1" == "latest" ) then
+  ssh ${ssh_loc} "cd $source_dir; git pull origin master"
+  set version = `git rev-parse --short HEAD`
+else if ( "$1" == "" ) then
+  set version = `git rev-parse --short HEAD`
+else
+  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  set version = "$1"
+  git checkout $version
+  if ( $? != 0 ) then
+    echo "GIT Checkout failed, please check version/hash"
+    exit 1
+  endif
+endif
+
+set version = "${version}"
+set build_dir = "${source_base}/${module}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building ${module}/${version}"
+
+#sed -i "s#CUDA_PATH ?= /usr/local/cuda#CUDA_PATH ?= $EBROOTCUDA#" Makefile.inc
+#sed -i 's#INSTALL_DIR = $(HOME)/linux_64#INSTALL_DIR = HOME#' Makefile.inc
+#sed -i "s#INSTALL_DIR = HOME#INSTALL_DIR = $install_dir#" Makefile.inc
+#sed -i 's#THRUST_DIR ?= $(CUDA_PATH)#THRUST_DIR ?= CUDAPATH#' Makefile.inc
+#sed -i "s#THRUST_DIR ?= CUDA_PATH#THRUST_DIR ?= $PSRHOME_THRUST_PATH#" Makefile.inc
+#sed -i "s#GPU_ARCH   = sm_30#GPU_ARCH   = sm_60#" Makefile.inc
+
+if ( -d $install_dir ) then
+  rm -rf $install_dir
+endif
+
+if ( -f ${source_dir}/build.log ) then
+  rm -f ${source_dir}/build.log
+endif
+
+mkdir -m 0755 -p $install_dir
+mkdir -m 0755 -p $install_dir/lib
+mkdir -m 0755 -p $install_dir/include
+
+echo "make ..."
+make GPU_ARCH=${cuda_arch} CUDA_PATH=$EBROOTCUDA INSTALL_DIR=$install_dir >>& ${source_dir}/build.log
+if ( $? != 0 ) then
+  echo "make failed, check ${source_dir}/build.log for errors"
+  exit 1
+endif
+
+echo "make install ..."
+make INSTALL_DIR=$install_dir install >>& ${source_dir}/build.log
+if ( $? != 0 ) then
+  echo "make install failed, check ${source_dir}/build.log for errors"
+  exit 1
+endif
+
+echo "make clean"
+make clean >>& ${source_dir}/build.log
+if ( $? != 0 ) then
+  echo "make clean failed, check ${source_dir}/build.log for errors"
+  exit 1
+endif
+
+popd
+
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -p $lmod_dir
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PSRHOME_DEDISP_PATH",pkg)' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end

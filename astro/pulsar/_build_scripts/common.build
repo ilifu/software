@@ -1,0 +1,54 @@
+#!/bin/csh
+
+# Default cluster specific versions
+if (!( $?gcc_ver)) then
+    if ( "$SYS_ARCH" == "skylake" ) then
+        #setenv gcc_ver "gcc-9.2.0"
+        setenv gcc_ver "gcc-11.3.0"
+    else if ( "$SYS_ARCH" == "openstack" ) then
+        setenv gcc_ver "gcc-11.3.0"
+    else if ( "$SYS_ARCH" == "milan" ) then
+        setenv gcc_ver "gcc-11.3.0"
+    endif
+endif
+if (!( $?omp_ver)) then
+    if ( "$SYS_ARCH" == "skylake" ) then
+        #setenv omp_ver "openmpi/4.0.2"
+        setenv omp_ver "openmpi/4.1.4"
+    else if ( "$SYS_ARCH" == "openstack" ) then
+        setenv omp_ver "openmpi/4.1.4"
+    else if ( "$SYS_ARCH" == "milan" ) then
+        setenv omp_ver "openmpi/4.1.4"
+    endif
+endif
+# above could possibly supposed to be
+# openmpi/4.1.4
+
+set source_base = "/home/pulsar/sources"
+set apps_base = "/apps/users/pulsar/$SYS_ARCH"
+set build_base = "$apps_base/$gcc_ver/build"
+set install_base = "$apps_base/$gcc_ver/software"
+set lmod_base = "$apps_base/$gcc_ver/modulefiles"
+
+if ( "$SYS_ARCH" == "skylake" ) then
+    #set git_mod = "git/2.18.0"
+    set git_mod = "git/2.36.0"
+    set ssh_loc = "farnarkle1"
+else if ( "$SYS_ARCH" == "openstack" ) then
+    set git_mod = "git/2.36.0"
+    set ssh_loc = "tooarrana1"
+else if ( "$SYS_ARCH" == "milan" ) then
+    set git_mod = "git/2.36.0"
+    set ssh_loc = "tooarrana1"
+endif
+
+if ( ! ( -f common.build.${gcc_ver} ) ) then
+    echo "WARNING: common.build.${gcc_ver} did not exist"
+    exit 1
+endif
+
+module unuse /apps/users/pulsar/skylake/modulefiles
+module use /apps/users/pulsar/${SYS_ARCH}/${gcc_ver}/modulefiles
+
+source common.build.${gcc_ver}
+

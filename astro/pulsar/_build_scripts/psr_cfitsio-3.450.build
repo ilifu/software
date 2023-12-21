@@ -1,0 +1,93 @@
+#!/bin/csh
+
+source common.build
+
+set module = "psr_cfitsio"
+set version = "3.450"
+set deps = "${gcc_mod} ${omp_ver}"
+
+# setup modules
+module purge
+foreach dep ( $deps )
+  module load $dep
+end
+
+set source_dir = "${source_base}/${module}/${version}"
+set build_dir = "${source_base}/${module}/${version}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+if ( ! ( -d $source_dir ) ) then
+  if ( ! ( -f cfitsio3450.tar.gz ) ) then
+    ssh ${ssh_loc} "cd $source_base; wget http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio3450.tar.gz"
+  endif
+  if ( -d cfitsio ) then
+    rm -rf ${module}
+  endif
+  tar -xzf cfitsio3450.tar.gz
+  mkdir -p ${source_base}/${module}/
+  mv cfitsio $source_dir
+  rm -f cfitsio3450.tar.gz
+endif
+
+echo "Building ${module}/${version}"
+
+pushd $source_dir
+
+# create build directory
+mkdir -m 0755 -p ${build_dir}
+cd ${build_dir}
+
+echo "Configuring ..."
+${source_dir}/configure --prefix=${install_dir} >& build.log
+if ( $? != 0 ) then
+  echo "configure failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "Make clean ..."
+make clean >>& build.log
+
+echo "Make ..."
+make >>& build.log
+if ( $? != 0 ) then
+  echo "make clean failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "Make shared ..."
+make shared >>& build.log
+if ( $? != 0 ) then
+  echo "make shared failed: see ${build_dir}/build.log"
+  exit 1
+endif
+echo "Make install ..."
+make install >>& build.log
+if ( $? != 0 ) then
+  echo "make install failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+popd
+
+# setup the lmod file
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -m 0755  -p ${lmod_dir}
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the common template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PSRHOME_CFITSIO_PATH",pkg)' >> $lmod_file
+echo 'append_path("PKG_CONFIG_PATH",pathJoin(pkg, "lib/pkgconfig"))' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end

@@ -1,0 +1,102 @@
+#!/bin/csh
+
+if ( "$SYS_ARCH" == "skylake" ) then
+  # ozstar soft
+  set gcc_mod = "gcc/11.3.0"
+  set omp_mod = "openmpi/4.1.4"
+  set cuda_mod = "cuda/11.7.0"
+  set cuda_arch = "sm_60"
+  set gsl_mod = "gsl/2.7"
+  set qd_mod = "qd/2.3.12"
+  set lapack_mod = "lapack/3.10.1"
+  set openblas_mod = "openblas/0.3.20"
+  set cmake_mod = "cmake/3.24.3"
+
+  # pulsar software
+  set calceph_mod = "calceph/2.3.2"
+  set psrchive_mod = "psrchive/5d7db6177"
+  set psrdada_mod = "psrdada/f654e40"
+  set psr_cfitsio_mod = "psr_cfitsio/3.450"
+  set fftw_mod = "fftw-SP/3.3.8"
+  set fftw_dp_mod = "fftw-DP/3.3.8"
+  set pgplot_mod = "pgplot/5.2"
+  set psrxml_mod = "psrxml/1.01"
+  set splinter_mod = "splinter/da6ac4f"
+
+  set sofa_mod = "sofa/20180130"
+  set imkl_mod = "imkl/2023.0.0"
+  set boost_mod = "boost/1.74.0-python-3.7.4"
+  set dedisp_mod = "dedisp/9850b7e"
+  set tempo_mod = "tempo/3ad01b1"
+  set tempo2_mod = "tempo2/0759584"
+  set psrcat_mod = "psrcat/1.50"
+  set atnfcat_mod = "atnfcat/1.70"
+
+  # python software
+  set python_mod = "python/3.10.4"
+  set numpy_mod = "numpy/1.22.3-scipy-bundle-2022.05"
+
+  set boost_mod = "boost.python/1.79.0"
+  set scipy_mod = "scipy/1.8.1-scipy-bundle-2022.05"
+  set pandas_mod = "pandas/1.4.2-scipy-bundle-2022.05"
+  set astropy_mod = "astropy/5.1.1"
+  set matplotlib_mod = "matplotlib/3.5.2"
+  set swig_mod = "swig/4.0.2"
+  set psrqpy_mod = "psrqpy/0addced"
+  set pyslalib_mod = "pyslalib/fcb0650"
+
+  set python_small_ver = "python3.10" # for PYTHONPATH setting
+
+else if ( "$SYS_ARCH" == "milan" || "$SYS_ARCH" == "openstack" ) then
+  # ozstar maintanted software
+  set gcc_mod = "gcc/11.3.0"
+  set omp_mod = "openmpi/4.1.4"
+  set cuda_mod = "cuda/11.7.0"
+  set cuda_arch = "sm_80"
+  set gsl_mod = "gsl/2.7"
+  set qd_mod = "qd/2.3.12"
+  set lapack_mod = "lapack/3.10.1"
+  set openblas_mod = "openblas/0.3.20"
+  set cmake_mod = "cmake/3.24.3"
+  set nextflow_mod = "nextflow/23.04.2"
+
+  # pulsar maintanted software
+  set calceph_mod = "calceph/2.3.2"
+  set psrchive_mod = "psrchive/e99fec329"
+  set psrdada_mod = "psrdada/f654e40"
+  set psr_cfitsio_mod = "psr_cfitsio/3.450"
+  set fftw_mod = "fftw-SP/3.3.8"
+  set fftw_dp_mod = "fftw-DP/3.3.8"
+  set pgplot_mod = "pgplot/5.2"
+  set psrxml_mod = "psrxml/1.01"
+  set splinter_mod = "splinter/da6ac4f"
+
+  set sofa_mod = "sofa/20180130"
+  set imkl_mod = "imkl/2023.0.0"
+  set dedisp_mod = "dedisp/9850b7e"
+  set tempo_mod = "tempo/3ad01b1"
+  set tempo2_mod = "tempo2/0759584_temponest_apar_56e2b58"
+  set tempo2_clock_mod = "tempo2_clock/2021-04-26"
+  set psrcat_mod = "psrcat/1.50"
+  set atnfcat_mod = "atnfcat/1.70"
+
+  # python software
+  set python_mod = "python/3.10.4"
+  set numpy_mod = "numpy/1.22.3-scipy-bundle-2022.05"
+  set boost_mod = "boost.python/1.79.0"
+  set scipy_mod = "scipy/1.8.1-scipy-bundle-2022.05"
+  set pandas_mod = "pandas/1.4.2-scipy-bundle-2022.05"
+  set astropy_mod = "astropy/5.1.1"
+  set matplotlib_mod = "matplotlib/3.5.2"
+  set swig_mod = "swig/4.0.2"
+  set psrqpy_mod = "psrqpy/0addced"
+  set pyslalib_mod = "pyslalib/fcb0650"
+  set coast_guard_mod = "coast_guard/e1442d2"
+  set scintools_mod = "scintools/1334918"
+  set psrdb_mod = "psrdb/3.0.1"
+
+  set python_small_ver = "python3.10" # for PYTHONPATH setting
+else
+  echo "WARNING: unmatched SYS_ARCH, westmere, sandybridge & skylake are supported"
+  exit 1
+endif

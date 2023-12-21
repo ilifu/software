@@ -1,0 +1,115 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+set deps = "${gcc_mod} ${omp_mod}"
+foreach dep ( $deps )
+  module load $dep
+end
+module load ${git_mod}
+
+source build.environ
+
+set module = "tempo"
+set source_dir = "${source_base}/${module}"
+
+if (! -d $source_dir) then
+  ssh ${ssh_loc} "cd $source_base; git clone http://git.code.sf.net/p/tempo/tempo"
+endif
+
+pushd $source_dir
+
+# If not hash, always pull latest
+if ( "$1" == "latest" ) then
+  ssh ${ssh_loc} "cd $source_dir; ./update"
+  set version = `git rev-parse --short HEAD`
+else if ( "$1" == "" ) then
+  set version = `git rev-parse --short HEAD`
+else
+  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  set version = "$1"
+  git checkout $version
+  if ( $? != 0 ) then
+    echo "GIT Checkout failed, please check version/hash"
+    exit 1
+  endif
+endif
+
+set build_dir = "${source_dir}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building ${module}/${version} to ${install_dir} with lmod file ${lmod_file}"
+
+echo "Bootstrapping ..."
+autoreconf --install --force >& ${source_dir}/build.log
+
+# create build directory
+mkdir -m 0755 -p ${build_dir}
+pushd ${build_dir}
+
+echo "Configuring ..."
+${source_dir}/configure --prefix=${install_dir} >& ${build_dir}/build.log
+
+echo "make clean ..."
+make clean >>& ${build_dir}/build.log
+
+echo "make -j 32 ..."
+make -j 32 >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make install ..."
+make install >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make install failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "Installing runtime distribution files..."
+cp obsys.dat tempo.cfg tempo.hlp ${install_dir}/
+sed -i "s#${source_dir}#${install_dir}#" ${install_dir}/tempo.cfg
+
+mkdir -m 0755 -p ${install_dir}/clock
+cp clock/* ${install_dir}/clock
+rm -f ${install_dir}/clock/Makefile*
+
+mkdir -m 0755 -p ${install_dir}/ephem
+cp ephem/* ${install_dir}/ephem
+rm -f ${install_dir}/ephem/Makefile*
+
+mkdir -m 0755 -p ${install_dir}/tzpar
+cp tzpar/* ${install_dir}/tzpar
+rm -f ${install_dir}/tzpar/Makefile*
+
+echo "make clean"
+make clean >>& ${build_dir}/build.log
+
+popd
+
+popd
+
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -p $lmod_dir
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PSRHOME_TEMPO_PATH",pkg)' >> $lmod_file
+echo 'setenv("TEMPO",pkg)' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end

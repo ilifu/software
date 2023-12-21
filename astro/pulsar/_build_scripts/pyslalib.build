@@ -1,0 +1,84 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+set deps = "${gcc_mod} ${omp_mod} ${python_mod} ${numpy_mod}"
+foreach dep ( $deps )
+    echo module load $dep
+    module load $dep
+end
+module load ${git_mod}
+
+source build.environ
+
+set module = "pyslalib"
+set source_dir = "${source_base}/${module}"
+
+if (! -d $source_dir) then
+    echo "cd $source_base; module load ${gcc_mod} ${git_mod}; git clone https://github.com/scottransom/pyslalib.git"
+    ssh ${ssh_loc} "cd $source_base; module load ${gcc_mod} ${git_mod}; git clone https://github.com/scottransom/pyslalib.git"
+endif
+
+pushd $source_dir
+
+
+# If not hash, always pull latest
+if ( "$1" == "latest" ) then
+  ssh ${ssh_loc} "cd $source_dir; git pull"
+  set version = `git rev-parse --short HEAD`
+else if ( "$1" == "" ) then
+  set version = `git rev-parse --short HEAD`
+else
+  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  set version = "$1"
+  git checkout $version
+  if ( $? != 0 ) then
+    echo "GIT Checkout failed, please check version/hash"
+    exit 1
+  endif
+endif
+
+set build_dir = "~/${module}/${version}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Installing ${module}/${version}"
+
+if ( ! -d ${install_dir} ) then
+  mkdir -m 0755 -p ${install_dir}
+endif
+
+# generate the poetry virtual environment
+ssh ${ssh_loc} "cd $source_dir; module purge; module load $deps; setenv PIP_REQUIRE_VIRTUALENV no; pip install . --prefix ${build_dir}/"
+# setenv PIP_REQUIRE_VIRTUALENV no
+# pip install . --prefix ${install_dir}/
+
+rm -r ${install_dir}
+mv ${build_dir} ${install_dir}
+
+
+popd
+
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -p $lmod_dir
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the template
+cp common.lua.${gcc_ver} $lmod_file
+
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end
+
+# add custom rules to the LUA
+echo 'append_path("PATH", pathJoin(pkg, "bin"))' >> $lmod_file
+echo "append_path('PYTHONPATH',pathJoin(pkg, 'lib', '${python_small_ver}', 'site-packages'))" >> $lmod_file

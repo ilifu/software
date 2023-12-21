@@ -1,0 +1,109 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+set deps = "${gcc_mod} ${omp_ver} ${psr_cfitsio_mod}"
+foreach dep ( $deps )
+  module load $dep
+end
+module load ${git_mod}
+
+source build.environ
+
+set module = "psrfits_utils"
+set source_dir = "${source_base}/${module}"
+
+if (! -d $source_dir) then
+  ssh tooarrrana1 "cd $source_base; git clone https://github.com/demorest/psrfits_utils.git"
+endif
+
+pushd $source_dir
+
+# If not hash, always pull latest
+if ( "$1" == "latest" ) then
+  ssh ${ssh_loc} "cd $source_dir; ./git pull origin master"
+  set version = `git rev-parse --short HEAD`
+else if ( "$1" == "" ) then
+  set version = `git rev-parse --short HEAD`
+else
+  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  set version = "$1"
+  git checkout $version
+  if ( $? != 0 ) then
+    echo "GIT Checkout failed, please check version/hash"
+    exit 1
+  endif
+endif
+
+set build_dir = "${build_base}/${module}/${version}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building ${module}/${version}, log at ${build_dir}/build.log"
+
+mkdir -m 0755 -p ${build_dir}
+
+setenv CFLAGS "${CFLAGS} -I${PSRHOME_CFITSIO_PATH}/include"
+setenv LDFLAGS "-L${PSRHOME_CFITSIO_PATH}/lib"
+
+set updated_configure = `grep AM_PROG_AR configure.ac | wc -l`
+if ( $updated_configure == 0 ) then
+  sed -i "s/AC_PROG_LIBTOOL/AC_PROG_LIBTOOL\nAM_PROG_AR/" configure.ac
+endif
+
+#set updated_configure = `grep AM_PROG_CC_O configure.ac | wc -l`
+#if ( $updated_configure == 0 ) then
+#  sed -i "s/AC_PROG_CC/AC_PROG_CC\nAM_PROG_CC_C_O/" configure.ac
+#endif
+
+./prepare >& ${build_dir}/build.log
+
+popd
+
+pushd $build_dir
+
+${source_dir}/configure --prefix=${install_dir} >& ${build_dir}/build.log
+
+echo "make clean ..."
+make clean >>& ${build_dir}/build.log
+
+echo "make -j 32 ..."
+make -j 32 >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make install ..."
+make install >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make install failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make clean"
+make clean >>& ${build_dir}/build.log
+
+popd
+
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -p $lmod_dir
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PSRHOME_PSRFITS_UTILS_PATH",pkg)' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end

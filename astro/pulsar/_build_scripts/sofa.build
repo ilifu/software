@@ -1,0 +1,92 @@
+#!/bin/csh
+
+source common.build
+
+set module = "sofa"
+set version = "20180130"
+set tar_gz = "sofa_c-20180130.tar.gz"
+
+pushd $source_base
+
+if ( -d ${module}/${version} ) then
+  rm -rf ${module}/${version}
+endif
+
+if ( ! -f $tar_gz ) then
+  ssh ${ssh_loc} "cd $source_base; wget http://www.iausofa.org/2018_0130_C/$tar_gz"
+endif
+
+if ( ! ( -f $tar_gz ) ) then
+  echo "FAILED to download tar.gz"
+  exit 1
+endif
+
+tar -xzf $tar_gz
+#rm -f $tar_gz
+
+set deps = "${gcc_mod} ${omp_mod}"
+
+# setup modules
+module purge
+foreach dep ( $deps )
+  module load $dep
+end
+
+set source_dir = "${source_base}/${module}/${version}"
+set build_dir = "${source_base}/${module}/${version}"
+
+set version = "${version}"
+
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building ${module}/${version}"
+
+pushd $source_dir/c/src
+
+sed -i 's#INSTALL_DIR = $(HOME)#INSTALL_DIR = HOME#' makefile
+sed -i "s#INSTALL_DIR = HOME#INSTALL_DIR = $install_dir#" makefile
+
+echo "make ..."
+make >& $build_dir/build.log
+if ( $? != 0 ) then
+  echo "ERROR: make failed, see $build_dir/build.log"
+  exit 1
+endif
+
+echo "make test ..."
+make test >>&  $build_dir/build.log
+if ( $? != 0 ) then
+  echo "ERROR: make test failed, see $build_dir/build.log"
+  exit 1
+endif
+
+echo "make install ..."
+make install >>&  $build_dir/build.log
+if ( $? != 0 ) then
+  echo "ERROR: make install failed, see $build_dir/build.log"
+  exit 1
+endif
+
+popd
+
+# setup the lmod file
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -m 0755  -p ${lmod_dir}
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the common template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PSRHOME_SOFA_PATH",pkg)' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end

@@ -1,0 +1,99 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+set deps = "${gcc_mod}"
+foreach dep ( $deps )
+  module load $dep
+end
+module load ${git_mod}
+module load ${cmake_mod}
+
+source build.environ
+
+set module = "splinter"
+set source_dir = "${source_base}/${module}"
+
+if ( ! ( -d $source_dir ) ) then
+  ssh ${ssh_loc} "cd $source_base; git clone https://github.com/bgrimstad/splinter.git"
+endif
+
+pushd $source_dir
+git checkout develop
+
+# If not hash, always pull latest
+if ( "$1" == "latest" ) then
+  ssh ${ssh_loc} "cd $source_dir; git pull"
+  set version = `git rev-parse --short HEAD`
+else if ( "$1" == "" ) then
+  set version = `git rev-parse --short HEAD`
+else
+  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  set version = "$1"
+  git checkout $version
+  if ( $? != 0 ) then
+    echo "GIT Checkout failed, please check version/hash"
+    exit 1
+  endif
+endif
+
+set version = "${version}"
+
+set build_dir = "${build_base}/${module}/${version}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building ${module}/${version}"
+
+# create build directory
+mkdir -m 0755 -p ${build_dir}
+cd ${build_dir}
+
+echo "Configuring ..."
+cmake ${source_dir} -DCMAKE_INSTALL_PREFIX=${install_dir} -DCMAKE_CXX_FLAGS="${CXXFLAGS} -fPIC" >& build.log
+if ( $? != 0 ) then
+  echo "cmake failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "Make clean ..."
+make clean >>& build.log
+
+echo "Make ..."
+make -j 8 >>& build.log
+if ( $? != 0 ) then
+  echo "make clean failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "Make install ..."
+make install >>& build.log
+if ( $? != 0 ) then
+  echo "make install failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+popd
+
+# setup the lmod file
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -m 0755  -p ${lmod_dir}
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the common template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PSRHOME_SPLINTER_PATH",pkg)' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end

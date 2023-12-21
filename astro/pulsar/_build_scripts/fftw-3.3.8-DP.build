@@ -1,0 +1,82 @@
+#!/bin/csh
+
+source common.build
+
+set module = "fftw-DP"
+set version = "3.3.8"
+set deps = "${gcc_mod} ${omp_mod}"
+
+
+# setup modules
+module purge
+foreach dep ( $deps )
+  module load $dep
+end
+
+source build.environ
+
+set source_dir = "${source_base}/fftw-3.3.8"
+set build_dir = "${build_base}/${module}/${version}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building ${module}/${version}"
+
+pushd $source_dir
+
+# bootstrap to produce the configure script
+rm -rf autom4te.cache
+echo "Bootstrapping ..."
+autoreconf --verbose --install --symlink --force >& bootstrap.log
+rm -f config.cache
+
+# create build directory
+mkdir -m 0755 -p ${build_dir}
+cd ${build_dir}
+
+echo "Configuring ..."
+${source_dir}/configure --prefix=${install_dir}  --enable-shared --enable-sse2 --enable-threads --disable-dependency-tracking >& build.log
+if ( $? != 0 ) then
+  echo "configure failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "Make clean ..."
+make clean >>& build.log
+
+echo "Make -j 32 ..."
+make -j 32 >>& build.log
+if ( $? != 0 ) then
+  echo "make failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "Make install ..."
+make install >>& build.log
+if ( $? != 0 ) then
+  echo "make install failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+popd
+
+# setup the lmod file
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -m 0755  -p ${lmod_dir}
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the common template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PSRHOME_FFTW_DP_PATH",pkg)' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end

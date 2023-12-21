@@ -1,0 +1,116 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+set deps = "${gcc_mod} ${omp_mod} ${gsl_mod} ${fftw_mod} ${pgplot_mod} ${sofa_mod} ${cuda_mod} ${imkl_mod}"
+foreach dep ( $deps )
+  module load $dep
+end
+module load $git_mod
+
+source build.environ
+
+set module = "psrdada"
+set source_dir = "${source_base}/${module}"
+
+if (! -d $source_dir) then
+  ssh ${ssh_loc} "cd $source_base; git clone ssh://ajameson@git.code.sf.net/p/psrdada/code psrdada"
+endif
+
+pushd $source_dir
+
+# If not hash, always pull latest
+if ( "$1" == "latest" ) then
+  ssh ${ssh_loc} "cd $source_dir; git pull"
+  set version = `git rev-parse --short HEAD`
+else if ( "$1" == "" ) then
+  set version = `git rev-parse --short HEAD`
+else
+  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  set version = "$1"
+  git checkout $version
+  if ( $? != 0 ) then
+    echo "GIT Checkout failed, please check version/hash"
+    exit 1
+  endif
+endif
+
+set build_dir = "${build_base}/${module}/${version}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building ${module}/${version}"
+
+if ( -d ${build_dir} ) then
+  rm -rf ${build_dir}
+endif
+
+# create build directory
+mkdir -m 0755 -p ${build_dir}
+
+echo "Bootstrapping ..."
+./bootstrap >& ${build_dir}/build.log
+
+pushd ${build_dir}
+
+# unsetenv LIBRARY_PATH
+if ( "$gcc_mod" == "gcc/11.3.0" ) then
+  set CFLAGS = "-fcommon"
+else
+  set CFLAGS = ""
+endif
+
+echo "Configuring ..."
+if ( ! $?EBROOTCUDA  ) then
+  echo "Without CUDA"
+  ${source_dir}/configure --prefix=${install_dir} --with-sofa-dir=$PSRHOME_SOFA_PATH --with-fftw3-dir=$PSRHOME_FFTW_SP_PATH --enable-shared >>& ${build_dir}/build.log
+else
+  echo "With CUDA"
+  ${source_dir}/configure --prefix=${install_dir} --with-cuda-dir=$EBROOTCUDA --with-sofa-dir=$PSRHOME_SOFA_PATH --with-fftw3-dir=$PSRHOME_FFTW_SP_PATH --enable-shared CFLAGS="${CFLAGS}" >>& ${build_dir}/build.log
+endif
+
+# echo "make clean ..."
+# make clean >>& ${build_dir}/build.log
+
+echo "make  ..."
+make >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make install ..."
+make install >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make install failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make clean"
+make clean >>& ${build_dir}/build.log
+
+popd
+
+popd
+
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -p $lmod_dir
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PSRHOME_PSRDADA_PATH",pkg)' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end

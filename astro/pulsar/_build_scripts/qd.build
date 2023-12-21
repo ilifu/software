@@ -1,0 +1,92 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+set deps = "${gcc_mod}"
+foreach dep ( $deps )
+  module load $dep
+end
+module load ${git_mod}
+
+source build.environ
+set module = "qd"
+set source_dir = "${source_base}/${module}"
+
+if (! -d $source_dir) then
+  ssh ${ssh_loc} "cd $source_base; git clone https://bitbucket.org/njet/qd-library.git qd"
+endif
+
+pushd $source_dir
+
+echo "Bootstrapping ..."
+autoreconf --install --force >&  ${source_dir}/build.log
+
+# If not hash, always pull latest
+set pkg_version = `grep PACKAGE_VERSION ${source_dir}/configure | awk -F= '{print $2}' | awk -F\' '{print $2}'`
+set version = "${pkg_version}"
+
+set build_dir = "${build_base}/${module}/${version}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Building ${module}/${version}"
+
+if ( -d ${build_dir} ) then
+  rm -rf ${build_dir}
+endif
+
+# create build directory
+mkdir -m 0755 -p ${build_dir}
+
+pushd ${build_dir}
+mv ${source_dir}/build.log .
+
+echo "Configuring ..."
+${source_dir}/configure --prefix=${install_dir} >>& ${build_dir}/build.log
+
+echo "make clean ..."
+make clean >>& ${build_dir}/build.log
+
+echo "make -j 32 ..."
+make -j 32 >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make install ..."
+make install >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make install failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make clean"
+make clean >>& ${build_dir}/build.log
+
+popd
+
+popd
+
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -p $lmod_dir
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'setenv("PSRHOME_QD_PATH",pkg)' >> $lmod_file
+echo 'setenv("QDINSTALL",pkg)' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end

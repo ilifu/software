@@ -1,0 +1,115 @@
+#!/bin/csh
+
+source common.build
+
+module purge
+
+set deps = "${gcc_mod} ${omp_mod} ${psr_cfitsio_mod} ${psrcat_mod} ${atnfcat_mod} ${gsl_mod} ${tempo_mod} ${tempo2_mod} ${fftw_mod} ${pgplot_mod} ${python_mod} ${numpy_mod} ${psrxml_mod} ${splinter_mod} ${swig_mod}"
+echo $deps
+foreach dep ( $deps )
+  module load $dep
+end
+module load ${git_mod}
+
+source build.environ
+
+set module = "psrchive"
+set source_dir = "${source_base}/${module}"
+
+if (! -d $source_dir) then
+  ssh ${ssh_loc}  "cd $source_base; git clone git://git.code.sf.net/p/psrchive/code psrchive"
+endif
+
+pushd $source_dir
+
+# If not hash, always pull latest
+if ( "$1" == "latest" ) then
+  ssh ${ssh_loc}  "cd $source_dir; ./update"
+  set version = `git rev-parse --short HEAD`
+else if ( "$1" == "" ) then
+  set version = `git rev-parse --short HEAD`
+else
+  ssh ${ssh_loc}  "cd $source_dir; git fetch"
+  set version = "$1"
+  git checkout $version
+  if ( $? != 0 ) then
+    echo "GIT Checkout failed, please check version/hash"
+    exit 1
+  endif
+endif
+
+set build_dir = "${build_base}/${module}/${version}"
+set install_dir = "${install_base}/${module}/${version}"
+set lmod_dir = "${lmod_base}/${module}"
+set lmod_file = "${lmod_dir}/${version}.lua"
+
+echo "Copying Matthew Bailes custom script into the repo"
+cp ${source_base}/example.C  ${source_dir}/More/Applications/
+sed -i 's/smint psr4th2txt/smint psr4th2txt example/' ${source_dir}/More/Applications/Makefile.am
+sed -i '16 i\example_SOURCES = example.C' ${source_dir}/More/Applications/Makefile.am
+
+echo "Building ${module}/${version}"
+
+echo "Bootstrapping ..."
+./bootstrap >& ${source_dir}/build.log
+
+# create build directory
+mkdir -m 0755 -p ${build_dir}
+pushd ${build_dir}
+
+# Add a flag to ignore a fortran mismatch error flagged in modern gcc versions
+if ( "$gcc_mod" == "gcc/11.3.0" ) then
+  set FFLAGS = "-fallow-argument-mismatch"
+else
+  set FFLAGS = ""
+endif
+
+echo "Configuring ..."
+echo $FFLAGS
+echo $gcc_mod
+${source_dir}/configure --prefix=${install_dir} --with-psrxml-dir=${PSRHOME_PSRXML_PATH} --enable-shared FFLAGS=${FFLAGS} >& ${build_dir}/build.log
+
+echo "make clean ..."
+make clean >>& ${build_dir}/build.log
+
+echo "make -j 32 ..."
+make -j 32 >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make install ..."
+make install >>& ${build_dir}/build.log
+if ( $? != 0 ) then
+  echo "make install failed: see ${build_dir}/build.log"
+  exit 1
+endif
+
+echo "make clean"
+make clean >>& ${build_dir}/build.log
+
+popd
+
+popd
+
+if ( ! ( -d ${lmod_dir} ) ) then
+  mkdir -p $lmod_dir
+endif
+
+if ( -f ${lmod_file} ) then
+  rm -f ${lmod_file}
+endif
+
+# use the template
+cp common.lua.${gcc_ver} $lmod_file
+
+# add custom rules to the LUA
+echo 'local pythonpath = pathJoin(pkg,"lib","python3.10","site-packages")' >> $lmod_file
+echo 'setenv("PSRHOME_PSRCHIVE_PATH",pkg)' >> $lmod_file
+echo 'prepend_path("PYTHONPATH", pythonpath, ":")' >> $lmod_file
+
+# add dependencies
+foreach dep ( $deps )
+  echo depends_on\(\"$dep\"\) >> $lmod_file
+end
