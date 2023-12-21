@@ -1,6 +1,6 @@
 #!/bin/csh
 
-setenv(SYS_ARCH, "openstack") # For Ilifu
+setenv SYS_ARCH "openstack" # System Architecture for Ilifu
 
 # Default cluster specific versions
 if (!( $?gcc_ver)) then
@@ -16,20 +16,20 @@ endif
 if (!( $?omp_ver)) then
     if ( "$SYS_ARCH" == "skylake" ) then
         #setenv omp_ver "openmpi/4.0.2"
-        setenv omp_ver "openmpi/4.1.4"
+        setenv omp_ver "openmpi/4.1.5"
     else if ( "$SYS_ARCH" == "openstack" ) then
-        setenv omp_ver "openmpi/4.1.4"
+        setenv omp_ver "openmpi/4.1.5"
     else if ( "$SYS_ARCH" == "milan" ) then
-        setenv omp_ver "openmpi/4.1.4"
+        setenv omp_ver "openmpi/4.1.5"
     endif
 endif
 # above could possibly supposed to be
 # openmpi/4.1.4
 
-set source_base = "/software/astro/pulsar/_sources" # Note: This does not exist - includes patches for pgplot. TODO: Get from Nick.
+set source_base = "/software/astro/pulsar/_src" # Note: This does not exist - includes patches for pgplot. TODO: Get from Nick.
 set apps_base = "/software/astro/pulsar"
-set build_base = "/dev/shm/pulsar/$gcc_ver/build"
-set install_base = "$apps_base/$gcc_ver/software"
+set build_base = "/dev/shm/pulsar/$gcc_ver"
+set install_base = "$apps_base/$gcc_ver"
 set lmod_base = "/software/modules/astro/pulsar"
 
 if ( "$SYS_ARCH" == "skylake" ) then
@@ -49,8 +49,7 @@ if ( ! ( -f common.build.${gcc_ver} ) ) then
     exit 1
 endif
 
-module unuse /apps/users/pulsar/skylake/modulefiles
-module use /apps/users/pulsar/${SYS_ARCH}/${gcc_ver}/modulefiles
+module unuse /software/modules/astro/pulsar
 
 source common.build.${gcc_ver}
 

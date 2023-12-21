@@ -4,13 +4,13 @@ source common.build
 
 module purge
 
-set deps = "${gcc_mod} ${omp_mod}"
+set deps = "${omp_mod}"
 foreach dep ( $deps )
   module load $dep
 end
-module load ${git_mod}
 
-source build.environ
+# module load ${git_mod}
+# source build.environ
 
 set module = "psrxml"
 set version = "1.01"
@@ -21,11 +21,11 @@ set lmod_dir = "${lmod_base}/${module}"
 set lmod_file = "${lmod_dir}/${version}.lua"
 
 if (! -d $source_dir) then
-  ssh ${ssh_loc} "cd $source_base; git clone https://github.com/SixByNine/psrxml.git"
+  pushd $source_base
+  git clone https://github.com/SixByNine/psrxml.git
 endif
 
 pushd $source_dir
-
 
 echo "Building ${module}/${version}"
 
@@ -44,14 +44,14 @@ make clean >>& ${build_dir}/build.log
 
 echo "make ..."
 make >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make failed: see ${build_dir}/build.log"
   exit 1
 endif
 
 echo "make install ..."
 make install >>& ${build_dir}/build.log
-if ( $? != 0 ) then
+if ( $status != 0 ) then
   echo "make install failed: see ${build_dir}/build.log"
   exit 1
 endif
