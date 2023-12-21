@@ -1,0 +1,43 @@
+- name: Install dedisp
+  vars:
+    dedisp_dir: "{{ astro_dir }}/dedisp"
+    dedisp_module_dir: "{{ astro_modules }}/dedisp"
+    git_url: "{{ git_url }}"
+    install_dir: "{{ dedisp_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/dedisp-master"
+  tags:
+    - never
+    - dedisp
+  block:
+    - name: git clone
+      git:
+        repo: "{{ git_url }}"
+        dest: "{{ unzipdir }}"
+        clone: yes
+
+    - name: make
+      make:
+        chdir: "{{ unzipdir }}"
+        target: "GPU_ARCH={{ cuda_arch }} CUDA_PATH={{ cuda_path }} INSTALL_DIR={{ install_dir }}"
+   
+    - name: make install 
+      make:
+        chdir: "{{ unzipdir }}"
+        target: INSTALL_DIR={{ install_dir }} install
+
+    - name: make clean 
+      make:
+        chdir: "{{ unzipdir }}"
+        target: "clean"
+
+    - name: Install dedisp {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ dedisp_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install dedisp {{ version_number }} module file
+          template:
+            src: astro/dedisp.lua
+            dest: "{{ dedisp_module_dir }}/default.lua"

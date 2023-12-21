@@ -89,10 +89,35 @@
         fftw_dir: "/software/common/fftw/3.3.8",
         psrxml_module: "psrxml/1.05",
         psrxml_dir: "/software/psrxml/1.05"
-      }
+      }   
   include_tasks:
     file: 'sigproc.yaml'
   loop: "{{ versions}}"
   tags:
       - never
       - sigproc
+
+- name: Install dedisp
+  vars:
+    git_url: "git://github.com/ajameson/dedisp.git"
+    git_hash: "TODO"
+  include_tasks:
+    file: 'dedisp.yaml'
+  tags:
+      - never
+      - dedisp
+
+- name: Install dedisp
+  vars:
+    versions:
+      - {
+        version_number: "default",
+        git_url: "https://github.com/ajameson/dedisp.git",
+      }
+  include_tasks:
+    file: 'dedisp.yaml'
+  loop: "{{ versions}}"
+  tags:
+      - never
+      - dedisp
+
