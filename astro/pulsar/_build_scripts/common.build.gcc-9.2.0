@@ -1,0 +1,64 @@
+#!/bin/csh
+
+if ( "$SYS_ARCH" == "westmere" ) then
+  set gcc_mod = "gcc/9.2.0"
+  set omp_mod = "openmpi/4.0.2"
+  set cuda_mod = "cuda/10.2.89"
+  set cuda_arch = ""
+  set gsl_mod = "gsl/2.5"
+else if ( "$SYS_ARCH" == "sandybridge" ) then
+  set gcc_mod = "gcc/9.2.0"
+  set omp_mod = "openmpi/4.0.2"
+  set cuda_mod = "cuda/10.2.89"
+  set cuda_arch = "sm_30"
+  set gsl_mod = "gsl/2.5"
+else if ( "$SYS_ARCH" == "knl" ) then
+  set gcc_mod = "gcc/9.2.0"
+  set omp_mod = "openmpi/4.0.2"
+  set cuda_mod = ""
+  set cuda_arch = ""
+  set gsl_mod = "gsl/2.5"
+else if ( "$SYS_ARCH" == "skylake" ) then
+  # ozstar maintanted software
+  set gcc_mod = "gcc/9.2.0"
+  set omp_mod = "openmpi/4.0.2"
+  set cuda_mod = "cuda/11.6.0"
+  set cuda_arch = "sm_60"
+  set gsl_mod = "gsl/2.5"
+  set lapack_mod = "lapack/3.9.0"
+  set openblas_mod = "openblas/0.3.9"
+  set cmake_mod = "cmake/3.16.4"
+  set imkl_mod = "imkl/2019.5.281"
+
+  # pulsar maintanted software
+  set fftw_mod = "fftw-SP/3.3.8"
+  set qd_mod = "qd/2.3.12"
+  set calceph_mod = "calceph/2.3.2"
+  set pgplot_mod = "pgplot/5.2"
+  set tempo_mod = "tempo/3ad01b1"
+  set tempo2_mod = "tempo2/02c9abb"
+  set psrchive_mod = "psrchive/c216582a0"
+  set psrcat_mod = "psrcat/1.50"
+  set atnfcat_mod = "atnfcat/1.70"
+  set psrxml_mod = "psrxml/1.01"
+  set splinter_mod = "splinter/da6ac4f"
+  set psr_cfitsio_mod = "psr_cfitsio/3.450"
+  set sofa_mod = "sofa/20180130"
+  set psrdada_mod = "psrdada/f654e40"
+  set dedisp_mod = "dedisp/9850b7e"
+  set pyslalib_mod = "pyslalib/fcb0650"
+
+  # python software
+  set python_mod = "python/3.7.4"
+  set numpy_mod = "numpy/1.18.2-python-3.7.4"
+  set boost_mod = "boost/1.74.0-python-3.7.4"
+  set scipy_mod = "scipy/1.4.1-python-3.7.4"
+  set astropy_mod = "astropy/4.0.1-python-3.7.4"
+  set matplotlib_mod = "matplotlib/3.2.1-python-3.7.4"
+  set swig_mod = "swig/4.0.2-python-3.7.4"
+
+  set python_small_ver = "python3.7" # for PYTHONPATH setting
+else
+  echo "WARNING: unmatched SYS_ARCH, westmere, sandybridge & skylake are supported"
+  exit 1
+endif

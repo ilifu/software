@@ -1,24 +1,26 @@
-./fftw-3.3.8-SP.build
-./pgplot.build
-./qd.build
-./calceph-2.3.2.build
+#!/usr/bin/env bash
 
-./psrcat.build
-./antfcat.build
-./tempo.build
-./tempo2.build
+# ./fftw-3.3.8-SP.build
+# ./pgplot.build
+# ./qd.build
+# ./calceph-2.3.2.build
+
+# ./psrcat.build
+# ./antfcat.build
+# ./tempo.build
+# ./tempo2.build
 
 ./psrxml.build
-./splinter.build
-./psr_cfitsio-3.450.build
-./sofa.build
-./psrdada.build
+# ./splinter.build
+# ./psr_cfitsio-3.450.build
+# ./sofa.build
+# ./psrdada.build
 
-./psrchive.build
-./dspsr.build
-./dedisp.build
-./heimdall.build
+# ./psrchive.build
+# ./dspsr.build
+# ./dedisp.build
+# ./heimdall.build
 
-./pyslalib.build
-./presto.build
-./sigproc.build
+# ./pyslalib.build
+# ./presto.build
+# ./sigproc.build

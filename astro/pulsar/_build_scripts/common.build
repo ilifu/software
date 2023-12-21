@@ -1,5 +1,7 @@
 #!/bin/csh
 
+setenv(SYS_ARCH, "openstack") # For Ilifu
+
 # Default cluster specific versions
 if (!( $?gcc_ver)) then
     if ( "$SYS_ARCH" == "skylake" ) then
@@ -24,11 +26,11 @@ endif
 # above could possibly supposed to be
 # openmpi/4.1.4
 
-set source_base = "/home/pulsar/sources"
-set apps_base = "/apps/users/pulsar/$SYS_ARCH"
-set build_base = "$apps_base/$gcc_ver/build"
+set source_base = "/software/astro/pulsar/_sources" # Note: This does not exist - includes patches for pgplot. TODO: Get from Nick.
+set apps_base = "/software/astro/pulsar"
+set build_base = "/dev/shm/pulsar/$gcc_ver/build"
 set install_base = "$apps_base/$gcc_ver/software"
-set lmod_base = "$apps_base/$gcc_ver/modulefiles"
+set lmod_base = "/software/modules/astro/pulsar"
 
 if ( "$SYS_ARCH" == "skylake" ) then
     #set git_mod = "git/2.18.0"
