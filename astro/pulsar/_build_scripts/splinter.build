@@ -54,7 +54,6 @@ mkdir -m 0755 -p ${build_dir}
 cd ${build_dir}
 
 echo "Configuring ..."
-# cmake ${source_dir} -DCMAKE_INSTALL_PREFIX=${install_dir} -DCMAKE_CXX_FLAGS="${CXXFLAGS} -fPIC" >& build.log
 cmake ${source_dir} -DCMAKE_INSTALL_PREFIX=${install_dir} -DCMAKE_CXX_FLAGS="-fPIC" >& build.log
 if ( $status != 0 ) then
   echo "cmake failed: see ${build_dir}/build.log"

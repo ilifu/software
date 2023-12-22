@@ -27,7 +27,7 @@ mv psrcat_tar psrcat
 set module = "psrcat"
 set sw_version = `grep PSRCAT_SOFTWARE_VERSION psrcat/psrcat.h | awk '{print $3}'`
 set version = "${sw_version}"
-set deps = "${gcc_mod}"
+set deps = ""
 
 # setup modules
 module purge
@@ -71,7 +71,7 @@ cp common.lua.${gcc_ver} $lmod_file
 
 # add custom rules to the LUA
 echo 'setenv("PSRHOME_PSRCAT_PATH", pkg)' >> $lmod_file
-echo 'setenv("PSRCAT_RUNDIR", "/apps/users/pulsar/common/software/psrcat/")' >> $lmod_file
+echo 'setenv("PSRCAT_RUNDIR", "/software/astro/pulsar/psrcat/")' >> $lmod_file
 
 # add dependencies
 foreach dep ( $deps )

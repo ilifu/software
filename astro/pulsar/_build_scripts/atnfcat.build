@@ -17,16 +17,19 @@ if ( -d psrcat ) then
 endif
 
 if ( "$1" == "latest" ) then
-  ssh ${ssh_loc} "cd $source_base; wget https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz"
+  cd $source_base
+  wget https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz
   gunzip -c psrcat_pkg.tar.gz | tar xvf -
   mv psrcat_tar psrcat
 else if ( "$1" == "" ) then
-  ssh ${ssh_loc} "cd $source_base; wget https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz"
+  cd $source_base
+  wget https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz
   gunzip -c psrcat_pkg.tar.gz | tar xvf -
   mv psrcat_tar psrcat
 else
   set version = "$1"
-  ssh ${ssh_loc} "cd $source_base; wget https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.v${version}.tar.gz"
+  cd $source_base
+  wget https://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.v${version}.tar.gz
   gunzip -c psrcat_pkg.v${version}.tar.gz | tar xvf -
   mv psrcat_tar psrcat
 endif
