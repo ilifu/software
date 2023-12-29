@@ -378,8 +378,16 @@
         checksum: "md5:a957cffb58a89303b62124896881950b"
       }
       - {
+          version_number: "3.11.7",
+          checksum: "md5:d96c7e134c35a8c46236f8a0e566b69c",
+      }
+      - {
           version_number: "3.12.0",
           checksum: "md5:f6f4616584b23254d165f4db90c247d6"
+      }
+      - {
+          version_number: "3.12.1",
+          checksum: "md5:50f827c800483776c8ef86e6a53831fa"
       }
     pip_packages:
       - pip
