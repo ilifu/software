@@ -9,7 +9,7 @@ echo $deps
 foreach dep ( $deps )
   module load $dep
 end
-module load ${git_mod}
+# module load ${git_mod}
 
 # source build.environ
 
@@ -25,12 +25,12 @@ pushd $source_dir
 
 # If not hash, always pull latest
 if ( "$1" == "latest" ) then
-  ssh ${ssh_loc}  "cd $source_dir; ./update"
+  cd $source_dir; ./update
   set version = `git rev-parse --short HEAD`
 else if ( "$1" == "" ) then
   set version = `git rev-parse --short HEAD`
 else
-  ssh ${ssh_loc}  "cd $source_dir; git fetch"
+  cd $source_dir; git fetch
   set version = "$1"
   git checkout $version
   if ( $status != 0 ) then

@@ -1,26 +1,27 @@
 #!/usr/bin/env bash
 
 # ./fftw-3.3.8-SP.build
-# ./pgplot.build
-# ./qd.build
-# ./calceph-2.3.2.build
+# ./pgplot.build # TC: patch needed
+./qd.build
+# ./calceph-2.3.2.build # DK: installed
 
-# ./psrcat.build
-# ./antfcat.build
-# ./tempo.build
-# ./tempo2.build
+./psrcat.build
+./antfcat.build
+# ./tempo.build # TC: TODO
+# ./tempo2.build # TC: TODO
 
 ./psrxml.build
 ./splinter.build
-# ./psr_cfitsio-3.450.build
-# ./sofa.build
-# ./psrdada.build
+# ./psr_cfitsio-3.450.build # DK: installed
+./sofa.build
 
+# ./psrdada.build # TC: TODO ... depends imkl?
 # ./psrchive.build
 # ./dspsr.build
-# ./dedisp.build
-# ./heimdall.build
 
-# ./pyslalib.build
+# ./dedisp.build
+# ./heimdall.build # Not needed
+# ./pyslalib.build 
 # ./presto.build
-# ./sigproc.build
+
+./sigproc.build

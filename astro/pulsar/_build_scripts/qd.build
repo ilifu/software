@@ -8,9 +8,9 @@ set deps = ""
 foreach dep ( $deps )
   module load $dep
 end
-module load ${git_mod}
+# module load ${git_mod}
 
-source build.environ
+# source build.environ
 set module = "qd"
 set source_dir = "${source_base}/${module}"
 

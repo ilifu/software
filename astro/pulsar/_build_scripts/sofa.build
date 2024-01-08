@@ -25,7 +25,7 @@ endif
 tar -xzf $tar_gz
 #rm -f $tar_gz
 
-set deps = "${gcc_mod} ${omp_mod}"
+set deps = "${omp_mod}"
 
 # setup modules
 module purge
@@ -80,6 +80,8 @@ endif
 if ( -f ${lmod_file} ) then
   rm -f ${lmod_file}
 endif
+
+popd
 
 # use the common template
 cp common.lua.${gcc_ver} $lmod_file
