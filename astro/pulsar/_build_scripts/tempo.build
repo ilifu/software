@@ -8,7 +8,7 @@ set deps = "${omp_mod}"
 foreach dep ( $deps )
   module load $dep
 end
-module load ${git_mod}
+# module load ${git_mod}
 
 # source build.environ
 

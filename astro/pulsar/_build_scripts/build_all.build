@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ./fftw-3.3.8-SP.build
-# ./pgplot.build # TC: patch needed
+./pgplot.build # TC: patch needed
 ./qd.build
 # ./calceph-2.3.2.build # DK: installed
 

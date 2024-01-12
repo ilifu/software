@@ -28,6 +28,7 @@ endif
 
 set source_base = "/software/astro/pulsar/_src" # Note: This does not exist - includes patches for pgplot. TODO: Get from Nick.
 set apps_base = "/software/astro/pulsar"
+set build_scripts_base = "${apps_base}/_build_scripts"
 set build_base = "/dev/shm/pulsar"
 set install_base = "$apps_base"
 set lmod_base = "/software/modules/astro/pulsar"

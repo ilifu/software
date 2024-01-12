@@ -1,4 +1,4 @@
-local root = pathJoin("/software/astro/pulsar")
+local root = pathJoin("/software/astro")
 local version = myModuleVersion()
 local pkgName = myModuleName()
 local pkg = pathJoin(root,pkgName,version)
