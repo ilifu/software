@@ -51,9 +51,9 @@ else if ( "$SYS_ARCH" == "milan" || "$SYS_ARCH" == "openstack" ) then
   # ozstar maintanted software
   set gcc_mod = "gcc/11.3.0"
   set omp_mod = "openmpi/4.1.5"
-  set cuda_mod = "cuda/11.7.0"
+  set cuda_mod = "cuda/11.6.0_510.39.01"
   set cuda_arch = "sm_80"
-  set gsl_mod = "gsl/2.7"
+  set gsl_mod = "libgsl/2.7.1"
   set qd_mod = "qd/2.3.12"
   set lapack_mod = "lapack/3.10.1"
   set openblas_mod = "openblas/0.3.20"

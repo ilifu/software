@@ -1,0 +1,27 @@
+--- pndriv.c	2024-01-12 09:14:23.588480300 +0200
++++ pndriv_new.c	2024-01-12 09:34:37.838480300 +0200
+@@ -222,15 +222,15 @@
+ 	return;
+   }
+ 
+-  if (setjmp(png_ptr->jmpbuf)) { /* not really sure what I'm doing here... */
+-	fprintf(stderr,"%s: error in libpng while writing file %s, plotting disabled\n", png_ident, filename);
+-	png_destroy_write_struct(&png_ptr,&info_ptr);
+-	dev->error = true;
+-	if (fp != stdout)
+-	  fclose(fp);
+-	free(filename);
+-	return;
+-  }
++//   if (setjmp(png_ptr->jmpbuf)) { /* not really sure what I'm doing here... */
++// 	fprintf(stderr,"%s: error in libpng while writing file %s, plotting disabled\n", png_ident, filename);
++// 	png_destroy_write_struct(&png_ptr,&info_ptr);
++// 	dev->error = true;
++// 	if (fp != stdout)
++// 	  fclose(fp);
++// 	free(filename);
++// 	return;
++//   }
+ 
+   png_init_io(png_ptr, fp);
+ 

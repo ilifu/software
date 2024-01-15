@@ -16,7 +16,7 @@ set module = "psrdada"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $source_dir) then
-  ssh ${ssh_loc} "cd $source_base; git clone ssh://ajameson@git.code.sf.net/p/psrdada/code psrdada"
+  cd $source_base; git clone ssh://ajameson@git.code.sf.net/p/psrdada/code psrdada
 endif
 
 pushd $source_dir

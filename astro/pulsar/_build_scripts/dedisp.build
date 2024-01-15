@@ -11,26 +11,26 @@ foreach dep ( $deps )
 end
 # module load ${git_mod}
 
-source build.environ
+# source build.environ
 
 set module = "dedisp"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $source_dir) then
   pushd $source_base
-  git clone "git://github.com/ajameson/dedisp.git"
+  git clone "https://github.com/ajameson/dedisp.git"
 endif
 
 pushd $source_dir
 
 # If not hash, always pull latest
 if ( "$1" == "latest" ) then
-  ssh ${ssh_loc} "cd $source_dir; git pull origin master"
+  cd $source_dir; git pull origin master
   set version = `git rev-parse --short HEAD`
 else if ( "$1" == "" ) then
   set version = `git rev-parse --short HEAD`
 else
-  ssh ${ssh_loc} "cd $source_dir; git fetch"
+  cd $source_dir; git fetch
   set version = "$1"
   git checkout $version
   if ( $status != 0 ) then
@@ -67,7 +67,7 @@ mkdir -m 0755 -p $install_dir/lib
 mkdir -m 0755 -p $install_dir/include
 
 echo "make ..."
-make GPU_ARCH=${cuda_arch} CUDA_PATH=$EBROOTCUDA INSTALL_DIR=$install_dir >>& ${source_dir}/build.log
+make GPU_ARCH=${cuda_arch} CUDA_PATH=$CUDA_PATH INSTALL_DIR=$install_dir >>& ${source_dir}/build.log
 if ( $status != 0 ) then
   echo "make failed, check ${source_dir}/build.log for errors"
   exit 1
