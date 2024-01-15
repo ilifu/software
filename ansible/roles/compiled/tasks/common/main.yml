@@ -1023,3 +1023,19 @@
   tags:
       - never
       - fftw
+
+- name: Install Intel oneAPIToolkits
+  vars:
+    versions:
+      - {
+        version_number: "2024.0.1.46",
+        url: "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/163da6e4-56eb-4948-aba3-debcec61c064/l_BaseKit_p_2024.0.1.46_offline.sh",
+        checksum: "sha384:7b9d71a0b412c65efe0b6083c6a48a64ffeeb9070f4e2af125333314e8e897490ec566e1d0c2c3cdb3c4aa0820ea44b4"
+      }
+  include_tasks:
+    file: 'inteloneapi.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - inteloneapi
+      - intelmkl
