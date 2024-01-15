@@ -27,6 +27,6 @@
               creates: "{{ install_dir }}"
 
     - name: Install inteloneAPI modules
-      command: "./modulefiles-setup.sh --output-dir={{ inteloneAPI_module_dir }}"
+      command: "./modulefiles-setup.sh --output-dir={{ inteloneAPI_module_dir }} --force"
       args:
         chdir: "{{ install_dir }}"
