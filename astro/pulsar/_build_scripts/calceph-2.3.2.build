@@ -1,84 +1,90 @@
 #!/bin/csh
 
-source common.build
+echo "Checking that calceph was installed using ansible"
+echo 'For example: ansible-playbook -i inventory.ini -t "calceph,calceph2.3.2"'
 
-set module = "calceph"
-set version = "2.3.2"
-set deps = "${omp_mod}"
-
-# setup modules
+module load calceph/2.3.2
 module purge
-foreach dep ( $deps )
-  module load $dep
-end
 
-set source_dir = "${source_base}/${module}-2.3.2"
-set build_dir = "${build_base}/${module}/${version}"
-set install_dir = "${install_base}/${module}/${version}"
-set lmod_dir = "${lmod_base}/${module}"
-set lmod_file = "${lmod_dir}/${version}.lua"
+# source common.build
 
-echo "Building ${module}/${version}"
+# set module = "calceph"
+# set version = "2.3.2"
+# set deps = "${omp_mod}"
 
-pushd $source_dir
+# # setup modules
+# module purge
+# foreach dep ( $deps )
+#   module load $dep
+# end
 
-# create build directory
-mkdir -m 0755 -p ${build_dir}
-cd ${build_dir}
+# set source_dir = "${source_base}/${module}-2.3.2"
+# set build_dir = "${build_base}/${module}/${version}"
+# set install_dir = "${install_base}/${module}/${version}"
+# set lmod_dir = "${lmod_base}/${module}"
+# set lmod_file = "${lmod_dir}/${version}.lua"
 
-if ( "$gcc_mod" == "gcc/11.3.0" ) then
-  set FFLAGS = "-fallow-argument-mismatch"
-else
-  set FFLAGS = ""
-endif
+# echo "Building ${module}/${version}"
 
-echo "Configuring ... with FFLAGS=${FFLAGS}"
-setenv FCFLAGS "${FFLAGS}"
-${source_dir}/configure --prefix=${install_dir} >& build.log
-if ( $status != 0 ) then
-  echo "configure failed: see ${build_dir}/build.log"
-  exit 1
-endif
+# pushd $source_dir
 
-echo "Make clean ..."
-make clean >>& build.log
-if ( $status != 0 ) then
-  echo "make clean failed: see ${build_dir}/build.log"
-  exit 1
-endif
+# # create build directory
+# mkdir -m 0755 -p ${build_dir}
+# cd ${build_dir}
 
-echo "Make -j 32 ..."
-make -j 1 >>& build.log
-if ( $status != 0 ) then
-  echo "make failed: see ${build_dir}/build.log"
-  exit 1
-endif
+# if ( "$gcc_mod" == "gcc/11.3.0" ) then
+#   set FFLAGS = "-fallow-argument-mismatch"
+# else
+#   set FFLAGS = ""
+# endif
 
-echo "Make install ..."
-make install >>& build.log
-if ( $status != 0 ) then
-  echo "make install failed: see ${build_dir}/build.log"
-  exit 1
-endif
+# echo "Configuring ... with FFLAGS=${FFLAGS}"
+# setenv FCFLAGS "${FFLAGS}"
+# ${source_dir}/configure --prefix=${install_dir} >& build.log
+# if ( $status != 0 ) then
+#   echo "configure failed: see ${build_dir}/build.log"
+#   exit 1
+# endif
 
-popd
+# echo "Make clean ..."
+# make clean >>& build.log
+# if ( $status != 0 ) then
+#   echo "make clean failed: see ${build_dir}/build.log"
+#   exit 1
+# endif
 
-# setup the lmod file
-if ( ! ( -d ${lmod_dir} ) ) then
-  mkdir -m 0755  -p ${lmod_dir}
-endif
+# echo "Make -j 32 ..."
+# make -j 1 >>& build.log
+# if ( $status != 0 ) then
+#   echo "make failed: see ${build_dir}/build.log"
+#   exit 1
+# endif
 
-if ( -f ${lmod_file} ) then
-  rm -f ${lmod_file}
-endif
+# echo "Make install ..."
+# make install >>& build.log
+# if ( $status != 0 ) then
+#   echo "make install failed: see ${build_dir}/build.log"
+#   exit 1
+# endif
 
-# use the common template
-cp common.lua.${gcc_ver} $lmod_file
+# popd
 
-# add custom rules to the LUA
-echo 'setenv("PSRHOME_CALCEPH_PATH",pkg)' >> $lmod_file
+# # setup the lmod file
+# if ( ! ( -d ${lmod_dir} ) ) then
+#   mkdir -m 0755  -p ${lmod_dir}
+# endif
 
-# add dependencies
-foreach dep ( $deps )
-  echo depends_on\(\"$dep\"\) >> $lmod_file
-end
+# if ( -f ${lmod_file} ) then
+#   rm -f ${lmod_file}
+# endif
+
+# # use the common template
+# cp common.lua.${gcc_ver} $lmod_file
+
+# # add custom rules to the LUA
+# echo 'setenv("PSRHOME_CALCEPH_PATH",pkg)' >> $lmod_file
+
+# # add dependencies
+# foreach dep ( $deps )
+#   echo depends_on\(\"$dep\"\) >> $lmod_file
+# end

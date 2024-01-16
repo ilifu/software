@@ -54,6 +54,8 @@ echo "Building ${module}/${version}"
 #sed -i "s#THRUST_DIR ?= CUDA_PATH#THRUST_DIR ?= $PSRHOME_THRUST_PATH#" Makefile.inc
 #sed -i "s#GPU_ARCH   = sm_30#GPU_ARCH   = sm_60#" Makefile.inc
 
+echo $install_dir
+
 if ( -d $install_dir ) then
   rm -rf $install_dir
 endif

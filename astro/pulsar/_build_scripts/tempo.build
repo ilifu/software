@@ -12,7 +12,7 @@ end
 
 # source build.environ
 
-# set module = "tempo"
+set module = "tempo"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $source_dir) then
@@ -21,6 +21,7 @@ if (! -d $source_dir) then
 endif
 
 pushd $source_dir
+pwd
 
 # If not hash, always pull latest
 if ( "$1" == "latest" ) then
@@ -53,6 +54,7 @@ autoreconf --install --force >& ${source_dir}/build.log
 # create build directory
 mkdir -m 0755 -p ${build_dir}
 pushd ${build_dir}
+pwd
 
 echo "Configuring ..."
 ${source_dir}/configure --prefix=${install_dir} >& ${build_dir}/build.log
@@ -94,8 +96,9 @@ echo "make clean"
 make clean >>& ${build_dir}/build.log
 
 popd
-
+pwd
 popd
+pwd
 
 if ( ! ( -d ${lmod_dir} ) ) then
   mkdir -p $lmod_dir

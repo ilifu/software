@@ -4,16 +4,21 @@ source common.build
 
 module purge
 
-set deps = "${omp_mod} ${qd_mod} ${calceph_mod} ${pgplot_mod} ${gsl_mod} ${fftw_mod} ${fftw_dp_mod} ${lapack_mod} ${openblas_mod}"
+set deps = "${omp_mod} ${qd_mod} ${calceph_mod} ${pgplot_mod} ${gsl_mod} ${fftw_mod} ${lapack_mod}" #${openblas_mod}: TC Testing 2024/01/16
+set deps2 = "${fftw_dp_mod}"
+
 echo $deps
 foreach dep ( $deps )
   module load $dep
 end
-module load ${git_mod}
+# module load ${git_mod}
 
 # source build.environ
 
-# set module = "tempo2"
+# Tinus test: 
+echo $PSRHOME_FFTW_SP_PATH
+
+set module = "tempo2"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $module ) then
@@ -41,10 +46,13 @@ else
   endif
 endif
 
+### << Tinus uncommented this ... testing 2024/01/16
 # Add the temponest version
-# if (! -d TempoNest_aparthas ) then
-#   ssh ${ssh_loc} "cd $source_base; git clone https://github.com/aparthas3112/TempoNest.git TempoNest_aparthas"
-# endif
+if (! -d TempoNest_aparthas ) then
+  cd $source_base; git clone https://github.com/aparthas3112/TempoNest.git TempoNest_aparthas
+endif
+### >>
+
 cd $source_base/TempoNest_aparthas
 set temponest_version = `git rev-parse --short HEAD`
 cd $source_base
@@ -157,6 +165,13 @@ cp src/libchord.a src/libchord.so ../
 cd ..
 
 echo "Building TempoNest/${temponest_version}"
+
+# Tinus: 
+echo $deps2
+foreach dep ( $deps2)
+  module load $dep
+end
+echo $PSRHOME_FFTW_DP_PATH
 
 setenv CXXFLAGS "${CXXFLAGS} -I${PSRHOME_FFTW_DP_PATH}/include"
 setenv LDFLAGS "-L${source_dir} -L${PSRHOME_FFTW_DP_PATH}/lib -L${source_base}/TempoNest_aparthas"

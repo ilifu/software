@@ -48,14 +48,15 @@ if ( "$SYS_ARCH" == "skylake" ) then
   set python_small_ver = "python3.10" # for PYTHONPATH setting
 
 else if ( "$SYS_ARCH" == "milan" || "$SYS_ARCH" == "openstack" ) then
+
   # ozstar maintanted software
   set gcc_mod = "gcc/11.3.0"
   set omp_mod = "openmpi/4.1.5"
   set cuda_mod = "cuda/11.6.0_510.39.01"
   set cuda_arch = "sm_80"
   set gsl_mod = "libgsl/2.7.1"
-  set qd_mod = "qd/2.3.12"
-  set lapack_mod = "lapack/3.10.1"
+  set qd_mod = "pulsar/qd/2.3.12"
+  set lapack_mod = "LAPACK/3.10.1"
   set openblas_mod = "openblas/0.3.20"
   set cmake_mod = "cmake/3.24.3"
   set nextflow_mod = "nextflow/23.04.2"
@@ -65,20 +66,20 @@ else if ( "$SYS_ARCH" == "milan" || "$SYS_ARCH" == "openstack" ) then
   set psrchive_mod = "psrchive/e99fec329"
   set psrdada_mod = "psrdada/f654e40"
   set psr_cfitsio_mod = "psr_cfitsio/3.450"
-  set fftw_mod = "fftw-SP/3.3.8"
-  set fftw_dp_mod = "fftw-DP/3.3.8"
-  set pgplot_mod = "pgplot/5.2"
-  set psrxml_mod = "psrxml/1.01"
-  set splinter_mod = "splinter/da6ac4f"
+  set fftw_mod = "fftw/3.3.8-single"
+  set fftw_dp_mod = "fftw/3.3.8-double"
+  set pgplot_mod = "pulsar/pgplot/5.2"
+  set psrxml_mod = "pulsar/psrxml/1.01"
+  set splinter_mod = "pulsar/splinter/da6ac4f"
 
-  set sofa_mod = "sofa/20180130"
+  set sofa_mod = "pulsar/sofa/20180130"
   set imkl_mod = "imkl/2023.0.0"
   set dedisp_mod = "dedisp/9850b7e"
-  set tempo_mod = "tempo/3ad01b1"
-  set tempo2_mod = "tempo2/0759584_temponest_apar_56e2b58"
+  set tempo_mod = "pulsar/tempo/3ad01b1"
+  set tempo2_mod = "pulsar/tempo2/0759584_temponest_apar_56e2b58"
   set tempo2_clock_mod = "tempo2_clock/2021-04-26"
-  set psrcat_mod = "psrcat/1.50"
-  set atnfcat_mod = "atnfcat/1.70"
+  set psrcat_mod = "pulsar/psrcat/1.50"
+  set atnfcat_mod = "pulsar/atnfcat/1.70"
 
   # python software
   set python_mod = "python/3.10.4"
