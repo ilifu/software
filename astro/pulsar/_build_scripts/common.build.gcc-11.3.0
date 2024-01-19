@@ -57,7 +57,7 @@ else if ( "$SYS_ARCH" == "milan" || "$SYS_ARCH" == "openstack" ) then
   set gsl_mod = "libgsl/2.7.1"
   set qd_mod = "pulsar/qd/2.3.12"
   set lapack_mod = "LAPACK/3.10.1"
-  set openblas_mod = "openblas/0.3.20"
+  set openblas_mod = "openBLAS/0.3.20"
   set cmake_mod = "cmake/3.24.3"
   set nextflow_mod = "nextflow/23.04.2"
 

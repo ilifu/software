@@ -4,7 +4,7 @@ source common.build
 
 module purge
 
-set deps = "${omp_mod} ${qd_mod} ${calceph_mod} ${pgplot_mod} ${gsl_mod} ${fftw_mod} ${lapack_mod}" #${openblas_mod}: TC Testing 2024/01/16
+set deps = "${omp_mod} ${qd_mod} ${calceph_mod} ${pgplot_mod} ${gsl_mod} ${fftw_mod} ${lapack_mod} ${openblas_mod}"
 set deps2 = "${fftw_dp_mod}"
 
 echo $deps
