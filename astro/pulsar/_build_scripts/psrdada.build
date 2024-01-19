@@ -4,7 +4,7 @@ source common.build
 
 module purge
 
-set deps = "${omp_mod} ${gsl_mod} ${fftw_mod} ${pgplot_mod} ${sofa_mod} ${cuda_mod} ${imkl_mod}"
+set deps = "${omp_mod} ${gsl_mod} ${fftw_mod} ${pgplot_mod} ${sofa_mod} ${cuda_mod}" # ${imkl_mod}
 foreach dep ( $deps )
   module load $dep
 end
@@ -16,7 +16,8 @@ set module = "psrdada"
 set source_dir = "${source_base}/${module}"
 
 if (! -d $source_dir) then
-  cd $source_base; git clone ssh://ajameson@git.code.sf.net/p/psrdada/code psrdada
+  cd $source_base
+  git clone git://git.code.sf.net/p/psrdada/code psrdada
 endif
 
 pushd $source_dir
@@ -66,12 +67,12 @@ else
 endif
 
 echo "Configuring ..."
-if ( ! $statusEBROOTCUDA  ) then
+if ( ! $?CUDA_PATH  ) then
   echo "Without CUDA"
   ${source_dir}/configure --prefix=${install_dir} --with-sofa-dir=$PSRHOME_SOFA_PATH --with-fftw3-dir=$PSRHOME_FFTW_SP_PATH --enable-shared >>& ${build_dir}/build.log
 else
   echo "With CUDA"
-  ${source_dir}/configure --prefix=${install_dir} --with-cuda-dir=$EBROOTCUDA --with-sofa-dir=$PSRHOME_SOFA_PATH --with-fftw3-dir=$PSRHOME_FFTW_SP_PATH --enable-shared CFLAGS="${CFLAGS}" >>& ${build_dir}/build.log
+  ${source_dir}/configure --prefix=${install_dir} --with-cuda-dir=$CUDA_PATH --with-sofa-dir=$PSRHOME_SOFA_PATH --with-fftw3-dir=$PSRHOME_FFTW_SP_PATH --enable-shared CFLAGS="${CFLAGS}" >>& ${build_dir}/build.log
 endif
 
 # echo "make clean ..."
