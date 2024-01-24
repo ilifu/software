@@ -58,8 +58,6 @@
               mode: 0755
         - name: Create intel modulefile
           template:
-              src: intel.lua
+              src: common/intel.lua
               dest: "{{ intel_module_dir }}/{{ version }}"
               mode: "u=rwx,g=rx,o=rx"
-          notify:
-              - "Load intel module"
