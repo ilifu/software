@@ -2,6 +2,7 @@
 - name: Install Intel toolkits {{ item.version_number }}
   vars:
     version: "{{ item.version_number }}"
+    major_minor: "{{ item.version_number | regex_replace('^([0-9])\\.([0-9]*).*', '\\1.\\2') }}"
     intel_dir: "{{ common_dir }}/intel"
     intel_module_dir: "{{ common_modules }}/intel"
     install_dir: "{{ intel_dir }}/{{ version }}"
@@ -17,6 +18,9 @@
     - never
     - "intel{{ item.version_number }}"
   block:
+    - name: Show message that we are accepting EULA
+      debug:
+        msg: "Installing Intel toolkits {{ item.version_number }}. Note this will accept the EULA."
     - name: Download Intel oneAPI installer ({{ oneapi_version }}) to {{ common_src }}/{{ oneapi_file_name }}
       get_url:
           url: "{{ oneapi_url }}"
@@ -45,7 +49,17 @@
         - "./{{ oneapi_file_name }}"
         - "./{{ hpc_file_name }}"
 
-#    - name: Install intel oneAPI modules
-#      command: "./modulefiles-setup.sh --output-dir={{ inteloneAPI_module_dir }} --force"
-#      args:
-#        chdir: "{{ install_dir }}"
+    - name: Install intel modules
+      block:
+        - name: Create intel module directory
+          file:
+              path: "{{ intel_module_dir }}"
+              state: directory
+              mode: 0755
+        - name: Create intel modulefile
+          template:
+              src: intel.lua
+              dest: "{{ intel_module_dir }}/{{ version }}"
+              mode: "u=rwx,g=rx,o=rx"
+          notify:
+              - "Load intel module"
