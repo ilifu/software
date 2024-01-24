@@ -2,7 +2,7 @@
 - name: Install Intel toolkits {{ item.version_number }}
   vars:
     version: "{{ item.version_number }}"
-    major_minor: "{{ item.version_number | regex_replace('^([0-9])\\.([0-9]*).*', '\\1.\\2') }}"
+    major_minor: "{{ version | regex_replace('^([0-9]*)\\.([0-9]*).*', '\\1.\\2') }}"
     intel_dir: "{{ common_dir }}/intel"
     intel_module_dir: "{{ common_modules }}/intel"
     install_dir: "{{ intel_dir }}/{{ version }}"
@@ -20,7 +20,7 @@
   block:
     - name: Show message that we are accepting EULA
       debug:
-        msg: "Installing Intel toolkits {{ item.version_number }}. Note this will accept the EULA."
+        msg: "Installing Intel toolkits {{ major_minor }}. Note this will accept the EULA."
     - name: Download Intel oneAPI installer ({{ oneapi_version }}) to {{ common_src }}/{{ oneapi_file_name }}
       get_url:
           url: "{{ oneapi_url }}"
@@ -56,8 +56,8 @@
               path: "{{ intel_module_dir }}"
               state: directory
               mode: 0755
-        - name: Create intel modulefile {{ intel_module_dir }}/{{ version }}
+        - name: Create intel modulefile {{ intel_module_dir }}/{{ major_minor }}.lua
           template:
               src: common/intel.lua
-              dest: "{{ intel_module_dir }}/{{ version }}.lua"
+              dest: "{{ intel_module_dir }}/{{ major_minor }}.lua"
               mode: "u=rwx,g=rx,o=rx"
