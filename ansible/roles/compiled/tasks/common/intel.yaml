@@ -1,0 +1,63 @@
+---
+- name: Install Intel toolkits {{ item.version_number }}
+  vars:
+    version: "{{ item.version_number }}"
+    major_minor: "{{ version | regex_replace('^([0-9]*)\\.([0-9]*).*', '\\1.\\2') }}"
+    intel_dir: "{{ common_dir }}/intel"
+    intel_module_dir: "{{ common_modules }}/intel"
+    install_dir: "{{ intel_dir }}/{{ version }}"
+    oneapi_version: "{{ item.oneapi_version }}"
+    oneapi_url: "{{ item.oneapi_url }}"
+    oneapi_checksum: "{{ item.oneapi_checksum }}"
+    oneapi_file_name: "intel_oneAPI_toolkit_{{ oneapi_version }}_offline.sh"
+    hpc_version: "{{ item.hpc_version }}"
+    hpc_url: "{{ item.hpc_url }}"
+    hpc_checksum: "{{ item.hpc_checksum }}"
+    hpc_file_name: "intel_hpc_toolkit_{{ hpc_version }}_offline.sh"
+  tags:
+    - never
+    - "intel{{ item.version_number }}"
+  block:
+    - name: Show message that we are accepting EULA
+      debug:
+        msg: "Installing Intel toolkits {{ major_minor }}. Note this will accept the EULA."
+    - name: Download Intel oneAPI installer ({{ oneapi_version }}) to {{ common_src }}/{{ oneapi_file_name }}
+      get_url:
+          url: "{{ oneapi_url }}"
+          dest: "{{ common_src }}/{{ oneapi_file_name }}"
+          mode: "u=rwx,g=rx,o=rx"
+          checksum: "{{ oneapi_checksum }}"
+    - name: Download and install Intel HPC toolkit ({{ hpc_version }})
+      block:
+        - name: Download Intel HPC installer ({{ hpc_version }}) to {{ common_src }}/{{ hpc_file_name }}
+          get_url:
+              url: "{{ hpc_url }}"
+              dest: "{{ common_src }}/{{ hpc_file_name }}"
+              mode: "u=rwx,g=rwx,o=rx"
+              checksum: "{{ hpc_checksum }}"
+    - name: Run Intel installers ({{ version }}) to {{ install_dir }}
+      command: "{{ installer_filename }} -l /tmp/intelone_install.{{ oneapi_version }}.log -a -s --eula accept --install-dir {{ install_dir }} --action install --components all"
+      args:
+        chdir: "{{ common_src }}"
+#        creates: "{{ install_dir }}"
+      register: intel_install
+      failed_when: intel_install.rc != 0 and "It is already installed" not in intel_install.stdout
+      changed_when: intel_install.rc == 0
+      loop_control:
+        loop_var: installer_filename
+      with_items:
+        - "./{{ oneapi_file_name }}"
+        - "./{{ hpc_file_name }}"
+
+    - name: Install intel modules
+      block:
+        - name: Create intel module directory
+          file:
+              path: "{{ intel_module_dir }}"
+              state: directory
+              mode: 0755
+        - name: Create intel modulefile {{ intel_module_dir }}/{{ major_minor }}.lua
+          template:
+              src: common/intel.lua
+              dest: "{{ intel_module_dir }}/{{ major_minor }}.lua"
+              mode: "u=rwx,g=rx,o=rx"

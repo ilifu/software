@@ -1023,3 +1023,24 @@
   tags:
       - never
       - fftw
+
+- name: Install Intel Toolkits
+  vars:
+    versions:
+      - {
+        version_number: "2024.0.1",
+        oneapi_version: "2024.0.1.46",
+        oneapi_url: "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/163da6e4-56eb-4948-aba3-debcec61c064/l_BaseKit_p_2024.0.1.46_offline.sh",
+        oneapi_checksum: "sha384:7b9d71a0b412c65efe0b6083c6a48a64ffeeb9070f4e2af125333314e8e897490ec566e1d0c2c3cdb3c4aa0820ea44b4",
+        hpc_version: "2024.0.1.38",
+        hpc_url: "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/67c08c98-f311-4068-8b85-15d79c4f277a/l_HPCKit_p_2024.0.1.38_offline.sh",
+        hpc_checksum: "sha384:df6509544dfc38cd0f58862545c98853b9a254c52eba105d988b98740cf987412872f9695584ba6985429d1a0b50a9e4",
+      }
+  include_tasks:
+    file: 'intel.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - intel
+      - inteloneapi
+      - intelmkl
