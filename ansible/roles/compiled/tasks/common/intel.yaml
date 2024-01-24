@@ -56,8 +56,8 @@
               path: "{{ intel_module_dir }}"
               state: directory
               mode: 0755
-        - name: Create intel modulefile
+        - name: Create intel modulefile {{ intel_module_dir }}/{{ version }}
           template:
               src: common/intel.lua
-              dest: "{{ intel_module_dir }}/{{ version }}"
+              dest: "{{ intel_module_dir }}/{{ version }}.lua"
               mode: "u=rwx,g=rx,o=rx"
