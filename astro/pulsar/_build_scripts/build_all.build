@@ -5,7 +5,7 @@
 # setenv('PSRHOME_FFTW_SP_PATH', "/software/common/fftw/3.3.8-single/bin")
 # setenv('PSRHOME_FFTW_DP_PATH', "/software/common/fftw/3.3.8-double/bin")
 
-./pgplot.build # TC: patch needed
+./pgplot.build
 ./qd.build
 ./calceph.build
 
