@@ -12,14 +12,14 @@
 ./psrcat.build
 ./antfcat.build
 ./tempo.build
-# ./tempo2.build # TC: OpenBLAS 0.3.20 needed (ansible). Error building
+# ./tempo2_temponest_aparthas.build 0759584 # tempo2 error buiding
 
 ./psrxml.build
 ./splinter.build
-# ./psr_cfitsio-3.450.build # DK: installed
+./psr_cfitsio-3.450.build # Using this version instead of DK install
 ./sofa.build
 
-# ./psrdada.build # TC: TODO ... depends imkl?
+./psrdada.build
 # ./psrchive.build
 # ./dspsr.build
 
