@@ -49,7 +49,7 @@ endif
 ### << Tinus uncommented this ... testing 2024/01/16
 # Add the temponest version
 if (! -d TempoNest_aparthas ) then
-  cd $source_base; git clone https://github.com/aparthas3112/TempoNest.git TempoNest_aparthas
+  cd $source_base; git clone https://github.com/aparthas3112/TempoNest.git #TempoNest_aparthas
 endif
 ### >>
 
