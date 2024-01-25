@@ -31,7 +31,7 @@ set apps_base = "/software/astro/pulsar"
 set build_scripts_base = "${apps_base}/_build_scripts"
 set build_base = "/dev/shm/pulsar"
 set install_base = "$apps_base"
-set lmod_base = "/software/modules/astro/pulsar"
+set lmod_base = "/software/modules/astro"
 
 if ( "$SYS_ARCH" == "skylake" ) then
     #set git_mod = "git/2.18.0"
