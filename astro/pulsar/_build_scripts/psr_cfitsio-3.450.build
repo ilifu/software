@@ -20,7 +20,9 @@ set lmod_file = "${lmod_dir}/${version}.lua"
 
 if ( ! ( -d $source_dir ) ) then
   if ( ! ( -f cfitsio3450.tar.gz ) ) then
-    ssh ${ssh_loc} "cd $source_base; wget http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio3450.tar.gz"
+    pushd $source_base 
+    wget http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio3450.tar.gz
+    popd
   endif
   if ( -d cfitsio ) then
     rm -rf ${module}
@@ -79,6 +81,8 @@ endif
 if ( -f ${lmod_file} ) then
   rm -f ${lmod_file}
 endif
+
+pwd
 
 # use the common template
 cp common.lua.${gcc_ver} $lmod_file

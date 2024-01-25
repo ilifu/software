@@ -68,19 +68,19 @@
         version_number: "0.3.9",
         url: "https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.9/OpenBLAS-0.3.9.tar.gz",
         checksum: "md5:28cc19a6acbf636f5aab5f10b9a0dfe1",
-        TARGET: "TARGET=SKYLAKEX",
+        TARGET: "TARGET=HASWELL",
       }
       - {
         version_number: "0.3.20",
         url: "https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.20/OpenBLAS-0.3.20.tar.gz",
         checksum: "md5:abfaa43d995046ca4c56ccf14165c93c",
-        TARGET: "TARGET=SKYLAKEX",
+        TARGET: "TARGET=HASWELL",
       }
       - {
         version_number: "0.3.25",
         url: "https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.25/OpenBLAS-0.3.25.tar.gz",
         checksum: "md5:48384e324cd1cdcfbdb0d2e16ca55327",
-        TARGET: "",
+        TARGET: "TARGET=HASWELL",
       }
   include_tasks:
     file: openblas.yaml
