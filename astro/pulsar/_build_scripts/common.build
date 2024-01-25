@@ -23,16 +23,31 @@ if (!( $?omp_ver)) then
         setenv omp_ver "openmpi/4.1.5"
     endif
 endif
-# above could possibly supposed to be
-# openmpi/4.1.4
 
-set source_base = "/software/astro/pulsar/_src" # Note: This does not exist - includes patches for pgplot. TODO: Get from Nick.
+# Builds scripts path e.g. /software/astro/pulsar/_build_scripts
+set rootdir_rel_scripts = `dirname $0`
+set build_scripts_base = `cd $rootdir_rel_scripts && pwd`
+
+
+# Other important paths
+set source_base = "/software/astro/pulsar/_src"
 set apps_base = "/software/astro/pulsar"
-set build_scripts_base = "${apps_base}/_build_scripts"
 set build_base = "/dev/shm/pulsar"
+
 set install_base = "$apps_base"
 set lmod_base = "/software/modules/astro"
 
+# Print Paths
+echo "----PATHS-----"
+echo "Build scripts: $build_scripts_base"
+echo "Source folder: $source_base"
+echo "Temp build folder: $build_base"
+echo ""
+echo "Installed apps folder: $apps_base"
+echo "Installed Lmod folder: $lmod_base"
+echo "--------------"
+
+# Git and ssh version -- delete later
 if ( "$SYS_ARCH" == "skylake" ) then
     #set git_mod = "git/2.18.0"
     set git_mod = "git/2.36.0"
@@ -54,6 +69,12 @@ module unuse /software/modules/astro/pulsar
 
 source common.build.${gcc_ver}
 
+# Check if source_base directory exists
+if ( ! ( -d $source_base ) ) then
+  echo "Creating $source_base directory"
+  mkdir -p -v $source_base
+endif
+
 # Clear the undefined enviroment flags (Ilifu) 
 
-env CXXFLAGS ""
+setenv CXXFLAGS ""
