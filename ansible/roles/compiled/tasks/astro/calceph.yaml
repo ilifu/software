@@ -2,8 +2,6 @@
   environment:
     MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
     FFLAGS: "-fallow-argument-mismatch"
-    CC: "gcc-10"
-    FC: "gfortran-10"
   vars:
     calceph_dir: "{{ astro_dir }}/calceph"
     calceph_module_dir: "{{ astro_modules }}/calceph"
