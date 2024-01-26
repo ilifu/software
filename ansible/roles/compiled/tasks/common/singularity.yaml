@@ -12,7 +12,7 @@
     - singularity{{ item.version_number }}
   block:
     - name: Install singularity {{ version_number }}
-      when: "version_number.startswith('3')"
+      when: "version_number.startswith('3') or version_number.startswith('4')"
       vars:
         unzip_dir: "/dev/shm/singularity-ce-{{ version_number }}"
       block:
