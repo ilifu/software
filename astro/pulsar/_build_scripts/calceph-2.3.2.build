@@ -1,9 +1,15 @@
 #!/bin/csh
 
-echo "Checking that calceph was installed using ansible"
-echo 'For example: ansible-playbook -i inventory.ini -t "calceph,calceph2.3.2"'
-
 module load calceph/2.3.2
+
+# Needs newer lmod on ilifu cluster for this to work with csh
+# https://github.com/TACC/Lmod/issues/222
+if ( $status != 0 ) then
+   echo "calceph is currently installed using ansible"
+   echo 'For example: ansible-playbook -i inventory.ini -t "calceph,calceph2.3.2"'
+   exit 1
+ endif
+
 module purge
 
 # source common.build
