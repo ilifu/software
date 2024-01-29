@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 
+# -----------------------------------------
+# check if calceph is installed with ansible
+calceph_lmod='calceph/2.3.2'
+
+module load $calceph_lmod
+ret=$?
+module purge
+
+if [ $ret -ne 0 ]; then
+  echo "Please install $calceph_lmod first using ansible"
+  echo "e.g. ansible-playbook -i inventory site.yml -t 'calceph,calcephX.X.X'"
+fi
+
+# -------------------------------------------
+# General build scripts
+
+
 # ./fftw-3.3.8-SP.build  
 # TODO ... add to lua files: 
 # setenv('PSRHOME_FFTW_SP_PATH', "/software/common/fftw/3.3.8-single/bin")
@@ -7,11 +24,11 @@
 
 ./pgplot.build
 ./qd.build
-./calceph.build
 
 ./psrcat.build
 ./antfcat.build
 ./tempo.build
+exit
 # ./tempo2_temponest_aparthas.build 0759584 # tempo2 error buiding
 
 ./psrxml.build
