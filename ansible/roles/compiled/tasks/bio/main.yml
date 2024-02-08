@@ -1059,3 +1059,18 @@
   tags:
       - never
       - bamtools
+
+- name: Install blast+
+  vars:
+    versions:
+      - {
+        version_number: "2.15.0",
+        url: "https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.15.0+-x64-linux.tar.gz",
+        checksum: "md5:0abb189643afd79f3fbbd2bf27db6428"
+      }
+  include_tasks:
+    file: 'blast.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - blast

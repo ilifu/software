@@ -1,0 +1,46 @@
+---
+- name: Install blast {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    blast_dir: "{{ bio_dir }}/blast"
+    blast_module_dir: "{{ bio_modules }}/blast"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    unzip_dir: "/dev/shm/ncbi-blast-{{ version_number }}+"
+    install_dir: "{{ blast_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - blast{{ item.version_number }}
+  block:
+    - name: Download and install blast ({{ version_number }})
+      block:
+        - name: Download blast
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/ncbi-blast-{{ version_number }}+-x64-linux.tar.gz"
+            mode: ug=rw,o=r
+        - name: Ensure blast dir exists
+          file:
+            path: "{{ blast_dir }}"
+            state: directory
+            recurse: yes
+        - name: Extract blast
+          unarchive:
+            src: "{{ bio_src }}/ncbi-blast-{{ version_number }}+-x64-linux.tar.gz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzip_dir }}"
+        - name: Move blast from {{ unzip_dir }} to {{ install_dir }}
+          command: "mv {{ unzip_dir }} {{ install_dir }}"
+
+    - name: Install blast {{ version_number }} module
+      block:
+        - name: Check module dir {{ blast_module_dir }}
+          file:
+            path: "{{ blast_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install blast {{ version_number }} module file
+          template:
+            src: bio/blast.lua
+            dest: "{{ blast_module_dir }}/{{ version_number }}.lua"

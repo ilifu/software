@@ -6,10 +6,6 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: bamtools")
 whatis("Description: bamtools {{ version_number }}")
 
-------------------------------------------------------------------------
--- Thanks @ https://github.com/TACC/Lmod/blob/main/rt/hook/mf/Core/intel/intel.lua
-------------------------------------------------------------------------
-
 prepend_path('PATH', '{{ install_dir }}/bin')
 prepend_path('LIBRARY_PATH', '{{ install_dir }}/lib')
 prepend_path('LD_LIBRARY_PATH', '{{ install_dir }}/lib')
