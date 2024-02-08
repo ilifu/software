@@ -1045,17 +1045,32 @@
       - never
       - nanocomp
 
-# TODO:
-#- name: Install cactus
-#  vars:
-#    versions:
-#      - {}
+- name: Install bamtools
+  vars:
+    versions:
+      - {
+          version_number: "2.5.2",
+          url: "https://github.com/pezmaster31/bamtools/archive/refs/tags/v2.5.2.tar.gz",
+          checksum: "sha256:4d8b84bd07b673d0ed41031348f10ca98dd6fa6a4460f9b9668d6f1d4084dfc8"
+      }
+  include_tasks:
+    file: 'bamtools.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - bamtools
 
-
-#- name: vcflib
-#
-#- name: fastix
-#
-#- name: pafplot
-#
-#- name: pggb
+- name: Install blast+
+  vars:
+    versions:
+      - {
+        version_number: "2.15.0",
+        url: "https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.15.0+-x64-linux.tar.gz",
+        checksum: "md5:0abb189643afd79f3fbbd2bf27db6428"
+      }
+  include_tasks:
+    file: 'blast.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - blast
