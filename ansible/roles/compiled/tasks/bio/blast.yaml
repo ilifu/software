@@ -32,6 +32,8 @@
             creates: "{{ unzip_dir }}"
         - name: Move blast from {{ unzip_dir }} to {{ install_dir }}
           command: "mv {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}"
 
     - name: Install blast {{ version_number }} module
       block:
