@@ -27,12 +27,6 @@
         creates: "{{ install_dir }}/gemma-{{ version_number }}-linux-static-AMD64"
         chdir: "{{ install_dir }}"
 
-
-#      unarchive:
-#        src: "{{ bio_src }}/gemma-{{ version_number }}-linux-static-AMD64.gz"
-#        dest: "{{ install_dir }}"
-#        creates: "{{ install_dir }}//gemma-{{ version_number }}-linux-static-AMD64"
-
     - name: Ensure gemma is executable
       file:
           path: "{{ install_dir }}/gemma-{{ version_number }}-linux-static-AMD64"
