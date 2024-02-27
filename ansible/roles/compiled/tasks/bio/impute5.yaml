@@ -25,6 +25,9 @@
         src: "bio/{{ zip_file }}"
         dest: "{{ bio_dir }}/src/{{ zip_file }}"
         mode: u=rwx,g=rx,o=rx
+    - name: Message that impute5 {{ version_number }} is only free for academic use
+      debug:
+        msg: "impute5 {{ version_number }} is only free for academic use. Check out https://jmarchini.org/software/#impute-5"
     - name: Unzip impute5 {{ version_number }}
       when: not impute5_installed.stat.exists
       unarchive:
