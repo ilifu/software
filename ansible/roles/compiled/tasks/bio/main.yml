@@ -1178,6 +1178,47 @@
     - never
     - whatshap
 
+- name: Install GLIMPSE
+  vars:
+      versions:
+      - {
+        version_number: "2.0.0",
+        components: [
+          {
+            name: GLIMPSE2_chunk,
+            url: "https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_chunk_static",
+            checksum: "sha1:16054a755a7047a7fe3d4f46f8fc06e264556405"
+          },
+          {
+            name: GLIMPSE2_concordance,
+            url: "https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_concordance_static",
+            checksum: "sha1:c4970c648c9ef79a2efdb954e825329816d147c0"
+          },
+          {
+            name: GLIMPSE2_ligate,
+            url: "https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_ligate_static",
+            checksum: "sha1:9f37470363cd115501cc0c0960912cdd2e9f9553"
+          },
+          {
+            name: GLIMPSE2_phase,
+            url: "https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_phase_static",
+            checksum: "sha1:669c0df3f267f63eefa1448b2c6c2663aa708084"
+          },
+          {
+            name: GLIMPSE2_split_reference,
+            url: "https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_split_reference_static",
+            checksum: "sha1:8aae1f29b7e1a0d14337c0f9c6b61e511da259c6"
+          }
+
+        ]
+      }
+  include_tasks:
+    file: 'glimpse.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - glimpse
+
 #
 #- GLIMPSE
 #
