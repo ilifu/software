@@ -1150,12 +1150,21 @@
     - never
     - shapeit5
 
+- name: Install impute5
+  vars:
+      versions:
+      - {
+        version_number: "1.2.0",
+        zip_file: "impute5_v1.2.0.zip",
+      }
+  include_tasks:
+    file: 'impute5.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - impute5
 
-#
-#- Shapeit5
-#
-#https://github.com/odelaneau/shapeit5/tree/main
-#
+
 #- impute5
 #
 #https://jmarchini.org/software/#impute-5
