@@ -1074,3 +1074,43 @@
   tags:
       - never
       - blast
+
+- name: Install Hapgen2
+  vars:
+    versions:
+      - {
+        version_number: "2.2.0",
+        url: "https://mathgen.stats.ox.ac.uk/genetics_software/hapgen/download/builds/x86_64/v2.2.0/hapgen2_x86_64.tar.gz",
+        checksum: "sha256:705a6b3b053ae192cffc430df2b9f2cc70695a95ca8e06ad515974e921a368dd"
+      }
+  include_tasks:
+    file: 'hapgen2.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - hapgen2
+
+
+#- Hapgen2
+#
+#https://mathgen.stats.ox.ac.uk/genetics_software/hapgen/hapgen2.html
+#
+#- GEMMA
+#
+#https://github.com/genetics-statistics/GEMMA#license
+#
+#- Shapeit5
+#
+#https://github.com/odelaneau/shapeit5/tree/main
+#
+#- impute5
+#
+#https://jmarchini.org/software/#impute-5
+#
+#- Whatshap
+#
+#https://whatshap.readthedocs.io/en/latest/
+#
+#- GLIMPSE
+#
+#https://github.com/odelaneau/GLIMPSE
