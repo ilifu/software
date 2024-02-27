@@ -1090,6 +1090,21 @@
       - never
       - hapgen2
 
+- name: Install GEMMA
+  vars:
+    versions:
+      - {
+        version_number: "0.98.5",
+        url: "https://github.com/genetics-statistics/GEMMA/releases/download/v0.98.5/gemma-0.98.5-linux-static-AMD64.gz",
+        checksum: "sha1:d1944e96620915fcac95b414fde88ab100eec96d"
+      }
+  include_tasks:
+    file: 'gemma.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - gemma
+
 
 #- Hapgen2
 #
