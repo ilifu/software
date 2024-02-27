@@ -20,7 +20,7 @@
       file:
         path: "{{ install_dir }}"
         state: directory
-        mode: o=rwx,g=rx,o=rx
+        mode: u=rwx,g=rx,o=rx
     - name: Unzip hapgen2 {{ version_number }}
       unarchive:
         src: "{{ bio_src }}/hapgen2_x86_64.{{ version_number }}.tar.gz"
