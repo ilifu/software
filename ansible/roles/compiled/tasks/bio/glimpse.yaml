@@ -1,4 +1,4 @@
-- name: Install glimpse
+- name: Install GLIMPSE
   vars:
     glimpse_dir: "{{ bio_dir }}/glimpse"
     glimpse_module_dir: "{{ bio_modules }}/glimpse"
@@ -16,7 +16,7 @@
         path: "{{ install_dir }}"
         state: directory
         mode: o=rwx,g=rx,o=rx
-    - name: Download glimpse {{ version_number }} components
+    - name: Download GLIMPSE {{ version_number }} components
       get_url:
         url: "{{ component.url }}"
         dest: "{{ install_dir }}/{{ component.name }}"
@@ -27,14 +27,14 @@
         loop_var: component
         label: "{{ component.name }}"
 
-    - name: Install glimpse {{ version_number }} module
+    - name: Install GLIMPSE {{ version_number }} module
       block:
         - name: Check module dir
           file:
             path: "{{ glimpse_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install glimpse {{ version_number }} module file
+        - name: Install GLIMPSE {{ version_number }} module file
           template:
             src: bio/glimpse.lua
             dest: "{{ glimpse_module_dir }}/{{ version_number }}.lua"
