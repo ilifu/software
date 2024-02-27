@@ -1,0 +1,40 @@
+- name: Install shapeit5
+  vars:
+    shapeit5_dir: "{{ bio_dir }}/shapeit5"
+    shapeit5_module_dir: "{{ bio_modules }}/shapeit5"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ shapeit5_dir }}/{{ version_number }}"
+    components: "{{ item.components }}"
+  tags:
+    - never
+    - shapeit{{ item.version_number }}
+  block:
+    - name: Ensure {{ install_dir }} exists
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: o=rwx,g=rx,o=rx
+    - name: Download shapeit5 {{ version_number }} components
+      get_url:
+        url: "{{ component.url }}"
+        dest: "{{ install_dir }}/{{ component.name }}"
+        mode: u=rwx,g=rx,o=rx
+        checksum: "{{ component.checksum }}"
+      loop: "{{ components }}"
+      loop_control:
+        loop_var: component
+        label: "{{ component.name }}"
+
+    - name: Install shapeit5 {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ shapeit5_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install shapeit5 {{ version_number }} module file
+          template:
+            src: bio/shapeit5.lua
+            dest: "{{ shapeit5_module_dir }}/{{ version_number }}.lua"

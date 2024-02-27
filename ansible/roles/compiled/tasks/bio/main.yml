@@ -1105,14 +1105,52 @@
       - never
       - gemma
 
+- name: Install Shapeit5
+  vars:
+    versions:
+      - {
+        version_number: "5.1.1",
+        components: [
+          {
+            name: ligate_static,
+            url: "https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/ligate_static",
+            checksum: "sha1:e09af2715cb820124437ba81a6fd1900bf3ce0a6"
+            },
+          {
+            name: phase_common_static,
+            url: "https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/phase_common_static",
+            checksum: "sha1:0e868c7ea722c3eb690fd5dcc3ff78c172b404fd"
+            },
+          {
+            name:  phase_rare_static,
+            url: "https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/phase_rare_static",
+            checksum: "sha1:9e493fdd8d9dbf2f6a2d09f737a990aedb52cb43"
+          },
+          {
+            name: simulate_static,
+            url: "https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/simulate_static",
+            checksum: "sha1:7276b95858c1b5302cacbaa891d3e00ae5879f9a"
+          },
+          {
+            name: switch_static,
+            url: "https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/switch_static",
+            checksum: "sha1:77e4e6afa8ce73c84af0c7da231713c560ad3796"
+          },
+          {
+            name: xfctools_static,
+            url: "https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/xcftools_static",
+            checksum: "sha1:8d9fcbda2e985584e9109e1727d5b1d7cc8b4d67"
+          }
+        ]
+      }
+  include_tasks:
+    file: 'shapeit5.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - shapeit5
 
-#- Hapgen2
-#
-#https://mathgen.stats.ox.ac.uk/genetics_software/hapgen/hapgen2.html
-#
-#- GEMMA
-#
-#https://github.com/genetics-statistics/GEMMA#license
+
 #
 #- Shapeit5
 #
