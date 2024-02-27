@@ -1,0 +1,60 @@
+- name: Install impute5
+  vars:
+    impute5_dir: "{{ bio_dir }}/impute5"
+    impute5_module_dir: "{{ bio_modules }}/impute5"
+    zip_file: "{{ item.zip_file }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ impute5_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - impute5_{{ item.version_number }}
+  block:
+    - name: Ensure {{ impute5_dir }} exists
+      file:
+        path: "{{ impute5_dir }}"
+        state: directory
+        mode: o=rwx,g=rx,o=rx
+    - name: Check if impute5 {{ version_number }} is already installed
+      stat:
+        path: "{{ install_dir }}"
+      register: impute5_installed
+    - name: Copy impute5 {{ version_number }} zip file to {{ impute5_dir }}
+      when: not impute5_installed.stat.exists
+      copy:
+        src: "bio/{{ zip_file }}"
+        dest: "{{ bio_dir }}/src/{{ zip_file }}"
+        mode: u=rwx,g=rx,o=rx
+    - name: Message that impute5 {{ version_number }} is only free for academic use
+      debug:
+        msg: "impute5 {{ version_number }} is only free for academic use. Check out https://jmarchini.org/software/#impute-5"
+    - name: Unzip impute5 {{ version_number }}
+      when: not impute5_installed.stat.exists
+      unarchive:
+        src: "{{ bio_dir }}/src/{{ zip_file }}"
+        dest: "{{ impute5_dir }}/"
+        creates: "{{ impute5_dir }}/impute5_v{{ version_number }}"
+        remote_src: yes
+      register: impute5_unzipped
+    - name: Rename impute5 {{ version_number }} directory
+      when: impute5_unzipped.changed
+      command: "mv {{ impute5_dir }}/impute5_v{{ version_number }} {{ install_dir }}"
+      args:
+        creates: "{{ install_dir }}/impute5"
+    - name: Clean up __MACOSX directory
+      command: "rm -rf {{ impute5_dir }}/__MACOSX"
+      args:
+          removes: "{{ impute5_dir }}/__MACOSX"
+
+
+    - name: Install impute5 {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ impute5_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install impute5 {{ version_number }} module file
+          template:
+            src: bio/impute5.lua
+            dest: "{{ impute5_module_dir }}/{{ version_number }}.lua"

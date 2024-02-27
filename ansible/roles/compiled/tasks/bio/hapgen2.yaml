@@ -1,0 +1,40 @@
+- name: Install HAPGEN2
+  vars:
+    hapgen2_dir: "{{ bio_dir }}/hapgen2"
+    hapgen2_module_dir: "{{ bio_modules }}/hapgen2"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ hapgen2_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/hapgen2"
+  tags:
+    - never
+    - hapgen{{ item.version_number }}
+  block:
+    - name: Download hapgen2 {{ version_number }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ bio_src }}/hapgen2_x86_64.{{ version_number }}.tar.gz"
+        checksum: "{{ checksum }}"
+    - name: Ensure {{ install_dir }} exists
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: u=rwx,g=rx,o=rx
+    - name: Unzip hapgen2 {{ version_number }}
+      unarchive:
+        src: "{{ bio_src }}/hapgen2_x86_64.{{ version_number }}.tar.gz"
+        dest: "{{ install_dir }}"
+        creates: "{{ install_dir }}/hapgen2"
+
+    - name: Install hapgen2 {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ hapgen2_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install hapgen2 {{ version_number }} module file
+          template:
+            src: bio/hapgen2.lua
+            dest: "{{ hapgen2_module_dir }}/{{ version_number }}.lua"
