@@ -1164,14 +1164,20 @@
       - never
       - impute5
 
+- name: Install Whatshap
+  vars:
+    versions:
+      - {
+        version_number: "2.2",
+        python_location: "/software/common/python/3.12.1",
+      }
+  include_tasks:
+    file: 'whatshap.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - whatshap
 
-#- impute5
-#
-#https://jmarchini.org/software/#impute-5
-#
-#- Whatshap
-#
-#https://whatshap.readthedocs.io/en/latest/
 #
 #- GLIMPSE
 #
