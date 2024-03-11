@@ -197,6 +197,15 @@
   vars:
     openmpi_versions:
       - {
+        version_number: "5.0.2",
+        checksum: "sha256:ee46ad8eeee2c3ff70772160bff877cbf38c330a0bc3b3ddc811648b3396698f",
+        url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.2.tar.bz2",
+        ucx_version: "1.15.0",
+        singularity_version: "3.11.3",
+        cuda_root: "/software/common/cuda/12.4.0_550.54.14",
+        pmix: "/software/common/pmix/4.1.1",
+      }
+      - {
         version_number: "4.1.5",
         checksum: "sha256:a640986bc257389dd379886fdae6264c8cfa56bc98b71ce3ae3dfbd8ce61dbe3",
         url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.5.tar.bz2",
