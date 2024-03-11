@@ -13,6 +13,7 @@ local include_dir = pathJoin(gromacs_dir, "include")
 local man_dir = pathJoin(gromacs_dir, "share/man")
 local pkgconfig_dir = pathJoin(gromacs_dir, "lib/pkgconfig")
 
+load("{{ hwloc_module }}")
 load("{{ cuda_module }}")
 load("{{ mpi_module }}")
 

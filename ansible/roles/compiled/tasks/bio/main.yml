@@ -492,6 +492,17 @@
         mpi_root: "/software/common/openmpi/4.1.4",
         mpi_module: "openmpi/4.1.4",
       }
+      - {
+        version_number: "2024.1",
+        checksum: "md5:cb7994089505b1e2fb50cbb06e07748f",
+        url: "https://ftp.gromacs.org/gromacs/gromacs-2024.1.tar.gz",
+        cuda_root: "/software/common/cuda/12.4.0_550.54.14",
+        cuda_module: "cuda/12.4.0_550.54.14",
+        mpi_root: "/software/common/openmpi/5.0.2",
+        mpi_module: "openmpi/5.0.2",
+        hwloc_module: "hwloc/2.10.0",
+        hwloc_root: "/software/common/hwloc/2.10.0",
+      }
   include_tasks:
     file: gromacs.yaml
   loop: "{{ versions }}"
@@ -1218,3 +1229,4 @@
   tags:
       - never
       - glimpse
+
