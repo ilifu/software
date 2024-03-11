@@ -167,6 +167,11 @@
         checksum: "sha256:ecf3d2afadcbac029f0f4505785810d52d006e4b87ba79ff3f984336a2bbf518"
       }
       - {
+        version_number: "12.1.0_530.30.02",
+        url: "https://developer.download.nvidia.com/compute/cuda/12.1.0/local_installers/cuda_12.1.0_530.30.02_linux.run",
+        checksum: "md5:6b6583fad98b905574a1fd37a471ef92"
+      }
+      - {
         version_number: "11.6.0_510.39.01",
         url: "https://developer.download.nvidia.com/compute/cuda/11.6.0/local_installers/cuda_11.6.0_510.39.01_linux.run",
         checksum: "md5:685ef40564b829eb8e6892563e9d8b80"
@@ -283,7 +288,7 @@
         url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.2.tar.bz2",
         ucx_version: "1.15.0",
         singularity_version: "3.11.3",
-        cuda_root: "/software/common/cuda/12.4.0_550.54.14",
+        cuda_root: "/software/common/cuda/12.1.0_530.30.02",
         pmix: "/software/common/pmix/4.2.9",
       }
       - {
