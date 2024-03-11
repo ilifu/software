@@ -185,6 +185,12 @@
         checksum: "sha1:eafc9a349a9dc184a15236320f600b238622029a",
         hwloc: "/software/common/hwloc/2.9.3"
       }
+      - {
+        version_number: "4.2.9",
+        url: "https://github.com/openpmix/openpmix/releases/download/v4.2.9/pmix-4.2.9.tar.gz",
+        checksum: "sha1:912c70f567098dd0a7c0a03a816c5e6ecfaf1962",
+        hwloc: "/software/common/hwloc/2.10.0"
+      }
   include_tasks:
     file: pmix.yaml
   loop: "{{ versions }}"
@@ -203,7 +209,7 @@
         ucx_version: "1.15.0",
         singularity_version: "3.11.3",
         cuda_root: "/software/common/cuda/12.4.0_550.54.14",
-        pmix: "/software/common/pmix/4.1.1",
+        pmix: "/software/common/pmix/4.2.9",
       }
       - {
         version_number: "4.1.5",
@@ -294,6 +300,11 @@
           version_number: "2.9.3",
           url: "https://download.open-mpi.org/release/hwloc/v2.9/hwloc-2.9.3.tar.gz",
           checksum: "sha256:5985db3a30bbe51234c2cd26ebe4ae9b4c3352ab788b1a464c40c0483bf4de59"
+      }
+      - {
+        version_number: "2.10.0",
+        url: "https://download.open-mpi.org/release/hwloc/v2.10/hwloc-2.10.0.tar.gz",
+        checksum: "sha256:c7fd8a1404a9719c76aadc642864b9f77aed1dc1fc8882d6af861a9260ba240d"
       }
   include_tasks:
     file: hwloc.yaml
