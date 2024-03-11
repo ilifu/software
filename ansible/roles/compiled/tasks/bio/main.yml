@@ -496,8 +496,8 @@
         version_number: "2024.1",
         checksum: "md5:cb7994089505b1e2fb50cbb06e07748f",
         url: "https://ftp.gromacs.org/gromacs/gromacs-2024.1.tar.gz",
-        cuda_root: "/software/common/cuda/12.4.0_550.54.14",
-        cuda_module: "cuda/12.4.0_550.54.14",
+        cuda_root: "/software/common/cuda/12.1.0_530.30.02",
+        cuda_module: "cuda/12.1.0_530.30.02",
         mpi_root: "/software/common/openmpi/5.0.2",
         mpi_module: "openmpi/5.0.2",
         hwloc_module: "hwloc/2.10.0",
@@ -1229,4 +1229,26 @@
   tags:
       - never
       - glimpse
+
+- name: Install Ambertools
+  vars:
+      versions:
+      - {
+        version_number: "23",
+        unzip_suffix: "22",
+        url: "https://ambermd.org/cgi-bin/AmberTools23-get.pl",
+        checksum: "md5:073deadb3edfa96f86da91e3b070d2bc",
+        cuda_root: "/software/common/cuda/12.1.0_530.30.02",
+        cuda_module: "cuda/12.1.0_530.30.02",
+        mpi_root: "/software/common/openmpi/5.0.2",
+        mpi_module: "openmpi/5.0.2",
+        hwloc_module: "hwloc/2.10.0",
+        hwloc_root: "/software/common/hwloc/2.10.0",
+      }
+  include_tasks:
+    file: 'ambertools.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - ambertools
 
