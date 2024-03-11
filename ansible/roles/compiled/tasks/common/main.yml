@@ -613,6 +613,11 @@
   vars:
     cuda_versions:
       - {
+        version_number: "12.4.0_550.54.14",
+        url: "https://developer.download.nvidia.com/compute/cuda/12.4.0/local_installers/cuda_12.4.0_550.54.14_linux.run",
+        checksum: "sha256:e6a842f4eca9490575cdb68b6b1bb78d47b95a897de48dee292c431892e57d17"
+      }
+      - {
         version_number: "12.2.0_535.54.03",
         url: "https://developer.download.nvidia.com/compute/cuda/12.2.0/local_installers/cuda_12.2.0_535.54.03_linux.run",
         checksum: "sha256:ecf3d2afadcbac029f0f4505785810d52d006e4b87ba79ff3f984336a2bbf518"
