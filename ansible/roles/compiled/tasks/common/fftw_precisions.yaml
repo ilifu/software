@@ -64,5 +64,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install fftw {{ version_number }}-{{ name }} module file
           template:
-            src: fftw.lua
+            src: fftw-precisions.lua
             dest: "{{ fftw_module_dir }}/{{ version_number }}-{{ name }}.lua"

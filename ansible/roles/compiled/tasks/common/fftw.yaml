@@ -15,8 +15,7 @@
     - fftw{{ item.version_number }}
   block:
     - name: Install fftw {{ version_number }}
-      tags: 
-        - build
+      tags: build
       block:
         - name: Download, compile and install fftw {{ version_number }}
           block:
