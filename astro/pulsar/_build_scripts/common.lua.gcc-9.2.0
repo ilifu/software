@@ -1,4 +1,4 @@
-local root = pathJoin("/software/astro")
+local root = pathJoin("/software/astro/pulsar")
 local version = myModuleVersion()
 local pkgName = myModuleName()
 local pkg = pathJoin(root,"gcc-9.2.0",pkgName,version)
