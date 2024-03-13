@@ -1,0 +1,51 @@
+- name: Install gemma
+  vars:
+    gemma_dir: "{{ bio_dir }}/gemma"
+    gemma_module_dir: "{{ bio_modules }}/gemma"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ gemma_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - gemma{{ item.version_number }}
+  block:
+    - name: Ensure {{ install_dir }} exists
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: o=rwx,g=rx,o=rx
+    - name: Download gemma {{ version_number }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ install_dir }}/gemma-{{ version_number }}-linux-static-AMD64.gz"
+        checksum: "{{ checksum }}"
+
+    - name: Unzip gemma {{ version_number }}
+      command: "gzip -d {{ install_dir }}/gemma-{{ version_number }}-linux-static-AMD64.gz"
+      args:
+        creates: "{{ install_dir }}/gemma-{{ version_number }}-linux-static-AMD64"
+        chdir: "{{ install_dir }}"
+
+    - name: Ensure gemma is executable
+      file:
+          path: "{{ install_dir }}/gemma-{{ version_number }}-linux-static-AMD64"
+          mode: u=rwx,g=rx,o=rx
+
+    - name: Create symlink to gemma
+      file:
+          src: "{{ install_dir }}/gemma-{{ version_number }}-linux-static-AMD64"
+          dest: "{{ install_dir }}/gemma"
+          state: link
+
+    - name: Install gemma {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ gemma_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install gemma {{ version_number }} module file
+          template:
+            src: bio/gemma.lua
+            dest: "{{ gemma_module_dir }}/{{ version_number }}.lua"

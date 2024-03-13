@@ -18,7 +18,7 @@
         - name: Download htslib {{ version_number }} from {{ url }}
           get_url:
             url: "{{ url }}"
-            dest: "{{  bio_dir }}/src//htslib.tar.bz2"
+            dest: "{{  bio_dir }}/src/htslib.tar.bz2"
             checksum: "{{ checksum }}"
         - name: Ensure htslib dir exists
           file:

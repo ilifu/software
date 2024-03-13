@@ -1,0 +1,40 @@
+- name: Install GLIMPSE
+  vars:
+    glimpse_dir: "{{ bio_dir }}/glimpse"
+    glimpse_module_dir: "{{ bio_modules }}/glimpse"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ glimpse_dir }}/{{ version_number }}"
+    components: "{{ item.components }}"
+  tags:
+    - never
+    - glimpse{{ item.version_number }}
+  block:
+    - name: Ensure {{ install_dir }} exists
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: o=rwx,g=rx,o=rx
+    - name: Download GLIMPSE {{ version_number }} components
+      get_url:
+        url: "{{ component.url }}"
+        dest: "{{ install_dir }}/{{ component.name }}"
+        mode: u=rwx,g=rx,o=rx
+        checksum: "{{ component.checksum }}"
+      loop: "{{ components }}"
+      loop_control:
+        loop_var: component
+        label: "{{ component.name }}"
+
+    - name: Install GLIMPSE {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ glimpse_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install GLIMPSE {{ version_number }} module file
+          template:
+            src: bio/glimpse.lua
+            dest: "{{ glimpse_module_dir }}/{{ version_number }}.lua"

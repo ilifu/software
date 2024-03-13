@@ -79,6 +79,11 @@
         url: "https://github.com/samtools/samtools/releases/download/1.18/samtools-1.18.tar.bz2",
         checksum: "sha256:d686ffa621023ba61822a2a50b70e85d0b18e79371de5adb07828519d3fc06e1"
       }
+      - {
+        version_number: "1.19",
+        url: "https://github.com/samtools/samtools/releases/download/1.19/samtools-1.19.tar.bz2",
+        checksum: "sha256:fa6b3b18e20851b6f3cb55afaf3205d02fcb79dae3b849fcf52e8fc10ff08b83"
+      }
   include_tasks:
     file: samtools.yaml
   loop: "{{ samtools_versions }}"
@@ -1040,17 +1045,176 @@
       - never
       - nanocomp
 
-# TODO:
-#- name: Install cactus
-#  vars:
-#    versions:
-#      - {}
+- name: Install bamtools
+  vars:
+    versions:
+      - {
+          version_number: "2.5.2",
+          url: "https://github.com/pezmaster31/bamtools/archive/refs/tags/v2.5.2.tar.gz",
+          checksum: "sha256:4d8b84bd07b673d0ed41031348f10ca98dd6fa6a4460f9b9668d6f1d4084dfc8"
+      }
+  include_tasks:
+    file: 'bamtools.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - bamtools
 
+- name: Install blast+
+  vars:
+    versions:
+      - {
+        version_number: "2.15.0",
+        url: "https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.15.0+-x64-linux.tar.gz",
+        checksum: "md5:0abb189643afd79f3fbbd2bf27db6428"
+      }
+  include_tasks:
+    file: 'blast.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - blast
 
-#- name: vcflib
-#
-#- name: fastix
-#
-#- name: pafplot
-#
-#- name: pggb
+- name: Install Hapgen2
+  vars:
+    versions:
+      - {
+        version_number: "2.2.0",
+        url: "https://mathgen.stats.ox.ac.uk/genetics_software/hapgen/download/builds/x86_64/v2.2.0/hapgen2_x86_64.tar.gz",
+        checksum: "sha256:705a6b3b053ae192cffc430df2b9f2cc70695a95ca8e06ad515974e921a368dd"
+      }
+  include_tasks:
+    file: 'hapgen2.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - hapgen2
+
+- name: Install GEMMA
+  vars:
+    versions:
+      - {
+        version_number: "0.98.5",
+        url: "https://github.com/genetics-statistics/GEMMA/releases/download/v0.98.5/gemma-0.98.5-linux-static-AMD64.gz",
+        checksum: "sha1:d1944e96620915fcac95b414fde88ab100eec96d"
+      }
+  include_tasks:
+    file: 'gemma.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - gemma
+
+- name: Install Shapeit5
+  vars:
+    versions:
+      - {
+        version_number: "5.1.1",
+        components: [
+          {
+            name: ligate_static,
+            url: "https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/ligate_static",
+            checksum: "sha1:e09af2715cb820124437ba81a6fd1900bf3ce0a6"
+            },
+          {
+            name: phase_common_static,
+            url: "https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/phase_common_static",
+            checksum: "sha1:0e868c7ea722c3eb690fd5dcc3ff78c172b404fd"
+            },
+          {
+            name:  phase_rare_static,
+            url: "https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/phase_rare_static",
+            checksum: "sha1:9e493fdd8d9dbf2f6a2d09f737a990aedb52cb43"
+          },
+          {
+            name: simulate_static,
+            url: "https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/simulate_static",
+            checksum: "sha1:7276b95858c1b5302cacbaa891d3e00ae5879f9a"
+          },
+          {
+            name: switch_static,
+            url: "https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/switch_static",
+            checksum: "sha1:77e4e6afa8ce73c84af0c7da231713c560ad3796"
+          },
+          {
+            name: xfctools_static,
+            url: "https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/xcftools_static",
+            checksum: "sha1:8d9fcbda2e985584e9109e1727d5b1d7cc8b4d67"
+          }
+        ]
+      }
+  include_tasks:
+    file: 'shapeit5.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - shapeit5
+
+- name: Install impute5
+  vars:
+      versions:
+      - {
+        version_number: "1.2.0",
+        zip_file: "impute5_v1.2.0.zip",
+      }
+  include_tasks:
+    file: 'impute5.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - impute5
+
+- name: Install Whatshap
+  vars:
+    versions:
+      - {
+        version_number: "2.2",
+        python_location: "/software/common/python/3.12.1",
+      }
+  include_tasks:
+    file: 'whatshap.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - whatshap
+
+- name: Install GLIMPSE
+  vars:
+      versions:
+      - {
+        version_number: "2.0.0",
+        components: [
+          {
+            name: GLIMPSE2_chunk,
+            url: "https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_chunk_static",
+            checksum: "sha1:16054a755a7047a7fe3d4f46f8fc06e264556405"
+          },
+          {
+            name: GLIMPSE2_concordance,
+            url: "https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_concordance_static",
+            checksum: "sha1:c4970c648c9ef79a2efdb954e825329816d147c0"
+          },
+          {
+            name: GLIMPSE2_ligate,
+            url: "https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_ligate_static",
+            checksum: "sha1:9f37470363cd115501cc0c0960912cdd2e9f9553"
+          },
+          {
+            name: GLIMPSE2_phase,
+            url: "https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_phase_static",
+            checksum: "sha1:669c0df3f267f63eefa1448b2c6c2663aa708084"
+          },
+          {
+            name: GLIMPSE2_split_reference,
+            url: "https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_split_reference_static",
+            checksum: "sha1:8aae1f29b7e1a0d14337c0f9c6b61e511da259c6"
+          }
+
+        ]
+      }
+  include_tasks:
+    file: 'glimpse.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - glimpse

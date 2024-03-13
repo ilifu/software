@@ -1,0 +1,73 @@
+---
+- name: Install bamtools {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    bamtools_dir: "{{ bio_dir }}/bamtools"
+    bamtools_module_dir: "{{ bio_modules }}/bamtools"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    unzip_dir: "/dev/shm/bamtools-{{ version_number }}"
+    install_dir: "{{ bamtools_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - bamtools{{ item.version_number }}
+  block:
+    - name: Download and install bamtools ({{ version_number }})
+      block:
+        - name: Download bamtools
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/bamtools.{{ version_number }}.tar.gz"
+            mode: ug=rw,o=r
+        - name: Extract bamtools
+          unarchive:
+            src: "{{ bio_src }}/bamtools.{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzip_dir }}"
+
+        - name: Ensure bamtools dir exists
+          file:
+            path: "{{ bamtools_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Create build directory
+          file:
+            path: "{{ unzip_dir }}/build"
+            state: directory
+
+        - name: Run cmake -DCMAKE_INSTALL_PREFIX={{ install_dir }}"
+          shell: "/usr/bin/cmake -DCMAKE_INSTALL_PREFIX={{ install_dir }} .."
+          args:
+            chdir: "{{ unzip_dir }}/build"
+            creates: "{{ unzip_dir }}/build/Makefile"
+
+        - name: Run make
+          make:
+            chdir: "{{ unzip_dir }}/build"
+            target: all
+            jobs: "{{ ansible_processor_count }}"
+            params:
+              DESTDIR: "{{ unzip_dir }}/staging"
+          environment:
+            MAKEFLAGS: "-j {{ ansible_processor_count }}"
+
+        - name: Run make install
+          make:
+            chdir: "{{ unzip_dir }}/build"
+            target: install
+
+
+
+    - name: Install bamtools {{ version_number }} module
+      block:
+        - name: Check module dir {{ bamtools_module_dir }}
+          file:
+            path: "{{ bamtools_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install bamtools {{ version_number }} module file
+          template:
+            src: bio/bamtools.lua
+            dest: "{{ bamtools_module_dir }}/{{ version_number }}.lua"
