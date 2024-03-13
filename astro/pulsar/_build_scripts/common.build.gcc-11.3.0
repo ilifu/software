@@ -66,8 +66,10 @@ else if ( "$SYS_ARCH" == "milan" || "$SYS_ARCH" == "openstack" ) then
   set psrchive_mod = "psrchive/e99fec329"
   set psrdada_mod = "psrdada/f654e40"
   set psr_cfitsio_mod = "psr_cfitsio/3.450"
-  set fftw_mod = "fftw/3.3.8-single"
-  set fftw_dp_mod = "fftw/3.3.8-double"
+  set fftw_sp_mod = "fftw/3.3.8-single"
+  set fftw_dp_mod = "fftw/3.3.8-double" 
+  set fftw_mod = "fftw/3.3.8" # includes single + double 
+
   set pgplot_mod = "pgplot/5.2"
   set psrxml_mod = "psrxml/1.01"
   set splinter_mod = "splinter/da6ac4f"
