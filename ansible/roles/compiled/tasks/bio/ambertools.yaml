@@ -35,31 +35,31 @@
         dest: "{{ bio_src }}/AmberTools{{ version_number }}.tar.bz2"
         checksum: "{{ checksum }}"
     - name: Unzip Ambertools {{ version_number }}
-      tags: []build]
+      tags: [build]
       unarchive:
         src: "{{ bio_src }}/AmberTools{{ version_number }}.tar.bz2"
         dest: "/dev/shm/"
         creates: "{{ unzipdir }}"
     - name: Ensure Ambertools build directory {{ build_dir }} is present
-      tags: []build]
+      tags: [build]
       file:
         path: "{{ build_dir }}"
         state: directory
     - name: Run cmake for Ambertools {{ version_number }}
       command: "cmake .. -DCOMPILER=GNU -DMPI=TRUE -DCUDA=TRUE -DOPENMP=TRUE -DCMAKE_INSTALL_PREFIX={{ install_dir }} -DINSTALL_TESTS=TRUE -DDOWNLOAD_MINICONDA=TRUE"
-      tags: []build]
+      tags: [build]
       args:
         chdir: "{{ build_dir }}"
         creates: "{{ build_dir }}/Makefile"
 
     - name: Build Ambertools {{ version_number }}
-      tags: []build]
+      tags: [build]
       make:
         chdir: "{{ build_dir }}"
         target: "all"
 
     - name: Install Ambertools {{ version_number }} to {{ install_dir }}
-      tags: []build]
+      tags: [build]
       make:
         chdir: "{{ build_dir }}"
         target: "install"
