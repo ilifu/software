@@ -15,6 +15,7 @@ setenv('AMBERHOME', '{{ install_dir }}')
 setenv('QUICK_BASIS', '{{ install_dir }}/AmberTools/src/quick/basis')
 
 prepend_path('PATH', '{{ install_dir }}/bin')
+prepend_path('PATH', '{{ install_dir }}/miniconda/bin')
 prepend_path('LD_LIBRARY_PATH', '{{ install_dir }}/lib')
 prepend_path('LIBRARY_PATH', '{{ install_dir }}/lib')
 prepend_path('INCLUDE', '{{ install_dir }}/include')
