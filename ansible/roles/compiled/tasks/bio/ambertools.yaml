@@ -24,6 +24,8 @@
     LD_LIBRARY_PATH: "{{ cuda_root }}/lib64:{{ mpi_root }}/lib:{{ hwloc_root }}/lib{% if 'LD_LIBRARY_PATH' in ansible_env %}:{{ ansible_env.LD_LIBRARY_PATH }}{% endif %}"
     PKG_CONFIG_PATH: "{{ cuda_root }}/pkgconfig:{{ mpi_root }}/lib/pkgconfig:{{ hwloc_root }}/lib/pkgconfig{% if 'PKG_CONFIG_PATH' in ansible_env %}:{{ ansible_env.PKG_CONFIG_PATH }}{% endif %}"
     MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+    CUDA_PATH: "{{ cuda_root }}"
+    CUDA_DIR: "{{ cuda_root }}"
   block:
     - name: Download Ambertools {{ version_number }}
       get_url:
