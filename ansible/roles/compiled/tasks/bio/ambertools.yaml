@@ -56,7 +56,6 @@
       make:
         chdir: "{{ build_dir }}"
         target: "install"
-        creates: "{{ install_dir }}/amber.sh"
 #
 #
 #    - name: Check Ambertools module dir
