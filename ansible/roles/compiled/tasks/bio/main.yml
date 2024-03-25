@@ -1244,6 +1244,8 @@
         mpi_module: "openmpi/4.1.5",
         hwloc_module: "hwloc/2.10.0",
         hwloc_root: "/software/common/hwloc/2.10.0",
+        python_root: "/software/common/python/3.12.1",
+        python_module: "python/3.12.1"
       }
   include_tasks:
     file: 'ambertools.yaml'

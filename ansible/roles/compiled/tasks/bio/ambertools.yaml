@@ -12,17 +12,19 @@
     cuda_root: "{{ item.cuda_root }}"
     mpi_root: "{{ item.mpi_root }}"
     hwloc_root: "{{ item.hwloc_root }}"
+    python_root: "{{ item.python_root }}"
     cuda_module: "{{ item.cuda_module }}"
     mpi_module: "{{ item.mpi_module }}"
     hwloc_module: "{{ item.hwloc_module }}"
+    python_module: "{{ item.python_module }}"
   tags:
     - never
     - ambertools{{ item.version_number }}
   environment:
-    PATH: "{{ cuda_root }}/bin:{{ mpi_root }}/bin:{{ hwloc_root }}/bin:{{ ansible_env.PATH }}"
-    INCLUDE: "{{ cuda_root }}/include:{{ mpi_root }}/include:{{ hwloc_root }}/include{% if 'INCLUDE' in ansible_env %}:{{ ansible_env.INCLUDE }}{% endif %}"
-    LD_LIBRARY_PATH: "{{ cuda_root }}/lib64:{{ mpi_root }}/lib:{{ hwloc_root }}/lib{% if 'LD_LIBRARY_PATH' in ansible_env %}:{{ ansible_env.LD_LIBRARY_PATH }}{% endif %}"
-    PKG_CONFIG_PATH: "{{ cuda_root }}/pkgconfig:{{ mpi_root }}/lib/pkgconfig:{{ hwloc_root }}/lib/pkgconfig{% if 'PKG_CONFIG_PATH' in ansible_env %}:{{ ansible_env.PKG_CONFIG_PATH }}{% endif %}"
+    PATH: "{{ cuda_root }}/bin:{{ mpi_root }}/bin:{{ hwloc_root }}/bin:{{ python_root }}/bin:{{ ansible_env.PATH }}"
+    INCLUDE: "{{ cuda_root }}/include:{{ mpi_root }}/include:{{ hwloc_root }}/include:{{ python_root }}/include{% if 'INCLUDE' in ansible_env %}:{{ ansible_env.INCLUDE }}{% endif %}"
+    LD_LIBRARY_PATH: "{{ cuda_root }}/lib64:{{ mpi_root }}/lib:{{ hwloc_root }}/lib:{{ python_root }}/lib{% if 'LD_LIBRARY_PATH' in ansible_env %}:{{ ansible_env.LD_LIBRARY_PATH }}{% endif %}"
+    PKG_CONFIG_PATH: "{{ cuda_root }}/pkgconfig:{{ mpi_root }}/lib/pkgconfig:{{ hwloc_root }}/lib/pkgconfig:{{ python_root }}/lib/pkgconfig{% if 'PKG_CONFIG_PATH' in ansible_env %}:{{ ansible_env.PKG_CONFIG_PATH }}{% endif %}"
     MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
     CUDA_PATH: "{{ cuda_root }}"
     CUDA_DIR: "{{ cuda_root }}"

@@ -9,6 +9,7 @@ whatis("Description: Ambertools {{ version_number }}")--------------------------
 load("{{ hwloc_module }}")
 load("{{ cuda_module }}")
 load("{{ mpi_module }}")
+load("{{ python_module }}")
 
 setenv('AMBERHOME', '{{ install_dir }}')
 setenv('QUICK_BASIS', '{{ install_dir }}/AmberTools/src/quick/basis')
