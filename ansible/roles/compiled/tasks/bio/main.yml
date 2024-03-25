@@ -1240,8 +1240,8 @@
         checksum: "md5:073deadb3edfa96f86da91e3b070d2bc",
         cuda_root: "/software/common/cuda/12.1.0_530.30.02",
         cuda_module: "cuda/12.1.0_530.30.02",
-        mpi_root: "/software/common/openmpi/5.0.2",
-        mpi_module: "openmpi/5.0.2",
+        mpi_root: "/software/common/openmpi/4.1.5",
+        mpi_module: "openmpi/4.1.5",
         hwloc_module: "hwloc/2.10.0",
         hwloc_root: "/software/common/hwloc/2.10.0",
       }
