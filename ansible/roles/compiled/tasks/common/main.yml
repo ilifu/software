@@ -172,6 +172,11 @@
         checksum: "md5:6b6583fad98b905574a1fd37a471ef92"
       }
       - {
+        version_number: "11.8.0_520.61.05",
+        url: "https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda_11.8.0_520.61.05_linux.run",
+        checksum: "md5:d6cf26349e5a4104b8683e26b717fa22"
+      }
+      - {
         version_number: "11.6.0_510.39.01",
         url: "https://developer.download.nvidia.com/compute/cuda/11.6.0/local_installers/cuda_11.6.0_510.39.01_linux.run",
         checksum: "md5:685ef40564b829eb8e6892563e9d8b80"
