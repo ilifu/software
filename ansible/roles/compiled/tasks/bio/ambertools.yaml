@@ -64,5 +64,5 @@
         mode: u=rwx,g=rwx,o=rx
     - name: Install Ambertools {{ version_number }} module file
       template:
-        src: ambertools.lua
+        src: bio/ambertools.lua
         dest: "{{ ambertools_module_dir }}/{{ version_number }}.lua"
