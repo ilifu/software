@@ -70,6 +70,8 @@ From: {{ base_container_image }}
     dirmngr \
     git \
     imagemagick \
+    libfribidi-dev \
+    libharfbuzz-dev \
     pandoc \
     pandoc-citeproc \
     pkg-config \
