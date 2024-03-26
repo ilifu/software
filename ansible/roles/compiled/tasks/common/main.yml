@@ -512,6 +512,36 @@
     - never
     - anaconda
 
+- name: Install harfbuzz
+  vars:
+    harfbuzz_versions:
+      - {
+        version_number: "8.3.1",
+        url: "https://github.com/harfbuzz/harfbuzz/releases/download/8.3.1/harfbuzz-8.3.1.tar.xz",
+        checksum: "sha256:f73e1eacd7e2ffae687bc3f056bb0c705b7a05aee86337686e09da8fc1c2030c"
+      }
+  include_tasks:
+    file: harfbuzz.yaml
+  loop: "{{ harfbuzz_versions }}"
+  tags:
+      - never
+      - harfbuzz
+
+- name: Install fribidi
+  vars:
+      fribidi_versions:
+      - {
+        version_number: "1.0.13",
+        url: "https://github.com/fribidi/fribidi/releases/download/v1.0.13/fribidi-1.0.13.tar.xz",
+        checksum: "sha256:7fa16c80c81bd622f7b198d31356da139cc318a63fc7761217af4130903f54a2"
+      }
+  include_tasks:
+    file: fribidi.yaml
+  loop: "{{ fribidi_versions }}"
+  tags:
+      - never
+      - fribidi
+
 - name: Install Rs
   vars:
     R_versions:
@@ -559,6 +589,11 @@
         version_number: "4.3.2",
         checksum: "sha256:b3f5760ac2eee8026a3f0eefcb25b47723d978038eee8e844762094c860c452a",
         url: "https://cran.r-project.org/src/base/R-4/R-4.3.2.tar.gz",
+      }
+      - {
+        version_number: "4.3.3",
+        checksum: "sha256:80851231393b85bf3877ee9e39b282e750ed864c5ec60cbd68e6e139f0520330",
+        url: "https://cran.r-project.org/src/base/R-4/R-4.3.3.tar.gz",
       }
   include_tasks:
     file: R.yaml
