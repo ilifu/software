@@ -11,4 +11,4 @@
 
     - name: "Uncompress {{ the_data.name }}"
       debug:
-        msg: "Uncompressing {{ the_data.name }}"
+        msg: "Remember to decompressing {{ the_data.name }}"

@@ -280,19 +280,35 @@
       }
     exomiser_data:
       - {
-        name: "hg19",
-        url: "https://data.monarchinitiative.org/exomiser/latest/2109_hg19.zip",
+        name: "2109_hg19",
+        url: "https://data.monarchinitiative.org/exomiser/data/2109_hg19.zip",
         checksum: "sha256:50f0005e97b697af6fb5ba35b5389aa417e1b040bb8700e3eb29fc339267c5fc",
       }
       - {
-          name: "hg38",
-          url: "https://data.monarchinitiative.org/exomiser/latest/2109_hg38.zip",
+          name: "2109_hg38",
+          url: "https://data.monarchinitiative.org/exomiser/data/2109_hg38.zip",
           checksum: "sha256:67cf14400681978f1ec8a33b660413b16fe6959d12f1bb2e29ba0e35e781107c",
       }
       - {
-          name: "phenotype",
-          url: "https://data.monarchinitiative.org/exomiser/latest/2109_phenotype.zip",
+          name: "2109_phenotype",
+          url: "https://data.monarchinitiative.org/exomiser/data/2109_phenotype.zip",
           checksum: "sha256:ef2eb758e1fb3aff9b84f769bd05f7f2d5e042b55a896cd7095cd30c29f20458",
+      }
+      - {
+        name: "2402_hg38",
+        url: "https://data.monarchinitiative.org/exomiser/data/2402_hg38.zip",
+        checksum: "sha256:64f96636a53606c43292d5b7281cd95f92d9457528b040fada3ef250216cf8f9",
+
+      }
+      - {
+        name: "2402_hg19",
+        url: "https://data.monarchinitiative.org/exomiser/data/2402_hg19.zip",
+        checksum: "sha256:80eee544f17756e568f5c9528e50a1301f8425f0453e1cc6300bc61bd2ab71f2",
+      }
+      - {
+        name: "2402_phenotype",
+        url: "https://data.monarchinitiative.org/exomiser/data/2402_phenotype.zip",
+        checksum: "sha256:48f2730459497b1fcb6b74f57a940eeb580395e9199d48c31a45a7a3672d041a",
       }
   include_tasks:
     file: exomiser.yaml
