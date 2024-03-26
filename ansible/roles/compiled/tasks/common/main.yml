@@ -153,6 +153,66 @@
     - never
     - spark
 
+- name: Install Cuda
+  vars:
+    cuda_versions:
+      - {
+        version_number: "12.4.0_550.54.14",
+        url: "https://developer.download.nvidia.com/compute/cuda/12.4.0/local_installers/cuda_12.4.0_550.54.14_linux.run",
+        checksum: "sha256:e6a842f4eca9490575cdb68b6b1bb78d47b95a897de48dee292c431892e57d17"
+      }
+      - {
+        version_number: "12.2.0_535.54.03",
+        url: "https://developer.download.nvidia.com/compute/cuda/12.2.0/local_installers/cuda_12.2.0_535.54.03_linux.run",
+        checksum: "sha256:ecf3d2afadcbac029f0f4505785810d52d006e4b87ba79ff3f984336a2bbf518"
+      }
+      - {
+        version_number: "12.1.0_530.30.02",
+        url: "https://developer.download.nvidia.com/compute/cuda/12.1.0/local_installers/cuda_12.1.0_530.30.02_linux.run",
+        checksum: "md5:6b6583fad98b905574a1fd37a471ef92"
+      }
+      - {
+        version_number: "11.8.0_520.61.05",
+        url: "https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda_11.8.0_520.61.05_linux.run",
+        checksum: "md5:d6cf26349e5a4104b8683e26b717fa22"
+      }
+      - {
+        version_number: "11.6.0_510.39.01",
+        url: "https://developer.download.nvidia.com/compute/cuda/11.6.0/local_installers/cuda_11.6.0_510.39.01_linux.run",
+        checksum: "md5:685ef40564b829eb8e6892563e9d8b80"
+      }
+      - {
+        version_number: "11.4.2_470.57.02",
+        url: "https://developer.download.nvidia.com/compute/cuda/11.4.2/local_installers/cuda_11.4.2_470.57.02_linux.run",
+        checksum: "sha256:bbd87ca0e913f837454a796367473513cddef555082e4d86ed9a38659cc81f0a"
+      }
+      - {
+        version_number: "11.0.2_450.51.05",
+        url: "http://developer.download.nvidia.com/compute/cuda/11.0.2/local_installers/cuda_11.0.2_450.51.05_linux.run",
+        checksum: "sha256:48247ada0e3f106051029ae8f70fbd0c238040f58b0880e55026374a959a69c1"
+      }
+      - {
+        version_number: "10.2.89_440.33.01",
+        url: "http://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run",
+        checksum: "md5:3d816c583759efa8567a92c1a2af90db",
+      }
+      - {
+        version_number: "10.1.243_418.87.00",
+        url: "http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_418.87.00_linux.run",
+        checksum: "md5:a71f703ed688eeca637dc27df714e854",
+      }
+      - {
+        version_number: "10.0.130_410.48",
+        url: "https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux",
+        checksum: "md5:9375304c8dc8d42e7f9a9ae37e80b42b",
+      }
+  include_tasks:
+    file: cuda.yaml
+  loop: "{{ cuda_versions }}"
+  tags:
+    - never
+    - cuda
+
 - name: Install UCX
   vars:
     ucx_versions:
@@ -176,6 +236,31 @@
     - never
     - ucx
 
+- name: Install hwloc
+  vars:
+    hwloc_versions:
+      - {
+        version_number: "1.11.13",
+        url: "https://download.open-mpi.org/release/hwloc/v1.11/hwloc-1.11.13.tar.gz",
+        checksum: "sha1:e3384557e6b4aca110209f8cb45a8f604e993d53",
+      }
+      - {
+          version_number: "2.9.3",
+          url: "https://download.open-mpi.org/release/hwloc/v2.9/hwloc-2.9.3.tar.gz",
+          checksum: "sha256:5985db3a30bbe51234c2cd26ebe4ae9b4c3352ab788b1a464c40c0483bf4de59"
+      }
+      - {
+        version_number: "2.10.0",
+        url: "https://download.open-mpi.org/release/hwloc/v2.10/hwloc-2.10.0.tar.gz",
+        checksum: "sha256:c7fd8a1404a9719c76aadc642864b9f77aed1dc1fc8882d6af861a9260ba240d"
+      }
+  include_tasks:
+    file: hwloc.yaml
+  loop: "{{ hwloc_versions }}"
+  tags:
+    - never
+    - hwloc
+
 - name: Install PMIx
   vars:
     versions:
@@ -184,6 +269,12 @@
         url: "https://github.com/openpmix/openpmix/releases/download/v4.1.1/pmix-4.1.1.tar.gz",
         checksum: "sha1:eafc9a349a9dc184a15236320f600b238622029a",
         hwloc: "/software/common/hwloc/2.9.3"
+      }
+      - {
+        version_number: "4.2.9",
+        url: "https://github.com/openpmix/openpmix/releases/download/v4.2.9/pmix-4.2.9.tar.gz",
+        checksum: "sha1:912c70f567098dd0a7c0a03a816c5e6ecfaf1962",
+        hwloc: "/software/common/hwloc/2.10.0"
       }
   include_tasks:
     file: pmix.yaml
@@ -196,6 +287,15 @@
 - name: Install openmpis
   vars:
     openmpi_versions:
+      - {
+        version_number: "5.0.2",
+        checksum: "sha256:ee46ad8eeee2c3ff70772160bff877cbf38c330a0bc3b3ddc811648b3396698f",
+        url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.2.tar.bz2",
+        ucx_version: "1.15.0",
+        singularity_version: "3.11.3",
+        cuda_root: "/software/common/cuda/12.1.0_530.30.02",
+        pmix: "/software/common/pmix/4.2.9",
+      }
       - {
         version_number: "4.1.5",
         checksum: "sha256:a640986bc257389dd379886fdae6264c8cfa56bc98b71ce3ae3dfbd8ce61dbe3",
@@ -271,27 +371,6 @@
   tags:
     - never
     - mpich
-
-
-- name: Install hwloc
-  vars:
-    hwloc_versions:
-      - {
-        version_number: "1.11.13",
-        url: "https://download.open-mpi.org/release/hwloc/v1.11/hwloc-1.11.13.tar.gz",
-        checksum: "sha1:e3384557e6b4aca110209f8cb45a8f604e993d53",
-      }
-      - {
-          version_number: "2.9.3",
-          url: "https://download.open-mpi.org/release/hwloc/v2.9/hwloc-2.9.3.tar.gz",
-          checksum: "sha256:5985db3a30bbe51234c2cd26ebe4ae9b4c3352ab788b1a464c40c0483bf4de59"
-      }
-  include_tasks:
-    file: hwloc.yaml
-  loop: "{{ hwloc_versions }}"
-  tags:
-    - never
-    - hwloc
 
 
 - name: Install pythons
@@ -609,50 +688,6 @@
     - never
     - drmaa
 
-- name: Install Cuda
-  vars:
-    cuda_versions:
-      - {
-        version_number: "12.2.0_535.54.03",
-        url: "https://developer.download.nvidia.com/compute/cuda/12.2.0/local_installers/cuda_12.2.0_535.54.03_linux.run",
-        checksum: "sha256:ecf3d2afadcbac029f0f4505785810d52d006e4b87ba79ff3f984336a2bbf518"
-      }
-      - {
-        version_number: "11.6.0_510.39.01",
-        url: "https://developer.download.nvidia.com/compute/cuda/11.6.0/local_installers/cuda_11.6.0_510.39.01_linux.run",
-        checksum: "md5:685ef40564b829eb8e6892563e9d8b80"
-      }
-      - {
-        version_number: "11.4.2_470.57.02",
-        url: "https://developer.download.nvidia.com/compute/cuda/11.4.2/local_installers/cuda_11.4.2_470.57.02_linux.run",
-        checksum: "sha256:bbd87ca0e913f837454a796367473513cddef555082e4d86ed9a38659cc81f0a"
-      }
-      - {
-        version_number: "11.0.2_450.51.05",
-        url: "http://developer.download.nvidia.com/compute/cuda/11.0.2/local_installers/cuda_11.0.2_450.51.05_linux.run",
-        checksum: "sha256:48247ada0e3f106051029ae8f70fbd0c238040f58b0880e55026374a959a69c1"
-      }
-      - {
-        version_number: "10.2.89_440.33.01",
-        url: "http://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run",
-        checksum: "md5:3d816c583759efa8567a92c1a2af90db",
-      }
-      - {
-        version_number: "10.1.243_418.87.00",
-        url: "http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_418.87.00_linux.run",
-        checksum: "md5:a71f703ed688eeca637dc27df714e854",
-      }
-      - {
-        version_number: "10.0.130_410.48",
-        url: "https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux",
-        checksum: "md5:9375304c8dc8d42e7f9a9ae37e80b42b",
-      }
-  include_tasks:
-    file: cuda.yaml
-  loop: "{{ cuda_versions }}"
-  tags:
-    - never
-    - cuda
 
 - name: Install PerlBrew
   include_tasks:
