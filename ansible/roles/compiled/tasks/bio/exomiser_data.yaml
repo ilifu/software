@@ -1,10 +1,14 @@
 ---
-- name: "Download {{ the_data.name }} from {{ the_data.url }} to {{ exomiser_data_dir }}"
-  get_url:
-    url: "{{ the_data.url }}"
-    dest: "{{ exomiser_data_dir }}/"
-    checksum: "{{ the_data.checksum }}"
+- name: Download and uncompressed exomiser data
+  tags:
+    - exomiserdata
+  block:
+    - name: "Download {{ the_data.name }} from {{ the_data.url }} to {{ exomiser_data_dir }}"
+      get_url:
+        url: "{{ the_data.url }}"
+        dest: "{{ exomiser_data_dir }}/"
+        checksum: "{{ the_data.checksum }}"
 
-- name: "Uncompress {{ the_data.name }}"
-  debug:
-    msg: "Uncompressing {{ the_data.name }}"
+    - name: "Uncompress {{ the_data.name }}"
+      debug:
+        msg: "Remember to decompressing {{ the_data.name }}"
