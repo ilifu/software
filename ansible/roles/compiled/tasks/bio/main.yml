@@ -269,9 +269,14 @@
   vars:
     exomiser_versions:
       - {
-          version_number: "13.0.1",
-          url: "https://github.com/exomiser/Exomiser/releases/download/13.0.1/exomiser-cli-13.0.1-distribution.zip",
-          checksum: "sha256:bad1a7f6c29b0844bc4931337af794358a75602da0aace87028ff57b3abf61a7",
+          version_number: "14.0.0",
+          url: "https://github.com/exomiser/Exomiser/releases/download/14.0.0/exomiser-cli-14.0.0-distribution.zip",
+          checksum: "sha256:7564602a1ab79e7e0e22d26530a460848e97e4cf81e21a7471cccd722afab4dd",
+      }
+      - {
+        version_number: "13.0.1",
+        url: "https://github.com/exomiser/Exomiser/releases/download/13.0.1/exomiser-cli-13.0.1-distribution.zip",
+        checksum: "sha256:bad1a7f6c29b0844bc4931337af794358a75602da0aace87028ff57b3abf61a7",
       }
     exomiser_data:
       - {
