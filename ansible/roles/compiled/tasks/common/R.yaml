@@ -42,6 +42,7 @@
       make:
         chdir: "{{ build_dir }}"
         target: install
+        jobs: "{{ ansible_processor_count }}"
     - name: Install R packages {{ r_packages }}
       command: "{{ install_dir }}/bin/Rscript -e 'install.packages(c({{ r_packages }}), repos=\"http://cran.rstudio.com/\", Ncpus={{ ansible_processor_vcpus }})'"
     - name: Ensure Rprofile.site is up-to-date
