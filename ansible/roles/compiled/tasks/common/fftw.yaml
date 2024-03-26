@@ -15,6 +15,7 @@
     - fftw{{ item.version_number }}
   block:
     - name: Install fftw {{ version_number }}
+      tags: build
       block:
         - name: Download, compile and install fftw {{ version_number }}
           block:
@@ -37,4 +38,17 @@
               loop: "{{ precisions }}"
               loop_control:
                 loop_var: precision
+        
+
+    - name: Install fftw {{ version_number }} all precisions module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ fftw_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install fftw {{ version_number }} all precisions module file
+          template:
+            src: fftw.lua
+            dest: "{{ fftw_module_dir }}/{{ version_number }}.lua"
 
