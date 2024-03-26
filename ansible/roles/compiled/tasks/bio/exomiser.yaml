@@ -50,10 +50,10 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install exomiser {{ version_number }} module file
           template:
-            src: exomiser.lua
+            src: bio/exomiser.lua
             dest: "{{ exomiser_module_dir }}/{{ version_number }}.lua"
 
-- name: Install exomiser data
+- name: Install exomiser data to {{ bio_dir }}/exomiser/data
   vars:
     exomiser_dir: "{{ bio_dir }}/exomiser"
     exomiser_data_dir: "{{ exomiser_dir }}/data"
