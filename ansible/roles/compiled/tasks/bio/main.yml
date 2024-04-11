@@ -430,6 +430,12 @@
         checksum: "sha256:444600f7b38b46ad0b3606b7d40ce921e0ff1910a50165872f1c73c7c4a1a390",
         unzip_dir_name: "gatk-4.4.0.0"
       }
+      - {
+        version_number: "4.5.0.0",
+        url: "https://github.com/broadinstitute/gatk/releases/download/4.5.0.0/gatk-4.5.0.0.zip",
+        checksum: "sha256:dc1a4471e8bb566397db9894ca18acbf8f40f3fc312c8fad9a8c5390c218e916",
+        unzip_dir_name: "gatk-4.5.0.0"
+      }
   include_tasks:
     file: gatk.yaml
   loop: "{{ versions }}"
