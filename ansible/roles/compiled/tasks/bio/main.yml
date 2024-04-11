@@ -1296,3 +1296,20 @@
       - never
       - ambertools
 
+- name: Install MDAnalysis
+  vars:
+      versions:
+      - {
+        version_number: "2.5.0",
+        python_dir: "/software/common/python/3.10.9",
+      }
+      - {
+        version_number: "2.7.0",
+        python_dir: "/software/common/python/3.12.1",
+      }
+  include_tasks:
+    file: 'mdanalysis.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - mdanalysis
