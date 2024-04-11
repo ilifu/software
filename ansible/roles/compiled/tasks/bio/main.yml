@@ -84,6 +84,11 @@
         url: "https://github.com/samtools/samtools/releases/download/1.19/samtools-1.19.tar.bz2",
         checksum: "sha256:fa6b3b18e20851b6f3cb55afaf3205d02fcb79dae3b849fcf52e8fc10ff08b83"
       }
+      - {
+        version_number: "1.19.2",
+        url: "https://github.com/samtools/samtools/releases/download/1.19.2/samtools-1.19.2.tar.bz2",
+        checksum: "sha256:71f60499668e4c08e7d745fbff24c15cc8a0977abab1acd5d2bb419bdb065e96"
+      }
   include_tasks:
     file: samtools.yaml
   loop: "{{ samtools_versions }}"
@@ -109,6 +114,11 @@
           url: "https://github.com/samtools/htslib/releases/download/1.18/htslib-1.18.tar.bz2",
           checksum: "sha256:f1ab53a593a2320a1bfadf4ef915dae784006c5b5c922c8a8174d7530a9af18f"
       }
+      - {
+        version_number: "1.19.1",
+        url: "https://github.com/samtools/htslib/releases/download/1.19.1/htslib-1.19.1.tar.bz2",
+        checksum: "sha256:222d74d3574fb67b158c6988c980eeaaba8a0656f5e4ffb76b5fa57f035933ec"
+      }
   include_tasks:
     file: htslib.yaml
   loop: "{{ htslib_versions }}"
@@ -128,6 +138,11 @@
           version_number: "1.17",
           url: "https://github.com/samtools/bcftools/releases/download/1.17/bcftools-1.17.tar.bz2",
           checksum: "sha256:01f75d8e701d85b2c759172412009cc04f29b61616ace2fa75116123de4596cc"
+      }
+      - {
+        version_number: "1.19",
+        url: "https://github.com/samtools/bcftools/releases/download/1.19/bcftools-1.19.tar.bz2",
+        checksum: "sha256:782b5f1bc690415192231e82213b3493b047f45e630dc8ef6f154d6126ab3e68"
       }
   include_tasks:
     file: bcftools.yaml
@@ -381,6 +396,12 @@
           checksum: "sha256:15510a176ef798e40325b717cac556509fb218268cfdb9a35ea6776498321369",
           unzip_dir_name: "FastQC"
       }
+      - {
+        version_number: "0.12.1",
+        url: "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip",
+        checksum: "sha256:5f4dba8780231a25a6b8e11ab2c238601920c9704caa5458d9de559575d58aa7",
+        unzip_dir_name: "FastQC"
+      }
   include_tasks:
     file: fastqc.yaml
   loop: "{{ versions }}"
@@ -408,6 +429,12 @@
         url: "https://github.com/broadinstitute/gatk/releases/download/4.4.0.0/gatk-4.4.0.0.zip",
         checksum: "sha256:444600f7b38b46ad0b3606b7d40ce921e0ff1910a50165872f1c73c7c4a1a390",
         unzip_dir_name: "gatk-4.4.0.0"
+      }
+      - {
+        version_number: "4.5.0.0",
+        url: "https://github.com/broadinstitute/gatk/releases/download/4.5.0.0/gatk-4.5.0.0.zip",
+        checksum: "sha256:dc1a4471e8bb566397db9894ca18acbf8f40f3fc312c8fad9a8c5390c218e916",
+        unzip_dir_name: "gatk-4.5.0.0"
       }
   include_tasks:
     file: gatk.yaml
@@ -1275,3 +1302,20 @@
       - never
       - ambertools
 
+- name: Install MDAnalysis
+  vars:
+      versions:
+      - {
+        version_number: "2.5.0",
+        python_dir: "/software/common/python/3.10.9",
+      }
+      - {
+        version_number: "2.7.0",
+        python_dir: "/software/common/python/3.12.1",
+      }
+  include_tasks:
+    file: 'mdanalysis.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - mdanalysis

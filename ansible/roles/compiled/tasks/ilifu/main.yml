@@ -24,17 +24,5 @@
     - never
     - disk_management
 
-- name: Install MDAnalysis
-  vars:
-      versions:
-      - {
-        version_number: "2.5.0",
-        python_dir: "/software/common/python/3.10.9",
-      }
-  include_tasks:
-    file: 'mdanalysis.yaml'
-  loop: "{{ versions }}"
-  tags:
-    - never
-    - mdanalysis
+
 
