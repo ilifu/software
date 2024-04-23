@@ -67,5 +67,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install ProteoWizard module file
           template:
-            src: proteowizard.lua
+            src: bio/proteowizard.lua
             dest: "{{ proteowizard_module_dir }}/{{ container_name }}.lua"

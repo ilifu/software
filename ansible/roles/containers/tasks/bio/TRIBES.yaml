@@ -39,5 +39,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install TRIBES module file
           template:
-            src: tribes.lua
+            src: bio/tribes.lua
             dest: "{{ tribes_module_dir }}/{{ version_number }}.lua"

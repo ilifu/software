@@ -43,5 +43,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install GATK module file
           template:
-            src: gatk.lua
+            src: bio/gatk.lua
             dest: "{{ GATK_module_dir }}/{{ container_name }}.lua"

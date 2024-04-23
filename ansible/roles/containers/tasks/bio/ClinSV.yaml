@@ -42,5 +42,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install ClinSV module file
           template:
-            src: ClinSV.lua
+            src: bio/ClinSV.lua
             dest: "{{ ClinSV_module_dir }}/{{ container_name }}.lua"

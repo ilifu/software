@@ -39,5 +39,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install vep module file
           template:
-            src: vep.lua
+            src: bio/vep.lua
             dest: "{{ vep_module_dir }}/singularity.lua"

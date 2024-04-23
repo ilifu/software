@@ -58,5 +58,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install DIANN module file
           template:
-            src: diann.lua
+            src: bio/diann.lua
             dest: "{{ diann_module_dir }}/{{ version_number }}.lua"

@@ -97,7 +97,7 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install PopGen {{ version_number }} module file
           template:
-            src: PopGen.lua
+            src: bio/PopGen.lua
             dest: "{{ popgen_module_dir }}/{{ version_number }}.lua"
 
 

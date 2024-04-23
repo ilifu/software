@@ -61,5 +61,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install pggb module file
           template:
-            src: pggb.lua
+            src: bio/pggb.lua
             dest: "{{ pggb_module_dir }}/default.lua"

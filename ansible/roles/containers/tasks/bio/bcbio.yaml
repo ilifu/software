@@ -41,5 +41,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install bcbio module file
           template:
-            src: bcbio.lua
+            src: bio/bcbio.lua
             dest: "{{ module_dir }}/{{ container_name }}_container.lua"

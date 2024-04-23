@@ -1,22 +1,22 @@
 ---
-# tasks file for containers
-- name: Create Ubuntu Base Containers
-  vars:
-    ubuntu_versions:
-      - {
-        version_name: bionic,
-        version_number: 18.04,
-      }
-      - {
-        version_name: focal,
-        version_number: 20.04,
-      }
+# tasks file for compiled
+
+- name: Run installs
+  tags: always
   include_tasks:
-    file: ubuntu.yaml
-  loop: "{{ ubuntu_versions }}"
-  tags:
-    - never
-    - base
+    file: "{{ class }}"
+  loop:
+      - common/main.yml
+      - ilifu/main.yml
+      - astro/main.yml
+      - bio/main.yml
+  loop_control:
+    loop_var: "class"
+
+
+---
+# tasks file for containers
+
 
 - name: Create RStudio Containers
   vars:
