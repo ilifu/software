@@ -85,8 +85,6 @@
           args:
             creates: "{{ container_image }}"
           become: true
-#          environment:
-#            SINGULARITY_TMPDIR: "/dev/shm"
 
     - name: Install PopGen {{ container_name }} module
       block:
