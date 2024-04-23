@@ -1319,3 +1319,10 @@
   tags:
     - never
     - mdanalysis
+
+- name: Install RFMIX
+  include_tasks:
+    file: 'rfmix.yaml'
+  tags:
+      - never
+      - rfmix
