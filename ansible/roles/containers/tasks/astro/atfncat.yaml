@@ -55,5 +55,5 @@
           mode: u=rwx,g=rwx,o=rx
       - name: Install atfncat module file
         template:
-          src: bio/atfncat.lua
+          src: astro/atfncat.lua
           dest: "{{ atfncat_module_dir }}/{{ version_number }}.lua"
