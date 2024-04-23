@@ -1,0 +1,48 @@
+---
+- name: Install rfmix
+  vars:
+    rfmix_dir: "{{ bio_dir }}/rfmix"
+    module_dir: "{{ bio_modules }}/rfmix"
+    install_dir: "{{ rfmix_dir }}/github"
+  tags:
+    - never
+    - rfmix
+  block:
+    - name: Clone git repo, setup venv and install
+      block:
+        - name: ensure rfmix dir exists
+          file:
+              path: "{{ install_dir }}"
+              state: directory
+        - name: Clone rfmix
+          git:
+              repo: https://github.com/slowkoni/rfmix.git
+              dest: "{{ bio_src }}/rfmix"
+        - name: Run autoreconf
+          command: autoreconf --force --install
+          args:
+            chdir: "{{ bio_src }}/rfmix"
+        - name: Run configure
+          command: ./configure --prefix={{ install_dir }}
+          args:
+              chdir: "{{ bio_src }}/rfmix"
+        - name: Run make
+          make:
+              chdir: "{{ bio_src }}/rfmix"
+          environment:
+              MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+        - name: Run make install
+          make:
+              chdir: "{{ bio_src }}/rfmix"
+              target: "install"
+
+    - name: Ensure mdanalsys module dir exists
+      file:
+          path: "{{ module_dir }}"
+          state: directory
+          mode: "u=rwx,g=rwx,o=rx"
+
+    - name: Install rfmix module file
+      template:
+        src: bio/rfmix.lua
+        dest: "{{ module_dir }}/default.lua"
