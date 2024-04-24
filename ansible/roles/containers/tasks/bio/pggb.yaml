@@ -13,7 +13,7 @@
       block:
         - name: Copy singularity definition file
           template:
-              src: "pggb.def"
+              src: "bio/pggb.def"
               dest: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
         - name: Build singularity container
           command: "{{ singularity }} build {{ container_image }} {{ bio_container_recipe_dir }}/{{ container_name }}.def"

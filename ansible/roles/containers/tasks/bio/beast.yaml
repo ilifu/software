@@ -40,7 +40,7 @@
             checksum: "{{ beagle_checksum }}"
         - name: Copy recipe  {{ container_recipe }}
           template:
-            src: "beast.def"
+            src: "bio/beast.def"
             dest: "{{ container_recipe }}"
         - name: Build container {{ container_image }}
           command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"

@@ -1,19 +1,18 @@
 ---
-# tasks file for compiled
-
+# tasks file for containers
 - name: Run installs
   tags: always
   include_tasks:
     file: "{{ class }}"
   loop:
       - common/main.yml
+      - astro/main.yml
       - bio/main.yml
   loop_control:
     loop_var: "class"
 
 
----
-# tasks file for containers
+
 
 
 

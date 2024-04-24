@@ -16,7 +16,7 @@
       block:
         - name: Copy recipe  {{ container_recipe }}
           template:
-            src: "ClinSV.def"
+            src: "bio/ClinSV.def"
             dest: "{{ container_recipe }}"
         - name: Build container {{ container_image }}
           command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"

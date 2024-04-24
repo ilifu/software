@@ -32,7 +32,7 @@
       block:
         - name: Copy recipe  {{ container_recipe }}
           template:
-            src: "PopGen.def"
+            src: "bio/PopGen.def"
             dest: "{{ container_recipe }}"
         - name: Download arlecore {{ arlecore.version }}
           get_url:
