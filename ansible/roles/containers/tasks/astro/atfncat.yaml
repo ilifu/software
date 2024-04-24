@@ -26,7 +26,7 @@
     block:
       - name: Copy atfncat recipe  {{ container_recipe }}
         template:
-          src: "atfncat.def"
+          src: "astro/atfncat.def"
           dest: "{{ container_recipe }}"
       - name: Build singularity container
         command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"

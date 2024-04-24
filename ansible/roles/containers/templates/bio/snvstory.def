@@ -1,0 +1,59 @@
+Bootstrap: docker
+From: continuumio/miniconda3:4.8.2
+Stage: spython-base
+
+%labels
+  container.base.image="continuumio/miniconda3:4.8.2" \
+  software.name="IGM Churchill Ancestry" \
+  software.version="3.0.2"
+
+%help
+  This container is based on work here: https://github.com/nch-igm/snvstory/blob/main/Dockerfile
+  I also used singularity python to convert the dockerfile to singularity recipe (I changed it a bit though).
+
+%environment
+  export INSTALLER_PATH=/installer
+  export SOFTWARE_PATH=/software
+  export PATH=/opt/conda/bin:${SOFTWARE_PATH}/bin:${PATH}
+  export LC_ALL=C
+  unset XDG_RUNTIME_DIR
+  export NUMBA_VERSION="0.48"
+  export SERVICE_NAME=Ancestry
+  export TMP_DIR=/data
+  export PYTHONPATH=/opt/${SERVICE_NAME}
+
+%files
+  requirements.txt /opt/Ancestry/requirements.txt
+  igm_churchill_ancestry /igm_churchill_ancestry
+
+%post
+  export NUMBA_VERSION="0.48"
+  conda install -y \
+      -c conda-forge \
+      matplotlib=3.2.1 xgboost=1.0.2  \
+      pandas=1.0.1 numpy=1.18.1 \
+      scipy=1.4.1 umap-learn=0.4.2 \
+      scikit-learn=0.24.1 \
+      bokeh=2.4.3 && \
+      # clean up
+      conda clean --all
+
+  export SERVICE_NAME=Ancestry
+  export WORKDIR=/opt/${SERVICE_NAME}
+  cd ${WORKDIR}
+  pip install -r requirements.txt
+  rm requirements.txt
+  mv /igm_churchill_ancestry ./igm_churchill_ancestry
+
+%runscript
+  export SERVICE_NAME=Ancestry
+  export TMP_DIR=/data
+  export PYTHONPATH=/opt/${SERVICE_NAME}
+  exec python3 -m igm_churchill_ancestry "$@"
+
+%startscript
+  export SERVICE_NAME=Ancestry
+  export TMP_DIR=/data
+  export PYTHONPATH=/opt/${SERVICE_NAME}
+  exec python3 -m igm_churchill_ancestry "$@"
+
