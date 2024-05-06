@@ -31,7 +31,7 @@
       block:
         - name: Copy recipe  {{ container_recipe }}
           template:
-            src: "DIANN.def"
+            src: "bio/DIANN.def"
             dest: "{{ container_recipe }}"
         - name: Build container {{ container_image }}
           command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
@@ -58,5 +58,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install DIANN module file
           template:
-            src: diann.lua
+            src: bio/diann.lua
             dest: "{{ diann_module_dir }}/{{ version_number }}.lua"

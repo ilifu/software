@@ -12,7 +12,7 @@
   block:
     - name: Copy recipe {{ container_recipe }}
       template:
-        src: "vep.def"
+        src: "bio/vep.def"
         dest: "{{ container_recipe }}"
     - name: Build container {{ container_image }}
       command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
@@ -39,5 +39,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install vep module file
           template:
-            src: vep.lua
+            src: bio/vep.lua
             dest: "{{ vep_module_dir }}/singularity.lua"

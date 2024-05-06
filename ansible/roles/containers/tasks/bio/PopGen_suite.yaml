@@ -32,7 +32,7 @@
       block:
         - name: Copy recipe  {{ container_recipe }}
           template:
-            src: "PopGen.def"
+            src: "bio/PopGen.def"
             dest: "{{ container_recipe }}"
         - name: Download arlecore {{ arlecore.version }}
           get_url:
@@ -85,8 +85,6 @@
           args:
             creates: "{{ container_image }}"
           become: true
-#          environment:
-#            SINGULARITY_TMPDIR: "/dev/shm"
 
     - name: Install PopGen {{ container_name }} module
       block:
@@ -97,10 +95,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install PopGen {{ version_number }} module file
           template:
-            src: PopGen.lua
+            src: bio/PopGen.lua
             dest: "{{ popgen_module_dir }}/{{ version_number }}.lua"
-
-
-#  Plink2+bcftools1.10.2+R3.5+ADMIXTURE
-#  or
-#  R3.5.1+Arlequin+BEASTv1.8

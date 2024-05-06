@@ -22,7 +22,7 @@
       block:
         - name: Copy bcbio recipe  {{ container_recipe }}
           template:
-            src: "bcbio.def"
+            src: "bio/bcbio.def"
             dest: "{{ container_recipe }}"
         - name: Build container {{ container_image }}
           command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
@@ -41,5 +41,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install bcbio module file
           template:
-            src: bcbio.lua
+            src: bio/bcbio.lua
             dest: "{{ module_dir }}/{{ container_name }}_container.lua"

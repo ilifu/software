@@ -1125,3 +1125,10 @@
       - intel
       - inteloneapi
       - intelmkl
+
+- name: Install Micromamba
+  include_tasks:
+    file: 'micromamba.yaml'
+  tags:
+    - never
+    - micromamba

@@ -1,0 +1,49 @@
+- name: Create snvstory container
+  vars:
+    container_name: "snvstory"
+    container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+    snvstory_module_dir: "{{ bio_modules }}/snvstory"
+    snvstory_binary_dir: "{{ bio_container_dir }}/snvstory"
+  tags:
+    - "snvstory"
+    - never
+  block:
+    - name: Copy snvstory recipe  {{ container_recipe }}
+      template:
+        src: "bio/snvstory.def"
+        dest: "{{ container_recipe }}"
+    - name: git clone snvstory to /dev/shm/snv_story_build
+      git:
+        repo: git@github.com:nch-igm/snvstory.git
+        dest: "/dev/shm/snv_story_build"
+    - name: Build singularity container
+      command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+      args:
+          creates: "{{ container_image }}"
+          chdir: "/dev/shm/snv_story_build"
+      become: true
+      environment:
+          SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"
+    - name: Ensure snvstory binary directory exists
+      file:
+        path: "{{ snvstory_binary_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Create snvstory binary
+      template:
+        src: "bio/snvstory.sh"
+        dest: "{{ snvstory_binary_dir }}/snvstory"
+        mode: 0755
+
+    - name: Install {{ container_name }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ snvstory_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install snvstory module file
+          template:
+            src: bio/snvstory.lua
+            dest: "{{ snvstory_module_dir }}/default.lua"

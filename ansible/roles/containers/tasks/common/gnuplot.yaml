@@ -42,5 +42,5 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install Gnuplot module file
           template:
-            src: gnuplot.lua
+            src: common/gnuplot.lua
             dest: "{{ gnuplot_module_dir }}/default.lua"
