@@ -1,0 +1,49 @@
+---
+- name: Install Micromamba {{ item.version_number }}
+  vars:
+    micromamba_dir: "{{ common_dir }}/micromamba"
+    micromamba_module_dir: "{{ common_modules }}/micromamba"
+    install_dir: "{{ micromamba_dir }}"
+  tags:
+    - never
+    - micromamba
+  block:
+    - name: Download Micromamba {{ version_number }} from {{ micromamba_url }}
+      get_url:
+        url: "https://micro.mamba.pm/api/micromamba/linux-64/latest"
+        dest: "{{ common_src }}/micromamba.tar.bz2"
+        mode: u=r,g=r,o=r
+    - name: Create Micromamba dir
+      file:
+        path: "{{ micromamba_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Extract Micromamba from tarball
+      unarchive:
+        src: "{{ common_src }}/micromamba.tar.bz2"
+        dest: "{{ install_dir }}"
+        remote_src: yes
+
+    - name: Create shell script
+      command: "{{ install_dir }}/bin/micromamba shell hook -s posix"
+      args:
+        creates: "{{ install_dir }}/shell_hook"
+        chdir: "{{ install_dir }}"
+      register: micromamba_shell_hook
+
+    - name: Write contents of shell_hook to file
+      copy:
+        content: "{{ micromamba_shell_hook.stdout }}"
+        dest: "{{ install_dir }}/shell_hook"
+        mode: u=rwx,g=rwx,o=rx
+      when: micromamba_shell_hook.changed
+
+    - name: Check module dir {{ micromamba_module_dir }}
+      file:
+        path: "{{ micromamba_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install Micromamba module file to {{ micromamba_module_dir }}
+      template:
+        src: common/micromamba.lua
+        dest: "{{ micromamba_module_dir }}/default.lua"
