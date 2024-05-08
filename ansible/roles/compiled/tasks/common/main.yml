@@ -468,6 +468,10 @@
           version_number: "3.12.1",
           checksum: "md5:50f827c800483776c8ef86e6a53831fa"
       }
+      - {
+        version_number: "3.12.3",
+        checksum: "md5:8defb33f0c37aa4bdd3a38ba52abde4e"
+      }
     pip_packages:
       - pip
       - pipenv

@@ -82,5 +82,5 @@
 
         - name: Install Python module file
           template:
-            src: python.lua
+            src: common/python.lua
             dest: "{{ python_module_dir }}/{{ version_number }}.lua"
