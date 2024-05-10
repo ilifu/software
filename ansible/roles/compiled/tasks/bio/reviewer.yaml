@@ -1,0 +1,43 @@
+---
+- name: Install reviewer {{ item.version_number }}
+  vars:
+    reviewer_dir: "{{ bio_dir }}/reviewer"
+    reviewer_module_dir: "{{ bio_modules }}/reviewer"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ reviewer_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - reviewer{{ item.version_number }}
+
+  block:
+    - name: Ensure REViewer install dir exists
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+    - name: Download REViewer {{ version_number }} from {{ url }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ install_dir }}/REViewer.gz"
+        checksum: "{{ checksum }}"
+    - name: Uncompress REViewer
+      command: "gzip -d {{ install_dir }}/REViewer.gz"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/REViewer"
+    - name: Ensure REViewer binary is executable
+      file:
+          path: "{{ install_dir }}/REViewer"
+          state: file
+          mode: u=rwx,g=rwx,o=rx
+
+    - name: Check module dir {{ reviewer_module_dir }}
+      file:
+        path: "{{ reviewer_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install reviewer {{ version_number }} module file
+      template:
+        src: bio/reviewer.lua
+        dest: "{{ reviewer_module_dir }}/{{ version_number }}.lua"
