@@ -1,0 +1,42 @@
+---
+- name: Install ExpansionHunter {{ item.version_number }}
+  vars:
+    expansionhunter_dir: "{{ bio_dir }}/expansionhunter"
+    expansionhunter_module_dir: "{{ bio_modules }}/expansionhunter"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ expansionhunter_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/ExpansionHunter-v{{ version_number }}-linux_x86_64"
+  tags:
+    - never
+    - expansionhunter{{ item.version_number }}
+
+  block:
+    - name: Ensure ExpansionHunter dir exists
+      file:
+        path: "{{ expansionhunter_dir }}"
+        state: directory
+    - name: Download ExpansionHunter {{ version_number }} from {{ url }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ bio_src }}/ExpansionHunter-v{{ version_number }}-linux_x86_64.tar.gz"
+        checksum: "{{ checksum }}"
+    - name: Uncompress ExpansionHunter
+      unarchive:
+          src: "{{ bio_src }}/ExpansionHunter-v{{ version_number }}-linux_x86_64.tar.gz"
+          dest: "/dev/shm/"
+          creates: "{{ unzip_dir }}"
+    - name: move unzipped dir to installation location
+      command: "mv {{ unzip_dir }} {{ install_dir }}"
+
+
+    - name: Check module dir {{ expansionhunter_module_dir }}
+      file:
+        path: "{{ expansionhunter_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install expansionhunter {{ version_number }} module file
+      template:
+        src: bio/expansionhunter.lua
+        dest: "{{ expansionhunter_module_dir }}/{{ version_number }}.lua"
