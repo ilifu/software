@@ -856,6 +856,11 @@
           url: "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/2.49.1/graphviz-2.49.1.tar.gz",
           checksum: "sha256:ba1aa7a209025cb3fc5aca1f2c0114e18ea3ad29c481d75e4d445ad44e0fb0f7"
       }
+      - {
+        version_number: "11.0.0",
+        url: "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/11.0.0/graphviz-11.0.0.tar.gz",
+        checksum: "sha256:83eae0455463a0027de7e90b2af0671d0d78025a5645d832587c0a6602cd7cec"
+      }
   include_tasks:
     file: graphviz.yaml
   loop: "{{ graphviz_versions }}"
