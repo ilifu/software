@@ -10,20 +10,24 @@
     build_dir: "{{ unzipdir }}/build"
     cuda_root: "{{ item.cuda_root }}"
     cuda_module: "{{ item.cuda_module }}"
-    mpi_module: "{{ item.mpi_module }}"
+#    mpi_module: "{{ item.mpi_module }}"
     hwloc_module: "{{ item.hwloc_module }}"
-    mpi_root: "{{ item.mpi_root }}"
+#    mpi_root: "{{ item.mpi_root }}"
     hwloc_root: "{{ item.hwloc_root }}"
   tags:
     - never
     - gromacs{{ item.version_number }}
   environment:
-    PATH: "{{ cuda_root }}/bin:{{ mpi_root }}/bin:{{ hwloc_root }}/bin:{{ ansible_env.PATH }}"
-    INCLUDE: "{{ cuda_root }}/include:{{ mpi_root }}/include:{{ hwloc_root }}/include{% if 'INCLUDE' in ansible_env %}:{{ ansible_env.INCLUDE }}{% endif %}"
-    LD_LIBRARY_PATH: "{{ cuda_root }}/lib64:{{ mpi_root }}/lib:{{ hwloc_root }}/lib{% if 'LD_LIBRARY_PATH' in ansible_env %}:{{ ansible_env.LD_LIBRARY_PATH }}{% endif %}"
-    PKG_CONFIG_PATH: "{{ cuda_root }}/pkgconfig:{{ mpi_root }}/lib/pkgconfig:{{ hwloc_root }}/lib/pkgconfig{% if 'PKG_CONFIG_PATH' in ansible_env %}:{{ ansible_env.PKG_CONFIG_PATH }}{% endif %}"
+#    PATH: "{{ cuda_root }}/bin:{{ mpi_root }}/bin:{{ hwloc_root }}/bin:{{ ansible_env.PATH }}"
+#    INCLUDE: "{{ cuda_root }}/include:{{ mpi_root }}/include:{{ hwloc_root }}/include{% if 'INCLUDE' in ansible_env %}:{{ ansible_env.INCLUDE }}{% endif %}"
+#    LD_LIBRARY_PATH: "{{ cuda_root }}/lib64:{{ mpi_root }}/lib:{{ hwloc_root }}/lib{% if 'LD_LIBRARY_PATH' in ansible_env %}:{{ ansible_env.LD_LIBRARY_PATH }}{% endif %}"
+#    PKG_CONFIG_PATH: "{{ cuda_root }}/pkgconfig:{{ mpi_root }}/lib/pkgconfig:{{ hwloc_root }}/lib/pkgconfig{% if 'PKG_CONFIG_PATH' in ansible_env %}:{{ ansible_env.PKG_CONFIG_PATH }}{% endif %}"
+    PATH: "{{ cuda_root }}/bin:{{ hwloc_root }}/bin:{{ ansible_env.PATH }}"
+    INCLUDE: "{{ cuda_root }}/include:{{ hwloc_root }}/include{% if 'INCLUDE' in ansible_env %}:{{ ansible_env.INCLUDE }}{% endif %}"
+    LD_LIBRARY_PATH: "{{ cuda_root }}/lib64:{{ hwloc_root }}/lib{% if 'LD_LIBRARY_PATH' in ansible_env %}:{{ ansible_env.LD_LIBRARY_PATH }}{% endif %}"
+    PKG_CONFIG_PATH: "{{ cuda_root }}/pkgconfig:{{ hwloc_root }}/lib/pkgconfig{% if 'PKG_CONFIG_PATH' in ansible_env %}:{{ ansible_env.PKG_CONFIG_PATH }}{% endif %}"
     MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
-    CMAKE_CXX_COMPILER: "{{ mpi_root }}/bin/mpicxx"
+#    CMAKE_CXX_COMPILER: "{{ mpi_root }}/bin/mpicxx"
   block:
     - name: Download GROMACS {{ version_number }}
       get_url:
@@ -40,7 +44,7 @@
         path: "{{ build_dir }}"
         state: directory
     - name: Run cmake for GROMACS {{ version_number }}
-      command: "cmake .. -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -DGMX_HWLOC=ON -DGMX_BUILD_OWN_FFTW=ON -DREGRESSIONTEST_DOWNLOAD=ON -DGMX_MPI=on -DGMX_GPU=CUDA -DCUDA_TOOLKIT_ROOT_DIR={{ cuda_root }} -DGMX_THREAD_MPI=on"
+      command: "cmake .. -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -DGMX_HWLOC=ON -DGMX_BUILD_OWN_FFTW=ON -DREGRESSIONTEST_DOWNLOAD=ON -DGMX_MPI=off -DGMX_GPU=CUDA -DCUDA_TOOLKIT_ROOT_DIR={{ cuda_root }} -DGMX_THREAD_MPI=on"
       args:
         chdir: "{{ build_dir }}"
         creates: "{{ build_dir }}/Makefile"
