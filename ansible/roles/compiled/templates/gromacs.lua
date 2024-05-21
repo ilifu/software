@@ -15,7 +15,7 @@ local pkgconfig_dir = pathJoin(gromacs_dir, "lib/pkgconfig")
 
 load("{{ hwloc_module }}")
 load("{{ cuda_module }}")
--- load("{{ mpi_module }}")
+{# load("{{ mpi_module }}") #}
 
 prepend_path('PATH', bin_dir)
 prepend_path('LD_LIBRARY_PATH', lib_dir)
