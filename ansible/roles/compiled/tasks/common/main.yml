@@ -229,6 +229,10 @@
         version_number: "1.15.0",
         cuda_root: "/software/common/cuda/12.2.0_535.54.03",
       }
+      - {
+        version_number: "1.16.0",
+        cuda_root: "/software/common/cuda/12.2.0_535.54.03",
+      }
   include_tasks:
     file: ucx.yaml
   loop: "{{ ucx_versions }}"
@@ -276,6 +280,12 @@
         checksum: "sha1:912c70f567098dd0a7c0a03a816c5e6ecfaf1962",
         hwloc: "/software/common/hwloc/2.10.0"
       }
+      - {
+        version_number: "5.0.2",
+        url: "https://github.com/openpmix/openpmix/releases/download/v5.0.2/pmix-5.0.2.tar.gz",
+        checksum: "sha1:85a17290ed51b5231094f4d9c19fb266e5fb672a",
+        hwloc: "/software/common/hwloc/2.10.0"
+      }
   include_tasks:
     file: pmix.yaml
   loop: "{{ versions }}"
@@ -287,6 +297,15 @@
 - name: Install openmpis
   vars:
     openmpi_versions:
+      - {
+        version_number: "5.0.3",
+        checksum: "sha256:990582f206b3ab32e938aa31bbf07c639368e4405dca196fabe7f0f76eeda90b",
+        url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.3.tar.bz2",
+        ucx_version: "1.16.0",
+        singularity_version: "3.11.3",
+        cuda_root: "/software/common/cuda/12.2.0_535.54.03",
+        pmix: "/software/common/pmix/5.0.2",
+      }
       - {
         version_number: "5.0.2",
         checksum: "sha256:ee46ad8eeee2c3ff70772160bff877cbf38c330a0bc3b3ddc811648b3396698f",
