@@ -448,6 +448,10 @@
         checksum: "md5:5738c204eecc375e29751cb2176fc9cc"
       }
       - {
+        version_number: "3.9.19",
+        checksum: "md5:87d0f8281237b972ff8b23e0e2c8d325"
+      }
+      - {
         version_number: "3.10.0",
         checksum: "md5:3e7035d272680f80e3ce4e8eb492d580"
       }
@@ -464,6 +468,10 @@
         checksum: "md5:dc8c0f274b28ee9e95923d20cfc364c9"
       }
       - {
+        version_number: "3.10.14",
+        checksum: "md5:05148354ce821ba7369e5b7958435400"
+      }
+      - {
         version_number: "3.11.0",
         checksum: "md5:fe92acfa0db9b9f5044958edb451d463"
       }
@@ -478,6 +486,10 @@
       - {
           version_number: "3.11.7",
           checksum: "md5:d96c7e134c35a8c46236f8a0e566b69c",
+      }
+      - {
+        version_number: "3.11.9",
+        checksum: "md5:22ea467e7d915477152e99d5da856ddc",
       }
       - {
           version_number: "3.12.0",
