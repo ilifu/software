@@ -304,6 +304,7 @@
         ucx_version: "1.16.0",
         singularity_version: "3.11.3",
         cuda_root: "/software/common/cuda/12.2.0_535.54.03",
+        cuda_module: "cuda/12.2.0_535.54.03",
         pmix: "/software/common/pmix/5.0.2",
       }
       - {
@@ -313,6 +314,7 @@
         ucx_version: "1.15.0",
         singularity_version: "3.11.3",
         cuda_root: "/software/common/cuda/12.1.0_530.30.02",
+        cuda_module: "cuda/12.1.0_530.30.02",
         pmix: "/software/common/pmix/4.2.9",
       }
       - {
@@ -322,6 +324,7 @@
         ucx_version: "1.15.0",
         singularity_version: "3.11.3",
         cuda_root: "/software/common/cuda/12.2.0_535.54.03",
+        cuda_module: "cuda/12.2.0_535.54.03",
         pmix: "/software/common/pmix/4.1.1",
       }
       - {
@@ -331,6 +334,7 @@
         ucx_version: "1.13.0",
         singularity_version: "3.9.1",
         cuda_root: "/software/common/cuda/11.6.0_510.39.01",
+        cuda_module: "cuda/11.6.0_510.39.01",
       }
       - {
         version_number: "4.1.0",

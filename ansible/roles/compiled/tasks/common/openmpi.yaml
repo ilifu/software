@@ -6,11 +6,13 @@
     version_number: "{{ item.version_number }}"
     checksum: "{{ item.checksum }}"
     install_dir: "{{ mpi_dir }}/{{ version_number }}"
+    install_dir_gpu: "{{ mpi_dir }}/{{ version_number }}_gpu"
     unzipdir: "/dev/shm/openmpi-{{ version_number }}"
     build_dir: "{{ unzipdir }}/build"
     ucx_dir: "{{ common_dir }}/ucx/{{ item.ucx_version }}"
     singularity_dir: "{{ common_dir }}/singularity/{{ item.singularity_version }}"
     cuda_root: "{{ item.cuda_root }}"
+    cuda_module: "{{ item.cuda_module }}"
   tags:
     - never
     - openmpi{{ item.version_number }}
@@ -41,19 +43,43 @@
                 creates: "{{ build_dir }}/Makefile"
             - name: Run OpenMPI {{ version_number }} configure ( 4.1.5 and above )
               when: item.version_number >= "4.1.5"
-              command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity={{ singularity_dir }} --with-ucx={{ ucx_dir }} --with-cuda={{ cuda_root }} --with-pmix={{ item.pmix }} --with-pmix-libdir={{ item.pmix }}/lib"
-              args:
-                chdir: "{{ build_dir }}"
-                creates: "{{ build_dir }}/Makefile"
-            - name: Build OpenMPI {{ version_number }}
-              make:
-                chdir: "{{ build_dir }}"
-              environment:
-                MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
-            - name: Install OpenMPI {{ version_number }}
-              make:
-                chdir: "{{ build_dir }}"
-                target: install
+              block:
+                - name: Configure OpenMPI {{ version_number }} for gpu
+                  command: "../configure --prefix={{ install_dir_gpu }} --enable-static --with-singularity={{ singularity_dir }} --with-ucx={{ ucx_dir }} --with-cuda={{ cuda_root }} --with-pmix={{ item.pmix }} --with-pmix-libdir={{ item.pmix }}/lib"
+                  args:
+                    chdir: "{{ build_dir }}"
+                    creates: "{{ build_dir }}/Makefile"
+                - name: Build OpenMPI {{ version_number }} with gpu
+                  make:
+                    chdir: "{{ build_dir }}"
+                  environment:
+                    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+                - name: Install OpenMPI {{ version_number }} with gpu
+                  make:
+                    chdir: "{{ build_dir }}"
+                    target: install
+                - name: Run Make Clean
+                  command: "make clean"
+                  args:
+                      chdir: "{{ build_dir }}"
+                - name: Clean OpenMPI {{ version_number }} gpu Makefile
+                  file:
+                    path: "{{ build_dir }}/Makefile"
+                    state: absent
+                - name: Configure OpenMPI {{ version_number }} for no gpu
+                  command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity={{ singularity_dir }} --with-ucx={{ ucx_dir }} --with-pmix={{ item.pmix }} --with-pmix-libdir={{ item.pmix }}/lib"
+                  args:
+                    chdir: "{{ build_dir }}"
+                    creates: "{{ build_dir }}/Makefile"
+                - name: Build OpenMPI {{ version_number }} with no gpu
+                  make:
+                    chdir: "{{ build_dir }}"
+                  environment:
+                    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+                - name: Install OpenMPI {{ version_number }} with no gpu
+                  make:
+                    chdir: "{{ build_dir }}"
+                    target: install
 
     - name: Install OpenMPI {{ version_number }} module
       block:
@@ -62,7 +88,15 @@
             path: "{{ mpi_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install OpenMPI module file
+        - name: Install OpenMPI gpu module file
+          vars:
+            gpu: true
+          template:
+            src: openmpi.lua
+            dest: "{{ mpi_module_dir }}/{{ version_number }}_gpu.lua"
+        - name: Install OpenMPI no gpu module file
+          vars:
+              gpu: false
           template:
             src: openmpi.lua
             dest: "{{ mpi_module_dir }}/{{ version_number }}.lua"
