@@ -551,6 +551,17 @@
         hwloc_module: "hwloc/2.10.0",
         hwloc_root: "/software/common/hwloc/2.10.0",
       }
+      - {
+        version_number: "2024.2",
+        checksum: "md5:b1caec2a81e221d68b3a58c53f1add40",
+        url: "https://ftp.gromacs.org/gromacs/gromacs-2024.2.tar.gz",
+        cuda_root: "/software/common/cuda/12.2.0_535.54.03",
+        cuda_module: "cuda/12.2.0_535.54.03",
+#        mpi_root: "/software/common/openmpi/5.0.3",
+#        mpi_module: "openmpi/5.0.3",
+        hwloc_module: "hwloc/2.10.0",
+        hwloc_root: "/software/common/hwloc/2.10.0",
+      }
   include_tasks:
     file: gromacs.yaml
   loop: "{{ versions }}"
