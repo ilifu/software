@@ -10,30 +10,26 @@
     - never
     - dotnet{{ item.version_number }}
   block:
-    - name: Install dotnet {{ version_number }}
-      block:
-        - name: Download and install dotnet {{ version_number }}
-          block:
-            - name: Download dotnet {{ version_number }}
-              get_url:
-                url: "{{ url }}"
-                dest: "{{ common_src }}/dotnet-{{ version_number }}.tar.gz"
-                checksum: "{{ checksum }}"
-            - name: Ensure installation parent {{ dotnet_dir }} exists
-              file:
-                path: "{{ dotnet_dir }}"
-                state: directory
-                mode: o=rwx,g=rx,o=rx
-            - name: Ensure installation directory {{ install_dir }} exists
-              file:
-                path: "{{ install_dir }}"
-                state: directory
-                mode: o=rwx,g=rx,o=rx
-            - name: Unzip dotnet {{ version_number }} to {{ install_dir }}
-              unarchive:
-                src: "{{ common_src }}/dotnet-{{ version_number }}.tar.gz"
-                dest: "{{ install_dir }}"
-                creates: "{{ install_dir }}/dotnet"
+    - name: Download dotnet {{ version_number }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ common_src }}/dotnet-{{ version_number }}.tar.gz"
+        checksum: "{{ checksum }}"
+    - name: Ensure installation parent {{ dotnet_dir }} exists
+      file:
+        path: "{{ dotnet_dir }}"
+        state: directory
+        mode: o=rwx,g=rx,o=rx
+    - name: Ensure installation directory {{ install_dir }} exists
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: o=rwx,g=rx,o=rx
+    - name: Unzip dotnet {{ version_number }} to {{ install_dir }}
+      unarchive:
+        src: "{{ common_src }}/dotnet-{{ version_number }}.tar.gz"
+        dest: "{{ install_dir }}"
+        creates: "{{ install_dir }}/dotnet"
 
 
     - name: Install dotnet {{ version_number }} module
