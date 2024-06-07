@@ -851,15 +851,28 @@
     - never
     - homebrew
 
-
-
 - name: Install dotnet
   vars:
     dotnet_versions:
       - {
+        version_number: "2.1.202",
+        url: "https://download.microsoft.com/download/f/c/1/fc16c864-b374-4668-83a2-f9f880928b2d/dotnet-sdk-2.1.202-linux-x64.tar.gz",
+        checksum: "sha512:e785b9b488b5570708eb060f9a4cb5cf94597d99a8b0a3ee449d2e5df83771c1ba643a87db17ae6727d0e2acb401eca292fb8c68ad92eeb59d7f0d75eab1c20a",
+      }
+      - {
         version_number: "5.0.301",
         url: "https://download.visualstudio.microsoft.com/download/pr/e1c236ec-c392-4eaa-a846-c600c82bb7f6/b13bd8b69f875f87cf83fc6f5457bcdf/dotnet-sdk-5.0.301-linux-x64.tar.gz",
         checksum: "sha512:81cd7a3550a262d5c907030677429fa9a1cb515071274931ab760bd8bb2a14f40c9384c8757e1c1aa681b1de22035f16bf20b41ed208becd054cc9bb1f620322",
+      }
+      - {
+        version_number: "6.0.423",
+        url: "https://download.visualstudio.microsoft.com/download/pr/111a63f5-e1d4-4d07-b8b2-98642b5fcc59/389661b982fa5b83b09a1f50b9da247a/dotnet-sdk-6.0.423-linux-x64.tar.gz",
+        checksum: "sha512:4b4a0e66634211ae04fa030e18ae9e22640f5828307ba85c4bae596ab2d31260519197828dae3b2ec73d6772635e0b375536ea6591b03c67c2b7a5566f016952",
+      }
+      - {
+        version_number: "8.0.301",
+        url: "https://download.visualstudio.microsoft.com/download/pr/86497c4f-3dc8-4ee7-9f6a-9e0464059427/293d074c28bbfd9410f4db8e021fa290/dotnet-sdk-8.0.301-linux-x64.tar.gz",
+        checksum: "sha512:6e2e1ad5fe3f00e6974ad3eac9c5b74cd09521f19e06eb9aff45a44d6c55e4a2c1cd489364735215d2ea53cec2a7d45892a5ede344a8421be9ad15872c3496a2",
       }
   include_tasks:
     file: dotnet.yaml
