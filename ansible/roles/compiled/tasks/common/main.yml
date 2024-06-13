@@ -669,6 +669,11 @@
         checksum: "sha256:3f934f40ac360b9c01f616a9aa1796d227d8b0328bf64cb045c7b8c4ee9caea4",
         url: "https://golang.org/dl/go1.21.6.linux-amd64.tar.gz",
       }
+      - {
+        version_number: "1.22.4",
+        checksum: "sha256:ba79d4526102575196273416239cca418a651e049c2b099f3159db85e7bade7d",
+        url: "https://golang.org/dl/go1.22.4.linux-amd64.tar.gz",
+      }
   include_tasks:
     file: golang.yaml
   loop: "{{ go_versions }}"
@@ -724,6 +729,12 @@
           checksum: "sha256:119667f18e76a750b7d4f8612d7878c18a824ee171852795019aa68875244813",
           url: "https://github.com/sylabs/singularity/releases/download/v4.1.0/singularity-ce-4.1.0.tar.gz",
           go_location: "{{ common_dir }}/golang/1.21.6/bin"
+      }
+      - {
+        version_number: "4.1.3",
+        checksum: "sha256:0a575292ddb2e7b74ab534b287c4dc8a1bd34d961accc0ba56ffa3714cca9c15",
+        url: "https://github.com/sylabs/singularity/releases/download/v4.1.3/singularity-ce-4.1.3.tar.gz",
+        go_location: "{{ common_dir }}/golang/1.22.4/bin"
       }
   include_tasks:
     file: singularity.yaml
