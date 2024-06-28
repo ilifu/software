@@ -52,5 +52,5 @@
           mode: "ug=rwx,o=rx"
     - name: "Install multiqc module file"
       template:
-        src: multiqc.lua
+        src: bio/multiqc.lua
         dest: "{{ multiqc_module_dir }}/{{ version_number }}.lua"
