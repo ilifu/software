@@ -890,6 +890,10 @@
         version_number: "1.17",
         python_location: "/software/common/python/3.12.0",
       }
+      - {
+        version_number: "1.22.3",
+        python_location: "/software/common/python/3.12.3",
+      }
   include_tasks:
     file: 'multiqc.yaml'
   loop: "{{ versions }}"
