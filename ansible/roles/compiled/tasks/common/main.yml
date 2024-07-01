@@ -18,6 +18,11 @@
         checksum: "sha256:cf06f41a3952038df0550e8cbc2baf0aa877c3ba00cca0dd26f73134f8baf0e6",
         url: "https://download.java.net/java/GA/jdk18.0.2/f6ad4b4450fd4d298113270ec84f30ee/9/GPL/openjdk-18.0.2_linux-x64_bin.tar.gz",
       }
+      - {
+        version_number: "22.0.1",
+        checksum: "sha256:133c8b65113304904cdef7c9103274d141cfb64b191ff48ceb6528aca25c67b1",
+        url: "https://download.java.net/java/GA/jdk22.0.1/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-22.0.1_linux-x64_bin.tar.gz",
+      }
   include_tasks:
     file: openjdk.yaml
   loop: "{{ openjdk_versions }}"
@@ -33,6 +38,12 @@
         checksum: "sha256:53e33ba35b1a8b799e1be943155c7b3c56a56a82956ddcf5d774325eca1df812",
         url: "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=242980_a4634525489241b9a9e1aa73d9e118e6",
         filename: "jre-8u261-linux-x64.tar",
+      }
+      - {
+        version_number: "1.8.0_411",
+        checksum: "sha256:5ae301f00fd45037146debdae55e5dbdf503281f1e8e796d5fa223d1124b2a10",
+        url: "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=249840_43d62d619be4e416215729597d70b8ac",
+        filename: "jre-8u411-linux-x64.tar.gz",
       }
   include_tasks:
     file: jre.yaml
