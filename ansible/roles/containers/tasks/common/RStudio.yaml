@@ -23,7 +23,7 @@
       block:
         - name: Copy recipe  {{ container_recipe }}
           template:
-            src: "RStudio.def"
+            src: "common/RStudio.def"
             dest: "{{ container_recipe }}"
         - name: Build container {{ container_image }}
           command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
