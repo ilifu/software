@@ -9,7 +9,7 @@
   block:
     - name: Copy recipe {{ base_container_recipe }}
       template:
-        src: "ubuntu.def"
+        src: "common/ubuntu.def"
         dest: "{{ base_container_recipe }}"
     - name: Build container {{ base_container_image }}
       command: "{{ singularity }} build {{ base_container_image }} {{ base_container_recipe }}"
@@ -43,7 +43,7 @@
       block:
         - name: Copy recipe  {{ container_recipe }}
           template:
-            src: "ubuntu-compile.def"
+            src: "common/ubuntu-compile.def"
             dest: "{{ container_recipe }}"
         - name: Build container {{ container_image }}
           command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
