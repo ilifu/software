@@ -37,7 +37,7 @@
         mode: u=rwx,g=rwx,o=rx
     - name: Create R binaries
       template:
-        src: "{{ binary.template }}"
+        src: "common/{{ binary.template }}"
         dest: "{{ R_binary_dir }}/{{ binary.name }}"
         mode: 0755
       with_items:
