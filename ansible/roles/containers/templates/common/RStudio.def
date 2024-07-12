@@ -146,9 +146,11 @@ From: {{ base_container_image }}
   # install a few basics
   Rscript -e 'install.packages(
     c(
+      "circlize",
       "data.table",
       "devtools",
       "DBI",
+      "gprofiler2",
       "mgcv",
       "nlme",
       "pacman",
@@ -167,6 +169,11 @@ From: {{ base_container_image }}
 
   Rscript -e 'install.packages("BiocManager", Ncpus={{ ansible_processor_vcpus }})'
   Rscript -e 'BiocManager::install(ask=FALSE, update=TRUE)'
+
+  Rscript -e 'BiocManager::install(
+    pkgs = c("DESeq2", "edgeR", "limma", "MethylSeekR", "methylKit", "BSmooth"),
+    dependencies = TRUE, Ncpus={{ ansible_processor_vcpus }}
+  )'
 
   Rscript -e 'install.packages(
     pkgs = "bcbioRNASeq",
