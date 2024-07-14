@@ -74,6 +74,7 @@ From: {{ base_container_image }}
     libharfbuzz-dev \
     pandoc \
     pandoc-citeproc \
+    python-is-python3 \
     pkg-config \
     texlive \
     texlive-extra-utils \
