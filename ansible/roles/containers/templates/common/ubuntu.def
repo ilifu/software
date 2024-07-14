@@ -65,7 +65,6 @@ OSVersion: {{ item.version_name }}
     /data \
     /idia \
     /ilifu \
-    /scratch \
     /scratch3 \
     /software \
     /users \

@@ -74,6 +74,7 @@ From: {{ base_container_image }}
     libharfbuzz-dev \
     pandoc \
     pandoc-citeproc \
+    python-is-python3 \
     pkg-config \
     texlive \
     texlive-extra-utils \
@@ -107,7 +108,7 @@ From: {{ base_container_image }}
     libfribidi-bin \
     libfribidi-dev \
     libgit2-dev \
-    libgsl23 \
+    {% if item.base_container_version_name != "jammy" %}libgsl23{% else %}libgsl27{% endif %} \
     libgsl-dev \
     libharfbuzz-dev \
     libhdf5-dev \
@@ -139,16 +140,18 @@ From: {{ base_container_image }}
   echo "R_LIBS_SITE=/library:\${R_LIBS_SITE}" >> /usr/lib/R/etc/Renviron.site
 
   cd /tmp
-  wget https://download2.rstudio.org/server/focal/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb
+  wget https://download2.rstudio.org/server/{{ item.base_container_version_name }}/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb
   gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb
   rm rstudio-server-${RSTUDIO_VERSION}-amd64.deb
 
   # install a few basics
   Rscript -e 'install.packages(
     c(
+      "circlize",
       "data.table",
       "devtools",
       "DBI",
+      "gprofiler2",
       "mgcv",
       "nlme",
       "pacman",
@@ -167,6 +170,11 @@ From: {{ base_container_image }}
 
   Rscript -e 'install.packages("BiocManager", Ncpus={{ ansible_processor_vcpus }})'
   Rscript -e 'BiocManager::install(ask=FALSE, update=TRUE)'
+
+  Rscript -e 'BiocManager::install(
+    pkgs = c("DESeq2", "edgeR", "limma", "MethylSeekR", "methylKit", "BSmooth"),
+    dependencies = TRUE, Ncpus={{ ansible_processor_vcpus }}
+  )'
 
   Rscript -e 'install.packages(
     pkgs = "bcbioRNASeq",

@@ -645,6 +645,11 @@
         checksum: "sha256:80851231393b85bf3877ee9e39b282e750ed864c5ec60cbd68e6e139f0520330",
         url: "https://cran.r-project.org/src/base/R-4/R-4.3.3.tar.gz",
       }
+      - {
+        version_number: "4.4.1",
+        checksum: "sha256:b4cb675deaaeb7299d3b265d218cde43f192951ce5b89b7bb1a5148a36b2d94d",
+        url: "https://cloud.r-project.org/src/base/R-4/R-4.4.1.tar.gz"
+      }
   include_tasks:
     file: R.yaml
   loop: "{{ R_versions }}"
