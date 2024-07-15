@@ -39,6 +39,7 @@ OSVersion: {{ item.version_name }}
     lftp \
     locales \
     nano \
+    python-is-python3 \
     screen \
     tcsh \
     tmux \

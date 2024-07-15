@@ -172,7 +172,7 @@ From: {{ base_container_image }}
   Rscript -e 'BiocManager::install(ask=FALSE, update=TRUE)'
 
   Rscript -e 'BiocManager::install(
-    pkgs = c("DESeq2", "edgeR", "limma", "MethylSeekR", "methylKit", "BSmooth"),
+    pkgs = c("DESeq2", "edgeR", "limma", "MethylSeekR", "methylKit", "bsseq"),
     dependencies = TRUE, Ncpus={{ ansible_processor_vcpus }}
   )'
 
