@@ -4,7 +4,7 @@ This module configures {{ container_name }}
 
 There are several binaries available via this module:
  * R – Starts a normal interactive R session
- * RStudio or rstudio – Starts and RStudio server and outputs instructions on how to connect to it
+ * RStudio or rstudio – Starts an RStudio server and outputs instructions on how to connect to it
  * Rscript – For running your R scripts from the command line
 
 ]])
