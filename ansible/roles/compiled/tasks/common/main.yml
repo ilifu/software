@@ -934,6 +934,53 @@
     - never
     - githubcli
 
+- name: Install gettext
+  vars:
+      gettext_versions:
+      - {
+        version_number: "0.22.5",
+        url: "https://ftp.gnu.org/pub/gnu/gettext/gettext-0.22.5.tar.gz",
+        checksum: "sha256:ec1705b1e969b83a9f073144ec806151db88127f5e40fe5a94cb6c8fa48996a0"
+      }
+  include_tasks:
+    file: gettext.yaml
+  loop: "{{ gettext_versions }}"
+  tags:
+      - never
+      - gettext
+
+- name: Install git
+  vars:
+      git_versions:
+      - {
+        version_number: "2.45.2",
+        url: "https://www.kernel.org/pub/software/scm/git/git-2.45.2.tar.gz",
+        checksum: "sha256:98b26090ed667099a3691b93698d1e213e1ded73d36a2fde7e9125fce28ba234",
+        gettext_dir: "{{ common_dir }}/gettext/0.22.5",
+        gettext_module: "gettext/0.22.5"
+      }
+  include_tasks:
+    file: git.yaml
+  loop: "{{ git_versions }}"
+  tags:
+    - never
+    - git
+
+- name: Install git-lfs
+  vars:
+      git_lfs_versions:
+      - {
+        version_number: "3.5.1",
+        url: "https://github.com/git-lfs/git-lfs/releases/download/v3.5.1/git-lfs-linux-amd64-v3.5.1.tar.gz",
+        checksum: "sha256:6f28eb19faa7a968882dca190d92adc82493378b933958d67ceaeb9ebe4d731e"
+      }
+  include_tasks:
+    file: git-lfs.yaml
+  loop: "{{ git_lfs_versions }}"
+  tags:
+      - never
+      - git-lfs
+
 - name: Install graphviz
   vars:
     graphviz_versions:
