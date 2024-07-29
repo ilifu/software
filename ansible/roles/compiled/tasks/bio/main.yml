@@ -1405,6 +1405,23 @@
       - never
       - cutadapt
 
+- name: Install TrimGalore
+  vars:
+      versions:
+        - {
+          version_number: "0.6.10",
+          url: "https://github.com/FelixKrueger/TrimGalore/archive/refs/tags/0.6.10.tar.gz",
+          checksum: "sha256:3a4e414fc658d6eb4356f1572351204e8475a9d7dc79f6798270b57d35bda017",
+          fastqc_module: "fastqc/0.12.1",
+          cutadapt_module: "cutadapt/4.9"
+        }
+  include_tasks:
+    file: 'trimgalore.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - trimgalore
+
 # trimgalore
 
 # STAR
