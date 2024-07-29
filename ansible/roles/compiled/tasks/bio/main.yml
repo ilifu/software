@@ -1394,9 +1394,9 @@
   vars:
       versions:
       - {
-        version_number: "3.7",
-        python_location: "/software/common/python/3.12.1",
-        python_module: "python/3.12.1"
+        version_number: "4.9",
+        python_location: "/software/common/python/3.12.3",
+        python_module: "python/3.12.3"
       }
   include_tasks:
     file: 'cutadapt.yaml'
