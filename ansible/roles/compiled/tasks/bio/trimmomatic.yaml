@@ -28,6 +28,8 @@
     - name: "Ensure Trimmomatic dir '{{ trimmomatic_dir }}' exists"
       file:
         path: "{{ trimmomatic_dir }}"
+        state: directory
+        mode: u=rwx,g=rx,o=rx
     - name: "Move Trimmomatic from '{{ uncompress_dir }}' to install dir '{{ install_dir }}'"
       command: "mv {{ uncompress_dir }} {{ install_dir }}"
       args:
