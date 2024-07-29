@@ -1371,3 +1371,48 @@
   tags:
       - never
       - reviewer
+
+- name: Install trimmomatic
+  vars:
+      versions:
+      - {
+        version_number: "0.39",
+        url: "https://github.com/usadellab/Trimmomatic/files/5854859/Trimmomatic-0.39.zip",
+        checksum: "sha256:2f7a5de11416899e5b38d3131019bc655946f770f9b7df5355d6a36acbcc488c",
+        java_module: "java/openjdk-22.0.1"
+      }
+  include_tasks:
+    file: 'trimmomatic.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - trimmomatic
+
+# trimmomatic
+
+- name: Install Cutadapt
+  vars:
+      versions:
+      - {
+        version_number: "3.7",
+        python_location: "/software/common/python/3.12.1",
+        python_module: "python/3.12.1"
+      }
+  include_tasks:
+    file: 'cutadapt.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - cutadapt
+
+# trimgalore
+
+# STAR
+
+# Salmon
+
+# Kallisto
+
+# featureCounts
+
+# Bismark
