@@ -1,0 +1,33 @@
+---
+- name: Install vg {{ item.version_number }}
+  vars:
+    vg_dir: "{{ bio_dir }}/vg"
+    vg_module_dir: "{{ bio_modules }}/vg"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ vg_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - vg{{ item.version_number }}
+  block:
+    - name: "Ensure vg dir '{{ install_dir }}' exists"
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+    - name: Download vg {{ version_number }} from {{ url }} to {{ install_dir }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ install_dir }}/vg"
+        checksum: "{{ checksum }}"
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Check module dir {{ vg_module_dir }}
+      file:
+        path: "{{ vg_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install vg {{ version_number }} module file
+      template:
+        src: bio/vg.lua
+        dest: "{{ vg_module_dir }}/{{ version_number }}.lua"

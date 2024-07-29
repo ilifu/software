@@ -1422,8 +1422,6 @@
       - never
       - trimgalore
 
-# trimgalore
-
 # STAR
 
 # Salmon
@@ -1433,3 +1431,18 @@
 # featureCounts
 
 # Bismark
+
+- name: Install vg
+  vars:
+      versions:
+      - {
+        version_number: "1.58.0",
+        url: "https://github.com/vgteam/vg/releases/download/v1.58.0/vg",
+        checksum: "sha256:66288c9dcf88e97e6e375dd7c87ea7b34ea0498146fcfec5dd38c8c5b5918149"
+      }
+  include_tasks:
+    file: 'vg.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - vg
