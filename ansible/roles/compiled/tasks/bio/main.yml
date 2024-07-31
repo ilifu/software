@@ -1422,6 +1422,21 @@
       - never
       - trimgalore
 
+- name: Install STAR
+  vars:
+      versions:
+      - {
+        version_number: "2.7.11b",
+        url: "https://github.com/alexdobin/STAR/archive/refs/tags/2.7.11b.tar.gz",
+        checksum: "sha256:3f65305e4112bd154c7e22b333dcdaafc681f4a895048fa30fa7ae56cac408e7"
+      }
+  include_tasks:
+    file: 'star.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - star
+
 # STAR
 
 # Salmon
@@ -1446,7 +1461,6 @@
   tags:
       - never
       - vg
-      -
 
 - name: Install miniwdl
   vars:
