@@ -995,6 +995,11 @@
           url: "https://cdn.oxfordnanoportal.com/software/analysis/dorado-0.4.2-linux-x64.tar.gz",
           checksum: "sha512:1d437b45476ee49aa8fba04d0275ff3a4afadb978c1541d5f71d99f03bdc4ed16d14b1527251ad8ba53c1ab6600d3452ced599352552c620ca05c284cd1eca2f"
           }
+        - {
+          version_number: "0.7.3",
+          url: "https://cdn.oxfordnanoportal.com/software/analysis/dorado-0.7.3-linux-x64.tar.gz",
+          checksum: "sha512:c00b0a1fe2f2b18ebd2f8189ed7267b4c44b906f43f97ac77d9ff41a2906fa3edfc3ddeee81c1615c279bce9f471b000309a1870dc5775625c07b2192c980c17"
+        }
   include_tasks:
     file: 'dorado.yaml'
   loop: "{{ versions }}"
@@ -1437,7 +1442,13 @@
       - never
       - star
 
-# STAR
+#- name: Install Salmon
+#  vars:
+#      versions:
+#      - {
+#          version_number: "1.6.0",
+#          url: ""
+#         }
 
 # Salmon
 
