@@ -1457,7 +1457,20 @@
       - never
       - salmon
 
-# Salmon
+- name: Install kallisto
+  vars:
+    versions:
+      - {
+          version_number: "0.51.0",
+          url: "https://github.com/pachterlab/kallisto/archive/refs/tags/v0.51.0.tar.gz",
+          checksum: "sha256:efeb0191c1a6a0d6de69111fb66f4bda51ff31fb40c513280f072bd44556f80d"
+         }
+  include_tasks:
+    file: 'kallisto.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - kallisto
 
 # Kallisto
 

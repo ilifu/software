@@ -1,0 +1,56 @@
+---
+- name: Install kallisto {{ item.version_number }}
+  vars:
+    kallisto_dir: "{{ bio_dir }}/kallisto"
+    kallisto_module_dir: "{{ bio_modules }}/kallisto"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    unarchive_dir: "/dev/shm/kallisto-{{ version_number }}"
+    install_dir: "{{ kallisto_dir }}/{{ version_number }}"
+#  environment:
+#    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+  tags:
+    - never
+    - kallisto{{ item.version_number }}
+  block:
+    - name: Ensure kallisto dir exists
+      file:
+        path: "{{ kallisto_dir }}"
+        state: directory
+    - name: Download kallisto {{ version_number }} from {{ url }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ bio_src }}/kallisto-{{ version_number }}.tar.gz"
+        checksum: "{{ checksum }}"
+    - name: Uncompress kallisto
+      unarchive:
+        src: "{{ bio_src }}/kallisto-{{ version_number }}.tar.gz"
+        dest: "/dev/shm"
+        remote_src: yes
+        creates: "{{ unarchive_dir }}"
+    - name: Create build directory {{ unarchive_dir }}/build
+      file:
+        path: "{{ unarchive_dir }}/build"
+        state: directory
+    - name: Run cmake in build dir
+      command: cmake -DCMAKE_INSTALL_PREFIX={{ install_dir }} ..
+      args:
+          chdir: "{{ unarchive_dir }}/build"
+    - name: Run make in build dir
+      make:
+        chdir: "{{ unarchive_dir }}/build"
+    - name: Run make install in build dir
+      make:
+          chdir: "{{ unarchive_dir }}/build"
+          target: install
+
+    - name: Check module dir {{ kallisto_module_dir }}
+      file:
+        path: "{{ kallisto_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install kallisto {{ version_number }} module file
+      template:
+        src: bio/kallisto.lua
+        dest: "{{ kallisto_module_dir }}/{{ version_number }}.lua"
