@@ -1442,13 +1442,20 @@
       - never
       - star
 
-#- name: Install Salmon
-#  vars:
-#      versions:
-#      - {
-#          version_number: "1.6.0",
-#          url: ""
-#         }
+- name: Install Salmon
+  vars:
+    versions:
+      - {
+          version_number: "1.10.0",
+          url: "https://github.com/COMBINE-lab/salmon/releases/download/v1.10.0/salmon-1.10.0_linux_x86_64.tar.gz",
+          checksum: "sha256:b876d041ef3bfbe44422b052b99ce387ff4e521c76002355c7b27882cf19c01b"
+         }
+  include_tasks:
+      file: 'salmon.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - salmon
 
 # Salmon
 
