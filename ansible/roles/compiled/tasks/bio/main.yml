@@ -1602,5 +1602,20 @@
       - never
       - nanofilt
 
-#https://github.com/wdecoster/nanofilt
+- name: Install yacrd
+  vars:
+    versions:
+      - {
+        version_number: 1.0.0,
+        url: "https://github.com/natir/yacrd/archive/refs/tags/v1.0.0.tar.gz",
+        checksum: "sha512:0fdb93a2553692e9c0f72ebb5c5f08af8bb01c5c5db8e60cc08c037d040ae560e29b887397b3a08c96921f34610fd80937367c2c544d4fdff2befa6d27ebba92",
+        cargo_dir: "/software/common/rustup/.cargo"
+      }
+  include_tasks:
+    file: 'yacrd.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - yacrd
+
 #https://github.com/natir/yacrd
