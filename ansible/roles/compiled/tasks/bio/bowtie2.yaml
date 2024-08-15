@@ -1,0 +1,45 @@
+---
+- name: Install bowtie2 {{ item.version_number }}
+  vars:
+    bowtie2_dir: "{{ bio_dir }}/bowtie2"
+    bowtie2_module_dir: "{{ bio_modules }}/bowtie2"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    unarchive_dir: "/dev/shm/bowtie2-{{ version_number }}-linux-x86_64"
+    install_dir: "{{ bowtie2_dir }}/{{ version_number }}"
+  environment:
+    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+  tags:
+    - never
+    - bowtie2-{{ item.version_number }}
+  block:
+    - name: Ensure bowtie2 dir exists
+      file:
+        path: "{{ bowtie2_dir }}"
+        state: directory
+    - name: Download bowtie2 {{ version_number }} from {{ url }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ bio_src }}/bowtie2-{{ version_number }}.zip"
+        checksum: "{{ checksum }}"
+    - name: Uncompress bowtie2 to {{ unarchive_dir }}
+      unarchive:
+        src: "{{ bio_src }}/bowtie2-{{ version_number }}.zip"
+        dest: "/dev/shm"
+        remote_src: yes
+        creates: "{{ unarchive_dir }}"
+    - name: Move {{ unarchive_dir }} to {{ install_dir }}
+      command: "mv {{ unarchive_dir }} {{ install_dir }}"
+      args:
+        creates: "{{ install_dir }}"
+
+    - name: Check module dir {{ bowtie2_module_dir }}
+      file:
+        path: "{{ bowtie2_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install bowtie2 {{ version_number }} module file
+      template:
+        src: bio/bowtie2.lua
+        dest: "{{ bowtie2_module_dir }}/{{ version_number }}.lua"

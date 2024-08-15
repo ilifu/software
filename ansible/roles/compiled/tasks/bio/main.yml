@@ -1492,8 +1492,25 @@
       - never
       - subread
 
-# bowtie2
-# hisat2
+- name: Install bowtie2
+  vars:
+    versions:
+      - {
+        version_number: "2.5.4",
+        url: "https://github.com/BenLangmead/bowtie2/releases/download/v2.5.4/bowtie2-2.5.4-linux-x86_64.zip",
+        checksum: "sha256:32de7d9363124452296d45d7cb7da48d41c60e9ebaeebd2feafe1cc0418ae00c"
+      }
+      - {
+          version_number: "2.5.4-sra",
+          url: "https://github.com/BenLangmead/bowtie2/releases/download/v2.5.4/bowtie2-2.5.4-sra-linux-x86_64.zip",
+          checksum: "sha256:537d189b508ac6920d5052dcc2c6d2b0529360f14485b844f7bfdde489ace443"
+      }
+  include_tasks:
+    file: 'bowtie2.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - bowtie2
 
 
 # Bismark
