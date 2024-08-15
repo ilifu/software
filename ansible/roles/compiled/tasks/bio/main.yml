@@ -1587,8 +1587,20 @@
       - never
       - nanostat
 
+- name: Install NanoFilter
+  vars:
+      versions:
+      - {
+          version_number: "2.8.0",
+          python_location: "/software/common/python/3.12.3",
+          python_module: "python/3.12.3"
+      }
+  include_tasks:
+      file: 'nanofilt.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - nanofilt
 
-
-#https://github.com/wdecoster/nanostat
 #https://github.com/wdecoster/nanofilt
 #https://github.com/natir/yacrd
