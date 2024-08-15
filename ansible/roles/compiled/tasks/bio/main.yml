@@ -1512,8 +1512,20 @@
       - never
       - bowtie2
 
-
-# Bismark
+- name: Install Bismark
+  vars:
+      versions:
+      - {
+        version_number: "0.24.2",
+        url: "https://github.com/FelixKrueger/Bismark/archive/refs/tags/v0.24.2.tar.gz",
+        checksum: "sha256:e86a5228f9bb63457e2aa713f67b462c63230517bed56df511fd372032acbe86"
+      }
+  include_tasks:
+    file: 'bismark.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - bismark
 
 - name: Install vg
   vars:

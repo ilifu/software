@@ -1,0 +1,45 @@
+---
+- name: Install Bismark {{ item.version_number }}
+  vars:
+    bismark_dir: "{{ bio_dir }}/bismark"
+    bismark_module_dir: "{{ bio_modules }}/bismark"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    unarchive_dir: "/dev/shm/Bismark-{{ version_number }}"
+    install_dir: "{{ bismark_dir }}/{{ version_number }}"
+  environment:
+    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+  tags:
+    - never
+    - bismark{{ item.version_number }}
+  block:
+    - name: Ensure Bismark dir exists
+      file:
+        path: "{{ bismark_dir }}"
+        state: directory
+    - name: Download Bismark {{ version_number }} from {{ url }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ bio_src }}/bismark-{{ version_number }}.tar.gz"
+        checksum: "{{ checksum }}"
+    - name: Uncompress Bismark to {{ unarchive_dir }}
+      unarchive:
+        src: "{{ bio_src }}/bismark-{{ version_number }}.tar.gz"
+        dest: "/dev/shm"
+        remote_src: yes
+        creates: "{{ unarchive_dir }}"
+    - name: Move {{ unarchive_dir }} to {{ install_dir }}
+      command: "mv {{ unarchive_dir }} {{ install_dir }}"
+      args:
+        creates: "{{ install_dir }}"
+
+    - name: Check module dir {{ bismark_module_dir }}
+      file:
+        path: "{{ bismark_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install Bismark {{ version_number }} module file
+      template:
+        src: bio/bismark.lua
+        dest: "{{ bismark_module_dir }}/{{ version_number }}.lua"
