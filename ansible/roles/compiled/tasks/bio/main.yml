@@ -89,6 +89,11 @@
         url: "https://github.com/samtools/samtools/releases/download/1.19.2/samtools-1.19.2.tar.bz2",
         checksum: "sha256:71f60499668e4c08e7d745fbff24c15cc8a0977abab1acd5d2bb419bdb065e96"
       }
+      - {
+        version_number: "1.20",
+        url: "https://github.com/samtools/samtools/releases/download/1.20/samtools-1.20.tar.bz2",
+        checksum: "sha256:c71be865e241613c2ca99679c074f1a0daeb55288af577db945bdabe3eb2cf10"
+      }
   include_tasks:
     file: samtools.yaml
   loop: "{{ samtools_versions }}"
@@ -995,6 +1000,11 @@
           url: "https://cdn.oxfordnanoportal.com/software/analysis/dorado-0.4.2-linux-x64.tar.gz",
           checksum: "sha512:1d437b45476ee49aa8fba04d0275ff3a4afadb978c1541d5f71d99f03bdc4ed16d14b1527251ad8ba53c1ab6600d3452ced599352552c620ca05c284cd1eca2f"
           }
+        - {
+          version_number: "0.7.3",
+          url: "https://cdn.oxfordnanoportal.com/software/analysis/dorado-0.7.3-linux-x64.tar.gz",
+          checksum: "sha512:c00b0a1fe2f2b18ebd2f8189ed7267b4c44b906f43f97ac77d9ff41a2906fa3edfc3ddeee81c1615c279bce9f471b000309a1870dc5775625c07b2192c980c17"
+        }
   include_tasks:
     file: 'dorado.yaml'
   loop: "{{ versions }}"
@@ -1371,3 +1381,179 @@
   tags:
       - never
       - reviewer
+
+- name: Install trimmomatic
+  vars:
+      versions:
+      - {
+        version_number: "0.39",
+        url: "https://github.com/usadellab/Trimmomatic/files/5854859/Trimmomatic-0.39.zip",
+        checksum: "sha256:2f7a5de11416899e5b38d3131019bc655946f770f9b7df5355d6a36acbcc488c",
+        java_module: "java/openjdk-22.0.1"
+      }
+  include_tasks:
+    file: 'trimmomatic.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - trimmomatic
+
+# trimmomatic
+
+- name: Install Cutadapt
+  vars:
+      versions:
+      - {
+        version_number: "4.9",
+        python_location: "/software/common/python/3.12.3",
+        python_module: "python/3.12.3"
+      }
+  include_tasks:
+    file: 'cutadapt.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - cutadapt
+
+- name: Install TrimGalore
+  vars:
+      versions:
+        - {
+          version_number: "0.6.10",
+          url: "https://github.com/FelixKrueger/TrimGalore/archive/refs/tags/0.6.10.tar.gz",
+          checksum: "sha256:3a4e414fc658d6eb4356f1572351204e8475a9d7dc79f6798270b57d35bda017",
+          fastqc_module: "fastqc/0.12.1",
+          cutadapt_module: "cutadapt/4.9"
+        }
+  include_tasks:
+    file: 'trimgalore.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - trimgalore
+
+- name: Install STAR
+  vars:
+      versions:
+      - {
+        version_number: "2.7.11b",
+        url: "https://github.com/alexdobin/STAR/archive/refs/tags/2.7.11b.tar.gz",
+        checksum: "sha256:3f65305e4112bd154c7e22b333dcdaafc681f4a895048fa30fa7ae56cac408e7"
+      }
+  include_tasks:
+    file: 'star.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - star
+
+- name: Install Salmon
+  vars:
+    versions:
+      - {
+          version_number: "1.10.0",
+          url: "https://github.com/COMBINE-lab/salmon/releases/download/v1.10.0/salmon-1.10.0_linux_x86_64.tar.gz",
+          checksum: "sha256:b876d041ef3bfbe44422b052b99ce387ff4e521c76002355c7b27882cf19c01b"
+         }
+  include_tasks:
+      file: 'salmon.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - salmon
+
+- name: Install kallisto
+  vars:
+    versions:
+      - {
+          version_number: "0.51.0",
+          url: "https://github.com/pachterlab/kallisto/archive/refs/tags/v0.51.0.tar.gz",
+          checksum: "sha256:efeb0191c1a6a0d6de69111fb66f4bda51ff31fb40c513280f072bd44556f80d"
+         }
+  include_tasks:
+    file: 'kallisto.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - kallisto
+
+- name: Install Subread
+  vars:
+    versions:
+        - {
+          version_number: "2.0.6",
+          url: "https://downloads.sourceforge.net/project/subread/subread-2.0.6/subread-2.0.6-source.tar.gz",
+          checksum: "sha256:f0fdda6b98634d2946028948c220253e10a0f27c7fa5f24913b65b3ac6cbb045"
+        }
+  include_tasks:
+    file: 'subread.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - subread
+
+- name: Install bowtie2
+  vars:
+    versions:
+      - {
+        version_number: "2.5.4",
+        url: "https://github.com/BenLangmead/bowtie2/releases/download/v2.5.4/bowtie2-2.5.4-linux-x86_64.zip",
+        checksum: "sha256:32de7d9363124452296d45d7cb7da48d41c60e9ebaeebd2feafe1cc0418ae00c"
+      }
+      - {
+          version_number: "2.5.4-sra",
+          url: "https://github.com/BenLangmead/bowtie2/releases/download/v2.5.4/bowtie2-2.5.4-sra-linux-x86_64.zip",
+          checksum: "sha256:537d189b508ac6920d5052dcc2c6d2b0529360f14485b844f7bfdde489ace443"
+      }
+  include_tasks:
+    file: 'bowtie2.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - bowtie2
+
+- name: Install Bismark
+  vars:
+      versions:
+      - {
+        version_number: "0.24.2",
+        url: "https://github.com/FelixKrueger/Bismark/archive/refs/tags/v0.24.2.tar.gz",
+        checksum: "sha256:e86a5228f9bb63457e2aa713f67b462c63230517bed56df511fd372032acbe86"
+      }
+  include_tasks:
+    file: 'bismark.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - bismark
+
+- name: Install vg
+  vars:
+      versions:
+      - {
+        version_number: "1.58.0",
+        url: "https://github.com/vgteam/vg/releases/download/v1.58.0/vg",
+        checksum: "sha256:66288c9dcf88e97e6e375dd7c87ea7b34ea0498146fcfec5dd38c8c5b5918149"
+      }
+  include_tasks:
+    file: 'vg.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - vg
+
+- name: Install miniwdl
+  vars:
+      versions:
+      - {
+        version_number: "1.12.1",
+        python_location: "/software/common/python/3.11.7",
+        python_module: "python/3.11.7"
+      }
+  include_tasks:
+    file: 'miniwdl.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - miniwdl
+

@@ -1,0 +1,57 @@
+---
+- name: Install subread {{ item.version_number }}
+  vars:
+    subread_dir: "{{ bio_dir }}/subread"
+    subread_module_dir: "{{ bio_modules }}/subread"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    unarchive_dir: "/dev/shm/subread-{{ version_number }}-source"
+    install_dir: "{{ subread_dir }}/{{ version_number }}"
+  environment:
+    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+  tags:
+    - never
+    - subread{{ item.version_number }}
+  block:
+    - name: Ensure subread installation dir "{{ install_dir }}" exists
+      file:
+        path: "{{ subread_dir }}"
+        state: directory
+    - name: Download subread {{ version_number }} from {{ url }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ bio_src }}/subread-{{ version_number }}.tar.gz"
+        checksum: "{{ checksum }}"
+    - name: Uncompress subread
+      unarchive:
+        src: "{{ bio_src }}/subread-{{ version_number }}.tar.gz"
+        dest: "/dev/shm"
+        remote_src: yes
+        creates: "{{ unarchive_dir }}"
+    - name: Compile subread
+      make:
+        chdir: "{{ unarchive_dir }}/src"
+        file: Makefile.Linux
+    - name: Copy binaries to install dir
+      copy:
+        src: "{{ file_name }}"
+        dest: "{{ install_dir }}/"
+        remote_src: yes
+        mode: u=rwx,g=rx,o=rx
+      with_fileglob:
+          - "{{ unarchive_dir }}/bin/*"
+          - "{{ unarchive_dir }}/bin/utilities/*"
+      loop_control:
+        loop_var: file_name
+
+
+    - name: Check module dir {{ subread_module_dir }}
+      file:
+        path: "{{ subread_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install subread {{ version_number }} module file
+      template:
+        src: bio/subread.lua
+        dest: "{{ subread_module_dir }}/{{ version_number }}.lua"

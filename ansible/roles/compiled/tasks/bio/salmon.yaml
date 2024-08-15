@@ -1,0 +1,45 @@
+---
+- name: Install Salmon {{ item.version_number }}
+  vars:
+    salmon_dir: "{{ bio_dir }}/salmon"
+    salmon_module_dir: "{{ bio_modules }}/salmon"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    unarchive_dir: "/dev/shm/salmon-latest_linux_x86_64"
+    install_dir: "{{ salmon_dir }}/{{ version_number }}"
+  environment:
+    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+  tags:
+    - never
+    - salmon{{ item.version_number }}
+  block:
+    - name: Ensure Salmon dir exists
+      file:
+        path: "{{ salmon_dir }}"
+        state: directory
+    - name: Download Salmon {{ version_number }} from {{ url }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ bio_src }}/salmon-{{ version_number }}.tar.gz"
+        checksum: "{{ checksum }}"
+    - name: Uncompress Salmon
+      unarchive:
+        src: "{{ bio_src }}/salmon-{{ version_number }}.tar.gz"
+        dest: "/dev/shm"
+        remote_src: yes
+        creates: "{{ unarchive_dir }}"
+    - name: Move {{ unarchive_dir }} to {{ install_dir }}
+      command: "mv {{ unarchive_dir }} {{ install_dir }}"
+      args:
+        creates: "{{ install_dir }}"
+
+    - name: Check module dir {{ salmon_module_dir }}
+      file:
+        path: "{{ salmon_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install salmon {{ version_number }} module file
+      template:
+        src: bio/salmon.lua
+        dest: "{{ salmon_module_dir }}/{{ version_number }}.lua"

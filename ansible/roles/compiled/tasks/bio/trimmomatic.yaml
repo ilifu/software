@@ -1,0 +1,53 @@
+---
+- name: Install trimmomatic {{ item.version_number }}
+  vars:
+    trimmomatic_dir: "{{ bio_dir }}/trimmomatic"
+    trimmomatic_module_dir: "{{ bio_modules }}/trimmomatic"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    uncompress_dir: "/dev/shm/Trimmomatic-{{ version_number }}"
+    install_dir: "{{ trimmomatic_dir }}/{{ version_number }}"
+    java_module: "{{ item.java_module }}"
+  tags:
+    - never
+    - trimmomatic{{ item.version_number }}
+
+  block:
+    - name: Download Trimmomatic {{ version_number }} from {{ url }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ bio_src }}/Trimmomatic-{{ version_number }}.zip"
+        checksum: "{{ checksum }}"
+    - name: "Uncompress Trimmomatic to '{{ uncompress_dir }}'"
+      unarchive:
+        src: "{{ bio_src }}/Trimmomatic-{{ version_number }}.zip"
+        dest: "/dev/shm"
+        remote_src: yes
+        creates: "{{ uncompress_dir }}"
+    - name: "Ensure Trimmomatic dir '{{ trimmomatic_dir }}' exists"
+      file:
+        path: "{{ trimmomatic_dir }}"
+        state: directory
+        mode: u=rwx,g=rx,o=rx
+    - name: "Move Trimmomatic from '{{ uncompress_dir }}' to install dir '{{ install_dir }}'"
+      command: "mv {{ uncompress_dir }} {{ install_dir }}"
+      args:
+        creates: "{{ install_dir }}"
+    - name: Create trimmomatic binary
+      copy:
+        dest: "{{ install_dir }}/trimmomatic"
+        mode: u=rwx,g=rx,o=rx
+        content: |
+          #!/bin/bash
+          java -jar {{ install_dir }}/trimmomatic-{{ version_number }}.jar "$@"
+
+    - name: Check module dir {{ trimmomatic_module_dir }}
+      file:
+        path: "{{ trimmomatic_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install trimmomatic {{ version_number }} module file
+      template:
+        src: bio/trimmomatic.lua
+        dest: "{{ trimmomatic_module_dir }}/{{ version_number }}.lua"

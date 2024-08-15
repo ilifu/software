@@ -1,0 +1,45 @@
+---
+- name: Install trimgalore {{ item.version_number }}
+  vars:
+    trimgalore_dir: "{{ bio_dir }}/trimgalore"
+    trimgalore_module_dir: "{{ bio_modules }}/trimgalore"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ trimgalore_dir }}/{{ version_number }}"
+    fastqc_module: "{{ item.fastqc_module }}"
+    cutadapt_module: "{{ item.cutadapt_module }}"
+  tags:
+    - never
+    - trimgalore{{ item.version_number }}
+
+  block:
+    - name: Ensure TrimGalore dir exists
+      file:
+        path: "{{ trimgalore_dir }}"
+        state: directory
+    - name: Download TrimGalore {{ version_number }} from {{ url }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ bio_src }}/TrimGalore.{{ version_number }}.tar.gz"
+        checksum: "{{ checksum }}"
+    - name: Uncompress TrimGalore
+      unarchive:
+        src: "{{ bio_src }}/TrimGalore.{{ version_number }}.tar.gz"
+        dest: "/dev/shm"
+        remote_src: yes
+        creates: "/dev/shm/TrimGalore-{{ version_number }}"
+    - name: Move TrimGalore from '/dev/shm/TrimGalore-{{ version_number }}' to install dir '{{ install_dir }}'
+      command: "mv /dev/shm/TrimGalore-{{ version_number }} {{ install_dir }}"
+      args:
+          creates: "{{ install_dir }}"
+
+    - name: Check module dir {{ trimgalore_module_dir }}
+      file:
+        path: "{{ trimgalore_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install trimgalore {{ version_number }} module file
+      template:
+        src: bio/trimgalore.lua
+        dest: "{{ trimgalore_module_dir }}/{{ version_number }}.lua"
