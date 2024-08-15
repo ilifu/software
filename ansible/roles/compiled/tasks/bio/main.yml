@@ -1572,12 +1572,23 @@
       - never
       - porechop
 
-#porechop
-#nanostat
-#nanofilt
-#yacrd
+- name: Install nanostat
+  vars:
+      versions:
+      - {
+          version_number: "1.6.0",
+          python_location: "/software/common/python/3.12.3",
+          python_module: "python/3.12.3"
+      }
+  include_tasks:
+      file: 'nanostat.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - nanostat
 
-#https://github.com/rrwick/Porechop
+
+
 #https://github.com/wdecoster/nanostat
 #https://github.com/wdecoster/nanofilt
 #https://github.com/natir/yacrd
