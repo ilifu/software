@@ -1,0 +1,24 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "daed9c23a21c898278afa849e5cf51a71c6fd39bf15de46f34e2e3d142f29e75"
+        },
+        "pipfile-spec": 6,
+        "requires": {
+            "python_version": "3.12"
+        },
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "porechop": {
+            "file": "https://github.com/rrwick/Porechop/archive/refs/tags/v0.2.4.tar.gz"
+        }
+    },
+    "develop": {}
+}
