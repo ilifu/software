@@ -1,0 +1,12 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+porechop = {file = "https://github.com/rrwick/Porechop/archive/refs/tags/v0.2.4.tar.gz"}
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"

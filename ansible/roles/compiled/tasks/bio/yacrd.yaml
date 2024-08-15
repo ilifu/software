@@ -1,0 +1,50 @@
+---
+- name: Install yacrd {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    yacrd_dir: "{{ bio_dir }}/yacrd"
+    yacrd_module_dir: "{{ bio_modules }}/yacrd"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ yacrd_dir }}/{{ version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    unzipdir: "/dev/shm/yacrd-{{ version_number }}"
+    cargo_dir: "{{ item.cargo_dir }}"
+  tags:
+    - never
+    - yacrd{{ item.version_number }}
+
+  block:
+    - name: Download and install yacrd ({{ version_number }})
+      block:
+        - name: Download yacrd
+          get_url:
+              url: "{{ url }}"
+              dest: "{{ bio_src }}/yacrd-{{ version_number }}.tar.gz"
+              mode: "ug=rwx,o=rx"
+              checksum: "{{ checksum }}"
+        - name: Uncompress yacrd
+          unarchive:
+            src: "{{ bio_src }}/yacrd-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzipdir }}"
+        - name: Compile yacrd using rust
+          command: "cargo install --path . --root {{ install_dir }}"
+          args:
+              chdir: "{{ unzipdir }}"
+              creates: "{{ install_dir }}/bin/yacrd"
+          environment:
+              PATH: "{{ cargo_dir }}/bin:{{ ansible_env.PATH | default('') }}"
+
+    - name: Install yacrd {{ version_number }} module
+      block:
+        - name: Check module dir {{ yacrd_module_dir }}
+          file:
+            path: "{{ yacrd_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install yacrd {{ version_number }} module file
+          template:
+            src: bio/yacrd.lua
+            dest: "{{ yacrd_module_dir }}/{{ version_number }}.lua"
