@@ -1,4 +1,3 @@
-╰─ cat kernel.json
 {
   "argv": [
     "{{ install_dir }}/bin/python",
