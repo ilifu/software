@@ -609,56 +609,78 @@
         version_number: "4.0.0",
         checksum: "sha256:06beb0291b569978484eb0dcb5d2339665ec745737bdfb4e873e7a5a75492940",
         url: "https://cran.r-project.org/src/base/R-4/R-4.0.0.tar.gz",
+        harfbuzz: "/software/common/harfbuzz/8.5.0",
+        fribidi: "/software/common/fribidi/1.0.15"
       }
       - {
         version_number: "4.0.2",
         checksum: "sha256:d3bceab364da0876625e4097808b42512395fdf41292f4915ab1fd257c1bbe75",
         url: "https://cran.r-project.org/src/base/R-4/R-4.0.2.tar.gz",
+        harfbuzz: "/software/common/harfbuzz/8.5.0",
+        fribidi: "/software/common/fribidi/1.0.15"
       }
       - {
         version_number: "4.0.3",
         checksum: "sha256:09983a8a78d5fb6bc45d27b1c55f9ba5265f78fa54a55c13ae691f87c5bb9e0d",
         url: "https://cran.r-project.org/src/base/R-4/R-4.0.3.tar.gz",
+        harfbuzz: "/software/common/harfbuzz/8.5.0",
+        fribidi: "/software/common/fribidi/1.0.15"
       }
       - {
         version_number: "4.1.0",
         checksum: "sha256:e8e68959d7282ca147360fc9644ada9bd161bab781bab14d33b8999a95182781",
         url: "https://cran.r-project.org/src/base/R-4/R-4.1.0.tar.gz",
+        harfbuzz: "/software/common/harfbuzz/8.5.0",
+        fribidi: "/software/common/fribidi/1.0.15"
       }
       - {
         version_number: "4.1.1",
         checksum: "sha256:515e03265752257d0b7036f380f82e42b46ed8473f54f25c7b67ed25bbbdd364",
         url: "https://cran.r-project.org/src/base/R-4/R-4.1.1.tar.gz",
+        harfbuzz: "/software/common/harfbuzz/8.5.0",
+        fribidi: "/software/common/fribidi/1.0.15"
       }
       - {
         version_number: "4.2.0",
         checksum: "sha256:38eab7719b7ad095388f06aa090c5a2b202791945de60d3e2bb0eab1f5097488",
         url: "https://cran.r-project.org/src/base/R-4/R-4.2.0.tar.gz",
+        harfbuzz: "/software/common/harfbuzz/8.5.0",
+        fribidi: "/software/common/fribidi/1.0.15"
       }
       - {
         version_number: "4.2.2",
         checksum: "sha256:0ff62b42ec51afa5713caee7c4fde7a0c45940ba39bef8c5c9487fef0c953df5",
         url: "https://cran.r-project.org/src/base/R-4/R-4.2.2.tar.gz",
+        harfbuzz: "/software/common/harfbuzz/8.5.0",
+        fribidi: "/software/common/fribidi/1.0.15"
       }
       - {
         version_number: "4.3.1",
         checksum: "sha256:8dd0bf24f1023c6f618c3b317383d291b4a494f40d73b983ac22ffea99e4ba99",
         url: "https://cran.r-project.org/src/base/R-4/R-4.3.1.tar.gz",
+        harfbuzz: "/software/common/harfbuzz/8.5.0",
+        fribidi: "/software/common/fribidi/1.0.15"
       }
       - {
         version_number: "4.3.2",
         checksum: "sha256:b3f5760ac2eee8026a3f0eefcb25b47723d978038eee8e844762094c860c452a",
         url: "https://cran.r-project.org/src/base/R-4/R-4.3.2.tar.gz",
+        harfbuzz: "/software/common/harfbuzz/8.5.0",
+        fribidi: "/software/common/fribidi/1.0.15"
       }
       - {
         version_number: "4.3.3",
         checksum: "sha256:80851231393b85bf3877ee9e39b282e750ed864c5ec60cbd68e6e139f0520330",
         url: "https://cran.r-project.org/src/base/R-4/R-4.3.3.tar.gz",
+        harfbuzz: "/software/common/harfbuzz/8.5.0",
+        fribidi: "/software/common/fribidi/1.0.15"
       }
       - {
         version_number: "4.4.1",
         checksum: "sha256:b4cb675deaaeb7299d3b265d218cde43f192951ce5b89b7bb1a5148a36b2d94d",
-        url: "https://cloud.r-project.org/src/base/R-4/R-4.4.1.tar.gz"
+        url: "https://cloud.r-project.org/src/base/R-4/R-4.4.1.tar.gz",
+        harfbuzz: "/software/common/harfbuzz/8.5.0",
+        fribidi: "/software/common/fribidi/1.0.15"
       }
   include_tasks:
     file: R.yaml
