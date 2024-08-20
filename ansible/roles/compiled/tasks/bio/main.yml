@@ -1557,3 +1557,65 @@
       - never
       - miniwdl
 
+- name: Install porechop
+  vars:
+      versions:
+      - {
+          version_number: "0.2.4",
+          python_location: "/software/common/python/3.12.3",
+          python_module: "python/3.12.3"
+      }
+  include_tasks:
+      file: 'porechop.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - porechop
+
+- name: Install nanostat
+  vars:
+      versions:
+      - {
+          version_number: "1.6.0",
+          python_location: "/software/common/python/3.12.3",
+          python_module: "python/3.12.3"
+      }
+  include_tasks:
+      file: 'nanostat.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - nanostat
+
+- name: Install NanoFilter
+  vars:
+      versions:
+      - {
+          version_number: "2.8.0",
+          python_location: "/software/common/python/3.12.3",
+          python_module: "python/3.12.3"
+      }
+  include_tasks:
+      file: 'nanofilt.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - nanofilt
+
+- name: Install yacrd
+  vars:
+    versions:
+      - {
+        version_number: 1.0.0,
+        url: "https://github.com/natir/yacrd/archive/refs/tags/v1.0.0.tar.gz",
+        checksum: "sha512:0fdb93a2553692e9c0f72ebb5c5f08af8bb01c5c5db8e60cc08c037d040ae560e29b887397b3a08c96921f34610fd80937367c2c544d4fdff2befa6d27ebba92",
+        cargo_dir: "/software/common/rustup/.cargo"
+      }
+  include_tasks:
+    file: 'yacrd.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - yacrd
+
+#https://github.com/natir/yacrd
