@@ -4,6 +4,7 @@
     python_dir: "{{ common_dir }}/python"
     python_module_dir: "{{ common_modules }}/python"
     version_number: "{{ item.version_number }}"
+    major_minor: "{{ version_number.split('.')[0] }}.{{ version_number.split('.')[1] }}"
     checksum: "{{ item.checksum }}"
     install_dir: "{{ python_dir }}/{{ version_number }}"
     unzipdir: "/dev/shm/Python-{{ version_number }}"
@@ -72,15 +73,20 @@
           loop_control:
             loop_var: "package_name"
 
-    - name: Install Python {{ version_number }} module
-      block:
-        - name: Check module dir
-          file:
-            path: "{{ python_module_dir }}"
-            state: directory
-            mode: u=rwx,g=rwx,o=rx
+    - name: Check python module dir {{ python_module_dir }} exists
+      file:
+        path: "{{ python_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
 
-        - name: Install Python module file
-          template:
-            src: common/python.lua
-            dest: "{{ python_module_dir }}/{{ version_number }}.lua"
+    - name: Install Python module file to {{ python_module_dir }}/{{ version_number }}.lua
+      template:
+        src: common/python.lua
+        dest: "{{ python_module_dir }}/{{ version_number }}.lua"
+
+    - name: Update jupyter kernel.json file
+      template:
+        src: common/python.kernel.json
+        dest: "{{ install_dir }}/share/jupyter/kernels/python3/kernel.json"
+        mode: u=rw,g=rw,o=r
+
