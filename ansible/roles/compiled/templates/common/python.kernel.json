@@ -1,0 +1,18 @@
+╰─ cat kernel.json
+{
+  "argv": [
+    "{{ install_dir }}/bin/python",
+    "-m",
+    "ipykernel_launcher",
+    "-f",
+    "{connection_file}"
+  ],
+  "env": {
+    "PATH":  "{{ install_dir }}/bin:${PATH}"
+  },
+  "display_name": "Python {{ major_minor }} (ipykernel)",
+  "language": "python",
+  "metadata": {
+    "debugger": false
+  }
+}
