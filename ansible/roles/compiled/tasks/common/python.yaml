@@ -87,6 +87,6 @@
     - name: Update jupyter kernel.json file
       template:
         src: common/python.kernel.json
-        dest: "{{ install_dir }}/share/jupyter/kernels/python3/kernel.json"
+        dest: "{{ install_dir }}/share/jupyter/kernels/python{{ version_number.split('.')[0] }}/kernel.json"
         mode: u=rw,g=rw,o=r
 
