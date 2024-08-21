@@ -17,5 +17,7 @@ apps = {
 }
 
 for i, app in ipairs(apps) do
-    set_alias(app, "singularity run --nv --app " .. app .. " " .. singularity_image)
+    bashStr = 'singularity run --nv --app ' .. app .. ' ' .. singularity_image .. ' "$@"'
+    cshStr = 'singularity run --nv --app ' .. app .. ' ' .. singularity_image .. ' $*'
+    set_shell_function(app, bashStr, cshStr)
 end
