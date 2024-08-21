@@ -1,0 +1,7 @@
+{"argv": ["{{ install_dir }}/bin/R", "--slave", "-e", "IRkernel::main()", "--args", "{connection_file}"],
+ "display_name":"R {{ short_version }}",
+ "env": {
+    "PATH":  "{{ install_dir }}/bin:${PATH}"
+  },
+ "language":"R"
+}
