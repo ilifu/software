@@ -1617,5 +1617,24 @@
   tags:
       - never
       - yacrd
+      -
+
+- name: Install RSEM
+  vars:
+      versions:
+      - {
+        version_number: "1.3.3",
+        url: "https://github.com/deweylab/RSEM/archive/refs/tags/v1.3.3.tar.gz",
+        checksum: "sha256:90e784dd9df8346caa2a7e3ad2ad07649608a51df1c69bfb6e16f45e611a40dc",
+        R_location: "/software/common/R/4.4.1",
+        R_module: "R/4.4.1"
+      }
+  include_tasks:
+    file: 'rsem.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - rsem
+
 
 #https://github.com/natir/yacrd
