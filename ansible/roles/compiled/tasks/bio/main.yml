@@ -20,7 +20,13 @@
     plink_versions:
       - {
         version_number: "2.00a2.3",
+        url: "https://github.com/chrchang/plink-ng/releases/download/v2.00a2.3/plink2_linux_x86_64.zip",
         checksum: "3fa20a2058df542e928b11d715cc314c01d7c5961525b55fd17a088e6caa9cc9",
+      }
+      - {
+          version_number: "1.9",
+          url: "https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20240818.zip",
+          checksum: "0ac294ffcd5d82f5b0d2d7f579ac85a87017f6fc46485b21793f5aff9c719e3d"
       }
   include_tasks:
     file: plink-ng.yaml

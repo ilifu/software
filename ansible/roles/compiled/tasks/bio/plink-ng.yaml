@@ -8,7 +8,7 @@
     install_dir: "{{ plink_dir }}/{{ version_number }}"
     unzipdir: "/dev/shm/plink-{{ version_number }}"
     build_dir: "{{ unzipdir }}/build"
-    plink_url: "https://github.com/chrchang/plink-ng/releases/download/v{{ version_number }}/plink2_linux_x86_64.zip"
+    plink_url: "{{ item.url }}"
   tags:
     - never
     - plink{{ item.version_number }}
