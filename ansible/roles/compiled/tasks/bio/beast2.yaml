@@ -1,0 +1,55 @@
+---
+- name: Install beast2 {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    beast2_dir: "{{ bio_dir }}/beast2"
+    beast2_module_dir: "{{ bio_modules }}/beast2"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ beast2_dir }}/{{ version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    unzipdir: "{{ beast2_dir }}/beast"
+  tags:
+    - never
+    - beast2-{{ item.version_number }}
+  block:
+    - name: Check if beast2 is already installed
+      stat:
+        path: "{{ install_dir }}/bin/beast"
+      register: beast2_installed
+    - name: Download and install beast2 ({{ version_number }})
+      when: not beast2_installed.stat.exists
+      block:
+        - name: Download beast2
+          get_url:
+              url: "{{ url }}"
+              dest: "{{ bio_src }}/beast2-{{ version_number }}.linux.x86.tgz"
+              mode: "ug=rwx,o=rx"
+              checksum: "{{ checksum }}"
+        - name: Ensure beast2 dir exists
+          file:
+            path: "{{ beast2_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Uncompress beast2
+          unarchive:
+            src: "{{ bio_src }}/beast2-{{ version_number }}.linux.x86.tgz"
+            dest: "{{ beast2_dir }}"
+            remote_src: yes
+            creates: "{{ unzipdir }}"
+
+
+        - name: Move beast2 to install dir
+          command: "mv {{ unzipdir }} {{ install_dir }}"
+          args:
+              creates: "{{ install_dir }}/bin/beast"
+
+    - name: Check module dir {{ beast2_module_dir }}
+      file:
+        path: "{{ beast2_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install beast2 {{ version_number }} module file
+      template:
+        src: bio/beast2.lua
+        dest: "{{ beast2_module_dir }}/{{ version_number }}.lua"
