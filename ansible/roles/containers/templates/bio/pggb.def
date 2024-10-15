@@ -1,9 +1,8 @@
 Bootstrap: docker
-From: pangenome/pggb:latest
+From: ghcr.io/pangenome/pggb:{{ tag }}
 
 %labels
-  Maintainer Dane Kennedy
-  Version 0.1
+  Version {{ tag }}
   pggb
 
 %help

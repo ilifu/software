@@ -1642,5 +1642,25 @@
       - never
       - rsem
 
+- name: Install Beast 2
+  vars:
+    versions:
+      - {
+          version_number: "2.7.3",
+          url: "https://github.com/CompEvol/beast2/releases/download/v2.7.3/BEAST.v2.7.3.Linux.x86.tgz",
+          checksum: "sha256:234af8572e827c1c856f0e1ad46e61fa3b3b875c6b5d246f67839ec7c1bf40b5",
+      }
+      - {
+        version_number: "2.7.7",
+        url: "https://github.com/CompEvol/beast2/releases/download/v2.7.7/BEAST.v2.7.7.Linux.x86.tgz",
+        checksum: "sha256:a866f3e5da4ef890a042f01849e32322aa0a8e16e3e1cb2c59f823de2611781a",
+      }
+  include_tasks:
+    file: 'beast2.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - beast2
+
 
 #https://github.com/natir/yacrd

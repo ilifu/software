@@ -197,8 +197,14 @@
     - diann
 
 - name: Create pggb container
+  vars:
+    versions:
+      - {
+        tag: '20240928233843e8dd3f',
+          }
   include_tasks:
     file: pggb.yaml
+  loop: "{{ versions }}"
   tags:
     - never
     - pggb

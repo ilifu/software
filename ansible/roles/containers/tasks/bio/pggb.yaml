@@ -4,9 +4,9 @@
     container_name: "pggb"
     container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
     pggb_module_dir: "{{ bio_modules }}/pggb"
-    pggb_binary_dir: "{{ bio_container_dir }}/pggb"
+    tag: "{{ item.tag }}"
   tags:
-    - "pggb"
+    - "pggb{{ item.tag }}"
     - never
   block:
     - name: Create pggb {{ version_number }} container
@@ -14,43 +14,14 @@
         - name: Copy singularity definition file
           template:
               src: "bio/pggb.def"
-              dest: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
+              dest: "{{ bio_container_recipe_dir }}/{{ container_name }}.{{ tag }}.def"
         - name: Build singularity container
-          command: "{{ singularity }} build {{ container_image }} {{ bio_container_recipe_dir }}/{{ container_name }}.def"
+          command: "{{ singularity }} build {{ container_image }} {{ bio_container_recipe_dir }}/{{ container_name }}.{{ tag }}.def"
           args:
               creates: "{{ container_image }}"
           become: true
           environment:
               SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"
-        - name: Ensure pggb binary directory exists
-          file:
-            path: "{{ pggb_binary_dir }}"
-            state: directory
-            mode: u=rwx,g=rwx,o=rx
-        - name: Create pggb binaries
-          template:
-            src: "pggb.sh"
-            dest: "{{ pggb_binary_dir }}/{{ pggb_binary.name }}"
-            mode: 0755
-          loop:
-            - { name: "pggb" }
-            - { name: "wfmash" }
-            - { name: "seqwish" }
-            - { name: "smoothxg" }
-            - { name: "odgi" }
-            - { name: "gfaffix" }
-            - { name: "vg" }
-            - { name: "multiqc" }
-            - { name: "vcfbub" }
-            - { name: "vcflib" }
-            - { name: "fastix" }
-            - { name: "pafplot" }
-            - { name: "pggb" }
-            - { name: "samtools" }
-            - { name: "bedtools" }
-            - { name: "vcfwave" }
-          loop_control:
-            loop_var: pggb_binary
 
     - name: Install pggb {{ container_name }} module
       block:
@@ -62,4 +33,4 @@
         - name: Install pggb module file
           template:
             src: bio/pggb.lua
-            dest: "{{ pggb_module_dir }}/default.lua"
+            dest: "{{ pggb_module_dir }}/{{ tag }}.lua"
