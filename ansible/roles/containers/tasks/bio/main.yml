@@ -202,6 +202,9 @@
       - {
         tag: '20240928233843e8dd3f',
           }
+      - {
+          tag: '202410160258499fff88',
+      }
   include_tasks:
     file: pggb.yaml
   loop: "{{ versions }}"

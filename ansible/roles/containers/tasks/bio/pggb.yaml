@@ -2,7 +2,7 @@
   vars:
     checksum: "{{ item.checksum }}"
     container_name: "pggb"
-    container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+    container_image: "{{ bio_container_dir }}/{{ container_name }}.{{ item.tag }}.sif"
     pggb_module_dir: "{{ bio_modules }}/pggb"
     tag: "{{ item.tag }}"
   tags:
