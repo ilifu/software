@@ -1662,5 +1662,21 @@
       - never
       - beast2
 
+- name: Install impg
+  vars:
+    versions:
+      - {
+        version_number: "0.2.1",
+        url: "https://github.com/pangenome/impg/archive/refs/tags/v0.2.1.tar.gz",
+        checksum: "sha512:e4d4833b294f0cd49e196f1f75f266e9ae893451716caf4098dfcfdc45115749e8ec04cab3305823336eb7796c9d276f34af8f85e184f947d7ba25bcadcefd3e",
+        rust_dir: "/software/common/rust/1.82.0/bin",
+      }
+  include_tasks:
+    file: 'impg.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - impg
+
 
 #https://github.com/natir/yacrd

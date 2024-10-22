@@ -1,0 +1,49 @@
+---
+- name: Install impg {{ item.version_number }}
+  vars:
+    impg_dir: "{{ bio_dir }}/impg"
+    impg_module_dir: "{{ bio_modules }}/impg"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ impg_dir }}/{{ version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    rust_dir: "{{ item.rust_dir }}"
+    unzip_dir: "/dev/shm/impg-{{ version_number }}"
+  tags:
+    - never
+    - impg{{ item.version_number }}
+
+  block:
+    - name: Download and install impg ({{ version_number }})
+      block:
+        - name: Download impg {{ version_number }} source
+          get_url:
+              url: "{{ url }}"
+              dest: "{{ bio_src }}/impg-{{ version_number }}.tar.gz"
+              mode: "ug=rwx,o=rx"
+              force: yes
+        - name: Uncompress impg
+          unarchive:
+              src: "{{ bio_src }}/impg-{{ version_number }}.tar.gz"
+              dest: "/dev/shm"
+              remote_src: yes
+              creates: "{{ unzip_dir }}"
+        - name: Run cargo install for impg {{ version_number }}
+          command: "cargo install --path . --root {{ install_dir }}"
+          args:
+              chdir: "{{ unzip_dir }}"
+              creates: "{{ install_dir }}/bin/impg"
+          environment:
+              PATH: "{{ rust_dir }}/bin:{{ ansible_env.PATH | default('') }}"
+
+    - name: Install impg {{ version_number }} module
+      block:
+        - name: Check module dir {{ impg_module_dir }}
+          file:
+            path: "{{ impg_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install impg module file
+          template:
+            src: bio/impg.lua
+            dest: "{{ impg_module_dir }}/{{ version_number }}.lua"
