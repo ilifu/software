@@ -467,6 +467,10 @@
         checksum: "md5:87d0f8281237b972ff8b23e0e2c8d325"
       }
       - {
+        version_number: "3.9.21",
+        checksum: "md5:e8ab0f9a295f12428310f409abd79e9c"
+      }
+      - {
         version_number: "3.10.0",
         checksum: "md5:3e7035d272680f80e3ce4e8eb492d580"
       }
@@ -485,6 +489,10 @@
       - {
         version_number: "3.10.14",
         checksum: "md5:05148354ce821ba7369e5b7958435400"
+      }
+      - {
+        version_number: "3.10.16",
+        checksum: "md5:97b3ee1740f32a92905dd0a99dcb04d5"
       }
       - {
         version_number: "3.11.0",
@@ -507,6 +515,10 @@
         checksum: "md5:22ea467e7d915477152e99d5da856ddc",
       }
       - {
+        version_number: "3.11.11",
+        checksum: "md5:3e497037b170fe4be5f462c4964596f2",
+      }
+      - {
           version_number: "3.12.0",
           checksum: "md5:f6f4616584b23254d165f4db90c247d6"
       }
@@ -518,12 +530,17 @@
         version_number: "3.12.3",
         checksum: "md5:8defb33f0c37aa4bdd3a38ba52abde4e"
       }
+      - {
+        version_number: "3.12.8",
+        checksum: "md5:d46e5bf9f2e596a3ba45fc0b3c053dd2"
+      }
     pip_packages:
       - pip
       - pipenv
       - ipython
       - ipykernel
       - ldap3
+      - uv
       - virtualenv
   include_tasks:
     file: python.yaml
