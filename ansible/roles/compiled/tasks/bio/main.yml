@@ -1662,5 +1662,21 @@
       - never
       - beast2
 
+- name: Install htstream
+  vars:
+      versions:
+      - {
+        version_number: "1.4.1",
+        url: "https://github.com/s4hts/HTStream/archive/refs/tags/v1.4.1.tar.gz",
+        checksum: "sha256:1231a6ff5cd5c4ba434d834452e37a5da88f78f8ede05ee02dc063ac52ae024a",
+        boost_dir: "/software/common/boost/1.87.0",
+        boost_module: "boost/1.87.0",
+      }
+  include_tasks:
+        file: 'htstream.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - htstream
 
 #https://github.com/natir/yacrd
