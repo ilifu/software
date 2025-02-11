@@ -1,0 +1,72 @@
+---
+- name: Install HTStream {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    htstream_dir: "{{ bio_dir }}/htstream"
+    htstream_module_dir: "{{ bio_modules }}/htstream"
+    version_number: "{{ item.version_number }}"
+    install_dir: "{{ htstream_dir }}/{{ version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    unzipdir: "/dev/shm/HTStream-{{ version_number }}"
+    boost_dir: "{{ item.boost_dir }}"
+    boost_module: "{{ item.boost_module }}"
+  environment:
+    LD_LIBRARY_PATH: "{{ boost_dir }}/lib:{{ ansible_env.PATH }}"
+    INCLUDE: "{{ boost_dir }}/include"
+    MAKEFLAGS: "-j 1"
+  tags:
+    - never
+    - htstream{{ item.version_number }}
+  block:
+    - name: Check if HTStream is already installed
+      stat:
+        path: "{{ install_dir }}/bin/hts_Stats"
+      register: htstream_installed
+    - name: Download and install HTStream ({{ version_number }})
+      when: not htstream_installed.stat.exists
+      block:
+        - name: Download htstream
+          get_url:
+              url: "{{ url }}"
+              dest: "{{ bio_src }}/htstream-{{ version_number }}.tar.gz"
+              mode: "ug=rwx,o=rx"
+              checksum: "{{ checksum }}"
+        - name: Ensure HTStream dir exists
+          file:
+            path: "{{ htstream_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Uncompress HTStream
+          unarchive:
+            src: "{{ bio_src }}/htstream-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzipdir }}"
+        - name: Ensure build directory exists
+          file:
+            path: "{{ unzipdir }}/build"
+            state: directory
+        - name: Run cmake in build dir
+          command: "cmake -DCMAKE_INSTALL_PREFIX={{ install_dir }} .."
+          args:
+              chdir: "{{ unzipdir }}/build"
+              creates: "{{ unzipdir }}/build/Makefile"
+        - name: run make
+          command: "make"
+          args:
+              chdir: "{{ unzipdir }}/build"
+        - name: run make install
+          command: "make install"
+          args:
+              chdir: "{{ unzipdir }}/build"
+
+    - name: Check HTStream module dir {{ htstream_module_dir }}
+      file:
+        path: "{{ htstream_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install HTStream {{ version_number }} module file
+      template:
+        src: bio/htstream.lua
+        dest: "{{ htstream_module_dir }}/{{ version_number }}.lua"
