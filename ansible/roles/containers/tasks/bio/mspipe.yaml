@@ -12,11 +12,11 @@
   block:
     - name: Create msPIPE {{ version_number }} container
       block:
-        - name: Copy singularity definition file
+        - name: "Copy singularity definition file to {{ bio_container_recipe_dir }}/{{ container_name }}.{{ version_number }}.def"
           template:
               src: "bio/mspipe.def"
               dest: "{{ bio_container_recipe_dir }}/{{ container_name }}.{{ version_number }}.def"
-        - name: Build singularity container
+        - name: "Build singularity container {{ container_image }}"
           command: "{{ singularity }} build {{ container_image }} {{ bio_container_recipe_dir }}/{{ container_name }}.{{ version_number }}.def"
           args:
               creates: "{{ container_image }}"
