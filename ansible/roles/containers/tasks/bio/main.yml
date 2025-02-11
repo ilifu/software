@@ -218,3 +218,18 @@
   tags:
     - never
     - snvstory
+
+- name: Create msPIPE container
+  vars:
+    versions:
+      - {
+        version_number: "2.1",
+        tag: "v2.1",
+#        docker_source: "jkimlab/mspipe:v2.1",
+      }
+  include_tasks:
+    file: mspipe.yaml
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - mspipe

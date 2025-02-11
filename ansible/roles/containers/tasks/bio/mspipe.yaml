@@ -1,0 +1,48 @@
+- name: Create msPIPE container
+  vars:
+    checksum: "{{ item.checksum }}"
+    container_name: "mspipe"
+    container_image: "{{ bio_container_dir }}/{{ container_name }}.{{ item.version_number }}.sif"
+    mspipe_binary_dir: "{{ bio_container_dir }}/mspipe/{{ item.version_number }}"
+    mspipe_module_dir: "{{ bio_modules }}/mspipe"
+    tag: "{{ item.tag }}"
+    version_number: "{{ item.version_number }}"
+  tags:
+    - "mspipe{{ item.version_number }}"
+    - never
+  block:
+    - name: Create msPIPE {{ version_number }} container
+      block:
+        - name: "Copy singularity definition file to {{ bio_container_recipe_dir }}/{{ container_name }}.{{ version_number }}.def"
+          template:
+              src: "bio/mspipe.def"
+              dest: "{{ bio_container_recipe_dir }}/{{ container_name }}.{{ version_number }}.def"
+        - name: "Build singularity container {{ container_image }}"
+          command: "{{ singularity }} build {{ container_image }} {{ bio_container_recipe_dir }}/{{ container_name }}.{{ version_number }}.def"
+          args:
+              creates: "{{ container_image }}"
+          become: true
+          environment:
+              SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"
+        - name: Ensure mspipe binary directory exists
+          file:
+            path: "{{ mspipe_binary_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Create mspipe binary
+          template:
+            src: "bio/mspipe.sh"
+            dest: "{{ mspipe_binary_dir }}/mspipe"
+            mode: 0755
+
+    - name: Install msPIPE {{ container_name }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ mspipe_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install mspipe module file
+          template:
+            src: bio/mspipe.lua
+            dest: "{{ mspipe_module_dir }}/{{ version_number }}.lua"
