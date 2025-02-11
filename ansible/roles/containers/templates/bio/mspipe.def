@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: jkimlab/mspipe:{{ tag }}
+
+%labels
+  Version {{ version_number }}
+  msPIPE
+
+%help
+  Methylation analysis pipeline for WGBS data
