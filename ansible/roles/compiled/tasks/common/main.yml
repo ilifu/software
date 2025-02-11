@@ -1328,3 +1328,21 @@
   tags:
     - never
     - micromamba
+
+- name: Install Boost Library
+  vars:
+      versions:
+      - {
+        version_number: "1.87.0",
+        url: "https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.bz2",
+        checksum: "sha256:af57be25cb4c4f4b413ed692fe378affb4352ea50fbe294a11ef548f4d527d89",
+        python_dir: "/software/common/python/3.12.3",
+        python_version: "3.12.3"
+      }
+  include_tasks:
+    file: 'boost.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - boost
+      -

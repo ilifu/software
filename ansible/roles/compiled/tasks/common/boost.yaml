@@ -1,0 +1,48 @@
+- name: Install Boost Library
+  vars:
+    boost_dir: "{{ common_dir }}/boost"
+    boost_module_dir: "{{ common_modules }}/boost"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ boost_dir }}/{{ version_number }}"
+    unzipdir: "/dev/shm/boost_{{ version_number | replace('.', '_') }}"
+    build_dir: "{{ unzipdir }}/build"
+    python_dir: "{{ item.python_dir }}"
+    python_version: "{{ item.python_version }}"
+  tags:
+    - never
+    - boost{{ item.version_number }}
+  block:
+    - name: Download boost {{ version_number }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ common_src }}/boost-{{ version_number }}.tar.bz"
+        checksum: "{{ checksum }}"
+    - name: Unzip boost {{ version_number }}
+      unarchive:
+        src: "{{ common_src }}/boost-{{ version_number }}.tar.bz"
+        dest: "/dev/shm/"
+        creates: "{{ unzipdir }}"
+    - name: Run boost {{ version_number }} bootstrap
+      command: "./bootstrap.sh --prefix={{ install_dir }} --with-python={{ python_dir }}/bin/python3 --with-python-root={{ python_dir }} --with-python-version={{ python_version }}"
+      args:
+        chdir: "{{ unzipdir }}"
+    - name: Run boost {{ version_number }} b2 install
+      command: "./b2 install"
+      args:
+          chdir: "{{ unzipdir }}"
+          creates: "{{ install_dir }}"
+
+
+    - name: Install boost {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ boost_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install boost module file
+          template:
+            src: common/boost.lua
+            dest: "{{ boost_module_dir }}/{{ version_number }}.lua"
