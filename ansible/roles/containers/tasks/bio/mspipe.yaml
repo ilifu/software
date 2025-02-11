@@ -31,7 +31,7 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Create mspipe binary
           template:
-            src: "mspipe.sh"
+            src: "bio/mspipe.sh"
             dest: "{{ mspipe_binary_dir }}/mspipe"
             mode: 0755
 
