@@ -408,6 +408,12 @@
           unzip_dir_name: "FastQC"
       }
       - {
+           version_number: "0.12.0",
+           url: "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.0.zip",
+           checksum: "sha256:73daa9a8b6b78fa0da4c3e9cf6c46bf1a83a2e62d39e4280a1431ff4bc63918d",
+           unzip_dir_name: "FastQC"
+      }
+      - {
         version_number: "0.12.1",
         url: "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip",
         checksum: "sha256:5f4dba8780231a25a6b8e11ab2c238601920c9704caa5458d9de559575d58aa7",
