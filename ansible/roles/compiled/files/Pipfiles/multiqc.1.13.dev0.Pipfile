@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+setuptools = "*"
+multiqc = {file = "https://github.com/s4hts/MultiQC/archive/refs/tags/v1.13.dev0.tar.gz"}
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
