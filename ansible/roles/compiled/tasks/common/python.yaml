@@ -36,7 +36,7 @@
             path: "{{ build_dir }}"
             state: directory
         - name: Run Python {{ version_number }} configure
-          command: "../configure --prefix={{ install_dir }} --enable-optimizations --enable-loadable-sqlite-extensions"
+          command: "../configure --prefix={{ install_dir }} --enable-optimizations --enable-loadable-sqlite-extensions --with-lto --with-system-expat --with-system-ffi --with-ensurepip=install"
           args:
             chdir: "{{ build_dir }}"
             creates: "{{ build_dir }}/Makefile"
@@ -45,8 +45,8 @@
         - name: Build Python {{ version_number }}
           make:
             chdir: "{{ build_dir }}"
-            params:
-              PROFILE_TASK="-m test.regrtest --pgo test_array test_base64 test_binascii test_binhex test_binop test_c_locale_coercion test_csv test_json test_hashlib test_unicode test_codecs test_traceback test_decimal test_math test_compile test_threading test_time test_fstring test_re test_float test_class test_cmath test_complex test_iter test_struct test_slice test_set test_dict test_long test_bytes test_memoryview test_io test_pickle"
+#            params:
+#              PROFILE_TASK="-m test.regrtest --pgo test_array test_base64 test_binascii test_binhex test_binop test_c_locale_coercion test_csv test_json test_hashlib test_unicode test_codecs test_traceback test_decimal test_math test_compile test_threading test_time test_fstring test_re test_float test_class test_cmath test_complex test_iter test_struct test_slice test_set test_dict test_long test_bytes test_memoryview test_io test_pickle"
           environment:
             MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
         - name: Install Python {{ version_number }}
@@ -65,8 +65,8 @@
             dest: "{{ install_dir }}/bin/pip"
             state: link
           ignore_errors: true
-        - name: Ensure pip is installed
-          command: "{{ install_dir }}/bin/python -m  ensurepip"
+#        - name: Ensure pip is installed
+#          command: "{{ install_dir }}/bin/python -m  ensurepip"
         - name: install / upgrade pip packages
           command: "{{ install_dir }}/bin/pip install --upgrade {{ package_name }}"
           loop: "{{ pip_packages }}"
