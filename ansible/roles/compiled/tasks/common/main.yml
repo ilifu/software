@@ -534,6 +534,14 @@
         version_number: "3.12.8",
         checksum: "md5:d46e5bf9f2e596a3ba45fc0b3c053dd2"
       }
+      - {
+        version_number: "3.12.9",
+        checksum: "md5:880942124f7d5c01e7b65cbad62dc873"
+      }
+      - {
+        version_number: "3.13.2",
+        checksum: "md5:4c2d9202ab4db02c9d0999b14655dfe5"
+      }
     pip_packages:
       - pip
       - pipenv
