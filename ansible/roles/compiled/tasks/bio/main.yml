@@ -1694,6 +1694,14 @@
       - htstream
 
 
+#- name: Install VIP
+#  include_tasks:
+#    file: 'vip.yaml'
+#  tags:
+#    - never
+#    - vip
+
+
 #- name: Install Sequence Tube Map
 #  vars:
 #      versions:
