@@ -56,6 +56,12 @@
   vars:
     versions:
       - {
+        version_number: "18.7.0",
+        checksum: "sha256:8bc6a1b9deaed2586d726fc62d4bee9c1bfc5a30b96c1c4cff7edd15225a11a2",
+        url: "https://nodejs.org/dist/v18.7.0/node-v18.7.0-linux-x64.tar.xz",
+
+      }
+      - {
         version_number: "18.13.0",
         checksum: "sha256:7f5d6922a91986ef059ba8a4396aa435440adacfe6fc6fab60a857c8f2cf5e7a",
         url: "https://nodejs.org/dist/v18.13.0/node-v18.13.0-linux-x64.tar.xz",
