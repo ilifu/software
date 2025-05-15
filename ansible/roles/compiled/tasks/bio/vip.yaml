@@ -1,0 +1,27 @@
+#---
+#- name: Install vip
+#  vars:
+#    vip_dir: "{{ bio_dir }}/vip"
+#    vip_data_dir: "/software/data/bio/vip"
+#    vip_module_dir: "{{ bio_modules_dir }}/vip"
+#  tags:
+#    - never
+#    - vip
+#  environment:
+#    PATH: "/software/common/singularity/4.1.3/bin:{{ ansible_env.PATH }}"
+#  block:
+#    - name: Download VIP installer
+#      get_url:
+#        url: "https://download.molgeniscloud.org/downloads/vip/install.sh"
+#        dest: "{{ bio_src }}/vip_install.sh"
+#        mode: "ugo=rx"
+#        checksum: "sha256:8460872a46873e80b5cc7733d83f17f7b790e8fb79c6309f1c87132c47af1f9f"
+#    - name: Install VIP to {{ vip_dir }}
+#      command:
+#        argv:
+#          - "{{ bio_src }}/vip_install.sh"
+#          - -d
+#          - "{{ vip_data_dir }}"
+#          - -i
+#          - "{{ vip_dir }}"
+

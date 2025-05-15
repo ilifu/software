@@ -56,9 +56,14 @@
   vars:
     versions:
       - {
+        version_number: "18.7.0",
+        checksum: "sha256:8bc6a1b9deaed2586d726fc62d4bee9c1bfc5a30b96c1c4cff7edd15225a11a2",
+        url: "https://nodejs.org/dist/v18.7.0/node-v18.7.0-linux-x64.tar.xz"
+      }
+      - {
         version_number: "18.13.0",
         checksum: "sha256:7f5d6922a91986ef059ba8a4396aa435440adacfe6fc6fab60a857c8f2cf5e7a",
-        url: "https://nodejs.org/dist/v18.13.0/node-v18.13.0-linux-x64.tar.xz",
+        url: "https://nodejs.org/dist/v18.13.0/node-v18.13.0-linux-x64.tar.xz"
       }
       - {
         version_number: "19.4.0",
@@ -579,6 +584,11 @@
           version_number: "2023.07",
           url: "https://repo.anaconda.com/archive/Anaconda3-2023.07-2-Linux-x86_64.sh",
           checksum: "sha512:2d9250848f92ac38acb7a4b4699bd01252eefaeeb17a5ca489bb06d06a89e02681fe3944ccf17cb92e07261e96d6b96cb9530d27a2d8d5cab37df44734aef492"
+      }
+      - {
+          version_number: "2024.10",
+          url: "https://repo.anaconda.com/archive/Anaconda3-2024.10-1-Linux-x86_64.sh",
+          checksum: "sha512:cd9af4f8e31527d81f0a8308ae5395a35bf9bf9b56f697b1b81c9e8742ae1a0bb83f6ceb049e785e8144b9cbd13329fd292cdfbdaace3450b2457922e0a59508"
       }
   include_tasks:
     file: anaconda.yaml

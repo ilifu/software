@@ -1545,6 +1545,16 @@
         url: "https://github.com/vgteam/vg/releases/download/v1.58.0/vg",
         checksum: "sha256:66288c9dcf88e97e6e375dd7c87ea7b34ea0498146fcfec5dd38c8c5b5918149"
       }
+      - {
+        version_number: "1.64.0",
+        url: "https://github.com/vgteam/vg/releases/download/v1.64.0/vg",
+        checksum: "sha512:91d117ba26b7175b6ce08ac5cc6d944e55565ae959a8761c5f3294e016a021ebd0c2eeafc1824a66a6a23a877c2e9f9cec3e3edf2cf8f212038332cfae515bb6"
+      }
+      - {
+        version_number: "1.65.0",
+        url: "https://github.com/vgteam/vg/releases/download/v1.65.0/vg",
+        checksum: "sha512:f841a4e12e5baa6609c4da76bd1b2635f1cb1a722def25c6af34ce0711be82ffddbc3532e46d619765f834c1d74ff532dd7d1ece13b7ff9a8e44d0763aa80c9f"
+      }
   include_tasks:
     file: 'vg.yaml'
   loop: "{{ versions }}"
@@ -1682,5 +1692,31 @@
   tags:
       - never
       - htstream
+
+
+#- name: Install VIP
+#  include_tasks:
+#    file: 'vip.yaml'
+#  tags:
+#    - never
+#    - vip
+
+
+#- name: Install Sequence Tube Map
+#  vars:
+#      versions:
+#      - {
+#        version_number: "",
+#        url: "https://github.com/s4hts/HTStream/archive/refs/tags/v1.4.1.tar.gz",
+#        checksum: "sha256:1231a6ff5cd5c4ba434d834452e37a5da88f78f8ede05ee02dc063ac52ae024a",
+#        boost_dir: "/software/common/boost/1.87.0",
+#        boost_module: "boost/1.87.0",
+#      }
+#  include_tasks:
+#        file: 'htstream.yaml'
+#  loop: "{{ versions }}"
+#  tags:
+#      - never
+#      - htstream
 
 #https://github.com/natir/yacrd
