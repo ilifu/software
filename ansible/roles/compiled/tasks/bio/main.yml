@@ -1720,3 +1720,17 @@
 #      - htstream
 
 #https://github.com/natir/yacrd
+
+- name: Install spliceai
+  vars:
+    versions:
+      - {
+        version_number: "0.1.0",
+        python_location: '/software/common/python/3.12.9'
+      }
+  include_tasks:
+    file: 'spliceai.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - spliceai
