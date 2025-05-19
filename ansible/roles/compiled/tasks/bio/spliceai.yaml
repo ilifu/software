@@ -5,7 +5,6 @@
     spliceai_dir: "{{ bio_dir }}/spliceai"
     spliceai_module_dir: "{{ bio_modules }}/spliceai"
     install_dir: "{{ spliceai_dir }}/{{ item.version_number }}"
-    uv_lockfile: "uv.lock.spliceai.{{ item.version_number }}"
     python_location: "{{ item.python_location }}"
   tags:
     - never
