@@ -1,0 +1,48 @@
+---
+- name: Install spliceai
+  vars:
+    version_number: "{{ item.version_number }}"
+    spliceai_dir: "{{ bio_dir }}/spliceai"
+    spliceai_module_dir: "{{ bio_modules }}/spliceai"
+    install_dir: "{{ spliceai_dir }}/{{ item.version_number }}"
+    python_location: "{{ item.python_location }}"
+  tags:
+    - never
+    - spliceai{{ item.version_number }}
+  environment:
+    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
+  block:
+    - name: Create spliceai directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+    - name: Copy uv files
+      copy:
+        src: "bio/{{ uv_file }}.spliceai.{{ version_number }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+        remote_src: false
+        mode: ugo=r
+      loop:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: "uv_file"
+    - name: Create virtual environment
+      command: "uv sync"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv"
+
+
+
+    - name: "Create spliceai module directory {{ spliceai_module_dir }}"
+      file:
+          path: "{{ spliceai_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install spliceai module file"
+      template:
+        src: bio/spliceai.lua
+        dest: "{{ spliceai_module_dir }}/{{ version_number }}.lua"
