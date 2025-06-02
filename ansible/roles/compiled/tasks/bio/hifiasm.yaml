@@ -1,0 +1,48 @@
+---
+- name: Install Hifiasm
+  vars:
+    hifiasm_dir: "{{ bio_dir }}/hifiasm"
+    hifiasm_module_dir: "{{ bio_modules }}/hifiasm"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ hifiasm_dir }}/{{ item.version_number }}"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+  environment:
+    MAKEFLAGS: "-j{{ ansible_processor_vcpus | default(1) }}"
+  tags:
+    - never
+    - hifiasm{{ item.version_number }}
+  block:
+    - name: Create hifiasm directory {{ install_dir }}
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+    - name: Download hifiasm
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ bio_src }}/hifiasm.{{ version_number }}.tar.gz"
+        checksum: "{{ checksum }}"
+    - name: Unzip hifiasm
+      unarchive:
+        src: "{{ bio_src }}/hifiasm.{{ version_number }}.tar.gz"
+        dest: "/dev/shm"
+        creates: "/dev/shm/hifiasm-{{ version_number }}"
+    - name: Make Hifiasm
+      make:
+        chdir: "/dev/shm/hifiasm-{{ version_number }}"
+    - name: Move hifiasm executable to install dir
+      command: "mv /dev/shm/hifiasm-{{ version_number }}/hifiasm {{ install_dir }}"
+      args:
+        creates: "{{ install_dir }}/hifiasm"
+
+    - name: "Create hifiasm module directory {{ hifiasm_module_dir }}"
+      file:
+          path: "{{ hifiasm_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install hifiasm module file"
+      template:
+        src: bio/hifiasm.lua
+        dest: "{{ hifiasm_module_dir }}/{{ version_number }}.lua"
