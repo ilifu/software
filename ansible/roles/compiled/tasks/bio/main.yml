@@ -1733,3 +1733,18 @@
   tags:
     - never
     - spliceai
+
+- name: Install Hifiasm
+  vars:
+    versions:
+      - {
+        version_number: "0.25.0",
+        url: "https://github.com/chhylp123/hifiasm/archive/refs/tags/0.25.0.tar.gz",
+        checksum: "sha256:51633138865207a9d41630da9377d46e4921ad4fc5facaa1740ceccae8611f1f",
+      }
+  include_tasks:
+    file: 'hifiasm.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - hifiasm
