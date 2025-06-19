@@ -1748,3 +1748,19 @@
   tags:
     - never
     - hifiasm
+
+- name: Install panacus
+  vars:
+      versions:
+      - {
+        version_number: "0.4.1",
+        url: "https://github.com/codialab/panacus/releases/download/v0.4.1/panacus-0.4.1_x86_64-unknown-linux-musl.tar.gz",
+        checksum: "sha256:78b70661a82cba9eb883b1aed6156e508c3537f4552ad6d5dc7bf8a1f0a9ad39",
+        python_location: "/software/common/python/3.13.2",
+      }
+  include_tasks:
+    file: 'panacus.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - panacus
