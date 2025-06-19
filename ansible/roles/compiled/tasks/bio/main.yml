@@ -1764,3 +1764,17 @@
   tags:
       - never
       - panacus
+
+- name: Install cnvpytor
+  vars:
+      versions:
+        - {
+          version_number: "1.3.2",
+          python_location: "/software/common/python/3.13.2",
+        }
+  include_tasks:
+    file: 'cnvpytor.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - cnvpytor
