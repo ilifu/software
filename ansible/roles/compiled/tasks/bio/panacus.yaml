@@ -34,7 +34,7 @@
           creates: "{{ install_dir }}"
     - name: Copy uv files
       copy:
-        src: "uv/bio/panacus/0.4.1/{{ uv_file }}"
+        src: "uv/bio/panacus/{{ version_number }}/{{ uv_file }}"
         dest: "{{ install_dir }}/{{ uv_file }}"
       with_items:
         - "uv.lock"
