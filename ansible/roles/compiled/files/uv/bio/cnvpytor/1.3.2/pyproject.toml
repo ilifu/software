@@ -1,0 +1,10 @@
+[project]
+name = "ilifu-cnvpytor"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "cnvpytor",
+]
+
+[tool.uv.sources]
+cnvpytor = { git = "https://github.com/abyzovlab/CNVpytor.git" }

@@ -1,0 +1,51 @@
+---
+- name: Install cnvpytor
+  vars:
+    cnvpytor_dir: "{{ bio_dir }}/cnvpytor"
+    cnvpytor_module_dir: "{{ bio_modules }}/cnvpytor"
+    install_dir: "{{ cnvpytor_dir }}/{{ item.version_number }}"
+    python_location: "{{ item.python_location }}"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+  tags:
+    - never
+    - cnvpytor{{ item.version_number }}
+
+  block:
+    - name: Create cnvpytor directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+
+    - name: Copy uv files
+      copy:
+        src: "uv/bio/cnvpytor/{{ version_number }}/{{ uv_file }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+      with_items:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: uv_file
+
+    - name: Initialise virtual environment
+      command: "{{ python_location }}/bin/uv venv"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv"
+
+    - name: Synchronise Virtual Environment
+      command: "{{ python_location }}/bin/uv sync"
+      args:
+        chdir: "{{ install_dir }}"
+
+    - name: "Create cnvpytor module directory {{ cnvpytor_module_dir }}"
+      file:
+          path: "{{ cnvpytor_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install cnvpytor module file"
+      template:
+        src: bio/cnvpytor.lua
+        dest: "{{ cnvpytor_module_dir }}/{{ version_number }}.lua"
