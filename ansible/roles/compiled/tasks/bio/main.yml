@@ -1778,3 +1778,19 @@
   tags:
       - never
       - cnvpytor
+
+- name: Install manta
+  vars:
+    versions:
+      - {
+        version_number: "1.6.0",
+        url: "https://github.com/Illumina/manta/releases/download/v1.6.0/manta-1.6.0.centos6_x86_64.tar.bz2",
+        checksum: "sha256:ae19b1b934cf5bb605dfb58b29e8e2b843cb469ec5ff12441ca3d9d39179abf4",
+        python_module: "python/2.7.18",
+      }
+  include_tasks:
+    file: 'manta.yaml'
+  loop: "{{ versions }}"
+  tags:
+      - never
+      - manta
