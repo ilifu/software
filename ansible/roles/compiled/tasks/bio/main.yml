@@ -100,6 +100,11 @@
         url: "https://github.com/samtools/samtools/releases/download/1.20/samtools-1.20.tar.bz2",
         checksum: "sha256:c71be865e241613c2ca99679c074f1a0daeb55288af577db945bdabe3eb2cf10"
       }
+      - {
+        version_number: "1.22.1",
+        url: "https://github.com/samtools/samtools/releases/download/1.22.1/samtools-1.22.1.tar.bz2",
+        checksum: "sha256:02aa5cd0ba52e06c2080054e059d7d77a885dfe9717c31cd89dfe7a4047eda0e"
+      }
   include_tasks:
     file: samtools.yaml
   loop: "{{ samtools_versions }}"
@@ -130,6 +135,11 @@
         url: "https://github.com/samtools/htslib/releases/download/1.19.1/htslib-1.19.1.tar.bz2",
         checksum: "sha256:222d74d3574fb67b158c6988c980eeaaba8a0656f5e4ffb76b5fa57f035933ec"
       }
+      - {
+        version_number: "1.22.1",
+        url: "https://github.com/samtools/htslib/releases/download/1.22.1/htslib-1.22.1.tar.bz2",
+        checksum: "sha256:3dfa6eeb71db719907fe3ef7c72cb2ec9965b20b58036547c858c89b58c342f7"
+      }
   include_tasks:
     file: htslib.yaml
   loop: "{{ htslib_versions }}"
@@ -154,6 +164,11 @@
         version_number: "1.19",
         url: "https://github.com/samtools/bcftools/releases/download/1.19/bcftools-1.19.tar.bz2",
         checksum: "sha256:782b5f1bc690415192231e82213b3493b047f45e630dc8ef6f154d6126ab3e68"
+      }
+      - {
+        version_number: "1.22",
+        url: "https://github.com/samtools/bcftools/releases/download/1.22/bcftools-1.22.tar.bz2",
+        checksum: "sha256:f2ab9e2f605b1203a7e9cbfb0a3eb7689322297f8c34b45dc5237fe57d98489f"
       }
   include_tasks:
     file: bcftools.yaml
