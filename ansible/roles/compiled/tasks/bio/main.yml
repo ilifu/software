@@ -1823,17 +1823,17 @@
         python_module: "python/3.7.17",
         python_location: "/software/common/python/3.7.17",
         samtools_module: "samtools/1.22.1",
-        samtools_location: "/software/common/samtools/1.22.1",
+        samtools_location: "/software/bio/samtools/1.22.1",
         htslib_module: "htslib/1.22.1",
-        htslib_location: "/software/common/htslib/1.22.1",
+        htslib_location: "/software/bio/htslib/1.22.1",
         bcftools_module: "bcftools/1.22",
-        bcftools_location: "/software/common/bcftools/1.22",
+        bcftools_location: "/software/bio/bcftools/1.22",
         bedtools_module: "bedtools/2.31.1",
-        bedtools_location: "/software/common/bedtools/2.31.1",
+        bedtools_location: "/software/bio/bedtools/2.31.1",
         blast_module: "blast/2.16.0",
-        blast_location: "/software/common/blast/2.16.0",
+        blast_location: "/software/bio/blast/2.16.0",
         bwa_module: "bwa/github",
-        bwa_location: "/software/common/bwa/github",
+        bwa_location: "/software/bio/bwa/github",
       }
   include_tasks:
     file: 'indelible.yaml'
