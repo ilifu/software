@@ -21,6 +21,8 @@
     bedtools_location: "{{ item.bedtools_location }}"
     blast_module: "{{ item.blast_module }}"
     blast_location: "{{ item.blast_location }}"
+    bwa_module: "{{ item.bwa_module }}"
+    bwa_location: "{{ item.bwa_location }}"
   tags:
     - never
     - indelible{{ item.version_number }}
