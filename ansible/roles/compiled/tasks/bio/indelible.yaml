@@ -27,7 +27,7 @@
     - never
     - indelible{{ item.version_number }}
   environment:
-    PATH: "{{ samtools_location }}/bin:{{ htslib_location }}/bin:{{ bcftools_location }}/bin:{{ bedtools_location }}:{{ blast_location }}/bin:{{ python_location }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ bwa_location }}:{{ samtools_location }}/bin:{{ htslib_location }}/bin:{{ bcftools_location }}/bin:{{ bedtools_location }}:{{ blast_location }}/bin:{{ python_location }}/bin:{{ ansible_env.PATH }}"
 
   block:
     - name: Create indelible directory
