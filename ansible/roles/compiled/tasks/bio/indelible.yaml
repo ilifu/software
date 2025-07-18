@@ -91,11 +91,11 @@
         checksum: "{{ data.checksum }}"
       with_items:
         - {
-            url: ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz,
+            url: https://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz,
             checksum: "sha256:2555eae3e0dda43c50b70741883d6cd28346cc8286c23e0fa37fb3788c5e6e37",
         }
         - {
-            url: ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz.fai,
+            url: https://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz.fai,
             checksum: "sha256:1eab7540d4b62ef0b43b50581d027be37c1ee57da9e9cb75957e750641c8630c",
         }
       loop_control:
