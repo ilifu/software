@@ -432,6 +432,10 @@
         checksum: "md5:df3b8ad6e2ab8f198d65ecf68816bf42"
       }
       - {
+        version_number: "3.7.17",
+        checksum: "md5:dd94cab4541b57b88cf3dab32d6336e3"
+      }
+      - {
         version_number: "3.8.2",
         checksum: "sha256:2646e7dc233362f59714c6193017bb2d6f7b38d6ab4a0cb5fbac5c36c4d845df"
       }
@@ -548,6 +552,7 @@
         checksum: "md5:4c2d9202ab4db02c9d0999b14655dfe5"
       }
     pip_packages:
+      - ansible
       - pip
       - pipenv
       - ipython
@@ -1091,6 +1096,12 @@
         checksum: "sha512:fabfe4913f25496c612f4b63a4ecbd5149c2a69eef2f12b0e916589dc7ef764c4722f7d114e1108687369b63b436606d54eb3b94622d215d885c7dcff0a12417",
         url: "https://downloads.rclone.org/v1.60.1/rclone-v1.60.1-linux-amd64.zip",
         creates: 'rclone-v1.60.1-linux-amd64'
+      }
+      - {
+        version_number: "1.70.3",
+        checksum: "sha512:472165c3989671f4163242c67cdb9da4c3d3e4548cd1222015f552d6d2fda1cbd616b133ec45e78d8efb088368e18cc314bfeea764e253b6a5d6a693d67a11ef",
+        url: "https://downloads.rclone.org/v1.70.3/rclone-v1.70.3-linux-amd64.zip",
+        creates: 'rclone-v1.70.3-linux-amd64'
       }
   include_tasks:
     file: 'rclone.yaml'

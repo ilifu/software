@@ -1,0 +1,139 @@
+---
+- name: Install InDelible
+  vars:
+    indelible_dir: "{{ bio_dir }}/indelible"
+    indelible_module_dir: "{{ bio_modules }}/indelible"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ indelible_dir }}/{{ item.version_number }}"
+    indelible_data_dir: "{{ install_dir }}/data"
+    python_location: "{{ item.python_location }}"
+    version_number: "{{ item.version_number }}"
+    pipfile_prefix: "Pipfiles/indelible.{{ version_number }}"
+    url: "https://github.com/HurlesGroupSanger/indelible.git"
+    python_module: "{{ item.python_module }}"
+    samtools_module: "{{ item.samtools_module }}"
+    samtools_location: "{{ item.samtools_location }}"
+    htslib_module: "{{ item.htslib_module }}"
+    htslib_location: "{{ item.htslib_location }}"
+    bcftools_module: "{{ item.bcftools_module }}"
+    bcftools_location: "{{ item.bcftools_location }}"
+    bedtools_module: "{{ item.bedtools_module }}"
+    bedtools_location: "{{ item.bedtools_location }}"
+    blast_module: "{{ item.blast_module }}"
+    blast_location: "{{ item.blast_location }}"
+    bwa_module: "{{ item.bwa_module }}"
+    bwa_location: "{{ item.bwa_location }}"
+  tags:
+    - never
+    - indelible{{ item.version_number }}
+  environment:
+    PATH: "{{ bwa_location }}:{{ samtools_location }}/bin:{{ htslib_location }}/bin:{{ bcftools_location }}/bin:{{ bedtools_location }}:{{ blast_location }}/bin:{{ python_location }}/bin:{{ ansible_env.PATH }}"
+
+  block:
+    - name: Create indelible directory
+      file:
+        path: "{{ indelible_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: yes
+    - name: Git clone indelible
+      git:
+        repo: "{{ url }}"
+        dest: "{{ install_dir }}"
+        version: "v{{ version_number }}"
+        force: yes
+    - name: Copy Pipfiles
+      copy:
+        src: "{{ pipfiles.src }}"
+        dest: "{{ pipfiles.dest }}"
+      with_items:
+        - {
+            src: "{{ pipfile_prefix }}.Pipfile",
+            dest: "{{ install_dir }}/Pipfile"
+          }
+        - {
+            src: "{{ pipfile_prefix }}.Pipfile.lock",
+            dest: "{{ install_dir }}/Pipfile.lock"
+          }
+      loop_control:
+        loop_var: pipfiles
+
+    - name: Create Virtual Environment
+      command: "{{ python_location }}/bin/pipenv sync --python {{ python_location }}/bin/python"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv"
+      environment:
+        PIPENV_VENV_IN_PROJECT: "1"
+        PIPENV_IGNORE_VIRTUALENVS: "1"
+
+    - name: Uncompress data files
+      unarchive:
+          src: "{{ install_dir }}/data/{{ data_file }}"
+          dest: "{{ install_dir }}/data/"
+          remote_src: yes
+      with_items:
+          - data_hg19.zip
+          - data_hg38.zip
+      loop_control:
+          loop_var: data_file
+
+    - name: "Ensure indelible data directory exists"
+      file:
+        path: "{{ indelible_data_dir }}"
+        state: directory
+        mode: "u=rwx,go=rx"
+
+    - name: "Fetch reference resources"
+      get_url:
+        url: "{{ data.url }}"
+        dest: "{{ indelible_data_dir }}/"
+        checksum: "{{ data.checksum }}"
+      with_items:
+        - {
+            url: https://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz,
+            checksum: "sha256:2555eae3e0dda43c50b70741883d6cd28346cc8286c23e0fa37fb3788c5e6e37",
+        }
+        - {
+            url: https://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz.fai,
+            checksum: "sha256:1eab7540d4b62ef0b43b50581d027be37c1ee57da9e9cb75957e750641c8630c",
+        }
+      loop_control:
+        loop_var: data
+
+    - name: "Uncompress hs37d5.fa.gz"
+      command: "gzip -kd {{ indelible_data_dir }}/hs37d5.fa.gz"
+      args:
+          chdir: "{{ indelible_data_dir }}"
+          creates: "{{ indelible_data_dir }}/hs37d5.fa"
+
+    - name: Rename (copy actually) hs37d5.fa.gz.fai
+      command: "cp {{ indelible_data_dir }}/hs37d5.fa.gz.fai {{ indelible_data_dir }}/hs37d5.fa.fai"
+      args:
+          chdir: "{{ indelible_data_dir }}"
+          creates: "{{ indelible_data_dir }}/hs37d5.fa.fai"
+
+    - name: Make bwa index
+      command: "bwa index {{ indelible_data_dir }}/hs37d5.fa"
+      args:
+          chdir: "{{ indelible_data_dir }}"
+          creates: "{{ indelible_data_dir }}/hs37d5.fa.bwt"
+
+    - name: Make repeat blast_db
+      command: "makeblastdb -in {{ indelible_data_dir }}/repeats.fasta -dbtype nucl"
+      args:
+          chdir: "{{ indelible_data_dir }}"
+          creates: "{{ indelible_data_dir }}/repeats.fasta.nhr"
+
+
+
+    - name: "Create indelible module directory {{ indelible_module_dir }}"
+      file:
+          path: "{{ indelible_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+
+    - name: "Install indelible module file"
+      template:
+        src: bio/indelible.lua
+        dest: "{{ indelible_module_dir }}/{{ version_number }}.lua"

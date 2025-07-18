@@ -1,0 +1,44 @@
+---
+- name: Install manta
+  vars:
+    manta_dir: "{{ bio_dir }}/manta"
+    manta_module_dir: "{{ bio_modules }}/manta"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ manta_dir }}/{{ item.version_number }}"
+    python_module: "{{ item.python_module }}"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+  tags:
+    - never
+    - manta{{ item.version_number }}
+
+  block:
+    - name: Create manta directory
+      file:
+        path: "{{ manta_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+    - name: Download manta
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ bio_src }}/manta.{{ version_number }}.tar.bz2"
+        checksum: "{{ checksum }}"
+    - name: Unzip manta
+      unarchive:
+        src: "{{ bio_src }}/manta.{{ version_number }}.tar.bz2"
+        dest: "/dev/shm"
+        creates: "/dev/shm/manta-{{ version_number }}.centos6_x86_64"
+    - name: Move manta source to install dir
+      command: "mv /dev/shm/manta-{{ version_number }}.centos6_x86_64 {{ install_dir }}"
+      args:
+          creates: "{{ install_dir }}"
+
+    - name: "Create manta module directory {{ manta_module_dir }}"
+      file:
+          path: "{{ manta_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install manta module file"
+      template:
+        src: bio/manta.lua
+        dest: "{{ manta_module_dir }}/{{ version_number }}.lua"
