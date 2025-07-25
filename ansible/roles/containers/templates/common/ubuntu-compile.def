@@ -64,21 +64,21 @@ From: {{ base_container_image }}
     libevent-dev \
     libhdf5-dev \
     libmagic1 libmagic-dev \
-    libncurses5 libncurses5-dev \
+    {% if item.version_name not in ['noble'] %}libncurses5 libncurses5-dev{% else %}libncurses6 libncurses-dev{% endif %} \
     libnetcdf-dev \
     libnuma1 libnuma-dev \
     libreadline-dev \
-    {% if item.version_name == "jammy" %}libssl3{% else %}libssl1.1{% endif %} libssl-dev \
+    {% if item.version_name in ["jammy", "noble"] %}libssl3{% else %}libssl1.1{% endif %} libssl-dev \
     libtool \
     libxml2 libxml2-dev \
     libxslt1.1 libxslt1-dev \
     libxt-dev \
     netcdf-bin \
     pandoc \
-    pandoc-citeproc \
+    {% if item.version_name not in ["noble", ] %} pandoc-citeproc {% endif %}\
     patchelf \
     pkg-config \
-    {% if item.version_name != "jammy" %}python python-dev{% endif %} python3 python3-dev \
+    {% if item.version_name not in ["jammy", "noble"] %}python python-dev{% endif %}python3 python3-dev \
     sqlite3 libsqlite3-0 libsqlite3-dev \
     systemd \
     texlive \
