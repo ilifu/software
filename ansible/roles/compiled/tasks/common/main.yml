@@ -1164,6 +1164,11 @@
         url: "https://github.com/nextflow-io/nextflow/releases/download/v24.04.4/nextflow-24.04.4-all",
         checksum: "sha512:2ce7cb79516a0342e2d1499d9aacf3e4516f760aa49411e58145e1ddef7f2f0a76314207999a39658a1edd1360eace17a4d42393ae1c5b841ba34b1c65431ff9"
       }
+      - {
+        version_number: "25.04.6",
+        url: "https://github.com/nextflow-io/nextflow/releases/download/v25.04.6/nextflow",
+        checksum: "sha256:a94f8bd1db9c0271ad58ec40b9c71f812d081a66f782396928b9b1f740f0be5f"
+      }
   include_tasks:
     file: 'nextflow.yaml'
   loop: "{{ versions }}"
