@@ -1,0 +1,33 @@
+Bootstrap: localimage
+From: {{ base_container_image }}
+
+%labels
+  Version {{ version_number }}
+  Spectronaut {{ version_number }}
+
+%help
+    Spectronaut is a software for the analysis of mass spectrometry data, particularly for proteomics.
+
+
+%files
+  {{ spectronaut_deb_file }} /spectronaut.deb
+
+%post
+  # Update apt
+  apt-get update -y && apt-get dist-upgrade -y
+
+
+  # Install microsoft .net
+  # add-apt-repository -y ppa:dotnet/backports
+  apt-get update -y
+  apt-get install -y dotnet-sdk-{{ dotnet_version }}
+
+  # Install Spectronaut deb
+  dpkg -i /spectronaut.deb
+
+  # Cleanup the container
+  apt-get clean
+  apt-get autoclean
+
+  # Remove the deb file
+  rm -f /spectronaut.deb

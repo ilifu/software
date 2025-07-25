@@ -233,3 +233,22 @@
   tags:
       - never
       - mspipe
+
+- name: Create Spectronaut container
+  vars:
+    versions:
+      - {
+          base_container_name: ubuntu-noble-compile,
+          base_container_version_name: noble,
+          version_number: "20.0",
+          deb_url: "https://files.biognosys.com/058_Spectronaut/Installer/SN20/Spectronaut_20.0.250602.92449.deb",
+          checksum: "sha512:5ec63de0966a8c021eded8d7724c8ca841d4f77e7b5a885cbf05f104ea168d9bd3a150c290bd98eceed29702fec4af9bba2e10d4373ae8e5fdd6c06d096e7b76",
+          dotnet_version: "8.0"
+
+      }
+  include_tasks:
+    file: spectronaut.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - spectronaut
