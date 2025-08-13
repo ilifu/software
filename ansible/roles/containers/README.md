@@ -94,19 +94,22 @@ exec singularity exec --bind /software:/software \
 Usage Examples
 --------------
 
-Install containerized software:
+Install containerized software (requires both software name and version tags):
 ```bash
 # Install RStudio with R 4.5.1
-ansible-playbook site.yaml -t RStudio2025.05.1-513-R4.5.1
+ansible-playbook site.yaml -t RStudio,RStudio2025.05.1-513-R4.5.1
 
 # Install Spectronaut 20.0
-ansible-playbook site.yaml -t spectronaut20.0
+ansible-playbook site.yaml -t spectronaut,spectronaut20.0
 
 # Install DIA-NN 1.8.1
-ansible-playbook site.yaml -t diann1.8.1
+ansible-playbook site.yaml -t diann,diann1.8.1
 
-# Build Ubuntu base container
-ansible-playbook site.yaml -t ubuntu-noble
+# Build Ubuntu base containers
+ansible-playbook site.yaml -t ubuntu,ubuntu-noble
+
+# Install all versions of a containerized software (not recommended)
+ansible-playbook site.yaml -t spectronaut
 ```
 
 Adding New Containers

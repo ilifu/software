@@ -61,16 +61,19 @@ Installation Process
 Usage Examples
 --------------
 
-Install a specific software version:
+Install a specific software version (requires both software name and version tags):
 ```bash
 # Install SAMtools 1.22.1
-ansible-playbook site.yaml -t samtools1.22.1
+ansible-playbook site.yaml -t samtools,samtools1.22.1
 
-# Install Python 3.12.8
-ansible-playbook site.yaml -t python3.12.8
+# Install Python 3.12.8  
+ansible-playbook site.yaml -t python,python3.12.8
 
 # Install R 4.4.1
-ansible-playbook site.yaml -t R4.4.1
+ansible-playbook site.yaml -t R,R4.4.1
+
+# Install all versions of a software (not recommended)
+ansible-playbook site.yaml -t samtools
 ```
 
 Adding New Software
