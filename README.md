@@ -44,7 +44,7 @@ where `software_root` is probably the most important variable to configure — t
 ### Installing software
 This is a reasonably typical ansible installation. Note that EVERYTHING is disabled by default apart from configuring the directories, which is ALWAYS run. There are typically two classes of software that can be installed: compiled software; and containers. While installation is similar for both, installing containers does require root access (via `sudo`) if the container is built from a recipe.
 
-So to install, say openmpi 4.0.3, one would run the command: ```ansible-playbook site.yaml -t openmpi,openmpi4.0.3```. Note that both the software name tag and the version-specific tag are required due to the loop structure. Software to be installed needs to be explicitly tagged, otherwise it will be ignored. Installation of the specific software will also install the appropriate environment module (lmod) in `${software_root}/modules`.
+So to install, say openmpi 4.0.3, one would run the command: ```ansible-playbook site.yaml -t openmpi,openmpi4.0.3```. Note that both the software name tag and the version-specific tag (comma-separated, e.g., `openmpi,openmpi4.0.3`) are required due to the loop structure. Software to be installed needs to be explicitly tagged, otherwise it will be ignored. Installation of the specific software will also install the appropriate environment module (lmod) in `${software_root}/modules`.
 
 Note that your user will need `sudo` rights in order to build containers.
 
