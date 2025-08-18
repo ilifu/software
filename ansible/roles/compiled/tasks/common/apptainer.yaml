@@ -33,7 +33,7 @@
                 state: directory
                 mode: o=rwx,g=rx,o=rx
             - name: Configure apptainer
-              command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir=/usr/local/etc"
+              command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir={{ install_dir }}/etc"
               args:
                 chdir: "{{ unzip_dir }}"
                 creates: "{{ unzip_dir }}/builddir/Makefile"
@@ -62,3 +62,23 @@
           template:
             src: apptainer.lua
             dest: "{{ apptainer_module_dir }}/{{ version_number }}.lua"
+
+    - name: Configure apptainer {{ version_number }}
+      block:
+        - name: Ensure apptainer config directory exists
+          file:
+            path: "{{ install_dir }}/etc/apptainer"
+            state: directory
+            mode: u=rwx,g=rx,o=rx
+            owner: root
+            group: root
+          become: true
+        - name: Deploy apptainer configuration file
+          template:
+            src: apptainer.conf
+            dest: "{{ install_dir }}/etc/apptainer/apptainer.conf"
+            mode: u=rw,g=r,o=r
+            owner: root
+            group: root
+            backup: yes
+          become: true
