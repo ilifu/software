@@ -831,6 +831,22 @@
     - never
     - singularity
 
+- name: Install apptainer
+  vars:
+    apptainer_versions:
+      - {
+        version_number: "1.4.2",
+        checksum: "sha256:6dda1dd2ca8e42ed7f498d2bc8574f01d7ad3db68494e453639d76aef4424d1d",
+        url: "https://github.com/apptainer/apptainer/releases/download/v1.4.2/apptainer-1.4.2.tar.gz",
+        go_location: "{{ common_dir }}/golang/1.22.4/bin"
+      }
+  include_tasks:
+    file: apptainer.yaml
+  loop: "{{ apptainer_versions }}"
+  tags:
+    - never
+    - apptainer
+
 - name: Install monos
   vars:
     mono_versions:
