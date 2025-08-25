@@ -93,7 +93,7 @@ From: {{ base_container_image }}
 
   # Install Python kernel for Jupyter from virtual environment
   echo "Installing Jupyter kernel..."
-  /opt/python-ml-env/bin/python -m ipykernel install --system --name python-ml --display-name "Python ML {{ item.version_number }} (Python {{ item.python_version }})"
+  /opt/python-ml-env/bin/python -m ipykernel install --sys-prefix --name python-ml --display-name "Python ML {{ item.version_number }} (Python {{ item.python_version }})"
 
   # Verify installations using virtual environment
   echo "Verifying package installations..."
