@@ -1,0 +1,129 @@
+Bootstrap: localimage
+From: {{ base_container_image }}
+
+%labels
+  Maintainer Dane Kennedy
+  Version {{ item.version_number }}
+  Base_Version {{ item.base_version }}
+  Python_Version {{ item.python_version }}
+  TensorFlow_Version {{ item.tensorflow_version }}
+
+%help
+  Python ML {{ item.version_number }} container for machine learning and data science.
+  Built with Python {{ item.python_version }}, TensorFlow {{ item.tensorflow_version }},
+  and a comprehensive ML/data science stack.
+  
+  Based on python-ml-base-{{ item.base_version }} with CUDA support.
+
+%apprun python
+  exec python "${@}"
+
+%apprun python3
+  exec python3 "${@}"
+
+%apprun pip
+  exec pip "${@}"
+
+%apprun pip3
+  exec pip3 "${@}"
+
+%runscript
+  exec python3 "${@}"
+
+%environment
+  export PYTHON_VERSION={{ item.python_version }}
+  export TENSORFLOW_VERSION={{ item.tensorflow_version }}
+  export PYTHON_ML_VERSION={{ item.version_number }}
+  
+  # Virtual environment paths
+  export VIRTUAL_ENV=/opt/python-ml-env
+  export PATH=/opt/python-ml-env/bin:${PATH}
+  export PYTHONPATH=/opt/python-ml-env/lib/python{{ item.python_version }}/site-packages:${PYTHONPATH}
+
+%post
+  # Create Installation Directories and export paths. This is needed as part of post.
+  # %environment scriptlet does not define these paths during %post, only after.
+  export PYTHON_VERSION={{ item.python_version }}
+  export TENSORFLOW_VERSION={{ item.tensorflow_version }}
+  export DEBIAN_FRONTEND=noninteractive
+
+  echo "Creating Python ML environment with TensorFlow {{ item.tensorflow_version }}"
+  
+  # Create virtual environment using uv (inherited from base container)
+  cd /opt
+  /usr/local/bin/uv venv python-ml-env --python python3
+  cd python-ml-env
+
+  # Activate virtual environment and install packages
+  export VIRTUAL_ENV=/opt/python-ml-env
+  export PATH=/opt/python-ml-env/bin:$PATH
+
+  # Install Python packages with specific versions using uv
+  echo "Installing core ML packages..."
+  /usr/local/bin/uv pip install \
+    tensorflow=={{ item.tensorflow_version }} \
+    opencv-python-headless=={{ item.opencv_version }} \
+    numpy=={{ item.numpy_version }} \
+    pandas=={{ item.pandas_version }} \
+    matplotlib=={{ item.matplotlib_version }} \
+    seaborn=={{ item.seaborn_version }} \
+    Pillow=={{ item.pillow_version }} \
+    scikit-learn=={{ item.sklearn_version }} \
+    requests=={{ item.requests_version }} \
+    ipywidgets \
+    ipykernel
+
+  # Install additional useful ML/data science packages
+  echo "Installing additional ML/data science packages..."
+  /usr/local/bin/uv pip install \
+    scipy \
+    plotly \
+    bokeh \
+    statsmodels \
+    xgboost \
+    lightgbm \
+    catboost \
+    joblib \
+    tqdm \
+    h5py \
+    tables \
+    pyarrow \
+    openpyxl \
+    xlrd
+
+  # Install Python kernel for Jupyter from virtual environment
+  echo "Installing Jupyter kernel..."
+  /opt/python-ml-env/bin/python -m ipykernel install --system --name python-ml --display-name "Python ML {{ item.version_number }} (Python {{ item.python_version }})"
+
+  # Verify installations using virtual environment
+  echo "Verifying package installations..."
+  /opt/python-ml-env/bin/python -c "import tensorflow as tf; print(f'TensorFlow version: {tf.__version__}')"
+  /opt/python-ml-env/bin/python -c "import cv2; print(f'OpenCV version: {cv2.__version__}')"
+  /opt/python-ml-env/bin/python -c "import numpy as np; print(f'NumPy version: {np.__version__}')"
+  /opt/python-ml-env/bin/python -c "import pandas as pd; print(f'Pandas version: {pd.__version__}')"
+  /opt/python-ml-env/bin/python -c "import sklearn; print(f'scikit-learn version: {sklearn.__version__}')"
+
+  # Test CUDA availability
+  echo "Testing CUDA availability..."
+  /opt/python-ml-env/bin/python -c "import tensorflow as tf; print('CUDA available:', tf.config.list_physical_devices('GPU'))"
+
+  echo "✓ Python ML environment {{ item.version_number }} ready!"
+
+%test
+  # Test Python and key packages using virtual environment
+  /opt/python-ml-env/bin/python --version
+  /opt/python-ml-env/bin/python -c "import tensorflow as tf; print('TensorFlow version:', tf.__version__)"
+  /opt/python-ml-env/bin/python -c "import cv2; print('OpenCV version:', cv2.__version__)"
+  /opt/python-ml-env/bin/python -c "import numpy as np; print('NumPy version:', np.__version__)"
+  /opt/python-ml-env/bin/python -c "import pandas as pd; print('Pandas version:', pd.__version__)"
+  /opt/python-ml-env/bin/python -c "import matplotlib; print('Matplotlib version:', matplotlib.__version__)"
+  /opt/python-ml-env/bin/python -c "import seaborn; print('Seaborn version:', seaborn.__version__)"
+  /opt/python-ml-env/bin/python -c "import PIL; print('Pillow version:', PIL.__version__)"
+  /opt/python-ml-env/bin/python -c "import sklearn; print('scikit-learn version:', sklearn.__version__)"
+  /opt/python-ml-env/bin/python -c "import requests; print('Requests version:', requests.__version__)"
+  
+  # Test IPython kernel
+  /opt/python-ml-env/bin/python -c "import ipykernel; print('IPython kernel installed successfully')"
+  
+  # Test CUDA (if available)
+  /opt/python-ml-env/bin/python -c "import tensorflow as tf; print('CUDA devices:', tf.config.list_physical_devices('GPU'))" || echo "CUDA test completed (GPU may not be available in build environment)"

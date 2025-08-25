@@ -1,0 +1,73 @@
+- name: Create python-ml {{ item.version_number }} container
+  vars:
+    - base_container_image: "{{ common_container_dir }}/python-ml-base-{{ item.base_version }}.sif"
+    - container_name: "python-ml-{{ item.version_number }}"
+    - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
+    - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
+    - python_ml_module_dir: "{{ common_modules }}/python-ml"
+    - python_ml_binary_dir: "{{ common_container_dir }}/python-ml/{{ item.version_number }}"
+    - python_ml_kernel_dir: "{{ common_container_dir }}/python-ml/{{ item.version_number }}/kernels"
+  tags:
+    - "python-ml{{ item.version_number }}"
+    - never
+  block:
+    - name: "Check for existence of {{ base_container_image }} container"
+      stat:
+        path: "{{ base_container_image }}"
+      register: base_container_exists
+    - name: "Missing {{ base_container_image }}"
+      fail:
+        msg: "The container {{ base_container_image }} is missing. Please build python-ml-base first."
+      when: not base_container_exists.stat.exists
+    - name: Create Python ML {{ item.version_number }} container
+      when: base_container_exists.stat.exists
+      block:
+        - name: Copy recipe {{ container_recipe }}
+          template:
+            src: "common/python-ml.def"
+            dest: "{{ container_recipe }}"
+        - name: Build container {{ container_image }}
+          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          args:
+            creates: "{{ container_image }}"
+          become: true
+    - name: Ensure python-ml binary directory exists
+      file:
+        path: "{{ python_ml_binary_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Ensure python-ml kernel directory exists
+      file:
+        path: "{{ python_ml_kernel_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Create python-ml binaries
+      template:
+        src: "common/{{ binary.template }}"
+        dest: "{{ python_ml_binary_dir }}/{{ binary.name }}"
+        mode: 0755
+      with_items:
+        - { name: "python", template: "python-ml.sh" }
+        - { name: "python3", template: "python-ml.sh" }
+        - { name: "pip", template: "python-ml.sh" }
+        - { name: "pip3", template: "python-ml.sh" }
+      loop_control:
+        loop_var: binary
+
+    - name: Create Jupyter kernel file
+      template:
+        src: "common/python-ml-kernel.json"
+        dest: "{{ python_ml_kernel_dir }}/kernel.json"
+        mode: 0644
+
+    - name: Install Python ML {{ container_name }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ python_ml_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Python ML module file
+          template:
+            src: common/python-ml.lua
+            dest: "{{ python_ml_module_dir }}/{{ item.version_number }}.lua"
