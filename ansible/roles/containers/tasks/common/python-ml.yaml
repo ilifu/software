@@ -147,6 +147,9 @@
     large_models:
       - microsoft/DialoGPT-large
       - facebook/blenderbot-400M-distill
+      - deepseek-ai/deepseek-llm-7b-base
+      - deepseek-ai/deepseek-coder-6.7b-base
+      - deepseek-ai/deepseek-math-7b-base
   shell: |
     export HF_HOME=/software/data/common
     export TRANSFORMERS_CACHE=/software/data/common
