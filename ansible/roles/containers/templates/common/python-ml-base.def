@@ -125,7 +125,11 @@ From: {{ base_container_image }}
   {% endif %}
   
   # Install cuDNN {{ item.cudnn_version }}
+  {% if item.base_container_version_name == "noble" %}
+  apt-get install -y libcudnn9-dev libcudnn9-cuda-12
+  {% else %}
   apt-get install -y libcudnn8 libcudnn8-dev
+  {% endif %}
 
   # Set up CUDA paths for compilation
   export CUDA_HOME=/usr/local/cuda
