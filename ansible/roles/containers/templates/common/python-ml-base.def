@@ -47,7 +47,7 @@ From: {{ base_container_image }}
 
 %files
   uv-x86_64-unknown-linux-gnu/uv /usr/local/bin/uv
-  {% if item.cudnn_deb_file is defined %}{{ item.cudnn_deb_file }} /tmp/{{ item.cudnn_deb_file }}{% endif %}
+  {% if item.cudnn_deb_file is defined %}{{ item.cudnn_deb_file }} /opt/{{ item.cudnn_deb_file }}{% endif %}
 
 %post
   # Create Installation Directories and export paths. This is needed as part of post.
@@ -115,11 +115,11 @@ From: {{ base_container_image }}
   # Install cuDNN {{ item.cudnn_version }}
   {% if item.cudnn_deb_file is defined %}
   # For Ubuntu 24.04 Noble - use local repository method
-  dpkg -i /tmp/{{ item.cudnn_deb_file }}
+  dpkg -i /opt/{{ item.cudnn_deb_file }}
   cp /var/cudnn-local-repo-ubuntu2404-9.8.0/cudnn-*-keyring.gpg /usr/share/keyrings/
   apt-get update
   apt-get install -y cudnn
-  rm -f /tmp/{{ item.cudnn_deb_file }}
+  rm -f /opt/{{ item.cudnn_deb_file }}
   {% else %}
   # For Ubuntu 22.04 Jammy - use standard packages
   apt-get install -y libcudnn8 libcudnn8-dev
