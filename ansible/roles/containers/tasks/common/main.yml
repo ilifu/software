@@ -109,7 +109,7 @@
     - never
     - gnuplot
 
-- name: `Create Python ML Base Containers`
+- name: Create Python ML Base Containers
   vars:
     python_ml_base_versions:
       - {
