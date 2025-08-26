@@ -22,14 +22,20 @@
         - name: Download uv binary
           get_url:
             url: "https://github.com/astral-sh/uv/releases/download/0.8.13/uv-x86_64-unknown-linux-gnu.tar.gz"
-            dest: "/tmp/uv.tar.gz"
+            dest: "{{ common_src }}/uv.tar.gz"
             mode: '0644'
         - name: Extract uv binary
           unarchive:
-            src: "/tmp/uv.tar.gz"
-            dest: "/tmp"
+            src: "{{ common_src }}/uv.tar.gz"
+            dest: "{{ common_src }}"
             remote_src: yes
-            creates: "/tmp/uv-x86_64-unknown-linux-gnu/uv"
+            creates: "{{ common_src }}/uv-x86_64-unknown-linux-gnu/uv"
+        - name: Download cuDNN for Noble
+          get_url:
+            url: "https://developer.download.nvidia.com/compute/cudnn/9.8.0/local_installers/{{ item.cudnn_deb_file }}"
+            dest: "{{ common_src }}/{{ item.cudnn_deb_file }}"
+            mode: '0644'
+          when: item.cudnn_deb_file is defined
         - name: Copy recipe {{ container_recipe }}
           template:
             src: "common/python-ml-base.def"
@@ -38,5 +44,5 @@
           command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
-            chdir: "/tmp"
+            chdir: "{{ common_src }}"
           become: true

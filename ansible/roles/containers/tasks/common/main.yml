@@ -109,7 +109,7 @@
     - never
     - gnuplot
 
-- name: Create Python ML Base Containers
+- name: `Create Python ML Base Containers`
   vars:
     python_ml_base_versions:
       - {
@@ -124,7 +124,8 @@
         base_container_version_name: noble,
         version_number: "0.0.2",
         cuda_version: "12.8.1",
-        cudnn_version: "8.9.7",
+        cudnn_version: "9.8.0",
+        cudnn_deb_file: "cudnn-local-repo-ubuntu2404-9.8.0_1.0-1_amd64.deb",
       }
   include_tasks:
     file: python-ml-base.yaml
