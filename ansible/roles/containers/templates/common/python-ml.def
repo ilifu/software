@@ -43,10 +43,10 @@ From: {{ base_container_image }}
   export PYTHONPATH=/opt/python-ml-env/lib/python{{ item.python_version }}/site-packages:${PYTHONPATH}
   
   # Shared model cache paths
-  export HF_HOME=/software/common/models
-  export TRANSFORMERS_CACHE=/software/common/models
-  export SENTENCE_TRANSFORMERS_HOME=/software/common/models
-  export TORCH_HOME=/software/common/models
+  export HF_HOME=/software/data/common
+  export TRANSFORMERS_CACHE=/software/data/common
+  export SENTENCE_TRANSFORMERS_HOME=/software/data/common
+  export TORCH_HOME=/software/data/common
 
 %post
   # Create Installation Directories and export paths. This is needed as part of post.

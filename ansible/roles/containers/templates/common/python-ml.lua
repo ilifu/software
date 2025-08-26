@@ -26,7 +26,7 @@ Includes:
 - 50+ additional ML/AI packages for comprehensive development
 - Jupyter notebook support with ipywidgets
 - CUDA-accelerated computing capabilities
-- Shared model cache at /software/common/models
+- Shared model cache at /software/data/common
 
 Usage:
   python script.py        # Run Python scripts
@@ -65,10 +65,10 @@ setenv("PYTHON_ML_KERNEL_DIR", "{{ python_ml_kernel_dir }}")
 setenv("CUDA_VISIBLE_DEVICES", os.getenv("CUDA_VISIBLE_DEVICES") or "")
 
 -- Shared model cache paths
-setenv("HF_HOME", "/software/common/models")
-setenv("TRANSFORMERS_CACHE", "/software/common/models")
-setenv("SENTENCE_TRANSFORMERS_HOME", "/software/common/models")
-setenv("TORCH_HOME", "/software/common/models")
+setenv("HF_HOME", "/software/data/common")
+setenv("TRANSFORMERS_CACHE", "/software/data/common")
+setenv("SENTENCE_TRANSFORMERS_HOME", "/software/data/common")
+setenv("TORCH_HOME", "/software/data/common")
 
 -- Container image path
 setenv("PYTHON_ML_CONTAINER", "{{ container_image }}")
@@ -77,6 +77,6 @@ setenv("PYTHON_ML_CONTAINER", "{{ container_image }}")
 if (mode() == "load") then
    io.stderr:write("Python ML container loaded. Available commands: python, python3, pip, pip3, jupyter\n")
    io.stderr:write("Enhanced v{{ item.version_number }}: PyTorch, JAX, Transformers, LangChain, and 50+ ML/AI packages\n")
-   io.stderr:write("Shared models at: /software/common/models\n")
+   io.stderr:write("Shared models at: /software/data/common\n")
    io.stderr:write("Jupyter kernel available at: {{ python_ml_kernel_dir }}/kernel.json\n")
 end
