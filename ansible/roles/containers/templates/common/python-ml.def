@@ -69,7 +69,7 @@ From: {{ base_container_image }}
   # Install Python packages with specific versions using uv
   echo "Installing core ML packages..."
   /usr/local/bin/uv pip install \
-    {% if item.tensorflow_version == "*" %}tensorflow{% else %}tensorflow=={{ item.tensorflow_version }}{% endif %} \
+    {% if item.tensorflow_version == "*" %}tensorflow tf-keras{% else %}tensorflow=={{ item.tensorflow_version }}{% endif %} \
     {% if item.opencv_version == "*" %}opencv-python-headless{% else %}opencv-python-headless=={{ item.opencv_version }}{% endif %} \
     {% if item.numpy_version == "*" %}numpy{% else %}numpy=={{ item.numpy_version }}{% endif %} \
     {% if item.pandas_version == "*" %}pandas{% else %}pandas=={{ item.pandas_version }}{% endif %} \
