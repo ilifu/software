@@ -77,7 +77,6 @@
   file:
     path: /software/data/common
     state: directory
-    owner: root
     group: "{{ admin_group }}"
     mode: '0755'
   tags:
