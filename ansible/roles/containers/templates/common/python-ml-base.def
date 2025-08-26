@@ -105,25 +105,12 @@ From: {{ base_container_image }}
     libeigen3-dev
 
   # Install NVIDIA CUDA {{ item.cuda_version }}
-  {% if item.base_container_version_name == "noble" %}
-  wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
-  dpkg -i cuda-keyring_1.1-1_all.deb
-  {% else %}
-  wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb
-  dpkg -i cuda-keyring_1.0-1_all.deb
-  {% endif %}
+  wget {{ item.cuda_keyring_url }}
+  dpkg -i {{ item.cuda_keyring_file }}
   apt-get update
   
-  # Install CUDA toolkit based on version
-  {% if item.cuda_version.startswith('12.8') %}
-  apt-get install -y cuda-toolkit-12-8
-  {% elif item.cuda_version.startswith('12.2') %}
-  apt-get install -y cuda-toolkit-12-2
-  {% elif item.cuda_version.startswith('12.') %}
-  apt-get install -y cuda-toolkit-12-2
-  {% else %}
-  apt-get install -y cuda-toolkit-11-8
-  {% endif %}
+  # Install CUDA toolkit {{ item.cuda_version }}
+  apt-get install -y {{ item.cuda_toolkit_package }}
   
   # Install cuDNN {{ item.cudnn_version }}
   {% if item.cudnn_deb_file is defined %}

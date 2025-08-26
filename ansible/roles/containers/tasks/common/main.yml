@@ -118,6 +118,9 @@
         version_number: "0.0.1",
         cuda_version: "11.8",
         cudnn_version: "8.6.0",
+        cuda_toolkit_package: "cuda-toolkit-11-8",
+        cuda_keyring_url: "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb",
+        cuda_keyring_file: "cuda-keyring_1.0-1_all.deb",
       }
       - {
         base_container_name: ubuntu-noble-compile,
@@ -126,6 +129,9 @@
         cuda_version: "12.8.1",
         cudnn_version: "9.8.0",
         cudnn_deb_file: "cudnn-local-repo-ubuntu2404-9.8.0_1.0-1_amd64.deb",
+        cuda_toolkit_package: "cuda-toolkit-12-8",
+        cuda_keyring_url: "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb",
+        cuda_keyring_file: "cuda-keyring_1.1-1_all.deb",
       }
   include_tasks:
     file: python-ml-base.yaml
