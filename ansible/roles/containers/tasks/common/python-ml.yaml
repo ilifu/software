@@ -71,3 +71,96 @@
           template:
             src: common/python-ml.lua
             dest: "{{ python_ml_module_dir }}/{{ item.version_number }}.lua"
+
+# Shared Model Download Tasks
+- name: Create Models Directory
+  file:
+    path: /software/common/models
+    state: directory
+    owner: root
+    group: "{{ admin_group }}"
+    mode: '0755'
+  tags:
+    - never
+    - models
+
+- name: Download Essential LLM Models
+  vars:
+    essential_models:
+      - bert-base-uncased
+      - sentence-transformers/all-MiniLM-L6-v2
+      - sentence-transformers/all-mpnet-base-v2
+      - microsoft/DialoGPT-medium
+      - distilbert-base-uncased
+  shell: |
+    export HF_HOME=/software/common/models
+    export TRANSFORMERS_CACHE=/software/common/models
+    {{ singularity }} exec {{ common_container_dir }}/python-ml-0.0.2.sif python3 -c "
+    from transformers import AutoTokenizer, AutoModel
+    from sentence_transformers import SentenceTransformer
+    model_name = '{{ item }}'
+    print(f'Downloading {model_name}...')
+    if 'sentence-transformers' in model_name:
+        model = SentenceTransformer(model_name, cache_folder='/software/common/models')
+    else:
+        tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir='/software/common/models')
+        model = AutoModel.from_pretrained(model_name, cache_dir='/software/common/models')
+    print(f'✓ Downloaded {model_name}')
+    "
+  loop: "{{ essential_models }}"
+  tags:
+    - never
+    - models
+    - essential-models
+
+- name: Download Popular Vision Models
+  vars:
+    vision_models:
+      - microsoft/resnet-50
+      - google/vit-base-patch16-224
+      - facebook/deit-base-distilled-patch16-224
+  shell: |
+    export HF_HOME=/software/common/models
+    export TRANSFORMERS_CACHE=/software/common/models
+    {{ singularity }} exec {{ common_container_dir }}/python-ml-0.0.2.sif python3 -c "
+    from transformers import AutoImageProcessor, AutoModel
+    model_name = '{{ item }}'
+    print(f'Downloading {model_name}...')
+    try:
+        processor = AutoImageProcessor.from_pretrained(model_name, cache_dir='/software/common/models')
+        model = AutoModel.from_pretrained(model_name, cache_dir='/software/common/models')
+        print(f'✓ Downloaded {model_name}')
+    except Exception as e:
+        print(f'⚠ Warning: Could not download {model_name}: {e}')
+    "
+  loop: "{{ vision_models }}"
+  tags:
+    - never
+    - models
+    - vision-models
+
+- name: Download Large Language Models
+  vars:
+    large_models:
+      - microsoft/DialoGPT-large
+      - facebook/blenderbot-400M-distill
+  shell: |
+    export HF_HOME=/software/common/models
+    export TRANSFORMERS_CACHE=/software/common/models
+    {{ singularity }} exec {{ common_container_dir }}/python-ml-0.0.2.sif python3 -c "
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+    model_name = '{{ item }}'
+    print(f'Downloading {model_name}...')
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir='/software/common/models')
+        model = AutoModelForCausalLM.from_pretrained(model_name, cache_dir='/software/common/models')
+        print(f'✓ Downloaded {model_name}')
+    except Exception as e:
+        print(f'⚠ Warning: Could not download {model_name}: {e}')
+        print('Note: Some models may require authentication or special access.')
+    "
+  loop: "{{ large_models }}"
+  tags:
+    - never
+    - models
+    - large-models

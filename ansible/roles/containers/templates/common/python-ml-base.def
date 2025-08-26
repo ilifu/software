@@ -70,7 +70,7 @@ From: {{ base_container_image }}
     python3-pip \
     python3-dev \
     python3-venv \
-    libgl1-mesa-glx \
+    {% if item.base_container_version_name == "noble" %}libgl1{% else %}libgl1-mesa-glx{% endif %} \
     libgl1-mesa-dev \
     libglib2.0-0 \
     libglib2.0-dev \
@@ -91,18 +91,41 @@ From: {{ base_container_image }}
     libgtk-3-dev \
     libatlas-base-dev \
     gfortran \
-    pkg-config
+    pkg-config{% if item.version_number.startswith('1.1') %} \
+    build-essential \
+    cmake \
+    git \
+    vim \
+    htop \
+    libgstreamer1.0-dev \
+    libgstreamer-plugins-base1.0-dev \
+    libopenblas-dev \
+    liblapack-dev \
+    libeigen3-dev{% endif %}
 
   # Install NVIDIA CUDA {{ item.cuda_version }}
+  {% if item.base_container_version_name == "noble" %}
+  wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+  dpkg -i cuda-keyring_1.1-1_all.deb
+  {% else %}
   wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb
   dpkg -i cuda-keyring_1.0-1_all.deb
+  {% endif %}
   apt-get update
   
-  # Install CUDA toolkit
+  # Install CUDA toolkit based on version
+  {% if item.cuda_version.startswith('12.8') %}
+  apt-get install -y cuda-toolkit-12-8
+  {% elif item.cuda_version.startswith('12.2') %}
+  apt-get install -y cuda-toolkit-12-2
+  {% elif item.cuda_version.startswith('12.') %}
+  apt-get install -y cuda-toolkit-12-2
+  {% else %}
   apt-get install -y cuda-toolkit-11-8
+  {% endif %}
   
   # Install cuDNN {{ item.cudnn_version }}
-  apt-get install -y libcudnn8={{ item.cudnn_version }}.* libcudnn8-dev={{ item.cudnn_version }}.*
+  apt-get install -y libcudnn8 libcudnn8-dev
 
   # Set up CUDA paths for compilation
   export CUDA_HOME=/usr/local/cuda
@@ -117,7 +140,7 @@ From: {{ base_container_image }}
   # Cleanup the container
   apt-get clean
   apt-get autoclean
-  rm -f cuda-keyring_1.0-1_all.deb
+  rm -f cuda-keyring_*.deb
 
 %test
   # Test basic components

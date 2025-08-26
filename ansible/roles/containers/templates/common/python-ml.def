@@ -33,12 +33,20 @@ From: {{ base_container_image }}
 %environment
   export PYTHON_VERSION={{ item.python_version }}
   export TENSORFLOW_VERSION={{ item.tensorflow_version }}
+  export TORCH_VERSION={{ item.torch_version }}
+  export TRANSFORMERS_VERSION={{ item.transformers_version }}
   export PYTHON_ML_VERSION={{ item.version_number }}
   
   # Virtual environment paths
   export VIRTUAL_ENV=/opt/python-ml-env
   export PATH=/opt/python-ml-env/bin:${PATH}
   export PYTHONPATH=/opt/python-ml-env/lib/python{{ item.python_version }}/site-packages:${PYTHONPATH}
+  
+  # Shared model cache paths
+  export HF_HOME=/software/common/models
+  export TRANSFORMERS_CACHE=/software/common/models
+  export SENTENCE_TRANSFORMERS_HOME=/software/common/models
+  export TORCH_HOME=/software/common/models
 
 %post
   # Create Installation Directories and export paths. This is needed as part of post.
@@ -73,12 +81,72 @@ From: {{ base_container_image }}
     ipywidgets \
     ipykernel
 
+  # Install PyTorch ecosystem
+  echo "Installing PyTorch ecosystem..."
+  /usr/local/bin/uv pip install \
+    torch=={{ item.torch_version }} \
+    torchvision=={{ item.torchvision_version }} \
+    torchaudio=={{ item.torchaudio_version }} \
+    --index-url https://download.pytorch.org/whl/cu118
+
+  # Install JAX ecosystem
+  echo "Installing JAX ecosystem..."
+  /usr/local/bin/uv pip install \
+    "jax[cuda12]=={{ item.jax_version }}" \
+    flax=={{ item.flax_version }}
+
+  # Install LLM and NLP frameworks
+  echo "Installing LLM and NLP frameworks..."
+  /usr/local/bin/uv pip install \
+    transformers=={{ item.transformers_version }} \
+    sentence-transformers=={{ item.sentence_transformers_version }} \
+    tokenizers \
+    datasets \
+    accelerate \
+    langchain=={{ item.langchain_version }} \
+    langchain-community \
+    llamaindex \
+    spacy=={{ item.spacy_version }} \
+    nltk \
+    gensim
+
+  # Install MLOps and experiment tracking
+  echo "Installing MLOps tools..."
+  /usr/local/bin/uv pip install \
+    optuna=={{ item.optuna_version }} \
+    wandb=={{ item.wandb_version }} \
+    mlflow \
+    shap \
+    lime \
+    imbalanced-learn \
+    peft
+
+  # Install computer vision and visualization
+  echo "Installing enhanced CV and visualization..."
+  /usr/local/bin/uv pip install \
+    albumentations \
+    timm \
+    mahotas \
+    plotly=={{ item.plotly_version }} \
+    bokeh \
+    streamlit=={{ item.streamlit_version }} \
+    dash \
+    polars \
+    "dask[complete]"
+
+  # Install specialized libraries
+  echo "Installing specialized ML libraries..."
+  /usr/local/bin/uv pip install \
+    prophet \
+    tslearn \
+    diffusers \
+    vllm \
+    fastai
+
   # Install additional useful ML/data science packages
   echo "Installing additional ML/data science packages..."
   /usr/local/bin/uv pip install \
     scipy \
-    plotly \
-    bokeh \
     statsmodels \
     xgboost \
     lightgbm \
@@ -103,9 +171,19 @@ From: {{ base_container_image }}
   /opt/python-ml-env/bin/python -c "import pandas as pd; print(f'Pandas version: {pd.__version__}')"
   /opt/python-ml-env/bin/python -c "import sklearn; print(f'scikit-learn version: {sklearn.__version__}')"
 
+  # Verify additional frameworks
+  echo "Verifying enhanced frameworks..."
+  /opt/python-ml-env/bin/python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
+  /opt/python-ml-env/bin/python -c "import jax; print(f'JAX version: {jax.__version__}')"
+  /opt/python-ml-env/bin/python -c "import transformers; print(f'Transformers version: {transformers.__version__}')"
+  /opt/python-ml-env/bin/python -c "import sentence_transformers; print('Sentence Transformers imported successfully')"
+  /opt/python-ml-env/bin/python -c "import langchain; print('LangChain imported successfully')"
+  /opt/python-ml-env/bin/python -c "import spacy; print(f'SpaCy version: {spacy.__version__}')"
+
   # Test CUDA availability
   echo "Testing CUDA availability..."
-  /opt/python-ml-env/bin/python -c "import tensorflow as tf; print('CUDA available:', tf.config.list_physical_devices('GPU'))"
+  /opt/python-ml-env/bin/python -c "import tensorflow as tf; print('TensorFlow CUDA available:', tf.config.list_physical_devices('GPU'))"
+  /opt/python-ml-env/bin/python -c "import torch; print('PyTorch CUDA available:', torch.cuda.is_available())"
 
   echo "✓ Python ML environment {{ item.version_number }} ready!"
 
