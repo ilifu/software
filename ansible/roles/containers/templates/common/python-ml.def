@@ -69,52 +69,52 @@ From: {{ base_container_image }}
   # Install Python packages with specific versions using uv
   echo "Installing core ML packages..."
   /usr/local/bin/uv pip install \
-    tensorflow=={{ item.tensorflow_version }} \
-    opencv-python-headless=={{ item.opencv_version }} \
-    numpy=={{ item.numpy_version }} \
-    pandas=={{ item.pandas_version }} \
-    matplotlib=={{ item.matplotlib_version }} \
-    seaborn=={{ item.seaborn_version }} \
-    Pillow=={{ item.pillow_version }} \
-    scikit-learn=={{ item.sklearn_version }} \
-    requests=={{ item.requests_version }} \
+    {% if item.tensorflow_version == "*" %}tensorflow{% else %}tensorflow=={{ item.tensorflow_version }}{% endif %} \
+    {% if item.opencv_version == "*" %}opencv-python-headless{% else %}opencv-python-headless=={{ item.opencv_version }}{% endif %} \
+    {% if item.numpy_version == "*" %}numpy{% else %}numpy=={{ item.numpy_version }}{% endif %} \
+    {% if item.pandas_version == "*" %}pandas{% else %}pandas=={{ item.pandas_version }}{% endif %} \
+    {% if item.matplotlib_version == "*" %}matplotlib{% else %}matplotlib=={{ item.matplotlib_version }}{% endif %} \
+    {% if item.seaborn_version == "*" %}seaborn{% else %}seaborn=={{ item.seaborn_version }}{% endif %} \
+    {% if item.pillow_version == "*" %}Pillow{% else %}Pillow=={{ item.pillow_version }}{% endif %} \
+    {% if item.sklearn_version == "*" %}scikit-learn{% else %}scikit-learn=={{ item.sklearn_version }}{% endif %} \
+    {% if item.requests_version == "*" %}requests{% else %}requests=={{ item.requests_version }}{% endif %} \
     ipywidgets \
     ipykernel
 
   # Install PyTorch ecosystem
   echo "Installing PyTorch ecosystem..."
   /usr/local/bin/uv pip install \
-    torch=={{ item.torch_version }} \
-    torchvision=={{ item.torchvision_version }} \
-    torchaudio=={{ item.torchaudio_version }} \
+    {% if item.torch_version == "*" %}torch{% else %}torch=={{ item.torch_version }}{% endif %} \
+    {% if item.torchvision_version == "*" %}torchvision{% else %}torchvision=={{ item.torchvision_version }}{% endif %} \
+    {% if item.torchaudio_version == "*" %}torchaudio{% else %}torchaudio=={{ item.torchaudio_version }}{% endif %} \
     --index-url https://download.pytorch.org/whl/cu118
 
   # Install JAX ecosystem
   echo "Installing JAX ecosystem..."
   /usr/local/bin/uv pip install \
-    "jax[cuda12]=={{ item.jax_version }}" \
-    flax=={{ item.flax_version }}
+    {% if item.jax_version == "*" %}"jax[cuda12]"{% else %}"jax[cuda12]=={{ item.jax_version }}"{% endif %} \
+    {% if item.flax_version == "*" %}flax{% else %}flax=={{ item.flax_version }}{% endif %}
 
   # Install LLM and NLP frameworks
   echo "Installing LLM and NLP frameworks..."
   /usr/local/bin/uv pip install \
-    transformers=={{ item.transformers_version }} \
-    sentence-transformers=={{ item.sentence_transformers_version }} \
+    {% if item.transformers_version == "*" %}transformers{% else %}transformers=={{ item.transformers_version }}{% endif %} \
+    {% if item.sentence_transformers_version == "*" %}sentence-transformers{% else %}sentence-transformers=={{ item.sentence_transformers_version }}{% endif %} \
     tokenizers \
     datasets \
     accelerate \
-    langchain=={{ item.langchain_version }} \
+    {% if item.langchain_version == "*" %}langchain{% else %}langchain=={{ item.langchain_version }}{% endif %} \
     langchain-community \
     llama-index \
-    spacy=={{ item.spacy_version }} \
+    {% if item.spacy_version == "*" %}spacy{% else %}spacy=={{ item.spacy_version }}{% endif %} \
     nltk \
     gensim
 
   # Install MLOps and experiment tracking
   echo "Installing MLOps tools..."
   /usr/local/bin/uv pip install \
-    optuna=={{ item.optuna_version }} \
-    wandb=={{ item.wandb_version }} \
+    {% if item.optuna_version == "*" %}optuna{% else %}optuna=={{ item.optuna_version }}{% endif %} \
+    {% if item.wandb_version == "*" %}wandb{% else %}wandb=={{ item.wandb_version }}{% endif %} \
     mlflow \
     shap \
     lime \
@@ -127,9 +127,9 @@ From: {{ base_container_image }}
     albumentations \
     timm \
     mahotas \
-    plotly=={{ item.plotly_version }} \
+    {% if item.plotly_version == "*" %}plotly{% else %}plotly=={{ item.plotly_version }}{% endif %} \
     bokeh \
-    streamlit=={{ item.streamlit_version }} \
+    {% if item.streamlit_version == "*" %}streamlit{% else %}streamlit=={{ item.streamlit_version }}{% endif %} \
     dash \
     polars \
     "dask[complete]"
