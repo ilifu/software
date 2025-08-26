@@ -105,7 +105,7 @@ From: {{ base_container_image }}
     accelerate \
     langchain=={{ item.langchain_version }} \
     langchain-community \
-    llamaindex \
+    llama-index \
     spacy=={{ item.spacy_version }} \
     nltk \
     gensim
