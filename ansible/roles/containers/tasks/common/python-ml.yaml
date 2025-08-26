@@ -97,7 +97,7 @@
     {{ singularity }} exec {{ common_container_dir }}/python-ml-0.0.2.sif python3 -c "
     from transformers import AutoTokenizer, AutoModel
     from sentence_transformers import SentenceTransformer
-    model_name = '{{ item }}'
+    model_name = '{{ model }}'
     print(f'Downloading {model_name}...')
     if 'sentence-transformers' in model_name:
         model = SentenceTransformer(model_name, cache_folder='/software/data/common')
@@ -107,6 +107,8 @@
     print(f'✓ Downloaded {model_name}')
     "
   loop: "{{ essential_models }}"
+  loop_control:
+    loop_var: model
   tags:
     - never
     - models
@@ -123,7 +125,7 @@
     export TRANSFORMERS_CACHE=/software/data/common
     {{ singularity }} exec {{ common_container_dir }}/python-ml-0.0.2.sif python3 -c "
     from transformers import AutoImageProcessor, AutoModel
-    model_name = '{{ item }}'
+    model_name = '{{ model }}'
     print(f'Downloading {model_name}...')
     try:
         processor = AutoImageProcessor.from_pretrained(model_name, cache_dir='/software/data/common')
@@ -133,6 +135,8 @@
         print(f'⚠ Warning: Could not download {model_name}: {e}')
     "
   loop: "{{ vision_models }}"
+  loop_control:
+    loop_var: model
   tags:
     - never
     - models
@@ -148,7 +152,7 @@
     export TRANSFORMERS_CACHE=/software/data/common
     {{ singularity }} exec {{ common_container_dir }}/python-ml-0.0.2.sif python3 -c "
     from transformers import AutoTokenizer, AutoModelForCausalLM
-    model_name = '{{ item }}'
+    model_name = '{{ model }}'
     print(f'Downloading {model_name}...')
     try:
         tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir='/software/data/common')
@@ -159,6 +163,8 @@
         print('Note: Some models may require authentication or special access.')
     "
   loop: "{{ large_models }}"
+  loop_control:
+    loop_var: model
   tags:
     - never
     - models
