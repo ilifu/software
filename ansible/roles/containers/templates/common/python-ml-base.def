@@ -92,7 +92,7 @@ From: {{ base_container_image }}
     libgtk-3-dev \
     libatlas-base-dev \
     gfortran \
-    pkg-config{% if item.version_number.startswith('1.1') %} \
+    pkg-config \
     build-essential \
     cmake \
     git \
@@ -102,7 +102,7 @@ From: {{ base_container_image }}
     libgstreamer-plugins-base1.0-dev \
     libopenblas-dev \
     liblapack-dev \
-    libeigen3-dev{% endif %}
+    libeigen3-dev
 
   # Install NVIDIA CUDA {{ item.cuda_version }}
   {% if item.base_container_version_name == "noble" %}
