@@ -4,7 +4,7 @@ This module configures the Python ML container for bioinformatics and machine le
 
 Includes:
 - Python {{ item.python_version }}
-- TensorFlow {{ item.tensorflow_version }} with CUDA {{ item.cuda_version }} support
+- TensorFlow {{ item.tensorflow_version }} with CUDA support
 - OpenCV {{ item.opencv_version }} (headless)
 - NumPy {{ item.numpy_version }}
 - Pandas {{ item.pandas_version }}
@@ -35,8 +35,6 @@ prepend_path("PATH", "{{ python_ml_binary_dir }}")
 -- Set container-specific environment variables
 setenv("PYTHON_ML_VERSION", "{{ item.version_number }}")
 setenv("TENSORFLOW_VERSION", "{{ item.tensorflow_version }}")
-setenv("CUDA_VERSION", "{{ item.cuda_version }}")
-setenv("CUDNN_VERSION", "{{ item.cudnn_version }}")
 
 -- Jupyter kernel path
 setenv("PYTHON_ML_KERNEL_DIR", "{{ python_ml_kernel_dir }}")
