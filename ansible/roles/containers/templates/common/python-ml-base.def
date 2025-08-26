@@ -116,7 +116,8 @@ From: {{ base_container_image }}
   {% if item.cudnn_deb_file is defined %}
   # For Ubuntu 24.04 Noble - use local repository method
   dpkg -i /opt/{{ item.cudnn_deb_file }}
-  cp /var/cudnn-local-repo-ubuntu2404-9.8.0/cudnn-*-keyring.gpg /usr/share/keyrings/
+  {% set repo_name = item.cudnn_deb_file.split('_')[0] %}
+  cp /var/{{ repo_name }}/cudnn-*-keyring.gpg /usr/share/keyrings/
   apt-get update
   apt-get install -y cudnn
   rm -f /opt/{{ item.cudnn_deb_file }}
