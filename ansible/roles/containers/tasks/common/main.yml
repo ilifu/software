@@ -169,8 +169,7 @@
         wandb_version: "0.19.1",
         plotly_version: "5.24.1",
         streamlit_version: "1.41.1",
-        pytorch_cuda_version: "cu118",
-        numba_cuda_version: "cu12"
+        pytorch_cuda_version: "cu118"
       }
       - {
         base_version: "0.0.2",
@@ -198,8 +197,7 @@
         wandb_version: "0.21.1",
         plotly_version: "6.3.0",
         streamlit_version: "1.48.1",
-        pytorch_cuda_version: "cu124",
-        numba_cuda_version: "cu12"
+        pytorch_cuda_version: "cu124"
       }
       - {
         base_version: "0.0.2",
@@ -227,8 +225,7 @@
         wandb_version: "*",
         plotly_version: "*",
         streamlit_version: "*",
-        pytorch_cuda_version: "cu124",
-        numba_cuda_version: "cu12"
+        pytorch_cuda_version: "cu124"
       }
   include_tasks:
     file: python-ml.yaml
