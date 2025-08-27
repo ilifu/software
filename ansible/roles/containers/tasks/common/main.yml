@@ -172,7 +172,7 @@
       }
       - {
         base_version: "0.0.2",
-        version_number: "0.0.2",
+        version_number: "ce",
         python_version: "3.12",
         tensorflow_version: "*",
         opencv_version: "*",
