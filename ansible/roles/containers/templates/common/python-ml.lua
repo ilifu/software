@@ -31,7 +31,8 @@ Includes:
 Usage:
   python script.py        # Run Python scripts
   pip install package     # Install additional packages
-  jupyter                 # Launch Jupyter notebook server
+  bash                    # Launch interactive bash shell
+  zsh                     # Launch interactive zsh shell
   
 Features:
   - PyTorch for deep learning research
@@ -75,7 +76,7 @@ setenv("PYTHON_ML_CONTAINER", "{{ container_image }}")
 
 -- Provide information about available tools
 if (mode() == "load") then
-   io.stderr:write("Python ML container loaded. Available commands: python, python3, pip, pip3, jupyter\n")
+   io.stderr:write("Python ML container loaded. Available commands: python, python3, pip, pip3, bash, zsh\n")
    io.stderr:write("Enhanced v{{ item.version_number }}: PyTorch, JAX, Transformers, LangChain, and 50+ ML/AI packages\n")
    io.stderr:write("Shared models at: /software/data/common\n")
    io.stderr:write("Jupyter kernel available at: {{ python_ml_kernel_dir }}/kernel.json\n")
