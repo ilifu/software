@@ -175,7 +175,7 @@
         pytorch_cuda_version: "cu118"
       }
       - {
-        base_version: "0.0.2",
+        base_version: "0.0.1",
         version_number: "0.0.2",
         python_version: "3.12",
         tensorflow_version: "2.19.1",
@@ -203,10 +203,10 @@
         ipympl_version: "0.9.7",
         jupyterlab_version: "4.4.6",
         jupyter_ai_version: "2.31.6",
-        pytorch_cuda_version: "cu124"
+        pytorch_cuda_version: "cu118"
       }
       - {
-        base_version: "0.0.2",
+        base_version: "0.0.1",
         version_number: "ce",
         python_version: "3.12",
         tensorflow_version: "*",
@@ -234,7 +234,7 @@
         ipympl_version: "*",
         jupyterlab_version: "*",
         jupyter_ai_version: "*",
-        pytorch_cuda_version: "cu124"
+        pytorch_cuda_version: "cu118"
       }
   include_tasks:
     file: python-ml.yaml
