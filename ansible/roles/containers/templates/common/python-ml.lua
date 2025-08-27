@@ -64,6 +64,7 @@ setenv("PYTHON_ML_KERNEL_DIR", "{{ python_ml_kernel_dir }}")
 
 -- Set CUDA environment variables for the host
 setenv("CUDA_VISIBLE_DEVICES", os.getenv("CUDA_VISIBLE_DEVICES") or "")
+setenv("NUMBA_CUDA_CC", "8.5")
 
 -- Shared model cache paths
 setenv("HF_HOME", "/software/data/common")
