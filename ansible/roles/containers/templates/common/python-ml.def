@@ -50,6 +50,11 @@ From: {{ base_container_image }}
   
   # Numba CUDA compute capability
   export NUMBA_CUDA_CC=8.5
+  
+  {% if item.pytorch_cuda_version == "cu118" %}
+  # Enable CUDA Minor Version Compatibility for CUDA 11.x
+  export NUMBA_CUDA_ENABLE_MINOR_VERSION_COMPATIBILITY=1
+  {% endif %}
 
 %post
   # Create Installation Directories and export paths. This is needed as part of post.
@@ -82,8 +87,21 @@ From: {{ base_container_image }}
     {% if item.sklearn_version == "*" %}scikit-learn{% else %}scikit-learn=={{ item.sklearn_version }}{% endif %} \
     {% if item.requests_version == "*" %}requests{% else %}requests=={{ item.requests_version }}{% endif %} \
     ipywidgets \
-    ipykernel \
-    "numba-cuda[{{ item.numba_cuda_version }}]"
+    ipykernel
+
+  # Install numba-cuda with conditional CUDA 11.x compatibility
+  echo "Installing numba-cuda with CUDA support..."
+  {% if item.pytorch_cuda_version == "cu118" %}
+  # CUDA 11.x environment - need compatibility packages
+  /usr/local/bin/uv pip install \
+    "numba-cuda[{{ item.numba_cuda_version }}]" \
+    --extra-index-url https://pypi.nvidia.com \
+    ptxcompiler-cu11 \
+    cubinlinker-cu11
+  {% else %}
+  # CUDA 12.x environment - standard installation
+  /usr/local/bin/uv pip install "numba-cuda[{{ item.numba_cuda_version }}]"
+  {% endif %}
 
   # Install PyTorch ecosystem
   echo "Installing PyTorch ecosystem..."
