@@ -87,7 +87,7 @@ From: {{ base_container_image }}
     {% if item.torch_version == "*" %}torch{% else %}torch=={{ item.torch_version }}{% endif %} \
     {% if item.torchvision_version == "*" %}torchvision{% else %}torchvision=={{ item.torchvision_version }}{% endif %} \
     {% if item.torchaudio_version == "*" %}torchaudio{% else %}torchaudio=={{ item.torchaudio_version }}{% endif %} \
-    --index-url https://download.pytorch.org/whl/cu118
+    --index-url https://download.pytorch.org/whl/{{ item.pytorch_cuda_version }}
 
   # Install JAX ecosystem
   echo "Installing JAX ecosystem..."
