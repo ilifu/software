@@ -94,7 +94,7 @@
   shell: |
     export HF_HOME=/software/data/common
     export TRANSFORMERS_CACHE=/software/data/common
-    {{ singularity }} exec {{ common_container_dir }}/python-ml-0.0.1.sif python3 -c "
+    {{ common_container_dir }}/python-ml/0.0.1/python3 -c "
     from transformers import AutoTokenizer, AutoModel
     from sentence_transformers import SentenceTransformer
     model_name = '{{ model }}'
@@ -123,7 +123,7 @@
   shell: |
     export HF_HOME=/software/data/common
     export TRANSFORMERS_CACHE=/software/data/common
-    {{ singularity }} exec {{ common_container_dir }}/python-ml-0.0.1.sif python3 -c "
+    {{ common_container_dir }}/python-ml/0.0.1/python3 -c "
     from transformers import AutoImageProcessor, AutoModel
     model_name = '{{ model }}'
     print(f'Downloading {model_name}...')
@@ -153,7 +153,7 @@
   shell: |
     export HF_HOME=/software/data/common
     export TRANSFORMERS_CACHE=/software/data/common
-    {{ singularity }} exec {{ common_container_dir }}/python-ml-0.0.1.sif python3 -c "
+    {{ common_container_dir }}/python-ml/0.0.1/python3 -c "
     from transformers import AutoTokenizer, AutoModelForCausalLM
     model_name = '{{ model }}'
     print(f'Downloading {model_name}...')
