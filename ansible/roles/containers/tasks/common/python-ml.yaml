@@ -51,6 +51,8 @@
         - { name: "python3", template: "python-ml.sh" }
         - { name: "pip", template: "python-ml.sh" }
         - { name: "pip3", template: "python-ml.sh" }
+        - { name: "bash", template: "python-ml.sh" }
+        - { name: "zsh", template: "python-ml.sh" }
       loop_control:
         loop_var: binary
 

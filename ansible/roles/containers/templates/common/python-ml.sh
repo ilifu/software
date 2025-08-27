@@ -29,6 +29,30 @@ case "${COMMAND_NAME}" in
             {{ container_image }} \
             /opt/python-ml-env/bin/pip "$@"
         ;;
+    "bash")
+        singularity exec \
+            --bind /software:/software \
+            --bind ${TEMP_DIR}:/tmp/python-ml \
+            --bind /data:/data \
+            --bind /idia:/idia \
+            --bind /cbio:/cbio \
+            --bind /ilifu:/ilifu \
+            --nv \
+            {{ container_image }} \
+            /bin/bash "$@"
+        ;;
+    "zsh")
+        singularity exec \
+            --bind /software:/software \
+            --bind ${TEMP_DIR}:/tmp/python-ml \
+            --bind /data:/data \
+            --bind /idia:/idia \
+            --bind /cbio:/cbio \
+            --bind /ilifu:/ilifu \
+            --nv \
+            {{ container_image }} \
+            /bin/zsh "$@"
+        ;;
     *)
         # Default case - run as python from virtual environment
         singularity exec \
