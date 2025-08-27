@@ -49,7 +49,7 @@ From: {{ base_container_image }}
   export TORCH_HOME=/software/data/common
   
   # Numba CUDA compute capability
-  export NUMBA_CUDA_CC=8.5
+  export NUMBA_CUDA_CC=6.0
   
   {% if item.pytorch_cuda_version == "cu118" %}
   # Enable CUDA Minor Version Compatibility for CUDA 11.x
