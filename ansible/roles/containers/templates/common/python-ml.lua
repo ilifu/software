@@ -11,6 +11,7 @@ Includes:
 - NumPy {{ item.numpy_version }}
 - Pandas {{ item.pandas_version }}
 - Matplotlib {{ item.matplotlib_version }}
+- ipympl {{ item.ipympl_version }} (interactive Matplotlib in Jupyter)
 - Seaborn {{ item.seaborn_version }}
 - Pillow {{ item.pillow_version }}
 - scikit-learn {{ item.sklearn_version }}
@@ -23,13 +24,16 @@ Includes:
 - Weights & Biases {{ item.wandb_version }} experiment tracking
 - Plotly {{ item.plotly_version }} interactive visualization
 - Streamlit {{ item.streamlit_version }} web applications
+- JupyterLab {{ item.jupyterlab_version }} interactive development environment
+- Jupyter AI {{ item.jupyter_ai_version }} generative AI extension (all providers)
 - 50+ additional ML/AI packages for comprehensive development
-- Jupyter notebook support with ipywidgets
+- Full Jupyter ecosystem with ipywidgets and interactive plotting
 - CUDA-accelerated computing capabilities
 - Shared model cache at /software/data/common
 
 Usage:
   python script.py        # Run Python scripts
+  jupyter lab             # Launch JupyterLab server
   pip install package     # Install additional packages
   bash                    # Launch interactive bash shell
   zsh                     # Launch interactive zsh shell
@@ -37,14 +41,15 @@ Usage:
 Features:
   - PyTorch for deep learning research
   - JAX/Flax for high-performance computing
-  - Complete LLM development stack
+  - Complete LLM development stack with Jupyter AI
   - Advanced computer vision tools
   - MLOps and experiment tracking
+  - Interactive JupyterLab with AI-powered coding assistance
   - Interactive visualization and web apps
 ]])
 
-whatis("Keywords: python, machine learning, bioinformatics, tensorflow, pytorch, jax, transformers, llm, cuda")
-whatis("Description: Comprehensive Python ML container with TensorFlow, PyTorch, LLM frameworks, and 50+ AI packages")
+whatis("Keywords: python, machine learning, bioinformatics, tensorflow, pytorch, jax, transformers, llm, cuda, jupyterlab")
+whatis("Description: Comprehensive Python ML container with JupyterLab, Jupyter AI, TensorFlow, PyTorch, LLM frameworks, and 50+ AI packages")
 whatis("Version: {{ item.version_number }}")
 
 -- Load required modules

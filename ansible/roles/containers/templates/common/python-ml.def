@@ -78,11 +78,14 @@ From: {{ base_container_image }}
     {% if item.pandas_version == "*" %}pandas{% else %}pandas=={{ item.pandas_version }}{% endif %} \
     {% if item.matplotlib_version == "*" %}matplotlib{% else %}matplotlib=={{ item.matplotlib_version }}{% endif %} \
     {% if item.seaborn_version == "*" %}seaborn{% else %}seaborn=={{ item.seaborn_version }}{% endif %} \
+    {% if item.ipympl_version == "*" %}ipympl{% else %}ipympl=={{ item.ipympl_version }}{% endif %} \
     {% if item.pillow_version == "*" %}Pillow{% else %}Pillow=={{ item.pillow_version }}{% endif %} \
     {% if item.sklearn_version == "*" %}scikit-learn{% else %}scikit-learn=={{ item.sklearn_version }}{% endif %} \
     {% if item.requests_version == "*" %}requests{% else %}requests=={{ item.requests_version }}{% endif %} \
     ipywidgets \
-    ipykernel
+    ipykernel \
+    {% if item.jupyterlab_version == "*" %}jupyterlab{% else %}jupyterlab=={{ item.jupyterlab_version }}{% endif %} \
+    {% if item.jupyter_ai_version == "*" %}"jupyter-ai[all]"{% else %}"jupyter-ai[all]=={{ item.jupyter_ai_version }}"{% endif %}
 
   # Note: Using built-in numba CUDA support for Tesla P100 compatibility
   # Modern numba-cuda package is incompatible with older GPU hardware

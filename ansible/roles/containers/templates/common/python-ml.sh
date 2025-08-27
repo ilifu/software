@@ -53,6 +53,18 @@ case "${COMMAND_NAME}" in
             {{ container_image }} \
             /bin/zsh "$@"
         ;;
+    "jupyter"|"jupyter-lab")
+        singularity exec \
+            --bind /software:/software \
+            --bind ${TEMP_DIR}:/tmp/python-ml \
+            --bind /data:/data \
+            --bind /idia:/idia \
+            --bind /cbio:/cbio \
+            --bind /ilifu:/ilifu \
+            --nv \
+            {{ container_image }} \
+            /opt/python-ml-env/bin/jupyter "$@"
+        ;;
     *)
         # Default case - run as python from virtual environment
         singularity exec \
