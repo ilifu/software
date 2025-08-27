@@ -26,6 +26,7 @@
   "debugger": true
  },
  "env": {
-  "CUDA_VISIBLE_DEVICES": "${CUDA_VISIBLE_DEVICES}"
+  "CUDA_VISIBLE_DEVICES": "${CUDA_VISIBLE_DEVICES}",
+  "NUMBA_CUDA_CC": "8.5"
  }
 }

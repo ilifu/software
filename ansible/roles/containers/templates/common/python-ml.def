@@ -47,6 +47,9 @@ From: {{ base_container_image }}
   export TRANSFORMERS_CACHE=/software/data/common
   export SENTENCE_TRANSFORMERS_HOME=/software/data/common
   export TORCH_HOME=/software/data/common
+  
+  # Numba CUDA compute capability
+  export NUMBA_CUDA_CC=8.5
 
 %post
   # Create Installation Directories and export paths. This is needed as part of post.
