@@ -27,6 +27,7 @@
  },
  "env": {
   "CUDA_VISIBLE_DEVICES": "${CUDA_VISIBLE_DEVICES}",
-  "NUMBA_CUDA_CC": "6.0"
+  "NUMBA_CUDA_CC": "6.0",
+  "NUMBA_CUDA_DEFAULT_PTX_CC": "6.0"
  }
 }

@@ -50,6 +50,7 @@ From: {{ base_container_image }}
   
   # Numba CUDA compute capability (Tesla P100 compatibility)
   export NUMBA_CUDA_CC=6.0
+  export NUMBA_CUDA_DEFAULT_PTX_CC=6.0
 
 %post
   # Create Installation Directories and export paths. This is needed as part of post.
