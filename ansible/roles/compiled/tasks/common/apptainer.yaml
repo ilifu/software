@@ -31,7 +31,7 @@
               file:
                 path: "{{ apptainer_dir }}"
                 state: directory
-                mode: o=rwx,g=rx,o=rx
+                mode: u=rwx,g=rx,o=rx
             - name: Configure apptainer
               command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir={{ install_dir }}/etc"
               args:
