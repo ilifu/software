@@ -82,7 +82,8 @@ From: {{ base_container_image }}
     {% if item.sklearn_version == "*" %}scikit-learn{% else %}scikit-learn=={{ item.sklearn_version }}{% endif %} \
     {% if item.requests_version == "*" %}requests{% else %}requests=={{ item.requests_version }}{% endif %} \
     ipywidgets \
-    ipykernel
+    ipykernel \
+    "numba-cuda[{{ item.numba_cuda_version }}]"
 
   # Install PyTorch ecosystem
   echo "Installing PyTorch ecosystem..."
