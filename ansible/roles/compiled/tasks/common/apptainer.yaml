@@ -1,0 +1,84 @@
+- name: Install apptainer
+  vars:
+    apptainer_dir: "{{ common_dir }}/apptainer"
+    apptainer_module_dir: "{{ common_modules }}/apptainer"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ apptainer_dir }}/{{ version_number }}"
+    go_location: "{{ item.go_location }}"
+  tags:
+    - never
+    - apptainer{{ item.version_number }}
+  block:
+    - name: Install apptainer {{ version_number }}
+      vars:
+        unzip_dir: "/dev/shm/apptainer-{{ version_number }}"
+      block:
+        - name: Download and install apptainer {{ version_number }}
+          block:
+            - name: Download apptainer {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ common_src }}/apptainer-{{ version_number }}.tar.gz"
+                checksum: "{{ checksum }}"
+            - name: Unzip apptainer {{ version_number }}
+              unarchive:
+                src: "{{ common_src }}/apptainer-{{ version_number }}.tar.gz"
+                dest: "/dev/shm/"
+                creates: "{{ unzip_dir }}"
+            - name: Ensure installation parent exists
+              file:
+                path: "{{ apptainer_dir }}"
+                state: directory
+                mode: u=rwx,g=rx,o=rx
+            - name: Configure apptainer
+              command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir={{ install_dir }}/etc"
+              args:
+                chdir: "{{ unzip_dir }}"
+                creates: "{{ unzip_dir }}/builddir/Makefile"
+              environment:
+                PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
+            - name: Compile apptainer
+              make:
+                chdir: "{{ unzip_dir }}/builddir"
+              environment:
+                PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
+                MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+            - name: Install apptainer
+              make:
+                chdir: "{{ unzip_dir }}/builddir"
+                target: install
+              become: true
+
+    - name: Install apptainer {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ apptainer_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install apptainer {{ version_number }} module file
+          template:
+            src: apptainer.lua
+            dest: "{{ apptainer_module_dir }}/{{ version_number }}.lua"
+
+    - name: Configure apptainer {{ version_number }}
+      block:
+        - name: Ensure apptainer config directory exists
+          file:
+            path: "{{ install_dir }}/etc/apptainer"
+            state: directory
+            mode: u=rwx,g=rx,o=rx
+            owner: root
+            group: root
+          become: true
+        - name: Deploy apptainer configuration file
+          template:
+            src: apptainer.conf
+            dest: "{{ install_dir }}/etc/apptainer/apptainer.conf"
+            mode: u=rw,g=r,o=r
+            owner: root
+            group: root
+            backup: yes
+          become: true

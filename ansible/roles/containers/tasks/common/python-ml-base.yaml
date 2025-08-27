@@ -1,0 +1,48 @@
+- name: Create python-ml-base {{ item.version_number }} container
+  vars:
+    - base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
+    - container_name: "python-ml-base-{{ item.version_number }}"
+    - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
+    - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
+  tags:
+    - "python-ml-base{{ item.version_number }}"
+    - never
+  block:
+    - name: "Check for existence of {{ base_container_image }} container"
+      stat:
+        path: "{{ base_container_image }}"
+      register: base_container_exists
+    - name: "Missing {{ base_container_image }}"
+      fail:
+        msg: "The container {{ base_container_image }} is missing."
+      when: not base_container_exists.stat.exists
+    - name: Create Python ML {{ item.version_number }} container
+      when: base_container_exists.stat.exists
+      block:
+        - name: Download uv binary
+          get_url:
+            url: "https://github.com/astral-sh/uv/releases/download/0.8.13/uv-x86_64-unknown-linux-gnu.tar.gz"
+            dest: "{{ common_src }}/uv.tar.gz"
+            mode: '0644'
+        - name: Extract uv binary
+          unarchive:
+            src: "{{ common_src }}/uv.tar.gz"
+            dest: "{{ common_src }}"
+            remote_src: yes
+            creates: "{{ common_src }}/uv-x86_64-unknown-linux-gnu/uv"
+        - name: Download cuDNN for Noble
+          get_url:
+            url: "https://developer.download.nvidia.com/compute/cudnn/9.8.0/local_installers/{{ item.cudnn_deb_file }}"
+            dest: "{{ common_src }}/{{ item.cudnn_deb_file }}"
+            mode: '0644'
+          when: item.cudnn_deb_file is defined
+        - name: Copy recipe {{ container_recipe }}
+          template:
+            src: "common/python-ml-base.def"
+            dest: "{{ container_recipe }}"
+        - name: Build container {{ container_image }}
+          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          args:
+            creates: "{{ container_image }}"
+            chdir: "{{ common_src }}"
+          become: true

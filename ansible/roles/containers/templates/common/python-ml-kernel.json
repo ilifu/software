@@ -1,0 +1,31 @@
+{
+ "argv": [
+  "singularity",
+  "exec",
+  "--nv",
+  "--bind",
+  "/software:/software",
+  "--bind",
+  "/data:/data",
+  "--bind",
+  "/idia:/idia",
+  "--bind",
+  "/cbio:/cbio",
+  "--bind",
+  "/ilifu:/ilifu",
+  "{{ container_image }}",
+  "/opt/python-ml-env/bin/python",
+  "-m",
+  "ipykernel_launcher",
+  "-f",
+  "{connection_file}"
+ ],
+ "display_name": "Python ML {{ item.version_number }} (Python {{ item.python_version }})",
+ "language": "python",
+ "metadata": {
+  "debugger": true
+ },
+ "env": {
+  "CUDA_VISIBLE_DEVICES": "${CUDA_VISIBLE_DEVICES}"
+ }
+}
