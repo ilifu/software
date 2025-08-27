@@ -126,10 +126,9 @@
         base_container_name: ubuntu-noble-compile,
         base_container_version_name: noble,
         version_number: "0.0.2",
-        cuda_version: "12.8.1",
-        cudnn_version: "9.8.0",
-        cudnn_deb_file: "cudnn-local-repo-ubuntu2404-9.8.0_1.0-1_amd64.deb",
-        cuda_toolkit_package: "cuda-toolkit-12-8",
+        cuda_version: "11.8",
+        cudnn_version: "8.6.0",
+        cuda_toolkit_package: "cuda-toolkit-11-8",
         cuda_keyring_url: "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb",
         cuda_keyring_file: "cuda-keyring_1.1-1_all.deb",
       }
@@ -175,7 +174,7 @@
         pytorch_cuda_version: "cu118"
       }
       - {
-        base_version: "0.0.1",
+        base_version: "0.0.2",
         version_number: "0.0.2",
         python_version: "3.12",
         tensorflow_version: "2.19.1",
@@ -206,7 +205,7 @@
         pytorch_cuda_version: "cu118"
       }
       - {
-        base_version: "0.0.1",
+        base_version: "0.0.2",
         version_number: "ce",
         python_version: "3.12",
         tensorflow_version: "*",
