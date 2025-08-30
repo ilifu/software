@@ -54,7 +54,7 @@
             loop_var: mlst_script
 
         - name: Download MLST databases
-          shell: "{{ install_dir }}/scripts/mlst-download_pub_mlst"
+          shell: "{{ install_dir }}/scripts/mlst-download_pub_mlst -d {{ install_dir }}/db"
           environment:
             PATH: "/software/common/perlbrew/perls/perl-5.33.0/bin:{{ install_dir }}/bin:{{ install_dir }}/scripts:{{ ansible_env.PATH }}"
             LD_LIBRARY_PATH: "/software/common/perlbrew/perls/perl-5.33.0/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
