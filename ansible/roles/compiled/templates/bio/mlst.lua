@@ -16,4 +16,5 @@ prepend_path('PATH', '{{ install_dir }}/scripts')
 setenv('MLST_DB', '{{ install_dir }}/db')
 
 -- Dependencies
-depends_on("ncbi-blast+", "perl")
+depends_on("perl")
+depends_on("blast/2.17.0")

@@ -37,10 +37,12 @@
 
         - name: Make snippy executables
           file:
-            path: "{{ install_dir }}/bin/{{ item }}"
+            path: "{{ snippy_script }}"
             mode: '0755'
           with_fileglob:
             - "{{ install_dir }}/bin/snippy*"
+          loop_control:
+            loop_var: snippy_script
 
         - name: Check snippy dependencies
           shell: "{{ install_dir }}/bin/snippy --check"

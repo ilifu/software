@@ -10,6 +10,10 @@
     unzip_dir: "/dev/shm/mlst-{{ version_number }}"
     install_dir: "{{ mlst_dir }}/{{ version_number }}"
     blast_module: "{{ item.blast_module | default('blast/2.16.0') }}"
+  environment:
+    PATH: "/software/common/perlbrew/perls/perl-5.33.0/bin:{{ ansible_env.PATH }}"
+    LD_LIBRARY_PATH: "/software/common/perlbrew/perls/perl-5.33.0/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+    LIBRARY_PATH: "/software/common/perlbrew/perls/perl-5.33.0/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
   tags:
     - never
     - mlst{{ item.version_number }}
