@@ -1,0 +1,50 @@
+---
+- name: Install pymlst {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    pymlst_dir: "{{ bio_dir }}/pymlst"
+    pymlst_module_dir: "{{ bio_modules }}/pymlst"
+    version_number: "{{ item.version_number }}"
+    python_location: "{{ item.python_location | default('/software/common/python/3.11.2') }}"
+    install_dir: "{{ pymlst_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - pymlst{{ item.version_number }}
+  block:
+    - name: Download and install pymlst ({{ version_number }})
+      block:
+        - name: Ensure pymlst dir exists
+          file:
+            path: "{{ pymlst_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Create Python virtual environment for pymlst
+          command: "{{ python_location }}/bin/python3 -m venv {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/bin/activate"
+
+        - name: Upgrade pip in virtual environment
+          pip:
+            name: pip
+            state: latest
+            virtualenv: "{{ install_dir }}"
+            executable: "{{ install_dir }}/bin/pip"
+
+        - name: Install pymlst using pip
+          pip:
+            name: pymlst
+            virtualenv: "{{ install_dir }}"
+            executable: "{{ install_dir }}/bin/pip"
+
+    - name: Install pymlst {{ version_number }} module
+      block:
+        - name: Check module dir {{ pymlst_module_dir }}
+          file:
+            path: "{{ pymlst_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install pymlst {{ version_number }} module file
+          template:
+            src: bio/pymlst.lua
+            dest: "{{ pymlst_module_dir }}/{{ version_number }}.lua"

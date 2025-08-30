@@ -1,0 +1,63 @@
+---
+- name: Install checkv {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    checkv_dir: "{{ bio_dir }}/checkv"
+    checkv_module_dir: "{{ bio_modules }}/checkv"
+    version_number: "{{ item.version_number }}"
+    python_location: "{{ item.python_location | default('/software/common/python/3.11.2') }}"
+    install_dir: "{{ checkv_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - checkv{{ item.version_number }}
+  block:
+    - name: Download and install checkv ({{ version_number }})
+      block:
+        - name: Ensure checkv dir exists
+          file:
+            path: "{{ checkv_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Create Python virtual environment for checkv
+          command: "{{ python_location }}/bin/python3 -m venv {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/bin/activate"
+
+        - name: Upgrade pip in virtual environment
+          pip:
+            name: pip
+            state: latest
+            virtualenv: "{{ install_dir }}"
+            executable: "{{ install_dir }}/bin/pip"
+
+        - name: Install checkv using pip
+          pip:
+            name: checkv
+            virtualenv: "{{ install_dir }}"
+            executable: "{{ install_dir }}/bin/pip"
+
+        - name: Create checkv database directory
+          file:
+            path: "{{ install_dir }}/checkv-db"
+            state: directory
+
+        - name: Download checkv database
+          shell: "{{ install_dir }}/bin/checkv download_database {{ install_dir }}/checkv-db"
+          args:
+            creates: "{{ install_dir }}/checkv-db/genome_db"
+          environment:
+            PATH: "{{ install_dir }}/bin:{{ ansible_env.PATH }}"
+          ignore_errors: yes
+
+    - name: Install checkv {{ version_number }} module
+      block:
+        - name: Check module dir {{ checkv_module_dir }}
+          file:
+            path: "{{ checkv_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install checkv {{ version_number }} module file
+          template:
+            src: bio/checkv.lua
+            dest: "{{ checkv_module_dir }}/{{ version_number }}.lua"

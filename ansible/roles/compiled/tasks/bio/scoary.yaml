@@ -1,0 +1,59 @@
+---
+- name: Install scoary {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    scoary_dir: "{{ bio_dir }}/scoary"
+    scoary_module_dir: "{{ bio_modules }}/scoary"
+    version_number: "{{ item.version_number }}"
+    python_location: "{{ item.python_location | default('/software/common/python/3.11.2') }}"
+    install_dir: "{{ scoary_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - scoary{{ item.version_number }}
+  block:
+    - name: Download and install scoary ({{ version_number }})
+      block:
+        - name: Ensure scoary dir exists
+          file:
+            path: "{{ scoary_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Create Python virtual environment for scoary
+          command: "{{ python_location }}/bin/python3 -m venv {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/bin/activate"
+
+        - name: Upgrade pip in virtual environment
+          pip:
+            name: pip
+            state: latest
+            virtualenv: "{{ install_dir }}"
+            executable: "{{ install_dir }}/bin/pip"
+
+        - name: Install scoary dependencies
+          pip:
+            name:
+              - numpy
+              - scipy
+              - pandas
+            virtualenv: "{{ install_dir }}"
+            executable: "{{ install_dir }}/bin/pip"
+
+        - name: Install scoary using pip
+          pip:
+            name: scoary
+            virtualenv: "{{ install_dir }}"
+            executable: "{{ install_dir }}/bin/pip"
+
+    - name: Install scoary {{ version_number }} module
+      block:
+        - name: Check module dir {{ scoary_module_dir }}
+          file:
+            path: "{{ scoary_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install scoary {{ version_number }} module file
+          template:
+            src: bio/scoary.lua
+            dest: "{{ scoary_module_dir }}/{{ version_number }}.lua"

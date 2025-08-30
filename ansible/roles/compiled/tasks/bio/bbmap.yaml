@@ -1,0 +1,59 @@
+---
+- name: Install bbmap {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    bbmap_dir: "{{ bio_dir }}/bbmap"
+    bbmap_module_dir: "{{ bio_modules }}/bbmap"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    unzip_dir: "/dev/shm/bbmap"
+    install_dir: "{{ bbmap_dir }}/{{ version_number }}"
+    java_module: "{{ item.java_module | default('java/openjdk-18.0.2') }}"
+  tags:
+    - never
+    - bbmap{{ item.version_number }}
+  block:
+    - name: Download and install bbmap ({{ version_number }})
+      block:
+        - name: Download bbmap
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/BBMap_{{ version_number }}.tar.gz"
+            mode: ug=rw,o=r
+
+        - name: Ensure bbmap dir exists
+          file:
+            path: "{{ bbmap_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Extract bbmap
+          unarchive:
+            src: "{{ bio_src }}/BBMap_{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzip_dir }}"
+
+        - name: Move bbmap from temp to install directory
+          command: "mv {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/bbmap.sh"
+
+        - name: Make bbmap scripts executable
+          file:
+            path: "{{ install_dir }}/{{ item }}"
+            mode: '0755'
+          with_fileglob:
+            - "{{ install_dir }}/*.sh"
+
+    - name: Install bbmap {{ version_number }} module
+      block:
+        - name: Check module dir {{ bbmap_module_dir }}
+          file:
+            path: "{{ bbmap_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install bbmap {{ version_number }} module file
+          template:
+            src: bio/bbmap.lua
+            dest: "{{ bbmap_module_dir }}/{{ version_number }}.lua"

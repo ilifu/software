@@ -1,0 +1,74 @@
+---
+- name: Install rgi {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    rgi_dir: "{{ bio_dir }}/rgi"
+    rgi_module_dir: "{{ bio_modules }}/rgi"
+    version_number: "{{ item.version_number }}"
+    git_repo: "{{ item.git_repo }}"
+    git_tag: "{{ item.git_tag }}"
+    python_location: "{{ item.python_location | default('/software/common/python/3.11.2') }}"
+    unzip_dir: "/dev/shm/rgi-{{ version_number }}"
+    install_dir: "{{ rgi_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - rgi{{ item.version_number }}
+  block:
+    - name: Download and install rgi ({{ version_number }})
+      block:
+        - name: Clone rgi repository
+          git:
+            repo: "{{ git_repo }}"
+            dest: "{{ unzip_dir }}"
+            version: "{{ git_tag }}"
+            force: yes
+
+        - name: Ensure rgi dir exists
+          file:
+            path: "{{ rgi_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Create Python virtual environment for rgi
+          command: "{{ python_location }}/bin/python3 -m venv {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/bin/activate"
+
+        - name: Upgrade pip in virtual environment
+          pip:
+            name: pip
+            state: latest
+            virtualenv: "{{ install_dir }}"
+            executable: "{{ install_dir }}/bin/pip"
+
+        - name: Install rgi using pip
+          pip:
+            name: "{{ unzip_dir }}"
+            virtualenv: "{{ install_dir }}"
+            executable: "{{ install_dir }}/bin/pip"
+
+        - name: Download CARD database
+          shell: "{{ install_dir }}/bin/rgi card_annotation --card_json {{ install_dir }}/card.json"
+          args:
+            creates: "{{ install_dir }}/card.json"
+          environment:
+            PATH: "{{ install_dir }}/bin:{{ ansible_env.PATH }}"
+          ignore_errors: yes
+
+        - name: Load CARD database
+          shell: "{{ install_dir }}/bin/rgi load --card_json {{ install_dir }}/card.json --local"
+          environment:
+            PATH: "{{ install_dir }}/bin:{{ ansible_env.PATH }}"
+          ignore_errors: yes
+
+    - name: Install rgi {{ version_number }} module
+      block:
+        - name: Check module dir {{ rgi_module_dir }}
+          file:
+            path: "{{ rgi_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install rgi {{ version_number }} module file
+          template:
+            src: bio/rgi.lua
+            dest: "{{ rgi_module_dir }}/{{ version_number }}.lua"

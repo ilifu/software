@@ -1,0 +1,61 @@
+---
+- name: Install seqtk {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    seqtk_dir: "{{ bio_dir }}/seqtk"
+    seqtk_module_dir: "{{ bio_modules }}/seqtk"
+    version_number: "{{ item.version_number }}"
+    git_repo: "{{ item.git_repo }}"
+    git_tag: "{{ item.git_tag }}"
+    unzip_dir: "/dev/shm/seqtk-{{ version_number }}"
+    install_dir: "{{ seqtk_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - seqtk{{ item.version_number }}
+  block:
+    - name: Download and install seqtk ({{ version_number }})
+      block:
+        - name: Clone seqtk repository
+          git:
+            repo: "{{ git_repo }}"
+            dest: "{{ unzip_dir }}"
+            version: "{{ git_tag }}"
+            force: yes
+
+        - name: Ensure seqtk dir exists
+          file:
+            path: "{{ seqtk_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Create install directory
+          file:
+            path: "{{ install_dir }}/bin"
+            state: directory
+            recurse: yes
+
+        - name: Compile seqtk
+          make:
+            chdir: "{{ unzip_dir }}"
+            jobs: "{{ ansible_processor_count }}"
+          environment:
+            MAKEFLAGS: "-j {{ ansible_processor_count }}"
+
+        - name: Copy seqtk binary to install directory
+          copy:
+            src: "{{ unzip_dir }}/seqtk"
+            dest: "{{ install_dir }}/bin/seqtk"
+            mode: '0755'
+            remote_src: yes
+
+    - name: Install seqtk {{ version_number }} module
+      block:
+        - name: Check module dir {{ seqtk_module_dir }}
+          file:
+            path: "{{ seqtk_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install seqtk {{ version_number }} module file
+          template:
+            src: bio/seqtk.lua
+            dest: "{{ seqtk_module_dir }}/{{ version_number }}.lua"

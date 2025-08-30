@@ -1,0 +1,62 @@
+---
+- name: Install diamond {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    diamond_dir: "{{ bio_dir }}/diamond"
+    diamond_module_dir: "{{ bio_modules }}/diamond"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    unzip_dir: "/dev/shm/diamond-linux64"
+    install_dir: "{{ diamond_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - diamond{{ item.version_number }}
+  block:
+    - name: Download and install diamond ({{ version_number }})
+      block:
+        - name: Download diamond
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/diamond-{{ version_number }}-linux64.tar.gz"
+            mode: ug=rw,o=r
+
+        - name: Ensure diamond dir exists
+          file:
+            path: "{{ diamond_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Extract diamond
+          unarchive:
+            src: "{{ bio_src }}/diamond-{{ version_number }}-linux64.tar.gz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzip_dir }}"
+
+        - name: Create install directory
+          file:
+            path: "{{ install_dir }}/bin"
+            state: directory
+            recurse: yes
+
+        - name: Move diamond binary to install directory
+          command: "mv {{ unzip_dir }}/diamond {{ install_dir }}/bin/"
+          args:
+            creates: "{{ install_dir }}/bin/diamond"
+
+        - name: Make diamond executable
+          file:
+            path: "{{ install_dir }}/bin/diamond"
+            mode: '0755'
+
+    - name: Install diamond {{ version_number }} module
+      block:
+        - name: Check module dir {{ diamond_module_dir }}
+          file:
+            path: "{{ diamond_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install diamond {{ version_number }} module file
+          template:
+            src: bio/diamond.lua
+            dest: "{{ diamond_module_dir }}/{{ version_number }}.lua"

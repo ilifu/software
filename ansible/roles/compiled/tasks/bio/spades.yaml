@@ -1,0 +1,51 @@
+---
+- name: Install spades {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    spades_dir: "{{ bio_dir }}/spades"
+    spades_module_dir: "{{ bio_modules }}/spades"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    unzip_dir: "/dev/shm/SPAdes-{{ version_number }}-Linux"
+    install_dir: "{{ spades_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - spades{{ item.version_number }}
+  block:
+    - name: Download and install spades ({{ version_number }})
+      block:
+        - name: Download spades
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/SPAdes-{{ version_number }}-Linux.tar.gz"
+            mode: ug=rw,o=r
+
+        - name: Ensure spades dir exists
+          file:
+            path: "{{ spades_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Extract spades
+          unarchive:
+            src: "{{ bio_src }}/SPAdes-{{ version_number }}-Linux.tar.gz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzip_dir }}"
+
+        - name: Move spades from temp to install directory
+          command: "mv {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/bin"
+
+    - name: Install spades {{ version_number }} module
+      block:
+        - name: Check module dir {{ spades_module_dir }}
+          file:
+            path: "{{ spades_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install spades {{ version_number }} module file
+          template:
+            src: bio/spades.lua
+            dest: "{{ spades_module_dir }}/{{ version_number }}.lua"

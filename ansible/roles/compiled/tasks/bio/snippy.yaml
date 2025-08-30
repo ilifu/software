@@ -1,0 +1,61 @@
+---
+- name: Install snippy {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    snippy_dir: "{{ bio_dir }}/snippy"
+    snippy_module_dir: "{{ bio_modules }}/snippy"
+    version_number: "{{ item.version_number }}"
+    git_repo: "{{ item.git_repo }}"
+    git_tag: "{{ item.git_tag }}"
+    unzip_dir: "/dev/shm/snippy-{{ version_number }}"
+    install_dir: "{{ snippy_dir }}/{{ version_number }}"
+    samtools_module: "{{ item.samtools_module | default('samtools/1.20') }}"
+    bwa_module: "{{ item.bwa_module | default('bwa/github') }}"
+  tags:
+    - never
+    - snippy{{ item.version_number }}
+  block:
+    - name: Download and install snippy ({{ version_number }})
+      block:
+        - name: Clone snippy repository
+          git:
+            repo: "{{ git_repo }}"
+            dest: "{{ unzip_dir }}"
+            version: "{{ git_tag }}"
+            force: yes
+
+        - name: Ensure snippy dir exists
+          file:
+            path: "{{ snippy_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Copy snippy to install directory
+          command: "cp -r {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/bin"
+
+        - name: Make snippy executables
+          file:
+            path: "{{ install_dir }}/bin/{{ item }}"
+            mode: '0755'
+          with_fileglob:
+            - "{{ install_dir }}/bin/snippy*"
+
+        - name: Check snippy dependencies
+          shell: "{{ install_dir }}/bin/snippy --check"
+          environment:
+            PATH: "{{ install_dir }}/bin:{{ ansible_env.PATH }}"
+          ignore_errors: yes
+
+    - name: Install snippy {{ version_number }} module
+      block:
+        - name: Check module dir {{ snippy_module_dir }}
+          file:
+            path: "{{ snippy_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install snippy {{ version_number }} module file
+          template:
+            src: bio/snippy.lua
+            dest: "{{ snippy_module_dir }}/{{ version_number }}.lua"

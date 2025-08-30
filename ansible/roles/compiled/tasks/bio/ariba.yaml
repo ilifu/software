@@ -1,0 +1,68 @@
+---
+- name: Install ariba {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    ariba_dir: "{{ bio_dir }}/ariba"
+    ariba_module_dir: "{{ bio_modules }}/ariba"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    python_location: "{{ item.python_location | default('/software/common/python/3.11.2') }}"
+    unzip_dir: "/dev/shm/ariba-{{ version_number }}"
+    install_dir: "{{ ariba_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - ariba{{ item.version_number }}
+  block:
+    - name: Download and install ariba ({{ version_number }})
+      block:
+        - name: Download ariba
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/ariba-{{ version_number }}.tar.gz"
+            mode: ug=rw,o=r
+
+        - name: Ensure ariba dir exists
+          file:
+            path: "{{ ariba_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Extract ariba
+          unarchive:
+            src: "{{ bio_src }}/ariba-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzip_dir }}"
+
+        - name: Create Python virtual environment for ariba
+          command: "{{ python_location }}/bin/python3 -m venv {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/bin/activate"
+
+        - name: Install ariba using pip
+          pip:
+            name: "{{ unzip_dir }}"
+            virtualenv: "{{ install_dir }}"
+            editable: no
+            executable: "{{ install_dir }}/bin/pip"
+
+        - name: Install additional Python dependencies
+          pip:
+            name:
+              - pymummer
+              - pysam
+              - pyfastaq
+            virtualenv: "{{ install_dir }}"
+            executable: "{{ install_dir }}/bin/pip"
+
+    - name: Install ariba {{ version_number }} module
+      block:
+        - name: Check module dir {{ ariba_module_dir }}
+          file:
+            path: "{{ ariba_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install ariba {{ version_number }} module file
+          template:
+            src: bio/ariba.lua
+            dest: "{{ ariba_module_dir }}/{{ version_number }}.lua"

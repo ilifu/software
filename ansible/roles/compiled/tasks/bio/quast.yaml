@@ -1,0 +1,70 @@
+---
+- name: Install quast {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    quast_dir: "{{ bio_dir }}/quast"
+    quast_module_dir: "{{ bio_modules }}/quast"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    unzip_dir: "/dev/shm/quast-{{ version_number }}"
+    install_dir: "{{ quast_dir }}/{{ version_number }}"
+    python_location: "{{ item.python_location | default('/usr/bin/python3') }}"
+  tags:
+    - never
+    - quast{{ item.version_number }}
+  block:
+    - name: Download and install quast ({{ version_number }})
+      block:
+        - name: Download quast
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/quast-{{ version_number }}.tar.gz"
+            mode: ug=rw,o=r
+
+        - name: Ensure quast dir exists
+          file:
+            path: "{{ quast_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Extract quast
+          unarchive:
+            src: "{{ bio_src }}/quast-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzip_dir }}"
+
+        - name: Copy quast to install directory
+          command: "cp -r {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/quast.py"
+
+        - name: Make quast executables
+          file:
+            path: "{{ install_dir }}/{{ item }}"
+            mode: '0755'
+          loop:
+            - quast.py
+            - metaquast.py
+            - quast-lg.py
+
+        - name: Install Python dependencies
+          pip:
+            name:
+              - matplotlib
+              - simplejson
+              - joblib
+            executable: "{{ python_location }}"
+          ignore_errors: yes
+
+    - name: Install quast {{ version_number }} module
+      block:
+        - name: Check module dir {{ quast_module_dir }}
+          file:
+            path: "{{ quast_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install quast {{ version_number }} module file
+          template:
+            src: bio/quast.lua
+            dest: "{{ quast_module_dir }}/{{ version_number }}.lua"

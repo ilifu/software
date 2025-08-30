@@ -57,6 +57,333 @@
     - never
     - bcbio
 
+- name: Install abricate
+  vars:
+    abricate_versions:
+      - {
+        version_number: "1.0.0",
+        git_repo: "https://github.com/tseemann/abricate.git",
+        git_tag: "v1.0.0"
+      }
+  include_tasks:
+    file: abricate.yaml
+  loop: "{{ abricate_versions }}"
+  tags:
+    - never
+    - abricate
+
+- name: Install diamond
+  vars:
+    diamond_versions:
+      - {
+        version_number: "2.1.13",
+        url: "http://github.com/bbuchfink/diamond/releases/download/v2.1.13/diamond-linux64.tar.gz"
+      }
+  include_tasks:
+    file: diamond.yaml
+  loop: "{{ diamond_versions }}"
+  tags:
+    - never
+    - diamond
+
+- name: Install fastp
+  vars:
+    fastp_versions:
+      - {
+        version_number: "1.0.1",
+        git_repo: "https://github.com/OpenGene/fastp.git",
+        git_tag: "v1.0.1"
+      }
+  include_tasks:
+    file: fastp.yaml
+  loop: "{{ fastp_versions }}"
+  tags:
+    - never
+    - fastp
+
+- name: Install prodigal
+  vars:
+    prodigal_versions:
+      - {
+        version_number: "2.6.3",
+        git_repo: "https://github.com/hyattpd/Prodigal.git",
+        git_tag: "v2.6.3"
+      }
+  include_tasks:
+    file: prodigal.yaml
+  loop: "{{ prodigal_versions }}"
+  tags:
+    - never
+    - prodigal
+
+- name: Install quast
+  vars:
+    quast_versions:
+      - {
+        version_number: "5.3.0",
+        url: "https://github.com/ablab/quast/releases/download/quast_5.3.0/quast-5.3.0.tar.gz",
+        python_location: "/software/common/python/3.12.3"
+      }
+  include_tasks:
+    file: quast.yaml
+  loop: "{{ quast_versions }}"
+  tags:
+    - never
+    - quast
+
+- name: Install spades
+  vars:
+    spades_versions:
+      - {
+        version_number: "4.2.0",
+        url: "https://github.com/ablab/spades/releases/download/v4.2.0/SPAdes-4.2.0-Linux.tar.gz"
+      }
+  include_tasks:
+    file: spades.yaml
+  loop: "{{ spades_versions }}"
+  tags:
+    - never
+    - spades
+
+- name: Install prokka
+  vars:
+    prokka_versions:
+      - {
+        version_number: "1.14.6",
+        git_repo: "https://github.com/tseemann/prokka.git",
+        git_tag: "v1.14.6",
+        prodigal_module: "prodigal/2.6.3",
+        blast_module: "blast/2.16.0"
+      }
+  include_tasks:
+    file: prokka.yaml
+  loop: "{{ prokka_versions }}"
+  tags:
+    - never
+    - prokka
+
+- name: Install seqtk
+  vars:
+    seqtk_versions:
+      - {
+        version_number: "1.5",
+        git_repo: "https://github.com/lh3/seqtk.git",
+        git_tag: "v1.5"
+      }
+  include_tasks:
+    file: seqtk.yaml
+  loop: "{{ seqtk_versions }}"
+  tags:
+    - never
+    - seqtk
+
+- name: Install mlst
+  vars:
+    mlst_versions:
+      - {
+        version_number: "2.23.0",
+        git_repo: "https://github.com/tseemann/mlst.git",
+        git_tag: "v2.23.0",
+        blast_module: "blast/2.16.0"
+      }
+  include_tasks:
+    file: mlst.yaml
+  loop: "{{ mlst_versions }}"
+  tags:
+    - never
+    - mlst
+
+- name: Install snippy
+  vars:
+    snippy_versions:
+      - {
+        version_number: "4.6.0",
+        git_repo: "https://github.com/tseemann/snippy.git",
+        git_tag: "v4.6.0",
+        samtools_module: "samtools/1.20",
+        bwa_module: "bwa/github"
+      }
+  include_tasks:
+    file: snippy.yaml
+  loop: "{{ snippy_versions }}"
+  tags:
+    - never
+    - snippy
+
+- name: Install ariba
+  vars:
+    ariba_versions:
+      - {
+        version_number: "2.13.5",
+        url: "https://github.com/sanger-pathogens/ariba/archive/refs/tags/v2.13.5.tar.gz",
+        python_location: "/software/common/python/3.11.2"
+      }
+  include_tasks:
+    file: ariba.yaml
+  loop: "{{ ariba_versions }}"
+  tags:
+    - never
+    - ariba
+
+- name: Install checkm
+  vars:
+    checkm_versions:
+      - {
+        version_number: "1.1.6",
+        url: "https://github.com/Ecogenomics/CheckM/archive/refs/tags/v1.1.6.tar.gz",
+        python_location: "/software/common/python/3.11.2"
+      }
+  include_tasks:
+    file: checkm.yaml
+  loop: "{{ checkm_versions }}"
+  tags:
+    - never
+    - checkm
+
+- name: Install bbmap
+  vars:
+    bbmap_versions:
+      - {
+        version_number: "39.33",
+        url: "https://sourceforge.net/projects/bbmap/files/latest/download",
+        java_module: "java/openjdk-18.0.2"
+      }
+  include_tasks:
+    file: bbmap.yaml
+  loop: "{{ bbmap_versions }}"
+  tags:
+    - never
+    - bbmap
+
+- name: Install checkv
+  vars:
+    checkv_versions:
+      - {
+        version_number: "1.0.5",
+        python_location: "/software/common/python/3.11.2"
+      }
+  include_tasks:
+    file: checkv.yaml
+  loop: "{{ checkv_versions }}"
+  tags:
+    - never
+    - checkv
+
+- name: Install rgi
+  vars:
+    rgi_versions:
+      - {
+        version_number: "6.0.3",
+        git_repo: "https://github.com/arpcard/rgi.git",
+        git_tag: "6.0.3",
+        python_location: "/software/common/python/3.11.2"
+      }
+  include_tasks:
+    file: rgi.yaml
+  loop: "{{ rgi_versions }}"
+  tags:
+    - never
+    - rgi
+
+- name: Install gubbins
+  vars:
+    gubbins_versions:
+      - {
+        version_number: "3.3.5",
+        python_location: "/software/common/python/3.11.2"
+      }
+  include_tasks:
+    file: gubbins.yaml
+  loop: "{{ gubbins_versions }}"
+  tags:
+    - never
+    - gubbins
+
+- name: Install panaroo
+  vars:
+    panaroo_versions:
+      - {
+        version_number: "1.5.0",
+        python_location: "/software/common/python/3.11.2"
+      }
+  include_tasks:
+    file: panaroo.yaml
+  loop: "{{ panaroo_versions }}"
+  tags:
+    - never
+    - panaroo
+
+- name: Install scoary
+  vars:
+    scoary_versions:
+      - {
+        version_number: "1.6.16",
+        python_location: "/software/common/python/3.11.2"
+      }
+  include_tasks:
+    file: scoary.yaml
+  loop: "{{ scoary_versions }}"
+  tags:
+    - never
+    - scoary
+
+- name: Install fastmlst
+  vars:
+    fastmlst_versions:
+      - {
+        version_number: "1.0.4",
+        git_repo: "https://github.com/EnzoAndree/FastMLST.git",
+        git_tag: "v1.0.4"
+      }
+  include_tasks:
+    file: fastmlst.yaml
+  loop: "{{ fastmlst_versions }}"
+  tags:
+    - never
+    - fastmlst
+
+- name: Install virsorter2
+  vars:
+    virsorter2_versions:
+      - {
+        version_number: "2.2.4",
+        python_location: "/software/common/python/3.11.2"
+      }
+  include_tasks:
+    file: virsorter2.yaml
+  loop: "{{ virsorter2_versions }}"
+  tags:
+    - never
+    - virsorter2
+
+- name: Install srst2
+  vars:
+    srst2_versions:
+      - {
+        version_number: "0.2.0",
+        python_location: "/software/common/python/3.11.2"
+      }
+  include_tasks:
+    file: srst2.yaml
+  loop: "{{ srst2_versions }}"
+  tags:
+    - never
+    - srst2
+
+- name: Install pymlst
+  vars:
+    pymlst_versions:
+      - {
+        version_number: "2.2",
+        python_location: "/software/common/python/3.11.2"
+      }
+  include_tasks:
+    file: pymlst.yaml
+  loop: "{{ pymlst_versions }}"
+  tags:
+    - never
+    - pymlst
+
 - name: Install samtools
   vars:
     samtools_versions:

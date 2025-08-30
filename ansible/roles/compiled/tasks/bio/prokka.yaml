@@ -1,0 +1,69 @@
+---
+- name: Install prokka {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    prokka_dir: "{{ bio_dir }}/prokka"
+    prokka_module_dir: "{{ bio_modules }}/prokka"
+    version_number: "{{ item.version_number }}"
+    git_repo: "{{ item.git_repo }}"
+    git_tag: "{{ item.git_tag }}"
+    unzip_dir: "/dev/shm/prokka-{{ version_number }}"
+    install_dir: "{{ prokka_dir }}/{{ version_number }}"
+    prodigal_module: "{{ item.prodigal_module | default('prodigal/2.6.3') }}"
+    blast_module: "{{ item.blast_module | default('blast/2.16.0') }}"
+  tags:
+    - never
+    - prokka{{ item.version_number }}
+  block:
+    - name: Download and install prokka ({{ version_number }})
+      block:
+        - name: Clone prokka repository
+          git:
+            repo: "{{ git_repo }}"
+            dest: "{{ unzip_dir }}"
+            version: "{{ git_tag }}"
+            force: yes
+
+        - name: Ensure prokka dir exists
+          file:
+            path: "{{ prokka_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Copy prokka to install directory
+          command: "cp -r {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/bin"
+
+        - name: Make prokka executables
+          file:
+            path: "{{ install_dir }}/bin/{{ item }}"
+            mode: '0755'
+          loop:
+            - prokka
+            - prokka-cdd_to_hmm
+            - prokka-genpept_to_fasta_db
+            - prokka-hamap_to_hmm
+            - prokka-tigrfams_to_hmm
+            - prokka-uniprot_to_fasta_db
+
+        - name: Setup prokka databases
+          shell: "{{ install_dir }}/bin/prokka --setupdb"
+          args:
+            creates: "{{ install_dir }}/db"
+          environment:
+            PATH: "{{ install_dir }}/bin:{{ ansible_env.PATH }}"
+            PERL5LIB: "{{ install_dir }}/lib:{{ ansible_env.PERL5LIB | default('') }}"
+          ignore_errors: yes
+
+    - name: Install prokka {{ version_number }} module
+      block:
+        - name: Check module dir {{ prokka_module_dir }}
+          file:
+            path: "{{ prokka_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install prokka {{ version_number }} module file
+          template:
+            src: bio/prokka.lua
+            dest: "{{ prokka_module_dir }}/{{ version_number }}.lua"

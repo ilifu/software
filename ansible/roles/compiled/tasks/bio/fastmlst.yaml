@@ -1,0 +1,61 @@
+---
+- name: Install fastmlst {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    fastmlst_dir: "{{ bio_dir }}/fastmlst"
+    fastmlst_module_dir: "{{ bio_modules }}/fastmlst"
+    version_number: "{{ item.version_number }}"
+    git_repo: "{{ item.git_repo }}"
+    git_tag: "{{ item.git_tag }}"
+    unzip_dir: "/dev/shm/fastmlst-{{ version_number }}"
+    install_dir: "{{ fastmlst_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - fastmlst{{ item.version_number }}
+  block:
+    - name: Download and install fastmlst ({{ version_number }})
+      block:
+        - name: Clone fastmlst repository
+          git:
+            repo: "{{ git_repo }}"
+            dest: "{{ unzip_dir }}"
+            version: "{{ git_tag }}"
+            force: yes
+
+        - name: Ensure fastmlst dir exists
+          file:
+            path: "{{ fastmlst_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Create install directory
+          file:
+            path: "{{ install_dir }}/bin"
+            state: directory
+            recurse: yes
+
+        - name: Compile fastmlst
+          make:
+            chdir: "{{ unzip_dir }}"
+            jobs: "{{ ansible_processor_count }}"
+          environment:
+            MAKEFLAGS: "-j {{ ansible_processor_count }}"
+
+        - name: Copy fastmlst binary to install directory
+          copy:
+            src: "{{ unzip_dir }}/fastmlst"
+            dest: "{{ install_dir }}/bin/fastmlst"
+            mode: '0755'
+            remote_src: yes
+
+    - name: Install fastmlst {{ version_number }} module
+      block:
+        - name: Check module dir {{ fastmlst_module_dir }}
+          file:
+            path: "{{ fastmlst_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install fastmlst {{ version_number }} module file
+          template:
+            src: bio/fastmlst.lua
+            dest: "{{ fastmlst_module_dir }}/{{ version_number }}.lua"
