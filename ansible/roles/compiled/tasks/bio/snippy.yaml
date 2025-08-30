@@ -51,9 +51,10 @@
         - name: Check snippy dependencies
           shell: "{{ install_dir }}/bin/snippy --check"
           environment:
-            PATH: "/software/common/perlbrew/perls/perl-5.33.0/bin:{{ install_dir }}/bin:{{ ansible_env.PATH }}"
+            PATH: "/software/bio/samtools/1.22.1/bin:/software/common/perlbrew/perls/perl-5.33.0/bin:{{ install_dir }}/bin:{{ ansible_env.PATH }}"
             LD_LIBRARY_PATH: "/software/common/perlbrew/perls/perl-5.33.0/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
             LIBRARY_PATH: "/software/common/perlbrew/perls/perl-5.33.0/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
+            MANPATH: "/software/bio/samtools/1.22.1/share/man:{{ ansible_env.MANPATH | default('') }}"
           ignore_errors: yes
 
     - name: Install snippy {{ version_number }} module

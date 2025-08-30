@@ -14,4 +14,4 @@ prepend_path('PATH', '{{ install_dir }}/bin')
 
 -- Dependencies
 depends_on("perl")
-depends_on("samtools", "bwa", "bcftools", "vcftools", "freebayes")
+depends_on("samtools/1.22.1", "bwa", "bcftools", "vcftools", "freebayes")
