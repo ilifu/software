@@ -16,4 +16,4 @@ prepend_path('PATH', '{{ install_dir }}/bin')
 setenv('ABRICATE_DB_PATH', '{{ install_dir }}/db')
 
 -- Dependencies
-depends_on("ncbi-blast+", "perl")
+depends_on("blast", "perl")

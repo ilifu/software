@@ -1,0 +1,67 @@
+---
+- name: Install freebayes {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    freebayes_dir: "{{ bio_dir }}/freebayes"
+    freebayes_module_dir: "{{ bio_modules }}/freebayes"
+    version_number: "{{ item.version_number }}"
+    git_repo: "{{ item.git_repo }}"
+    git_tag: "{{ item.git_tag }}"
+    install_dir: "{{ freebayes_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - freebayes{{ item.version_number }}
+  block:
+    - name: Download and install freebayes ({{ version_number }})
+      block:
+        - name: Ensure freebayes dir exists
+          file:
+            path: "{{ freebayes_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Clone freebayes repository
+          git:
+            repo: "{{ git_repo }}"
+            dest: "{{ bio_src }}/freebayes-{{ version_number }}"
+            version: "{{ git_tag }}"
+            force: yes
+            recursive: yes
+
+        - name: Compile freebayes
+          command: "make -j{{ ansible_processor_vcpus }}"
+          args:
+            chdir: "{{ bio_src }}/freebayes-{{ version_number }}"
+            creates: "{{ bio_src }}/freebayes-{{ version_number }}/bin/freebayes"
+
+        - name: Create install directory
+          file:
+            path: "{{ install_dir }}/bin"
+            state: directory
+            recurse: yes
+
+        - name: Copy freebayes binaries
+          copy:
+            src: "{{ bio_src }}/freebayes-{{ version_number }}/bin/"
+            dest: "{{ install_dir }}/bin/"
+            remote_src: yes
+            mode: preserve
+
+        - name: Copy freebayes scripts
+          copy:
+            src: "{{ bio_src }}/freebayes-{{ version_number }}/scripts/"
+            dest: "{{ install_dir }}/bin/"
+            remote_src: yes
+            mode: preserve
+
+    - name: Install freebayes {{ version_number }} module
+      block:
+        - name: Check module dir {{ freebayes_module_dir }}
+          file:
+            path: "{{ freebayes_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install freebayes {{ version_number }} module file
+          template:
+            src: bio/freebayes.lua
+            dest: "{{ freebayes_module_dir }}/{{ version_number }}.lua"

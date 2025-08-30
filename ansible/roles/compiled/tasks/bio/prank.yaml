@@ -1,0 +1,63 @@
+---
+- name: Install prank {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    prank_dir: "{{ bio_dir }}/prank"
+    prank_module_dir: "{{ bio_modules }}/prank"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    install_dir: "{{ prank_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - prank{{ item.version_number }}
+  block:
+    - name: Download and install prank ({{ version_number }})
+      block:
+        - name: Download prank
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/prank-{{ version_number }}.tar.gz"
+            mode: ug=rw,o=r
+
+        - name: Ensure prank dir exists
+          file:
+            path: "{{ prank_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Extract prank
+          unarchive:
+            src: "{{ bio_src }}/prank-{{ version_number }}.tar.gz"
+            dest: "{{ bio_src }}"
+            remote_src: yes
+            creates: "{{ bio_src }}/prank-msa"
+
+        - name: Configure prank
+          command: "./configure --prefix={{ install_dir }}"
+          args:
+            chdir: "{{ bio_src }}/prank-msa"
+            creates: "{{ bio_src }}/prank-msa/Makefile"
+
+        - name: Compile prank
+          command: "make -j{{ ansible_processor_vcpus }}"
+          args:
+            chdir: "{{ bio_src }}/prank-msa"
+            creates: "{{ bio_src }}/prank-msa/src/prank"
+
+        - name: Install prank
+          command: "make install"
+          args:
+            chdir: "{{ bio_src }}/prank-msa"
+            creates: "{{ install_dir }}/bin/prank"
+
+    - name: Install prank {{ version_number }} module
+      block:
+        - name: Check module dir {{ prank_module_dir }}
+          file:
+            path: "{{ prank_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install prank {{ version_number }} module file
+          template:
+            src: bio/prank.lua
+            dest: "{{ prank_module_dir }}/{{ version_number }}.lua"

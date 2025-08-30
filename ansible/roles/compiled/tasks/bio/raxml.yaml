@@ -1,0 +1,63 @@
+---
+- name: Install raxml {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    raxml_dir: "{{ bio_dir }}/raxml"
+    raxml_module_dir: "{{ bio_modules }}/raxml"
+    version_number: "{{ item.version_number }}"
+    git_repo: "{{ item.git_repo }}"
+    git_tag: "{{ item.git_tag }}"
+    install_dir: "{{ raxml_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - raxml{{ item.version_number }}
+  block:
+    - name: Download and install raxml ({{ version_number }})
+      block:
+        - name: Ensure raxml dir exists
+          file:
+            path: "{{ raxml_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Clone raxml repository
+          git:
+            repo: "{{ git_repo }}"
+            dest: "{{ bio_src }}/raxml-{{ version_number }}"
+            version: "{{ git_tag }}"
+            force: yes
+
+        - name: Create build directory
+          file:
+            path: "{{ bio_src }}/raxml-{{ version_number }}/build"
+            state: directory
+
+        - name: Configure raxml with cmake
+          command: "cmake -DCMAKE_INSTALL_PREFIX={{ install_dir }} .."
+          args:
+            chdir: "{{ bio_src }}/raxml-{{ version_number }}/build"
+            creates: "{{ bio_src }}/raxml-{{ version_number }}/build/Makefile"
+
+        - name: Compile raxml
+          command: "make -j{{ ansible_processor_vcpus }}"
+          args:
+            chdir: "{{ bio_src }}/raxml-{{ version_number }}/build"
+            creates: "{{ bio_src }}/raxml-{{ version_number }}/build/bin/raxml-ng"
+
+        - name: Install raxml
+          command: "make install"
+          args:
+            chdir: "{{ bio_src }}/raxml-{{ version_number }}/build"
+            creates: "{{ install_dir }}/bin/raxml-ng"
+
+    - name: Install raxml {{ version_number }} module
+      block:
+        - name: Check module dir {{ raxml_module_dir }}
+          file:
+            path: "{{ raxml_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install raxml {{ version_number }} module file
+          template:
+            src: bio/raxml.lua
+            dest: "{{ raxml_module_dir }}/{{ version_number }}.lua"

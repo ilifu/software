@@ -14,4 +14,4 @@ prepend_path('PATH', '{{ install_dir }}/.venv/bin')
 prepend_path('PYTHONPATH', '{{ install_dir }}/.venv/lib/python*/site-packages')
 
 -- Dependencies
-depends_on("diamond", "ncbi-blast+", "prodigal")
+depends_on("diamond", "blast", "prodigal")

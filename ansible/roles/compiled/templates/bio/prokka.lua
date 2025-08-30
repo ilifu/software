@@ -17,4 +17,4 @@ prepend_path('PERL5LIB', '{{ install_dir }}/lib')
 setenv('PROKKA_DBDIR', '{{ install_dir }}/db')
 
 -- Dependencies
-depends_on("prodigal", "ncbi-blast+", "perl")
+depends_on("prodigal", "blast", "perl")

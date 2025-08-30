@@ -16,4 +16,4 @@ prepend_path('PATH', '{{ install_dir }}')
 setenv('BBMAP_HOME', '{{ install_dir }}')
 
 -- Dependencies
-depends_on("java")
+depends_on("openjdk")

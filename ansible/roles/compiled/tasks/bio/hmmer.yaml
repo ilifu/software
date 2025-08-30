@@ -1,0 +1,63 @@
+---
+- name: Install hmmer {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    hmmer_dir: "{{ bio_dir }}/hmmer"
+    hmmer_module_dir: "{{ bio_modules }}/hmmer"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    install_dir: "{{ hmmer_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - hmmer{{ item.version_number }}
+  block:
+    - name: Download and install hmmer ({{ version_number }})
+      block:
+        - name: Download hmmer
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/hmmer-{{ version_number }}.tar.gz"
+            mode: ug=rw,o=r
+
+        - name: Ensure hmmer dir exists
+          file:
+            path: "{{ hmmer_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Extract hmmer
+          unarchive:
+            src: "{{ bio_src }}/hmmer-{{ version_number }}.tar.gz"
+            dest: "{{ bio_src }}"
+            remote_src: yes
+            creates: "{{ bio_src }}/hmmer-{{ version_number }}"
+
+        - name: Configure hmmer
+          command: "./configure --prefix={{ install_dir }}"
+          args:
+            chdir: "{{ bio_src }}/hmmer-{{ version_number }}"
+            creates: "{{ bio_src }}/hmmer-{{ version_number }}/Makefile"
+
+        - name: Compile hmmer
+          command: "make -j{{ ansible_processor_vcpus }}"
+          args:
+            chdir: "{{ bio_src }}/hmmer-{{ version_number }}"
+            creates: "{{ bio_src }}/hmmer-{{ version_number }}/src/hmmsearch"
+
+        - name: Install hmmer
+          command: "make install"
+          args:
+            chdir: "{{ bio_src }}/hmmer-{{ version_number }}"
+            creates: "{{ install_dir }}/bin/hmmsearch"
+
+    - name: Install hmmer {{ version_number }} module
+      block:
+        - name: Check module dir {{ hmmer_module_dir }}
+          file:
+            path: "{{ hmmer_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install hmmer {{ version_number }} module file
+          template:
+            src: bio/hmmer.lua
+            dest: "{{ hmmer_module_dir }}/{{ version_number }}.lua"

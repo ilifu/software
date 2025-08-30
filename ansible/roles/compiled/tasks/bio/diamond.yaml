@@ -40,7 +40,7 @@
             recurse: yes
 
         - name: Move diamond binary to install directory
-          command: "mv {{ unzip_dir }}/diamond {{ install_dir }}/bin/"
+          command: "mv /dev/shm/diamond {{ install_dir }}/bin/"
           args:
             creates: "{{ install_dir }}/bin/diamond"
 

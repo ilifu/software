@@ -2167,3 +2167,75 @@
   tags:
     - never
     - indelible
+
+- name: Install hmmer
+  vars:
+    hmmer_versions:
+      - {
+        version_number: "3.4",
+        url: "http://eddylab.org/software/hmmer/hmmer-3.4.tar.gz"
+      }
+  include_tasks:
+    file: hmmer.yaml
+  loop: "{{ hmmer_versions }}"
+  tags:
+    - never
+    - hmmer
+
+- name: Install raxml
+  vars:
+    raxml_versions:
+      - {
+        version_number: "1.2.2",
+        git_repo: "https://github.com/amkozlov/raxml-ng.git",
+        git_tag: "1.2.2"
+      }
+  include_tasks:
+    file: raxml.yaml
+  loop: "{{ raxml_versions }}"
+  tags:
+    - never
+    - raxml
+
+- name: Install prank
+  vars:
+    prank_versions:
+      - {
+        version_number: "170427",
+        url: "http://wasabiapp.org/download/prank/prank.source.170427.tgz"
+      }
+  include_tasks:
+    file: prank.yaml
+  loop: "{{ prank_versions }}"
+  tags:
+    - never
+    - prank
+
+- name: Install freebayes
+  vars:
+    freebayes_versions:
+      - {
+        version_number: "1.3.8",
+        git_repo: "https://github.com/freebayes/freebayes.git",
+        git_tag: "v1.3.8"
+      }
+  include_tasks:
+    file: freebayes.yaml
+  loop: "{{ freebayes_versions }}"
+  tags:
+    - never
+    - freebayes
+
+- name: Install screed
+  vars:
+    screed_versions:
+      - {
+        version_number: "1.1.3",
+        python_location: "/software/common/python/3.11.2"
+      }
+  include_tasks:
+    file: screed.yaml
+  loop: "{{ screed_versions }}"
+  tags:
+    - never
+    - screed

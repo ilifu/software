@@ -1,0 +1,46 @@
+---
+- name: Install screed {{ item.version_number }}
+  vars:
+    screed_dir: "{{ bio_dir }}/screed"
+    screed_module_dir: "{{ bio_modules }}/screed"
+    version_number: "{{ item.version_number }}"
+    python_location: "{{ item.python_location | default('/software/common/python/3.11.2') }}"
+    install_dir: "{{ screed_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - screed{{ item.version_number }}
+  environment:
+    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
+  block:
+    - name: Create screed directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+    - name: Copy uv files
+      copy:
+        src: "bio/{{ uv_file }}.screed.{{ version_number }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+        remote_src: false
+        mode: ugo=r
+      loop:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: "uv_file"
+    - name: Create virtual environment
+      command: "uv sync"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv"
+
+    - name: "Create screed module directory {{ screed_module_dir }}"
+      file:
+          path: "{{ screed_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install screed module file"
+      template:
+        src: bio/screed.lua
+        dest: "{{ screed_module_dir }}/{{ version_number }}.lua"
