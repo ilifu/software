@@ -9,6 +9,8 @@
     checksum: "{{ item.checksum }}"
     unzip_dir: "/dev/shm/isa-l-{{ version_number }}"
     install_dir: "{{ libisal_dir }}/{{ version_number }}"
+  environment:
+    PATH: "{{ common_dir }}/nasm/2.16.01/bin:{{ ansible_env.PATH }}"
   tags:
     - never
     - libisal{{ item.version_number }}
@@ -41,13 +43,8 @@
             chdir: "{{ unzip_dir }}"
             creates: "{{ unzip_dir }}/configure"
 
-        - name: Configure libisal with NASM
-          command: |
-            bash -c "
-            source /etc/profile.d/modules.sh
-            module load nasm
-            ./configure --prefix={{ install_dir }}
-            "
+        - name: Configure libisal
+          command: "./configure --prefix={{ install_dir }}"
           args:
             chdir: "{{ unzip_dir }}"
             creates: "{{ unzip_dir }}/Makefile"
