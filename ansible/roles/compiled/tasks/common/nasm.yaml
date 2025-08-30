@@ -1,0 +1,66 @@
+---
+- name: Install nasm {{ item.version_number }}
+  vars:
+    common_src: "{{ common_dir }}/src"
+    nasm_dir: "{{ common_dir }}/nasm"
+    nasm_module_dir: "{{ common_modules }}/nasm"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    unzip_dir: "/dev/shm/nasm-{{ version_number }}"
+    install_dir: "{{ nasm_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - nasm{{ item.version_number }}
+  block:
+    - name: Download and install nasm ({{ version_number }})
+      block:
+        - name: Download nasm
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ common_src }}/nasm-{{ version_number }}.tar.xz"
+            mode: ug=rw,o=r
+            checksum: "{{ checksum }}"
+
+        - name: Ensure nasm dir exists
+          file:
+            path: "{{ nasm_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Extract nasm
+          unarchive:
+            src: "{{ common_src }}/nasm-{{ version_number }}.tar.xz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzip_dir }}"
+
+        - name: Configure nasm
+          command: "./configure --prefix={{ install_dir }}"
+          args:
+            chdir: "{{ unzip_dir }}"
+            creates: "{{ unzip_dir }}/Makefile"
+
+        - name: Compile nasm
+          command: "make -j{{ ansible_processor_vcpus }}"
+          args:
+            chdir: "{{ unzip_dir }}"
+            creates: "{{ unzip_dir }}/nasm"
+
+        - name: Install nasm
+          command: "make install"
+          args:
+            chdir: "{{ unzip_dir }}"
+            creates: "{{ install_dir }}/bin/nasm"
+
+    - name: Install nasm {{ version_number }} module
+      block:
+        - name: Check module dir {{ nasm_module_dir }}
+          file:
+            path: "{{ nasm_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install nasm {{ version_number }} module file
+          template:
+            src: common/nasm.lua
+            dest: "{{ nasm_module_dir }}/{{ version_number }}.lua"

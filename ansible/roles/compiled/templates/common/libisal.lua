@@ -12,6 +12,8 @@ whatis("Version: {{ version_number }}")
 whatis("Description: Intel Intelligent Storage Acceleration Library")
 whatis("URL: https://github.com/intel/isa-l")
 
+depends_on("nasm")
+
 local root = "{{ common_dir }}/libisal/{{ version_number }}"
 
 prepend_path("PATH", pathJoin(root, "bin"))

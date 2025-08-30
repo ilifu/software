@@ -1425,3 +1425,18 @@
   tags:
     - never
     - libdeflate
+
+- name: Install nasm
+  vars:
+    nasm_versions:
+      - {
+        version_number: "2.16.01",
+        url: "https://www.nasm.us/pub/nasm/releasebuilds/2.16.01/nasm-2.16.01.tar.xz",
+        checksum: "sha256:c77745f4802375efeee2ec5c0ad6b7f037ea9c87c92b149a9637ff099f162558"
+      }
+  include_tasks:
+    file: nasm.yaml
+  loop: "{{ nasm_versions }}"
+  tags:
+    - never
+    - nasm

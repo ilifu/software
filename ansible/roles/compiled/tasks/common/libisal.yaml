@@ -41,8 +41,13 @@
             chdir: "{{ unzip_dir }}"
             creates: "{{ unzip_dir }}/configure"
 
-        - name: Configure libisal
-          command: "./configure --prefix={{ install_dir }}"
+        - name: Configure libisal with NASM
+          command: |
+            bash -c "
+            source /etc/profile.d/modules.sh
+            module load nasm
+            ./configure --prefix={{ install_dir }}
+            "
           args:
             chdir: "{{ unzip_dir }}"
             creates: "{{ unzip_dir }}/Makefile"
