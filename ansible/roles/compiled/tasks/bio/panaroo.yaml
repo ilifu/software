@@ -1,7 +1,6 @@
 ---
 - name: Install panaroo {{ item.version_number }}
   vars:
-    bio_src: "{{ bio_dir }}/src"
     panaroo_dir: "{{ bio_dir }}/panaroo"
     panaroo_module_dir: "{{ bio_modules }}/panaroo"
     version_number: "{{ item.version_number }}"
@@ -10,52 +9,38 @@
   tags:
     - never
     - panaroo{{ item.version_number }}
+  environment:
+    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
   block:
-    - name: Download and install panaroo ({{ version_number }})
-      block:
-        - name: Ensure panaroo dir exists
-          file:
-            path: "{{ panaroo_dir }}"
-            state: directory
-            recurse: yes
+    - name: Create panaroo directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+    - name: Copy uv files
+      copy:
+        src: "bio/{{ uv_file }}.panaroo.{{ version_number }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+        remote_src: false
+        mode: ugo=r
+      loop:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: "uv_file"
+    - name: Create virtual environment
+      command: "uv sync"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv"
 
-        - name: Create Python virtual environment for panaroo
-          command: "{{ python_location }}/bin/python3 -m venv {{ install_dir }}"
-          args:
-            creates: "{{ install_dir }}/bin/activate"
-
-        - name: Upgrade pip in virtual environment
-          pip:
-            name: pip
-            state: latest
-            virtualenv: "{{ install_dir }}"
-
-        - name: Install panaroo dependencies
-          pip:
-            name:
-              - numpy
-              - scipy
-              - networkx
-              - gffutils
-              - biopython
-              - joblib
-              - tqdm
-              - plotly
-            virtualenv: "{{ install_dir }}"
-
-        - name: Install panaroo using pip
-          pip:
-            name: panaroo
-            virtualenv: "{{ install_dir }}"
-
-    - name: Install panaroo {{ version_number }} module
-      block:
-        - name: Check module dir {{ panaroo_module_dir }}
-          file:
-            path: "{{ panaroo_module_dir }}"
-            state: directory
-            mode: u=rwx,g=rwx,o=rx
-        - name: Install panaroo {{ version_number }} module file
-          template:
-            src: bio/panaroo.lua
-            dest: "{{ panaroo_module_dir }}/{{ version_number }}.lua"
+    - name: "Create panaroo module directory {{ panaroo_module_dir }}"
+      file:
+          path: "{{ panaroo_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install panaroo module file"
+      template:
+        src: bio/panaroo.lua
+        dest: "{{ panaroo_module_dir }}/{{ version_number }}.lua"

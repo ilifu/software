@@ -1,77 +1,46 @@
 ---
 - name: Install checkm {{ item.version_number }}
   vars:
-    bio_src: "{{ bio_dir }}/src"
     checkm_dir: "{{ bio_dir }}/checkm"
     checkm_module_dir: "{{ bio_modules }}/checkm"
     version_number: "{{ item.version_number }}"
-    url: "{{ item.url }}"
     python_location: "{{ item.python_location | default('/software/common/python/3.11.2') }}"
-    unzip_dir: "/dev/shm/checkm-{{ version_number }}"
     install_dir: "{{ checkm_dir }}/{{ version_number }}"
   tags:
     - never
     - checkm{{ item.version_number }}
+  environment:
+    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
   block:
-    - name: Download and install checkm ({{ version_number }})
-      block:
-        - name: Download checkm
-          get_url:
-            url: "{{ url }}"
-            dest: "{{ bio_src }}/checkm-{{ version_number }}.tar.gz"
-            mode: ug=rw,o=r
+    - name: Create checkm directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+    - name: Copy uv files
+      copy:
+        src: "bio/{{ uv_file }}.checkm.{{ version_number }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+        remote_src: false
+        mode: ugo=r
+      loop:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: "uv_file"
+    - name: Create virtual environment
+      command: "uv sync"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv"
 
-        - name: Ensure checkm dir exists
-          file:
-            path: "{{ checkm_dir }}"
-            state: directory
-            recurse: yes
-
-        - name: Extract checkm
-          unarchive:
-            src: "{{ bio_src }}/checkm-{{ version_number }}.tar.gz"
-            dest: "/dev/shm"
-            remote_src: yes
-            creates: "{{ unzip_dir }}"
-
-        - name: Create Python virtual environment for checkm
-          command: "{{ python_location }}/bin/python3 -m venv {{ install_dir }}"
-          args:
-            creates: "{{ install_dir }}/bin/activate"
-
-        - name: Upgrade pip in virtual environment
-          pip:
-            name: pip
-            state: latest
-            virtualenv: "{{ install_dir }}"
-
-        - name: Install checkm dependencies
-          pip:
-            name:
-              - numpy
-              - scipy
-              - matplotlib
-              - dendropy
-            virtualenv: "{{ install_dir }}"
-
-        - name: Install checkm using pip
-          pip:
-            name: "{{ unzip_dir }}"
-            virtualenv: "{{ install_dir }}"
-
-        - name: Create checkm data directory
-          file:
-            path: "{{ install_dir }}/checkm_data"
-            state: directory
-
-    - name: Install checkm {{ version_number }} module
-      block:
-        - name: Check module dir {{ checkm_module_dir }}
-          file:
-            path: "{{ checkm_module_dir }}"
-            state: directory
-            mode: u=rwx,g=rwx,o=rx
-        - name: Install checkm {{ version_number }} module file
-          template:
-            src: bio/checkm.lua
-            dest: "{{ checkm_module_dir }}/{{ version_number }}.lua"
+    - name: "Create checkm module directory {{ checkm_module_dir }}"
+      file:
+          path: "{{ checkm_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install checkm module file"
+      template:
+        src: bio/checkm.lua
+        dest: "{{ checkm_module_dir }}/{{ version_number }}.lua"

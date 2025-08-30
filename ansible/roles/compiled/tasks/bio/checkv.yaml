@@ -1,7 +1,6 @@
 ---
 - name: Install checkv {{ item.version_number }}
   vars:
-    bio_src: "{{ bio_dir }}/src"
     checkv_dir: "{{ bio_dir }}/checkv"
     checkv_module_dir: "{{ bio_modules }}/checkv"
     version_number: "{{ item.version_number }}"
@@ -10,52 +9,38 @@
   tags:
     - never
     - checkv{{ item.version_number }}
+  environment:
+    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
   block:
-    - name: Download and install checkv ({{ version_number }})
-      block:
-        - name: Ensure checkv dir exists
-          file:
-            path: "{{ checkv_dir }}"
-            state: directory
-            recurse: yes
+    - name: Create checkv directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+    - name: Copy uv files
+      copy:
+        src: "bio/{{ uv_file }}.checkv.{{ version_number }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+        remote_src: false
+        mode: ugo=r
+      loop:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: "uv_file"
+    - name: Create virtual environment
+      command: "uv sync"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv"
 
-        - name: Create Python virtual environment for checkv
-          command: "{{ python_location }}/bin/python3 -m venv {{ install_dir }}"
-          args:
-            creates: "{{ install_dir }}/bin/activate"
-
-        - name: Upgrade pip in virtual environment
-          pip:
-            name: pip
-            state: latest
-            virtualenv: "{{ install_dir }}"
-
-        - name: Install checkv using pip
-          pip:
-            name: checkv
-            virtualenv: "{{ install_dir }}"
-
-        - name: Create checkv database directory
-          file:
-            path: "{{ install_dir }}/checkv-db"
-            state: directory
-
-        - name: Download checkv database
-          shell: "{{ install_dir }}/bin/checkv download_database {{ install_dir }}/checkv-db"
-          args:
-            creates: "{{ install_dir }}/checkv-db/genome_db"
-          environment:
-            PATH: "{{ install_dir }}/bin:{{ ansible_env.PATH }}"
-          ignore_errors: yes
-
-    - name: Install checkv {{ version_number }} module
-      block:
-        - name: Check module dir {{ checkv_module_dir }}
-          file:
-            path: "{{ checkv_module_dir }}"
-            state: directory
-            mode: u=rwx,g=rwx,o=rx
-        - name: Install checkv {{ version_number }} module file
-          template:
-            src: bio/checkv.lua
-            dest: "{{ checkv_module_dir }}/{{ version_number }}.lua"
+    - name: "Create checkv module directory {{ checkv_module_dir }}"
+      file:
+          path: "{{ checkv_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install checkv module file"
+      template:
+        src: bio/checkv.lua
+        dest: "{{ checkv_module_dir }}/{{ version_number }}.lua"

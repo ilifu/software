@@ -1,7 +1,6 @@
 ---
 - name: Install gubbins {{ item.version_number }}
   vars:
-    bio_src: "{{ bio_dir }}/src"
     gubbins_dir: "{{ bio_dir }}/gubbins"
     gubbins_module_dir: "{{ bio_modules }}/gubbins"
     version_number: "{{ item.version_number }}"
@@ -10,49 +9,38 @@
   tags:
     - never
     - gubbins{{ item.version_number }}
+  environment:
+    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
   block:
-    - name: Download and install gubbins ({{ version_number }})
-      block:
-        - name: Ensure gubbins dir exists
-          file:
-            path: "{{ gubbins_dir }}"
-            state: directory
-            recurse: yes
+    - name: Create gubbins directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+    - name: Copy uv files
+      copy:
+        src: "bio/{{ uv_file }}.gubbins.{{ version_number }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+        remote_src: false
+        mode: ugo=r
+      loop:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: "uv_file"
+    - name: Create virtual environment
+      command: "uv sync"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv"
 
-        - name: Create Python virtual environment for gubbins
-          command: "{{ python_location }}/bin/python3 -m venv {{ install_dir }}"
-          args:
-            creates: "{{ install_dir }}/bin/activate"
-
-        - name: Upgrade pip in virtual environment
-          pip:
-            name: pip
-            state: latest
-            virtualenv: "{{ install_dir }}"
-
-        - name: Install gubbins dependencies
-          pip:
-            name:
-              - numpy
-              - scipy
-              - biopython
-              - dendropy
-              - multiprocess
-            virtualenv: "{{ install_dir }}"
-
-        - name: Install gubbins using pip
-          pip:
-            name: gubbins
-            virtualenv: "{{ install_dir }}"
-
-    - name: Install gubbins {{ version_number }} module
-      block:
-        - name: Check module dir {{ gubbins_module_dir }}
-          file:
-            path: "{{ gubbins_module_dir }}"
-            state: directory
-            mode: u=rwx,g=rwx,o=rx
-        - name: Install gubbins {{ version_number }} module file
-          template:
-            src: bio/gubbins.lua
-            dest: "{{ gubbins_module_dir }}/{{ version_number }}.lua"
+    - name: "Create gubbins module directory {{ gubbins_module_dir }}"
+      file:
+          path: "{{ gubbins_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install gubbins module file"
+      template:
+        src: bio/gubbins.lua
+        dest: "{{ gubbins_module_dir }}/{{ version_number }}.lua"

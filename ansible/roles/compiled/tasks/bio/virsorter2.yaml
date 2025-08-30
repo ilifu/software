@@ -1,7 +1,6 @@
 ---
 - name: Install virsorter2 {{ item.version_number }}
   vars:
-    bio_src: "{{ bio_dir }}/src"
     virsorter2_dir: "{{ bio_dir }}/virsorter2"
     virsorter2_module_dir: "{{ bio_modules }}/virsorter2"
     version_number: "{{ item.version_number }}"
@@ -10,61 +9,38 @@
   tags:
     - never
     - virsorter2{{ item.version_number }}
+  environment:
+    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
   block:
-    - name: Download and install virsorter2 ({{ version_number }})
-      block:
-        - name: Ensure virsorter2 dir exists
-          file:
-            path: "{{ virsorter2_dir }}"
-            state: directory
-            recurse: yes
+    - name: Create virsorter2 directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+    - name: Copy uv files
+      copy:
+        src: "bio/{{ uv_file }}.virsorter2.{{ version_number }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+        remote_src: false
+        mode: ugo=r
+      loop:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: "uv_file"
+    - name: Create virtual environment
+      command: "uv sync"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv"
 
-        - name: Create Python virtual environment for virsorter2
-          command: "{{ python_location }}/bin/python3 -m venv {{ install_dir }}"
-          args:
-            creates: "{{ install_dir }}/bin/activate"
-
-        - name: Upgrade pip in virtual environment
-          pip:
-            name: pip
-            state: latest
-            virtualenv: "{{ install_dir }}"
-
-        - name: Install virsorter2 dependencies
-          pip:
-            name:
-              - numpy
-              - pandas
-              - seaborn
-              - scikit-learn
-              - imbalanced-learn
-              - joblib
-              - click
-              - ruamel.yaml
-            virtualenv: "{{ install_dir }}"
-
-        - name: Install virsorter2 using pip
-          pip:
-            name: virsorter
-            version: "2.2.4"
-            virtualenv: "{{ install_dir }}"
-
-        - name: Setup virsorter2 database
-          shell: "{{ install_dir }}/bin/virsorter setup -d {{ install_dir }}/db -j 4"
-          args:
-            creates: "{{ install_dir }}/db"
-          environment:
-            PATH: "{{ install_dir }}/bin:{{ ansible_env.PATH }}"
-          ignore_errors: yes
-
-    - name: Install virsorter2 {{ version_number }} module
-      block:
-        - name: Check module dir {{ virsorter2_module_dir }}
-          file:
-            path: "{{ virsorter2_module_dir }}"
-            state: directory
-            mode: u=rwx,g=rwx,o=rx
-        - name: Install virsorter2 {{ version_number }} module file
-          template:
-            src: bio/virsorter2.lua
-            dest: "{{ virsorter2_module_dir }}/{{ version_number }}.lua"
+    - name: "Create virsorter2 module directory {{ virsorter2_module_dir }}"
+      file:
+          path: "{{ virsorter2_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install virsorter2 module file"
+      template:
+        src: bio/virsorter2.lua
+        dest: "{{ virsorter2_module_dir }}/{{ version_number }}.lua"

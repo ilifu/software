@@ -1,7 +1,6 @@
 ---
 - name: Install pymlst {{ item.version_number }}
   vars:
-    bio_src: "{{ bio_dir }}/src"
     pymlst_dir: "{{ bio_dir }}/pymlst"
     pymlst_module_dir: "{{ bio_modules }}/pymlst"
     version_number: "{{ item.version_number }}"
@@ -10,39 +9,38 @@
   tags:
     - never
     - pymlst{{ item.version_number }}
+  environment:
+    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
   block:
-    - name: Download and install pymlst ({{ version_number }})
-      block:
-        - name: Ensure pymlst dir exists
-          file:
-            path: "{{ pymlst_dir }}"
-            state: directory
-            recurse: yes
+    - name: Create pymlst directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+    - name: Copy uv files
+      copy:
+        src: "bio/{{ uv_file }}.pymlst.{{ version_number }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+        remote_src: false
+        mode: ugo=r
+      loop:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: "uv_file"
+    - name: Create virtual environment
+      command: "uv sync"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv"
 
-        - name: Create Python virtual environment for pymlst
-          command: "{{ python_location }}/bin/python3 -m venv {{ install_dir }}"
-          args:
-            creates: "{{ install_dir }}/bin/activate"
-
-        - name: Upgrade pip in virtual environment
-          pip:
-            name: pip
-            state: latest
-            virtualenv: "{{ install_dir }}"
-
-        - name: Install pymlst using pip
-          pip:
-            name: pymlst
-            virtualenv: "{{ install_dir }}"
-
-    - name: Install pymlst {{ version_number }} module
-      block:
-        - name: Check module dir {{ pymlst_module_dir }}
-          file:
-            path: "{{ pymlst_module_dir }}"
-            state: directory
-            mode: u=rwx,g=rwx,o=rx
-        - name: Install pymlst {{ version_number }} module file
-          template:
-            src: bio/pymlst.lua
-            dest: "{{ pymlst_module_dir }}/{{ version_number }}.lua"
+    - name: "Create pymlst module directory {{ pymlst_module_dir }}"
+      file:
+          path: "{{ pymlst_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+    - name: "Install pymlst module file"
+      template:
+        src: bio/pymlst.lua
+        dest: "{{ pymlst_module_dir }}/{{ version_number }}.lua"
