@@ -36,12 +36,14 @@
 
         - name: Make mlst executables
           file:
-            path: "{{ install_dir }}/bin/{{ item }}"
+            path: "{{ install_dir }}/bin/{{ mlst_script }}"
             mode: '0755'
           loop:
             - mlst
             - mlst-download_pub_mlst
             - mlst-make_blast_db
+          loop_control:
+            loop_var: mlst_script
 
         - name: Download MLST databases
           shell: "{{ install_dir }}/bin/mlst-download_pub_mlst"
