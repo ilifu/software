@@ -37,7 +37,7 @@
 
         - name: Make prokka executables
           file:
-            path: "{{ install_dir }}/bin/{{ item }}"
+            path: "{{ install_dir }}/bin/{{ prokka_script }}"
             mode: '0755'
           loop:
             - prokka
@@ -46,6 +46,8 @@
             - prokka-hamap_to_hmm
             - prokka-tigrfams_to_hmm
             - prokka-uniprot_to_fasta_db
+          loop_control:
+            loop_var: prokka_script
 
         - name: Setup prokka databases
           shell: "{{ install_dir }}/bin/prokka --setupdb"

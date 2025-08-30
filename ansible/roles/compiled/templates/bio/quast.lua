@@ -10,8 +10,10 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: quast, genome assembly, quality assessment, evaluation")
 whatis("Description: quast {{ version_number }} - Genome assembly quality assessment tool")
 
+prepend_path('PATH', '{{ install_dir }}/venv/bin')
 prepend_path('PATH', '{{ install_dir }}')
 prepend_path('PYTHONPATH', '{{ install_dir }}')
 
 -- Set QUAST environment
 setenv('QUAST_HOME', '{{ install_dir }}')
+setenv('VIRTUAL_ENV', '{{ install_dir }}/venv')

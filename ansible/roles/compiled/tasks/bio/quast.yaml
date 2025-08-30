@@ -51,14 +51,17 @@
           loop_control:
             loop_var: quast_script
 
-        - name: Install Python dependencies
-          pip:
-            name:
-              - matplotlib
-              - simplejson
-              - joblib
-            executable: "{{ python_location }}"
-          ignore_errors: yes
+        - name: Create uv virtual environment for quast
+          command: "uv venv {{ install_dir }}/venv --python python3"
+          args:
+            creates: "{{ install_dir }}/venv/bin/python"
+
+        - name: Install Python dependencies with uv
+          command: "uv pip install matplotlib simplejson joblib"
+          args:
+            chdir: "{{ install_dir }}"
+          environment:
+            VIRTUAL_ENV: "{{ install_dir }}/venv"
 
     - name: Install quast {{ version_number }} module
       block:
