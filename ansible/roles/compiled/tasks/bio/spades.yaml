@@ -19,6 +19,7 @@
             url: "{{ url }}"
             dest: "{{ bio_src }}/SPAdes-{{ version_number }}-Linux.tar.gz"
             mode: ug=rw,o=r
+            checksum: "sha256:{{ item.checksum }}"
 
         - name: Ensure spades dir exists
           file:

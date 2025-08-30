@@ -18,6 +18,7 @@
             url: "{{ url }}"
             dest: "{{ bio_src }}/prank-{{ version_number }}.tar.gz"
             mode: ug=rw,o=r
+            checksum: "sha256:{{ item.checksum }}"
 
         - name: Ensure prank dir exists
           file:

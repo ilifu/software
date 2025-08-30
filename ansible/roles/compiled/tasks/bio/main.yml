@@ -77,7 +77,8 @@
     diamond_versions:
       - {
         version_number: "2.1.13",
-        url: "http://github.com/bbuchfink/diamond/releases/download/v2.1.13/diamond-linux64.tar.gz"
+        url: "http://github.com/bbuchfink/diamond/releases/download/v2.1.13/diamond-linux64.tar.gz",
+        checksum: "78b28a98088a0e01675fefca8e6248ab7801f779a22e15a12ff9e3881b8dd38a"
       }
   include_tasks:
     file: diamond.yaml
@@ -122,6 +123,7 @@
       - {
         version_number: "5.3.0",
         url: "https://github.com/ablab/quast/releases/download/quast_5.3.0/quast-5.3.0.tar.gz",
+        checksum: "ac9dba03ef9d0a51d7a9e2c56826104e78f340f6263a3ad393648442debc74ec",
         python_location: "/software/common/python/3.12.3"
       }
   include_tasks:
@@ -136,7 +138,8 @@
     spades_versions:
       - {
         version_number: "4.2.0",
-        url: "https://github.com/ablab/spades/releases/download/v4.2.0/SPAdes-4.2.0-Linux.tar.gz"
+        url: "https://github.com/ablab/spades/releases/download/v4.2.0/SPAdes-4.2.0-Linux.tar.gz",
+        checksum: "b449f5fa8ba8369981a7ff7a5e266ab4746d9f72abb863ebae1df38c02fb5985"
       }
   include_tasks:
     file: spades.yaml
@@ -245,6 +248,7 @@
       - {
         version_number: "39.33",
         url: "https://sourceforge.net/projects/bbmap/files/latest/download",
+        checksum: "b82d06579e118467b5f129f06c93991196d25cc7e43cd233aeb777f85507175e",
         java_module: "java/openjdk-18.0.2"
       }
   include_tasks:
@@ -2173,7 +2177,8 @@
     hmmer_versions:
       - {
         version_number: "3.4",
-        url: "http://eddylab.org/software/hmmer/hmmer-3.4.tar.gz"
+        url: "http://eddylab.org/software/hmmer/hmmer-3.4.tar.gz",
+        checksum: "ca70d94fd0cf271bd7063423aabb116d42de533117343a9b27a65c17ff06fbf3"
       }
   include_tasks:
     file: hmmer.yaml
@@ -2202,7 +2207,8 @@
     prank_versions:
       - {
         version_number: "170427",
-        url: "http://wasabiapp.org/download/prank/prank.source.170427.tgz"
+        url: "http://wasabiapp.org/download/prank/prank.source.170427.tgz",
+        checksum: "623eb5e9b5cb0be1f49c3bf715e5fabceb1059b21168437264bdcd5c587a8859"
       }
   include_tasks:
     file: prank.yaml

@@ -20,6 +20,7 @@
             url: "{{ url }}"
             dest: "{{ bio_src }}/quast-{{ version_number }}.tar.gz"
             mode: ug=rw,o=r
+            checksum: "sha256:{{ item.checksum }}"
 
         - name: Ensure quast dir exists
           file:

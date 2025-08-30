@@ -19,6 +19,7 @@
             url: "{{ url }}"
             dest: "{{ bio_src }}/diamond-{{ version_number }}-linux64.tar.gz"
             mode: ug=rw,o=r
+            checksum: "sha256:{{ item.checksum }}"
 
         - name: Ensure diamond dir exists
           file:

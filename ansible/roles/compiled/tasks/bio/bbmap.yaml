@@ -20,6 +20,7 @@
             url: "{{ url }}"
             dest: "{{ bio_src }}/BBMap_{{ version_number }}.tar.gz"
             mode: ug=rw,o=r
+            checksum: "sha256:{{ item.checksum }}"
 
         - name: Ensure bbmap dir exists
           file:
