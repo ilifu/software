@@ -20,7 +20,7 @@
             repo: "https://github.com/rdemolgen/SavvySuite.git"
             dest: "{{ install_dir }}"
         - name: Compile savvysuite in {{ install_dir }}
-          command: "{{ java_location }}/bin/javac {{ item }}"
+          command: "{{ java_location }}/bin/javac {{ java_file }}"
           args:
             chdir: "{{ install_dir }}"
           environment:
@@ -29,7 +29,8 @@
           with_fileglob:
             - "{{ install_dir }}/*.java"
           loop_control:
-            label: "{{ item }}"
+            loop_var: java_file
+            label: "{{ java_file }}"
 
 
     - name: Install SavvySuite {{ version_number }} module

@@ -32,11 +32,13 @@
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install snpEffData
-          command: "java -jar {{ snpeff_dir }}/snpEff.jar download {{ item }}"
+          command: "java -jar {{ snpeff_dir }}/snpEff.jar download {{ snpeff_data }}"
           args:
             chdir: "{{ snpeff_dir }}"
           with_items:
             - GRCh38.99
+          loop_control:
+            loop_var: snpeff_data
 
     - name: Install snpeff {{ version_number }} module
       block:

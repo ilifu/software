@@ -42,10 +42,12 @@
 
         - name: Make bbmap scripts executable
           file:
-            path: "{{ install_dir }}/{{ item }}"
+            path: "{{ bbmap_script }}"
             mode: '0755'
           with_fileglob:
             - "{{ install_dir }}/*.sh"
+          loop_control:
+            loop_var: bbmap_script
 
     - name: Install bbmap {{ version_number }} module
       block:

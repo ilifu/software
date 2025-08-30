@@ -20,9 +20,11 @@
         - "{{ gemini_dir }}"
         - "{{ gemini_data_dir }}"
       file:
-        path: "{{ item }}"
+        path: "{{ gemini_directory }}"
         state: directory
         mode: u=rwx,g=rxs,o=rx
+      loop_control:
+        loop_var: gemini_directory
     - name: Install gemini
       command: "/bin/bash -c 'module add python/2.7.18 && python3 {{ bio_src }}/gemini_install.py {{ gemini_dir }} {{ gemini_data_dir }}'"
       args:

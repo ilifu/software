@@ -13,4 +13,5 @@ whatis("Description: snippy {{ version_number }} - Rapid haploid variant calling
 prepend_path('PATH', '{{ install_dir }}/bin')
 
 -- Dependencies
+depends_on("perl")
 depends_on("samtools", "bwa", "bcftools", "vcftools", "freebayes")
