@@ -1,0 +1,71 @@
+---
+- name: Install libdeflate {{ item.version_number }}
+  vars:
+    common_src: "{{ common_dir }}/src"
+    libdeflate_dir: "{{ common_dir }}/libdeflate"
+    libdeflate_module_dir: "{{ common_modules }}/libdeflate"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    unzip_dir: "/dev/shm/libdeflate-{{ version_number }}"
+    install_dir: "{{ libdeflate_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - libdeflate{{ item.version_number }}
+  block:
+    - name: Download and install libdeflate ({{ version_number }})
+      block:
+        - name: Download libdeflate
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ common_src }}/libdeflate-{{ version_number }}.tar.gz"
+            mode: ug=rw,o=r
+            checksum: "{{ checksum }}"
+
+        - name: Ensure libdeflate dir exists
+          file:
+            path: "{{ libdeflate_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Extract libdeflate
+          unarchive:
+            src: "{{ common_src }}/libdeflate-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzip_dir }}"
+
+        - name: Create build directory
+          file:
+            path: "{{ unzip_dir }}/build"
+            state: directory
+
+        - name: Configure libdeflate with CMake
+          command: "cmake .. -DCMAKE_INSTALL_PREFIX={{ install_dir }} -DCMAKE_BUILD_TYPE=Release"
+          args:
+            chdir: "{{ unzip_dir }}/build"
+            creates: "{{ unzip_dir }}/build/Makefile"
+
+        - name: Compile libdeflate
+          command: "make -j{{ ansible_processor_vcpus }}"
+          args:
+            chdir: "{{ unzip_dir }}/build"
+            creates: "{{ unzip_dir }}/build/libdeflate.so"
+
+        - name: Install libdeflate
+          command: "make install"
+          args:
+            chdir: "{{ unzip_dir }}/build"
+            creates: "{{ install_dir }}/lib/libdeflate.so"
+
+    - name: Install libdeflate {{ version_number }} module
+      block:
+        - name: Check module dir {{ libdeflate_module_dir }}
+          file:
+            path: "{{ libdeflate_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install libdeflate {{ version_number }} module file
+          template:
+            src: common/libdeflate.lua
+            dest: "{{ libdeflate_module_dir }}/{{ version_number }}.lua"

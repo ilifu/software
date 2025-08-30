@@ -1395,3 +1395,33 @@
   tags:
       - never
       - boost
+
+- name: Install libisal
+  vars:
+    libisal_versions:
+      - {
+        version_number: "2.31.0",
+        url: "https://github.com/intel/isa-l/archive/v2.31.0.tar.gz",
+        checksum: "sha256:e218b7b2e241cfb8e8b68f54a6e5eed80968cc387c4b1af03708b54e9fb236f1"
+      }
+  include_tasks:
+    file: libisal.yaml
+  loop: "{{ libisal_versions }}"
+  tags:
+    - never
+    - libisal
+
+- name: Install libdeflate
+  vars:
+    libdeflate_versions:
+      - {
+        version_number: "1.22",
+        url: "https://github.com/ebiggers/libdeflate/archive/v1.22.tar.gz",
+        checksum: "sha256:7f343c7bf2ba46e774d8a632bf073235e1fd27723ef0a12a90f8947b7fe851d6"
+      }
+  include_tasks:
+    file: libdeflate.yaml
+  loop: "{{ libdeflate_versions }}"
+  tags:
+    - never
+    - libdeflate

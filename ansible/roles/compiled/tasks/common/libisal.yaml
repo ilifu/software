@@ -1,0 +1,66 @@
+---
+- name: Install libisal {{ item.version_number }}
+  vars:
+    common_src: "{{ common_dir }}/src"
+    libisal_dir: "{{ common_dir }}/libisal"
+    libisal_module_dir: "{{ common_modules }}/libisal"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    unzip_dir: "/dev/shm/isa-l-{{ version_number }}"
+    install_dir: "{{ libisal_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - libisal{{ item.version_number }}
+  block:
+    - name: Download and install libisal ({{ version_number }})
+      block:
+        - name: Download libisal
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ common_src }}/isa-l-{{ version_number }}.tar.gz"
+            mode: ug=rw,o=r
+            checksum: "{{ checksum }}"
+
+        - name: Ensure libisal dir exists
+          file:
+            path: "{{ libisal_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Extract libisal
+          unarchive:
+            src: "{{ common_src }}/isa-l-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzip_dir }}"
+
+        - name: Configure libisal
+          command: "./configure --prefix={{ install_dir }}"
+          args:
+            chdir: "{{ unzip_dir }}"
+            creates: "{{ unzip_dir }}/Makefile"
+
+        - name: Compile libisal
+          command: "make -j{{ ansible_processor_vcpus }}"
+          args:
+            chdir: "{{ unzip_dir }}"
+            creates: "{{ unzip_dir }}/bin/igzip"
+
+        - name: Install libisal
+          command: "make install"
+          args:
+            chdir: "{{ unzip_dir }}"
+            creates: "{{ install_dir }}/lib/libisal.so"
+
+    - name: Install libisal {{ version_number }} module
+      block:
+        - name: Check module dir {{ libisal_module_dir }}
+          file:
+            path: "{{ libisal_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install libisal {{ version_number }} module file
+          template:
+            src: common/libisal.lua
+            dest: "{{ libisal_module_dir }}/{{ version_number }}.lua"

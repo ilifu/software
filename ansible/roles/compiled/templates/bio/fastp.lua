@@ -10,4 +10,6 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: fastp, FASTQ, preprocessor, quality control, trimming")
 whatis("Description: fastp {{ version_number }} - Ultra-fast all-in-one FASTQ preprocessor")
 
+depends_on("libisal", "libdeflate")
+
 prepend_path('PATH', '{{ install_dir }}/bin')
