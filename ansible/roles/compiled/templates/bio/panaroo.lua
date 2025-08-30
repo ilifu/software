@@ -10,8 +10,8 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: panaroo, pangenome analysis, bacterial genomes, graph-based")
 whatis("Description: panaroo {{ version_number }} - Graph-based pangenome analysis tool")
 
-prepend_path('PATH', '{{ install_dir }}/bin')
-prepend_path('PYTHONPATH', '{{ install_dir }}/lib/python*/site-packages')
+prepend_path('PATH', '{{ install_dir }}/.venv/bin')
+prepend_path('PYTHONPATH', '{{ install_dir }}/.venv/lib/python*/site-packages')
 
 -- Dependencies
 depends_on("prokka", "cd-hit", "mafft", "prank")

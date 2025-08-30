@@ -29,7 +29,6 @@
             name: pip
             state: latest
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install scoary dependencies
           pip:
@@ -38,13 +37,11 @@
               - scipy
               - pandas
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install scoary using pip
           pip:
             name: scoary
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
     - name: Install scoary {{ version_number }} module
       block:

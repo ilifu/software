@@ -44,7 +44,6 @@
             name: pip
             state: latest
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install checkm dependencies
           pip:
@@ -54,13 +53,11 @@
               - matplotlib
               - dendropy
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install checkm using pip
           pip:
             name: "{{ unzip_dir }}"
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Create checkm data directory
           file:

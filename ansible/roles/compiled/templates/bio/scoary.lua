@@ -11,5 +11,5 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: scoary, pan-genome, association studies, GWAS")
 whatis("Description: scoary {{ version_number }} - Pan-genome association studies")
 
-prepend_path('PATH', '{{ install_dir }}/bin')
-prepend_path('PYTHONPATH', '{{ install_dir }}/lib/python*/site-packages')
+prepend_path('PATH', '{{ install_dir }}/.venv/bin')
+prepend_path('PYTHONPATH', '{{ install_dir }}/.venv/lib/python*/site-packages')

@@ -10,8 +10,8 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: rgi, resistance gene identifier, antibiotic resistance, CARD")
 whatis("Description: rgi {{ version_number }} - Resistance Gene Identifier")
 
-prepend_path('PATH', '{{ install_dir }}/bin')
-prepend_path('PYTHONPATH', '{{ install_dir }}/lib/python*/site-packages')
+prepend_path('PATH', '{{ install_dir }}/.venv/bin')
+prepend_path('PYTHONPATH', '{{ install_dir }}/.venv/lib/python*/site-packages')
 
 -- Dependencies
 depends_on("diamond", "ncbi-blast+", "prodigal")

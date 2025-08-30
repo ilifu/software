@@ -29,7 +29,6 @@
             name: pip
             state: latest
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install srst2 dependencies
           pip:
@@ -37,13 +36,11 @@
               - scipy
               - pysam
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install srst2 using pip
           pip:
             name: srst2
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
     - name: Install srst2 {{ version_number }} module
       block:

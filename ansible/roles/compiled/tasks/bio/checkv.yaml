@@ -29,13 +29,11 @@
             name: pip
             state: latest
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install checkv using pip
           pip:
             name: checkv
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Create checkv database directory
           file:

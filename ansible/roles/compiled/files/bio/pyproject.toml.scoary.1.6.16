@@ -1,0 +1,12 @@
+[project]
+name = "scoary"
+version = "1.6.16"
+description = "Scoary project"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "scoary>=1.6.16",
+    "numpy",
+    "scipy", 
+    "pandas",
+]

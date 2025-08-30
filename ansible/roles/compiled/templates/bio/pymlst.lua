@@ -9,5 +9,5 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: pymlst, multilocus sequence typing, python, MLST")
 whatis("Description: pymlst {{ version_number }} - Python-based MLST analysis tool")
 
-prepend_path('PATH', '{{ install_dir }}/bin')
-prepend_path('PYTHONPATH', '{{ install_dir }}/lib/python*/site-packages')
+prepend_path('PATH', '{{ install_dir }}/.venv/bin')
+prepend_path('PYTHONPATH', '{{ install_dir }}/.venv/lib/python*/site-packages')

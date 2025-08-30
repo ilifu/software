@@ -29,7 +29,6 @@
             name: pip
             state: latest
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install virsorter2 dependencies
           pip:
@@ -43,14 +42,12 @@
               - click
               - ruamel.yaml
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install virsorter2 using pip
           pip:
             name: virsorter
             version: "2.2.4"
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Setup virsorter2 database
           shell: "{{ install_dir }}/bin/virsorter setup -d {{ install_dir }}/db -j 4"

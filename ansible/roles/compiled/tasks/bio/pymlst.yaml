@@ -29,13 +29,11 @@
             name: pip
             state: latest
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install pymlst using pip
           pip:
             name: pymlst
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
     - name: Install pymlst {{ version_number }} module
       block:

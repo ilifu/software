@@ -10,8 +10,8 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: checkv, viral genomes, quality assessment, metagenomes")
 whatis("Description: checkv {{ version_number }} - Viral genome quality assessment tool")
 
-prepend_path('PATH', '{{ install_dir }}/bin')
-prepend_path('PYTHONPATH', '{{ install_dir }}/lib/python*/site-packages')
+prepend_path('PATH', '{{ install_dir }}/.venv/bin')
+prepend_path('PYTHONPATH', '{{ install_dir }}/.venv/lib/python*/site-packages')
 
 -- Set CheckV database directory
 setenv('CHECKV_DB', '{{ install_dir }}/checkv-db')

@@ -39,13 +39,11 @@
             name: pip
             state: latest
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install rgi using pip
           pip:
             name: "{{ unzip_dir }}"
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Download CARD database
           shell: "{{ install_dir }}/bin/rgi card_annotation --card_json {{ install_dir }}/card.json"

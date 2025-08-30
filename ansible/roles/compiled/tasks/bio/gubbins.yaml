@@ -29,7 +29,6 @@
             name: pip
             state: latest
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install gubbins dependencies
           pip:
@@ -40,13 +39,11 @@
               - dendropy
               - multiprocess
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install gubbins using pip
           pip:
             name: gubbins
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
     - name: Install gubbins {{ version_number }} module
       block:

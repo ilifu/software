@@ -10,8 +10,8 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: srst2, sequence typing, MLST, resistance genes")
 whatis("Description: srst2 {{ version_number }} - Short Read Sequence Typing")
 
-prepend_path('PATH', '{{ install_dir }}/bin')
-prepend_path('PYTHONPATH', '{{ install_dir }}/lib/python*/site-packages')
+prepend_path('PATH', '{{ install_dir }}/.venv/bin')
+prepend_path('PYTHONPATH', '{{ install_dir }}/.venv/lib/python*/site-packages')
 
 -- Dependencies
 depends_on("bwa", "samtools", "bowtie2")

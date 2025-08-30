@@ -29,7 +29,6 @@
             name: pip
             state: latest
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install panaroo dependencies
           pip:
@@ -43,13 +42,11 @@
               - tqdm
               - plotly
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install panaroo using pip
           pip:
             name: panaroo
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
     - name: Install panaroo {{ version_number }} module
       block:

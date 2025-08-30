@@ -10,8 +10,8 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: ariba, antimicrobial resistance, assembly, MLST")
 whatis("Description: ariba {{ version_number }} - Antimicrobial Resistance Identification By Assembly")
 
-prepend_path('PATH', '{{ install_dir }}/bin')
-prepend_path('PYTHONPATH', '{{ install_dir }}/lib/python*/site-packages')
+prepend_path('PATH', '{{ install_dir }}/.venv/bin')
+prepend_path('PYTHONPATH', '{{ install_dir }}/.venv/lib/python*/site-packages')
 
 -- Dependencies  
 depends_on("spades", "samtools", "bwa", "bcftools")

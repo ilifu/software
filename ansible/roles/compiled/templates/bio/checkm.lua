@@ -11,8 +11,8 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: checkm, genome quality, completeness, contamination")
 whatis("Description: checkm {{ version_number }} - Genome quality assessment tool")
 
-prepend_path('PATH', '{{ install_dir }}/bin')
-prepend_path('PYTHONPATH', '{{ install_dir }}/lib/python*/site-packages')
+prepend_path('PATH', '{{ install_dir }}/.venv/bin')
+prepend_path('PYTHONPATH', '{{ install_dir }}/.venv/lib/python*/site-packages')
 
 -- Set CheckM data directory
 setenv('CHECKM_DATA_PATH', '{{ install_dir }}/checkm_data')
