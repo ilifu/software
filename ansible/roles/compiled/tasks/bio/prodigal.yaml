@@ -41,21 +41,12 @@
           environment:
             MAKEFLAGS: "-j {{ ansible_processor_count }}"
 
-        - name: Install prodigal to custom directory
-          make:
-            chdir: "{{ unzip_dir }}"
-            target: install
-          environment:
-            DESTDIR: "{{ install_dir }}"
-            PREFIX: ""
-
-        - name: Copy prodigal binary if make install didn't work as expected
+        - name: Install prodigal binary
           copy:
             src: "{{ unzip_dir }}/prodigal"
             dest: "{{ install_dir }}/bin/prodigal"
             mode: '0755'
             remote_src: yes
-          ignore_errors: yes
 
     - name: Install prodigal {{ version_number }} module
       block:
