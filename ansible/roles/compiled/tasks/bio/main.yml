@@ -229,8 +229,7 @@
   vars:
     checkm_versions:
       - {
-        version_number: "1.1.6",
-        url: "https://github.com/Ecogenomics/CheckM/archive/refs/tags/v1.1.6.tar.gz",
+        version_number: "1.2.4",
         python_location: "/software/common/python/3.11.2"
       }
   include_tasks:
