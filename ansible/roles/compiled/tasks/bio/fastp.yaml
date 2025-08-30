@@ -38,9 +38,9 @@
           command: |
             bash -c "
             source /etc/profile.d/modules.sh
-            module load libisal/2.31.0 libdeflate/1.22
-            export LDFLAGS=\"-L{{ common_dir }}/libisal/2.31.0/lib -L{{ common_dir }}/libdeflate/1.22/lib \$LDFLAGS\"
-            export CPPFLAGS=\"-I{{ common_dir }}/libisal/2.31.0/include -I{{ common_dir }}/libdeflate/1.22/include \$CPPFLAGS\"
+            module load libisal libdeflate
+            export LDFLAGS=\"-L\$LIBISAL_ROOT/lib -L\$LIBDEFLATE_ROOT/lib \$LDFLAGS\"
+            export CPPFLAGS=\"-I\$LIBISAL_ROOT/include -I\$LIBDEFLATE_ROOT/include \$CPPFLAGS\"
             make -j{{ ansible_processor_count }}
             "
           args:

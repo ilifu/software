@@ -35,6 +35,12 @@
             remote_src: yes
             creates: "{{ unzip_dir }}"
 
+        - name: Generate configure script
+          command: "./autogen.sh"
+          args:
+            chdir: "{{ unzip_dir }}"
+            creates: "{{ unzip_dir }}/configure"
+
         - name: Configure libisal
           command: "./configure --prefix={{ install_dir }}"
           args:
