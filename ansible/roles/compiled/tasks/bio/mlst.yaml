@@ -51,8 +51,6 @@
 
         - name: Download MLST databases
           shell: "{{ install_dir }}/scripts/mlst-download_pub_mlst"
-          args:
-            creates: "{{ install_dir }}/db"
           environment:
             PATH: "{{ install_dir }}/bin:{{ install_dir }}/scripts:{{ ansible_env.PATH }}"
           ignore_errors: yes
