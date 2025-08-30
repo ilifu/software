@@ -44,7 +44,6 @@
             name: "{{ unzip_dir }}"
             virtualenv: "{{ install_dir }}"
             editable: no
-            executable: "{{ install_dir }}/bin/pip"
 
         - name: Install additional Python dependencies
           pip:
@@ -53,7 +52,6 @@
               - pysam
               - pyfastaq
             virtualenv: "{{ install_dir }}"
-            executable: "{{ install_dir }}/bin/pip"
 
     - name: Install ariba {{ version_number }} module
       block:
