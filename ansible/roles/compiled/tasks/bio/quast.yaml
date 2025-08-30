@@ -52,12 +52,12 @@
             loop_var: quast_script
 
         - name: Create uv virtual environment for quast
-          command: "uv venv {{ install_dir }}/venv --python python3"
+          command: "/software/common/python/3.12.3/bin/uv venv {{ install_dir }}/venv --python /software/common/python/3.12.3/bin/python3"
           args:
             creates: "{{ install_dir }}/venv/bin/python"
 
         - name: Install Python dependencies with uv
-          command: "uv pip install matplotlib simplejson joblib"
+          command: "/software/common/python/3.12.3/bin/uv pip install matplotlib simplejson joblib"
           args:
             chdir: "{{ install_dir }}"
           environment:
