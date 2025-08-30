@@ -34,23 +34,27 @@
           args:
             creates: "{{ install_dir }}/bin"
 
-        - name: Make mlst executables
+        - name: Make mlst main executable
           file:
-            path: "{{ install_dir }}/bin/{{ mlst_script }}"
+            path: "{{ install_dir }}/bin/mlst"
+            mode: '0755'
+
+        - name: Make mlst script executables
+          file:
+            path: "{{ install_dir }}/scripts/{{ mlst_script }}"
             mode: '0755'
           loop:
-            - mlst
             - mlst-download_pub_mlst
             - mlst-make_blast_db
           loop_control:
             loop_var: mlst_script
 
         - name: Download MLST databases
-          shell: "{{ install_dir }}/bin/mlst-download_pub_mlst"
+          shell: "{{ install_dir }}/scripts/mlst-download_pub_mlst"
           args:
             creates: "{{ install_dir }}/db"
           environment:
-            PATH: "{{ install_dir }}/bin:{{ ansible_env.PATH }}"
+            PATH: "{{ install_dir }}/bin:{{ install_dir }}/scripts:{{ ansible_env.PATH }}"
           ignore_errors: yes
 
     - name: Install mlst {{ version_number }} module

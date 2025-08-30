@@ -10,6 +10,7 @@ whatis("Keywords: mlst, multilocus sequence typing, pubmlst")
 whatis("Description: mlst {{ version_number }} - Multilocus sequence typing from assembled sequences")
 
 prepend_path('PATH', '{{ install_dir }}/bin')
+prepend_path('PATH', '{{ install_dir }}/scripts')
 
 -- Set MLST database path
 setenv('MLST_DB', '{{ install_dir }}/db')
