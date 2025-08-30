@@ -42,12 +42,14 @@
 
         - name: Make quast executables
           file:
-            path: "{{ install_dir }}/{{ item }}"
+            path: "{{ install_dir }}/{{ quast_script }}"
             mode: '0755'
           loop:
             - quast.py
             - metaquast.py
             - quast-lg.py
+          loop_control:
+            loop_var: quast_script
 
         - name: Install Python dependencies
           pip:
