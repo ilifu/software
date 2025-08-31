@@ -20,19 +20,12 @@
             state: directory
             recurse: yes
 
-        - name: Clone freebayes repository with HTTPS rewrite
-          shell: |
-            git config url."https://github.com/".insteadOf "git@github.com:"
-            git clone --recursive --branch {{ git_tag }} {{ git_repo }} {{ bio_src }}/freebayes-{{ version_number }}
-            git config --unset url."https://github.com/".insteadOf
-          args:
-            creates: "{{ bio_src }}/freebayes-{{ version_number }}"
-
-        - name: Compile freebayes
-          command: "make -j{{ ansible_processor_vcpus }}"
-          args:
-            chdir: "{{ bio_src }}/freebayes-{{ version_number }}"
-            creates: "{{ bio_src }}/freebayes-{{ version_number }}/bin/freebayes"
+        - name: Download freebayes binary
+          get_url:
+            url: "{{ item.url }}"
+            dest: "{{ bio_src }}/freebayes-{{ version_number }}-linux-amd64-static.gz"
+            mode: ug=rw,o=r
+            checksum: "sha256:{{ item.checksum }}"
 
         - name: Create install directory
           file:
@@ -40,19 +33,15 @@
             state: directory
             recurse: yes
 
-        - name: Copy freebayes binaries
-          copy:
-            src: "{{ bio_src }}/freebayes-{{ version_number }}/bin/"
-            dest: "{{ install_dir }}/bin/"
-            remote_src: yes
-            mode: preserve
+        - name: Extract and install freebayes binary
+          shell: "gunzip -c {{ bio_src }}/freebayes-{{ version_number }}-linux-amd64-static.gz > {{ install_dir }}/bin/freebayes"
+          args:
+            creates: "{{ install_dir }}/bin/freebayes"
 
-        - name: Copy freebayes scripts
-          copy:
-            src: "{{ bio_src }}/freebayes-{{ version_number }}/scripts/"
-            dest: "{{ install_dir }}/bin/"
-            remote_src: yes
-            mode: preserve
+        - name: Make freebayes executable
+          file:
+            path: "{{ install_dir }}/bin/freebayes"
+            mode: '0755'
 
     - name: Install freebayes {{ version_number }} module
       block:
