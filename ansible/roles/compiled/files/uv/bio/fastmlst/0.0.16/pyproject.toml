@@ -1,0 +1,8 @@
+[project]
+name = "fastmlst"
+version = "0.0.16"
+dependencies = [
+    "biopython",
+    "tqdm", 
+    "pandas"
+]

@@ -28,25 +28,32 @@
             state: directory
             recurse: yes
 
-        - name: Create install directory
-          file:
-            path: "{{ install_dir }}/bin"
-            state: directory
-            recurse: yes
+        - name: Copy fastmlst source to install directory
+          command: "cp -r {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/setup.py"
 
-        - name: Compile fastmlst
-          make:
-            chdir: "{{ unzip_dir }}"
-            jobs: "{{ ansible_processor_count }}"
-          environment:
-            MAKEFLAGS: "-j {{ ansible_processor_count }}"
+        - name: Create uv virtual environment for fastmlst
+          command: "/software/common/python/3.12.3/bin/uv venv {{ install_dir }}/venv --python /software/common/python/3.12.3/bin/python3"
+          args:
+            creates: "{{ install_dir }}/venv/bin/python"
 
-        - name: Copy fastmlst binary to install directory
+        - name: Copy uv configuration files for fastmlst
           copy:
-            src: "{{ unzip_dir }}/fastmlst"
-            dest: "{{ install_dir }}/bin/fastmlst"
-            mode: '0755'
-            remote_src: yes
+            src: "uv/bio/fastmlst/{{ version_number }}/{{ uv_file }}"
+            dest: "{{ install_dir }}/{{ uv_file }}"
+          loop:
+            - "uv.lock"
+            - "pyproject.toml"
+          loop_control:
+            loop_var: uv_file
+
+        - name: Install fastmlst and dependencies with uv
+          command: "/software/common/python/3.12.3/bin/uv sync"
+          args:
+            chdir: "{{ install_dir }}"
+          environment:
+            VIRTUAL_ENV: "{{ install_dir }}/venv"
 
     - name: Install fastmlst {{ version_number }} module
       block:
