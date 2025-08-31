@@ -2221,9 +2221,9 @@
   vars:
     freebayes_versions:
       - {
-        version_number: "1.3.8",
-        git_repo: "https://github.com/freebayes/freebayes.git",
-        git_tag: "v1.3.8"
+        version_number: "1.3.10",
+        url: "https://github.com/freebayes/freebayes/releases/download/v1.3.10/freebayes-1.3.10-linux-amd64-static.gz",
+        checksum: "680b6ff224d057f35e3a0e4f7d357506df3815db9690a43410d50928ea36ab64"
       }
   include_tasks:
     file: freebayes.yaml
