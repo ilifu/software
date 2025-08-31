@@ -20,13 +20,13 @@
             state: directory
             recurse: yes
 
-        - name: Clone freebayes repository
-          git:
-            repo: "{{ git_repo }}"
-            dest: "{{ bio_src }}/freebayes-{{ version_number }}"
-            version: "{{ git_tag }}"
-            force: yes
-            recursive: yes
+        - name: Clone freebayes repository with HTTPS rewrite
+          shell: |
+            git config url."https://github.com/".insteadOf "git@github.com:"
+            git clone --recursive --branch {{ git_tag }} {{ git_repo }} {{ bio_src }}/freebayes-{{ version_number }}
+            git config --unset url."https://github.com/".insteadOf
+          args:
+            creates: "{{ bio_src }}/freebayes-{{ version_number }}"
 
         - name: Compile freebayes
           command: "make -j{{ ansible_processor_vcpus }}"
