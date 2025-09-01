@@ -2336,9 +2336,9 @@
   vars:
     amrfinder_versions:
       - {
-        version_number: "4.0.23",
-        url: "https://github.com/ncbi/amr/releases/download/amrfinder_v4.0.23/amrfinder_binaries_v4.0.23.tar.gz",
-        checksum: "sha256:1d1e1368166ccf3daa1b0c2aec6120f3c4fb19e8cd52c652666cde0e9b5a0998",
+        version_number: "3.12.8",
+        url: "https://github.com/ncbi/amr/releases/download/amrfinder_v3.12.8/amrfinder_binaries_v3.12.8.tar.gz",
+        checksum: "sha256:a0eb7cd9129d31370a4b8506a8c44e6eb0ecee8a33e76d54e07f085004ffde14",
         blast_module: "blast/2.16.0",
         hmmer_module: "hmmer/3.4"
       }
