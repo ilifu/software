@@ -233,7 +233,7 @@
     checkm_versions:
       - {
         version_number: "1.2.4",
-        python_location: "/software/common/python/3.11.2"
+        python_location: "/software/common/python/3.12.3"
       }
   include_tasks:
     file: checkm.yaml
