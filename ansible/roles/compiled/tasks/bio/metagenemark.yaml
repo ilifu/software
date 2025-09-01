@@ -36,7 +36,7 @@
         - name: Compile MetaGeneMark-2
           make:
             chdir: "{{ install_dir }}/src"
-            file: "Makefile"
+            file: "Makefile.ubuntu"
             jobs: 4
           environment:
             CC: gcc
@@ -51,7 +51,7 @@
 
         - name: Copy model files to install directory
           copy:
-            src: "{{ install_dir }}/dependencies/{{ model_file }}"
+            src: "{{ install_dir }}/src/{{ model_file }}"
             dest: "{{ install_dir }}/{{ model_file }}"
             remote_src: true
           loop:
@@ -60,10 +60,12 @@
           loop_control:
             loop_var: model_file
 
-        - name: Make run script executable
-          file:
-            path: "{{ install_dir }}/run_mgm.pl"
+        - name: Copy run script to install directory
+          copy:
+            src: "{{ install_dir }}/src/run_mgm.pl"
+            dest: "{{ install_dir }}/run_mgm.pl"
             mode: '0755'
+            remote_src: true
 
         - name: Create GeneMark license key notice
           copy:
