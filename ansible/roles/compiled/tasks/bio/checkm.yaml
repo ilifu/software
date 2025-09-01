@@ -31,16 +31,15 @@
         loop_var: uv_file
 
     - name: Create uv virtual environment for checkm
-      command: "/software/common/python/3.12.3/bin/uv venv {{ install_dir }}/venv --python /software/common/python/3.12.3/bin/python3"
+      command: "/software/common/python/3.12.3/bin/uv venv .venv --python /software/common/python/3.12.3/bin/python3"
       args:
-        creates: "{{ install_dir }}/venv/bin/python"
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv/bin/python"
 
     - name: Install checkm and dependencies with uv
       command: "/software/common/python/3.12.3/bin/uv sync"
       args:
         chdir: "{{ install_dir }}"
-      environment:
-        VIRTUAL_ENV: "{{ install_dir }}/venv"
 
     - name: "Create checkm module directory {{ checkm_module_dir }}"
       file:
