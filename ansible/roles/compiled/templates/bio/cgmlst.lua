@@ -11,6 +11,7 @@ whatis("Keywords: cgMLST, typing, genome analysis")
 whatis("Description: cgMLST {{ version_number }} - Core genome MLST typing tool")
 
 prepend_path('PATH', '{{ install_dir }}/bin')
+prepend_path('PATH', '{{ install_dir }}/scripts')
 prepend_path('PERL5LIB', '{{ install_dir }}/perl5')
 
 -- Dependencies
