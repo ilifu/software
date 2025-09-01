@@ -1,4 +1,4 @@
- ---
+---
 - name: Install dram {{ item.version_number }}
   vars:
     dram_dir: "{{ bio_dir }}/dram"
