@@ -4,7 +4,7 @@
     checkm_dir: "{{ bio_dir }}/checkm"
     checkm_module_dir: "{{ bio_modules }}/checkm"
     version_number: "{{ item.version_number }}"
-    python_location: "{{ item.python_location | default('/software/common/python/3.12.3') }}"
+    python_location: "{{ item.python_location | default('/software/common/python/3.11.11') }}"
     install_dir: "{{ checkm_dir }}/{{ version_number }}"
   tags:
     - never
@@ -31,13 +31,13 @@
         loop_var: uv_file
 
     - name: Create uv virtual environment for checkm
-      command: "/software/common/python/3.12.3/bin/uv venv .venv --python /software/common/python/3.12.3/bin/python3"
+      command: "{{ python_location }}/bin/uv venv .venv --python {{ python_location }}/bin/python3"
       args:
         chdir: "{{ install_dir }}"
         creates: "{{ install_dir }}/.venv/bin/python"
 
     - name: Install checkm and dependencies with uv
-      command: "/software/common/python/3.12.3/bin/uv sync"
+      command: "{{ python_location }}/bin/uv sync"
       args:
         chdir: "{{ install_dir }}"
 

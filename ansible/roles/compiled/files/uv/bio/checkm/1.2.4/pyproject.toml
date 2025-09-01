@@ -3,7 +3,7 @@ name = "1-2-4"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = "<3.12,>=3.11"
 dependencies = [
     "checkm-genome",
 ]
