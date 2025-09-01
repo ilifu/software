@@ -9,6 +9,7 @@
     git_tag: "{{ item.git_tag }}"
     unzip_dir: "/dev/shm/metagenemark-{{ version_number }}"
     install_dir: "{{ metagenemark_dir }}/{{ version_number }}"
+    boost_module: "{{ item.boost_module | default('boost/1.87.0') }}"
   tags:
     - never
     - metagenemark{{ item.version_number }}
@@ -41,6 +42,8 @@
           environment:
             CC: gcc
             CXX: g++
+            CPPFLAGS: "-I/software/common/boost/1.87.0/include"
+            LDFLAGS: "-L/software/common/boost/1.87.0/lib"
 
         - name: Copy compiled binary to main directory
           copy:

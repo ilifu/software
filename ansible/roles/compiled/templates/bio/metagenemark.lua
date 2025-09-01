@@ -15,5 +15,8 @@ whatis("Description: MetaGeneMark-2 {{ version_number }} - Metagenomic gene pred
 
 prepend_path('PATH', '{{ install_dir }}')
 
+-- Dependencies
+depends_on("{{ boost_module }}")
+
 -- Set MetaGeneMark model directory
 setenv('METAGENEMARK_MODELS', '{{ install_dir }}')

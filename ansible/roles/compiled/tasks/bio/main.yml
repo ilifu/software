@@ -2322,7 +2322,8 @@
       - {
         version_number: "2.10",
         git_repo: "https://github.com/gatech-genemark/MetaGeneMark-2.git",
-        git_tag: "main"
+        git_tag: "main",
+        boost_module: "boost/1.87.0"
       }
   include_tasks:
     file: metagenemark.yaml
