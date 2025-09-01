@@ -1,0 +1,67 @@
+---
+- name: Install tbprofiler {{ item.version_number }}
+  vars:
+    tbprofiler_dir: "{{ bio_dir }}/tbprofiler"
+    tbprofiler_module_dir: "{{ bio_modules }}/tbprofiler"
+    version_number: "{{ item.version_number }}"
+    python_location: "{{ item.python_location | default('/software/common/python/3.11.11') }}"
+    install_dir: "{{ tbprofiler_dir }}/{{ version_number }}"
+    bwa_module: "{{ item.bwa_module | default('bwa/github') }}"
+    samtools_module: "{{ item.samtools_module | default('samtools/1.22.1') }}"
+    bcftools_module: "{{ item.bcftools_module | default('bcftools/1.22') }}"
+    freebayes_module: "{{ item.freebayes_module | default('freebayes/1.3.10') }}"
+    trimmomatic_module: "{{ item.trimmomatic_module | default('trimmomatic/0.39') }}"
+  tags:
+    - never
+    - tbprofiler{{ item.version_number }}
+  environment:
+    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
+  block:
+    - name: Create tbprofiler directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+
+    - name: Copy uv configuration files for tbprofiler
+      copy:
+        src: "uv/bio/tbprofiler/{{ version_number }}/{{ uv_file }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+        remote_src: false
+        mode: ug=rw,o=r
+      loop:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: uv_file
+
+    - name: Create uv virtual environment for tbprofiler
+      command: "{{ python_location }}/bin/uv venv .venv --python {{ python_location }}/bin/python3"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv/bin/python"
+
+    - name: Install tbprofiler and dependencies with uv
+      command: "{{ python_location }}/bin/uv sync"
+      args:
+        chdir: "{{ install_dir }}"
+
+    - name: Update TBProfiler database
+      shell: "{{ install_dir }}/.venv/bin/tb-profiler update_db"
+      args:
+        creates: "{{ install_dir }}/.tbdb"
+      environment:
+        PATH: "{{ install_dir }}/.venv/bin:{{ ansible_env.PATH }}"
+      ignore_errors: yes
+
+    - name: "Create tbprofiler module directory {{ tbprofiler_module_dir }}"
+      file:
+          path: "{{ tbprofiler_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+
+    - name: "Install tbprofiler module file"
+      template:
+        src: bio/tbprofiler.lua
+        dest: "{{ tbprofiler_module_dir }}/{{ version_number }}.lua"

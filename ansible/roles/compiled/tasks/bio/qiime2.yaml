@@ -1,0 +1,63 @@
+---
+- name: Install qiime2 {{ item.version_number }}
+  vars:
+    qiime2_dir: "{{ bio_dir }}/qiime2"
+    qiime2_module_dir: "{{ bio_modules }}/qiime2"
+    version_number: "{{ item.version_number }}"
+    python_location: "{{ item.python_location | default('/software/common/python/3.11.11') }}"
+    install_dir: "{{ qiime2_dir }}/{{ version_number }}"
+    distribution: "{{ item.distribution | default('amplicon') }}"
+  tags:
+    - never
+    - qiime2{{ item.version_number }}
+  environment:
+    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
+  block:
+    - name: Create qiime2 directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+
+    - name: Copy uv configuration files for qiime2
+      copy:
+        src: "uv/bio/qiime2/{{ version_number }}/{{ uv_file }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+        remote_src: false
+        mode: ug=rw,o=r
+      loop:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: uv_file
+
+    - name: Create uv virtual environment for qiime2
+      command: "{{ python_location }}/bin/uv venv .venv --python {{ python_location }}/bin/python3"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv/bin/python"
+
+    - name: Install qiime2 and dependencies with uv (this may take a long time)
+      command: "{{ python_location }}/bin/uv sync"
+      args:
+        chdir: "{{ install_dir }}"
+      async: 3600  # 1 hour timeout for large installation
+      poll: 30
+
+    - name: Create QIIME2 cache directory
+      file:
+        path: "{{ install_dir }}/.qiime2_cache"
+        state: directory
+        mode: "ug=rwx,o=rx"
+
+    - name: "Create qiime2 module directory {{ qiime2_module_dir }}"
+      file:
+          path: "{{ qiime2_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+
+    - name: "Install qiime2 module file"
+      template:
+        src: bio/qiime2.lua
+        dest: "{{ qiime2_module_dir }}/{{ version_number }}.lua"

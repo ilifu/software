@@ -1,0 +1,64 @@
+---
+- name: Install cgmlst {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    cgmlst_dir: "{{ bio_dir }}/cgmlst"
+    cgmlst_module_dir: "{{ bio_modules }}/cgmlst"
+    version_number: "{{ item.version_number }}"
+    git_repo: "{{ item.git_repo }}"
+    git_tag: "{{ item.git_tag }}"
+    unzip_dir: "/dev/shm/cgmlst-{{ version_number }}"
+    install_dir: "{{ cgmlst_dir }}/{{ version_number }}"
+    blast_module: "{{ item.blast_module | default('blast/2.16.0') }}"
+  tags:
+    - never
+    - cgmlst{{ item.version_number }}
+  environment:
+    PATH: "{{ ansible_env.PATH }}"
+    PERL5LIB: "{{ install_dir }}/lib:{{ ansible_env.PERL5LIB | default('') }}"
+  block:
+    - name: Download and install cgmlst ({{ version_number }})
+      block:
+        - name: Clone cgmlst repository
+          git:
+            repo: "{{ git_repo }}"
+            dest: "{{ unzip_dir }}"
+            version: "{{ git_tag }}"
+            force: yes
+
+        - name: Ensure cgmlst dir exists
+          file:
+            path: "{{ cgmlst_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Copy cgmlst to install directory
+          command: "cp -r {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/cgmlst"
+
+        - name: Make cgmlst executable
+          file:
+            path: "{{ install_dir }}/cgmlst"
+            mode: '0755'
+
+        - name: Download cgmlst databases
+          shell: "cd {{ install_dir }} && bash getdb.sh"
+          args:
+            creates: "{{ install_dir }}/db"
+          environment:
+            PATH: "{{ install_dir }}:{{ ansible_env.PATH }}"
+            PERL5LIB: "{{ install_dir }}/lib:{{ ansible_env.PERL5LIB | default('') }}"
+          ignore_errors: yes
+
+    - name: Install cgmlst {{ version_number }} module
+      block:
+        - name: Check module dir {{ cgmlst_module_dir }}
+          file:
+            path: "{{ cgmlst_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install cgmlst {{ version_number }} module file
+          template:
+            src: bio/cgmlst.lua
+            dest: "{{ cgmlst_module_dir }}/{{ version_number }}.lua"

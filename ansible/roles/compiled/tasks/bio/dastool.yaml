@@ -1,0 +1,79 @@
+---
+- name: Install dastool {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    dastool_dir: "{{ bio_dir }}/dastool"
+    dastool_module_dir: "{{ bio_modules }}/dastool"
+    version_number: "{{ item.version_number }}"
+    git_repo: "{{ item.git_repo }}"
+    git_tag: "{{ item.git_tag }}"
+    unzip_dir: "/dev/shm/dastool-{{ version_number }}"
+    install_dir: "{{ dastool_dir }}/{{ version_number }}"
+    blast_module: "{{ item.blast_module | default('blast/2.16.0') }}"
+    diamond_module: "{{ item.diamond_module | default('diamond/2.1.13') }}"
+    prodigal_module: "{{ item.prodigal_module | default('prodigal/2.6.3') }}"
+    R_module: "{{ item.R_module | default('R/4.4.1') }}"
+    R_location: "{{ item.R_location | default('/software/common/R/4.4.1') }}"
+  tags:
+    - never
+    - dastool{{ item.version_number }}
+  environment:
+    R_LIBS_USER: "{{ install_dir }}/R_libs"
+    PATH: "{{ R_location }}/bin:{{ ansible_env.PATH }}"
+  block:
+    - name: Download and install dastool ({{ version_number }})
+      block:
+        - name: Clone dastool repository
+          git:
+            repo: "{{ git_repo }}"
+            dest: "{{ unzip_dir }}"
+            version: "{{ git_tag }}"
+            force: yes
+
+        - name: Ensure dastool dir exists
+          file:
+            path: "{{ dastool_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Copy dastool to install directory
+          command: "cp -r {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/DAS_Tool"
+
+        - name: Create R library directory
+          file:
+            path: "{{ install_dir }}/R_libs"
+            state: directory
+            mode: '0755'
+
+        - name: Install required R packages
+          shell: |
+            Rscript -e "
+            .libPaths('{{ install_dir }}/R_libs')
+            repo='http://cran.us.r-project.org'
+            install.packages('data.table', repos=repo, lib='{{ install_dir }}/R_libs', dependencies=TRUE)
+            install.packages('magrittr', repos=repo, lib='{{ install_dir }}/R_libs', dependencies=TRUE)
+            install.packages('docopt', repos=repo, lib='{{ install_dir }}/R_libs', dependencies=TRUE)
+            "
+          args:
+            creates: "{{ install_dir }}/R_libs/data.table"
+          environment:
+            R_LIBS_USER: "{{ install_dir }}/R_libs"
+
+        - name: Make DAS_Tool executable
+          file:
+            path: "{{ install_dir }}/DAS_Tool"
+            mode: '0755'
+
+    - name: Install dastool {{ version_number }} module
+      block:
+        - name: Check module dir {{ dastool_module_dir }}
+          file:
+            path: "{{ dastool_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install dastool {{ version_number }} module file
+          template:
+            src: bio/dastool.lua
+            dest: "{{ dastool_module_dir }}/{{ version_number }}.lua"

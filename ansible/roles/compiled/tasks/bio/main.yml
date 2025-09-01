@@ -2245,3 +2245,139 @@
   tags:
     - never
     - screed
+
+- name: Install cgmlst
+  vars:
+    cgmlst_versions:
+      - {
+        version_number: "1.0",
+        git_repo: "https://github.com/aldertzomer/cgmlst.git",
+        git_tag: "master",
+        blast_module: "blast/2.16.0"
+      }
+  include_tasks:
+    file: cgmlst.yaml
+  loop: "{{ cgmlst_versions }}"
+  tags:
+    - never
+    - cgmlst
+
+- name: Install dastool
+  vars:
+    dastool_versions:
+      - {
+        version_number: "1.1.7",
+        git_repo: "https://github.com/cmks/DAS_Tool.git",
+        git_tag: "1.1.7",
+        blast_module: "blast/2.16.0",
+        diamond_module: "diamond/2.1.13",
+        prodigal_module: "prodigal/2.6.3",
+        R_module: "R/4.4.1",
+        R_location: "/software/common/R/4.4.1"
+      }
+  include_tasks:
+    file: dastool.yaml
+  loop: "{{ dastool_versions }}"
+  tags:
+    - never
+    - dastool
+
+- name: Install dram
+  vars:
+    dram_versions:
+      - {
+        version_number: "1.5.0",
+        python_location: "/software/common/python/3.11.11",
+        prodigal_module: "prodigal/2.6.3",
+        hmmer_module: "hmmer/3.4"
+      }
+  include_tasks:
+    file: dram.yaml
+  loop: "{{ dram_versions }}"
+  tags:
+    - never
+    - dram
+
+- name: Install kmerfinder
+  vars:
+    kmerfinder_versions:
+      - {
+        version_number: "3.0.2",
+        git_repo: "https://bitbucket.org/genomicepidemiology/kmerfinder.git",
+        git_tag: "3.0.2",
+        kma_repo: "https://bitbucket.org/genomicepidemiology/kma.git",
+        kma_tag: "1.4.14",
+        python_location: "/software/common/python/3.11.11"
+      }
+  include_tasks:
+    file: kmerfinder.yaml
+  loop: "{{ kmerfinder_versions }}"
+  tags:
+    - never
+    - kmerfinder
+
+- name: Install metagenemark
+  vars:
+    metagenemark_versions:
+      - {
+        version_number: "2.10",
+        git_repo: "https://github.com/gatech-genemark/MetaGeneMark-2.git",
+        git_tag: "master"
+      }
+  include_tasks:
+    file: metagenemark.yaml
+  loop: "{{ metagenemark_versions }}"
+  tags:
+    - never
+    - metagenemark
+
+- name: Install amrfinder
+  vars:
+    amrfinder_versions:
+      - {
+        version_number: "3.12.8",
+        url: "https://github.com/ncbi/amr/releases/download/amrfinder_v3.12.8/amrfinder_binaries_v3.12.8.tar.gz",
+        checksum: "sha256:c1c5c5b5d4c4b4d4e4f4g4h4i4j4k4l4m4n4o4p4q4r4s4t4u4v4w4x4y4z",
+        blast_module: "blast/2.16.0",
+        hmmer_module: "hmmer/3.4"
+      }
+  include_tasks:
+    file: amrfinder.yaml
+  loop: "{{ amrfinder_versions }}"
+  tags:
+    - never
+    - amrfinder
+
+- name: Install qiime2
+  vars:
+    qiime2_versions:
+      - {
+        version_number: "2024.10",
+        python_location: "/software/common/python/3.11.11",
+        distribution: "amplicon"
+      }
+  include_tasks:
+    file: qiime2.yaml
+  loop: "{{ qiime2_versions }}"
+  tags:
+    - never
+    - qiime2
+
+- name: Install tbprofiler
+  vars:
+    tbprofiler_versions:
+      - {
+        version_number: "4.4.0",
+        python_location: "/software/common/python/3.11.11",
+        bwa_module: "bwa/github",
+        samtools_module: "samtools/1.22.1",
+        bcftools_module: "bcftools/1.22",
+        freebayes_module: "freebayes/1.3.10",
+        trimmomatic_module: "trimmomatic/0.39"
+      }
+  include_tasks:
+    file: tbprofiler.yaml
+  loop: "{{ tbprofiler_versions }}"
+  tags:
+    - never
+    - tbprofiler

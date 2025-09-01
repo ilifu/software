@@ -1,0 +1,89 @@
+---
+- name: Install metagenemark {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    metagenemark_dir: "{{ bio_dir }}/metagenemark"
+    metagenemark_module_dir: "{{ bio_modules }}/metagenemark"
+    version_number: "{{ item.version_number }}"
+    git_repo: "{{ item.git_repo }}"
+    git_tag: "{{ item.git_tag }}"
+    unzip_dir: "/dev/shm/metagenemark-{{ version_number }}"
+    install_dir: "{{ metagenemark_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - metagenemark{{ item.version_number }}
+  block:
+    - name: Download and install metagenemark ({{ version_number }})
+      block:
+        - name: Clone metagenemark repository
+          git:
+            repo: "{{ git_repo }}"
+            dest: "{{ unzip_dir }}"
+            version: "{{ git_tag }}"
+            force: yes
+
+        - name: Ensure metagenemark dir exists
+          file:
+            path: "{{ metagenemark_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Copy metagenemark to install directory
+          command: "cp -r {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/src"
+
+        - name: Compile MetaGeneMark-2
+          make:
+            chdir: "{{ install_dir }}/src"
+            file: "Makefile"
+            jobs: 4
+          environment:
+            CC: gcc
+            CXX: g++
+
+        - name: Copy compiled binary to main directory
+          copy:
+            src: "{{ install_dir }}/src/gmhmmp2"
+            dest: "{{ install_dir }}/gmhmmp2"
+            mode: '0755'
+            remote_src: true
+
+        - name: Copy model files to install directory
+          copy:
+            src: "{{ install_dir }}/dependencies/{{ model_file }}"
+            dest: "{{ install_dir }}/{{ model_file }}"
+            remote_src: true
+          loop:
+            - mgm2_11.mod
+            - mgm2_4.mod
+          loop_control:
+            loop_var: model_file
+
+        - name: Make run script executable
+          file:
+            path: "{{ install_dir }}/run_mgm.pl"
+            mode: '0755'
+
+        - name: Create GeneMark license key notice
+          copy:
+            content: |
+              # GeneMark License Required
+              # Please download your GeneMark license key from:
+              # http://exon.gatech.edu/GeneMark/license_download.cgi
+              # and place it at $HOME/.gm_key
+              # 
+              # The license key is required for MetaGeneMark-2 to function.
+            dest: "{{ install_dir }}/LICENSE_INFO.txt"
+
+    - name: Install metagenemark {{ version_number }} module
+      block:
+        - name: Check module dir {{ metagenemark_module_dir }}
+          file:
+            path: "{{ metagenemark_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install metagenemark {{ version_number }} module file
+          template:
+            src: bio/metagenemark.lua
+            dest: "{{ metagenemark_module_dir }}/{{ version_number }}.lua"

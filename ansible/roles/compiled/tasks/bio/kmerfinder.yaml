@@ -1,0 +1,95 @@
+---
+- name: Install kmerfinder {{ item.version_number }}
+  vars:
+    bio_src: "{{ bio_dir }}/src"
+    kmerfinder_dir: "{{ bio_dir }}/kmerfinder"
+    kmerfinder_module_dir: "{{ bio_modules }}/kmerfinder"
+    version_number: "{{ item.version_number }}"
+    git_repo: "{{ item.git_repo }}"
+    git_tag: "{{ item.git_tag }}"
+    kma_repo: "{{ item.kma_repo | default('https://bitbucket.org/genomicepidemiology/kma.git') }}"
+    kma_tag: "{{ item.kma_tag | default('1.4.14') }}"
+    python_location: "{{ item.python_location | default('/software/common/python/3.11.11') }}"
+    unzip_dir: "/dev/shm/kmerfinder-{{ version_number }}"
+    kma_dir: "/dev/shm/kma-{{ item.kma_tag | default('1.4.14') }}"
+    install_dir: "{{ kmerfinder_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - kmerfinder{{ item.version_number }}
+  environment:
+    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
+  block:
+    - name: Download and install kmerfinder ({{ version_number }})
+      block:
+        - name: Clone kmerfinder repository
+          git:
+            repo: "{{ git_repo }}"
+            dest: "{{ unzip_dir }}"
+            version: "{{ git_tag }}"
+            force: yes
+
+        - name: Clone KMA repository
+          git:
+            repo: "{{ kma_repo }}"
+            dest: "{{ kma_dir }}"
+            version: "{{ kma_tag }}"
+            force: yes
+
+        - name: Compile KMA
+          make:
+            chdir: "{{ kma_dir }}"
+            jobs: 4
+
+        - name: Ensure kmerfinder dir exists
+          file:
+            path: "{{ kmerfinder_dir }}"
+            state: directory
+            recurse: yes
+
+        - name: Copy kmerfinder to install directory
+          command: "cp -r {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/kmerfinder.py"
+
+        - name: Create bin directory
+          file:
+            path: "{{ install_dir }}/bin"
+            state: directory
+
+        - name: Copy KMA binaries to install directory
+          copy:
+            src: "{{ kma_dir }}/{{ kma_binary }}"
+            dest: "{{ install_dir }}/bin/{{ kma_binary }}"
+            mode: '0755'
+            remote_src: true
+          loop:
+            - kma
+            - kma_index
+            - kma_shm
+          loop_control:
+            loop_var: kma_binary
+
+        - name: Make kmerfinder executable
+          file:
+            path: "{{ install_dir }}/kmerfinder.py"
+            mode: '0755'
+
+        - name: Download kmerfinder databases
+          shell: "cd {{ install_dir }} && bash download-db.sh"
+          args:
+            creates: "{{ install_dir }}/db"
+          environment:
+            PATH: "{{ install_dir }}/bin:{{ python_location }}/bin:{{ ansible_env.PATH }}"
+          ignore_errors: yes
+
+    - name: Install kmerfinder {{ version_number }} module
+      block:
+        - name: Check module dir {{ kmerfinder_module_dir }}
+          file:
+            path: "{{ kmerfinder_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install kmerfinder {{ version_number }} module file
+          template:
+            src: bio/kmerfinder.lua
+            dest: "{{ kmerfinder_module_dir }}/{{ version_number }}.lua"

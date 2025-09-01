@@ -1,0 +1,56 @@
+---
+- name: Install dram {{ item.version_number }}
+  vars:
+    dram_dir: "{{ bio_dir }}/dram"
+    dram_module_dir: "{{ bio_modules }}/dram"
+    version_number: "{{ item.version_number }}"
+    python_location: "{{ item.python_location | default('/software/common/python/3.11.11') }}"
+    install_dir: "{{ dram_dir }}/{{ version_number }}"
+    prodigal_module: "{{ item.prodigal_module | default('prodigal/2.6.3') }}"
+    hmmer_module: "{{ item.hmmer_module | default('hmmer/3.4') }}"
+  tags:
+    - never
+    - dram{{ item.version_number }}
+  environment:
+    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
+  block:
+    - name: Create dram directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+
+    - name: Copy uv configuration files for dram
+      copy:
+        src: "uv/bio/dram/{{ version_number }}/{{ uv_file }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+        remote_src: false
+        mode: ug=rw,o=r
+      loop:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: uv_file
+
+    - name: Create uv virtual environment for dram
+      command: "{{ python_location }}/bin/uv venv .venv --python {{ python_location }}/bin/python3"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv/bin/python"
+
+    - name: Install dram and dependencies with uv
+      command: "{{ python_location }}/bin/uv sync"
+      args:
+        chdir: "{{ install_dir }}"
+
+    - name: "Create dram module directory {{ dram_module_dir }}"
+      file:
+          path: "{{ dram_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+
+    - name: "Install dram module file"
+      template:
+        src: bio/dram.lua
+        dest: "{{ dram_module_dir }}/{{ version_number }}.lua"
