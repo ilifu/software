@@ -18,9 +18,9 @@
         state: directory
         mode: "ug=rwx,o=rx"
         recurse: true
-    - name: Copy uv files
+    - name: Copy uv configuration files for checkm
       copy:
-        src: "bio/{{ uv_file }}.checkm.{{ version_number }}"
+        src: "uv/bio/checkm/{{ version_number }}/{{ uv_file }}"
         dest: "{{ install_dir }}/{{ uv_file }}"
         remote_src: false
         mode: ugo=r
@@ -28,12 +28,19 @@
         - "uv.lock"
         - "pyproject.toml"
       loop_control:
-        loop_var: "uv_file"
-    - name: Create virtual environment
-      command: "uv sync"
+        loop_var: uv_file
+
+    - name: Create uv virtual environment for checkm
+      command: "/software/common/python/3.12.3/bin/uv venv {{ install_dir }}/venv --python /software/common/python/3.12.3/bin/python3"
+      args:
+        creates: "{{ install_dir }}/venv/bin/python"
+
+    - name: Install checkm and dependencies with uv
+      command: "/software/common/python/3.12.3/bin/uv sync"
       args:
         chdir: "{{ install_dir }}"
-        creates: "{{ install_dir }}/.venv"
+      environment:
+        VIRTUAL_ENV: "{{ install_dir }}/venv"
 
     - name: "Create checkm module directory {{ checkm_module_dir }}"
       file:
