@@ -34,16 +34,17 @@
           args:
             creates: "{{ install_dir }}/src"
 
-        - name: Compile MetaGeneMark-2
-          make:
+        - name: Load boost module and compile MetaGeneMark-2
+          shell: |
+            source /software/modules/init.sh
+            module load {{ boost_module }}
+            make -f Makefile.ubuntu -j4
+          args:
             chdir: "{{ install_dir }}/src"
-            file: "Makefile.ubuntu"
-            jobs: 4
+            creates: "{{ install_dir }}/src/gmhmmp2"
           environment:
             CC: gcc
             CXX: g++
-            CPPFLAGS: "-I/software/common/boost/1.87.0/include"
-            LDFLAGS: "-L/software/common/boost/1.87.0/lib"
 
         - name: Copy compiled binary to main directory
           copy:
