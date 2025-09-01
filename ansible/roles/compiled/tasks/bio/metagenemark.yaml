@@ -34,6 +34,18 @@
           args:
             creates: "{{ install_dir }}/src"
 
+        - name: Fix Makefile to include multi_shift_site.cpp
+          replace:
+            path: "{{ install_dir }}/src/Makefile.ubuntu"
+            regexp: 'evidence_2\.cpp site_2\.cpp output_2\.cpp'
+            replace: 'evidence_2.cpp site_2.cpp output_2.cpp multi_shift_site.cpp'
+
+        - name: Fix Makefile to include multi_shift_site.o
+          replace:
+            path: "{{ install_dir }}/src/Makefile.ubuntu"
+            regexp: 'evidence_2\.o site_2\.o output_2\.o'
+            replace: 'evidence_2.o site_2.o output_2.o multi_shift_site.o'
+
         - name: Compile MetaGeneMark-2 with boost
           make:
             chdir: "{{ install_dir }}/src"
