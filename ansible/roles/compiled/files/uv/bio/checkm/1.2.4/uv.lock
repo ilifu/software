@@ -4,23 +4,26 @@ requires-python = ">=3.13"
 [[package]]
 name = "checkm-genome"
 version = "1.2.4"
-source = { virtual = "." }
+source = { git = "https://github.com/Ecogenomics/CheckM?rev=v1.2.4#4c11fed446ae7b728031f67b3c0d618ebc0ea39c" }
 dependencies = [
     { name = "dendropy" },
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "pysam" },
     { name = "scipy" },
+    { name = "setuptools" },
+]
+
+[[package]]
+name = "checkm-test"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "checkm-genome" },
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "dendropy", specifier = ">=4.5.2" },
-    { name = "matplotlib", specifier = ">=3.5.1" },
-    { name = "numpy", specifier = ">=1.21.3" },
-    { name = "pysam", specifier = ">=0.19.0" },
-    { name = "scipy", specifier = ">=1.7.3" },
-]
+requires-dist = [{ name = "checkm-genome", git = "https://github.com/Ecogenomics/CheckM?rev=v1.2.4" }]
 
 [[package]]
 name = "contourpy"
