@@ -36,12 +36,13 @@
 
         - name: Load boost module and compile MetaGeneMark-2
           shell: |
-            source /software/modules/init.sh
+            . /etc/profile.d/modules.sh
             module load {{ boost_module }}
             make -f Makefile.ubuntu -j4
           args:
             chdir: "{{ install_dir }}/src"
             creates: "{{ install_dir }}/src/gmhmmp2"
+            executable: /bin/bash
           environment:
             CC: gcc
             CXX: g++
