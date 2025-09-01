@@ -23,7 +23,7 @@
         src: "uv/bio/checkm/{{ version_number }}/{{ uv_file }}"
         dest: "{{ install_dir }}/{{ uv_file }}"
         remote_src: false
-        mode: ugo=r
+        mode: ug=rw,o=r
       loop:
         - "uv.lock"
         - "pyproject.toml"
