@@ -74,13 +74,8 @@
             path: "{{ install_dir }}/kmerfinder.py"
             mode: '0755'
 
-        - name: Download kmerfinder databases
-          shell: "cd {{ install_dir }} && bash download-db.sh"
-          args:
-            creates: "{{ install_dir }}/db"
-          environment:
-            PATH: "{{ install_dir }}/bin:{{ python_location }}/bin:{{ ansible_env.PATH }}"
-          ignore_errors: yes
+        # Note: KmerFinder downloads databases dynamically or uses pre-configured paths
+        # No manual database installation step required
 
     - name: Install kmerfinder {{ version_number }} module
       block:

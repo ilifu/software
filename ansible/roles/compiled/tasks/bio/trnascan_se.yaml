@@ -1,0 +1,71 @@
+---
+- name: Install trnascan-se {{ item.version_number }}
+  vars:
+    trnascan_se_dir: "{{ bio_dir }}/trnascan-se"
+    trnascan_se_module_dir: "{{ bio_modules }}/trnascan-se"
+    version_number: "{{ item.version_number }}"
+    download_url: "{{ item.download_url }}"
+    archive_name: "tRNAscan-SE-{{ version_number }}.tar.gz"
+    unzip_dir: "/dev/shm/tRNAscan-SE-{{ version_number }}"
+    install_dir: "{{ trnascan_se_dir }}/{{ version_number }}"
+    infernal_module: "{{ item.infernal_module | default('infernal/1.1.4') }}"
+  tags:
+    - never
+    - trnascan_se{{ item.version_number }}
+  block:
+    - name: Create trnascan-se directory
+      file:
+        path: "{{ trnascan_se_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+
+    - name: Download trnascan-se
+      get_url:
+        url: "{{ download_url }}"
+        dest: "/dev/shm/{{ archive_name }}"
+        mode: '0644'
+
+    - name: Extract trnascan-se
+      unarchive:
+        src: "/dev/shm/{{ archive_name }}"
+        dest: "/dev/shm"
+        remote_src: yes
+        creates: "{{ unzip_dir }}"
+
+    - name: Configure trnascan-se
+      command: "./configure --prefix={{ install_dir }}"
+      args:
+        chdir: "{{ unzip_dir }}"
+        creates: "{{ unzip_dir }}/Makefile"
+
+    - name: Build trnascan-se
+      command: "make"
+      args:
+        chdir: "{{ unzip_dir }}"
+        creates: "{{ unzip_dir }}/tRNAscan-SE"
+
+    - name: Install trnascan-se
+      command: "make install"
+      args:
+        chdir: "{{ unzip_dir }}"
+        creates: "{{ install_dir }}/bin/tRNAscan-SE"
+
+    - name: Create trnascan-se module directory
+      file:
+        path: "{{ trnascan_se_module_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+
+    - name: Install trnascan-se module file
+      template:
+        src: bio/trnascan_se.lua
+        dest: "{{ trnascan_se_module_dir }}/{{ version_number }}.lua"
+
+    - name: Clean up downloaded and extracted files
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "/dev/shm/{{ archive_name }}"
+        - "{{ unzip_dir }}"

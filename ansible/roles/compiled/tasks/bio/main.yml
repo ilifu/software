@@ -2322,7 +2322,7 @@
       - {
         version_number: "2.10",
         git_repo: "https://github.com/gatech-genemark/MetaGeneMark-2.git",
-        git_tag: "master"
+        git_tag: "main"
       }
   include_tasks:
     file: metagenemark.yaml
@@ -2381,3 +2381,33 @@
   tags:
     - never
     - tbprofiler
+
+- name: Install mmseqs2
+  vars:
+    mmseqs2_versions:
+      - {
+        version_number: "15.6f452",
+        git_repo: "https://github.com/soedinglab/MMseqs2.git",
+        git_tag: "15-6f452"
+      }
+  include_tasks:
+    file: mmseqs2.yaml
+  loop: "{{ mmseqs2_versions }}"
+  tags:
+    - never
+    - mmseqs2
+
+- name: Install trnascan_se
+  vars:
+    trnascan_se_versions:
+      - {
+        version_number: "2.0.12",
+        download_url: "http://lowelab.ucsc.edu/software/tRNAscan-SE-2.0.12.tar.gz",
+        infernal_module: "infernal/1.1.4"
+      }
+  include_tasks:
+    file: trnascan_se.yaml
+  loop: "{{ trnascan_se_versions }}"
+  tags:
+    - never
+    - trnascan_se

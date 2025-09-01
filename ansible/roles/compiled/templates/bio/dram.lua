@@ -19,6 +19,14 @@ prepend_path('PYTHONPATH', '{{ install_dir }}/.venv/lib/python*/site-packages')
 -- Dependencies
 depends_on("{{ prodigal_module }}", "{{ hmmer_module }}")
 
--- Note: Optional dependencies not currently available:
--- - mmseqs2 (for additional database searches)
--- - tRNAscan-SE (for tRNA prediction)
+-- Optional dependencies (when available):
+if (mode() == "load" and isAvail("mmseqs2")) then
+    depends_on("mmseqs2")
+end
+if (mode() == "load" and isAvail("trnascan-se")) then  
+    depends_on("trnascan-se")
+end
+
+-- Note: Enhanced functionality available when optional dependencies are loaded:
+-- - mmseqs2: Enables additional database search capabilities
+-- - tRNAscan-SE: Provides tRNA prediction functionality
