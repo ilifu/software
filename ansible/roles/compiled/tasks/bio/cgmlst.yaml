@@ -35,11 +35,11 @@
         - name: Copy cgmlst to install directory
           command: "cp -r {{ unzip_dir }} {{ install_dir }}"
           args:
-            creates: "{{ install_dir }}/cgmlst"
+            creates: "{{ install_dir }}/bin/cgmlst"
 
         - name: Make cgmlst executable
           file:
-            path: "{{ install_dir }}/cgmlst"
+            path: "{{ install_dir }}/bin/cgmlst"
             mode: '0755'
 
         - name: Download cgmlst databases
