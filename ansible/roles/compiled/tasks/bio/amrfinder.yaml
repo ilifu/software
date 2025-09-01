@@ -23,27 +23,23 @@
             checksum: "{{ checksum }}"
             timeout: 300
 
-        - name: Unpack amrfinder {{ version_number }} to {{ unzip_dir }}
-          unarchive:
-            src: "{{ bio_src }}/amrfinder-{{ version_number }}.tar.gz"
-            dest: "/dev/shm"
-            creates: "{{ unzip_dir }}"
-            remote_src: yes
-
         - name: Ensure amrfinder dir exists
           file:
-            path: "{{ amrfinder_dir }}"
+            path: "{{ install_dir }}"
             state: directory
+            mode: "ug=rwx,o=rx"
             recurse: yes
 
-        - name: Copy amrfinder to install directory
-          command: "cp -r {{ unzip_dir }} {{ install_dir }}"
-          args:
-            creates: "{{ install_dir }}/bin/amrfinder"
+        - name: Unpack amrfinder {{ version_number }} directly to install directory
+          unarchive:
+            src: "{{ bio_src }}/amrfinder-{{ version_number }}.tar.gz"
+            dest: "{{ install_dir }}"
+            creates: "{{ install_dir }}/amrfinder"
+            remote_src: yes
 
         - name: Make amrfinder binaries executable
           file:
-            path: "{{ install_dir }}/bin/{{ amr_binary }}"
+            path: "{{ install_dir }}/{{ amr_binary }}"
             mode: '0755'
           loop:
             - amrfinder
@@ -54,11 +50,11 @@
             loop_var: amr_binary
 
         - name: Update AMRFinder database
-          shell: "{{ install_dir }}/bin/amrfinder --update"
+          shell: "{{ install_dir }}/amrfinder --update"
           args:
             creates: "{{ install_dir }}/data"
           environment:
-            PATH: "{{ install_dir }}/bin:{{ ansible_env.PATH }}"
+            PATH: "{{ install_dir }}:{{ ansible_env.PATH }}"
           ignore_errors: yes
 
     - name: Install amrfinder {{ version_number }} module
