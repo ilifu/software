@@ -42,10 +42,10 @@
           environment:
             CC: gcc
             CXX: g++
-            CPATH: "/software/common/boost/1.87.0/include"
-            INCLUDE: "/software/common/boost/1.87.0/include"
-            LD_LIBRARY_PATH: "/software/common/boost/1.87.0/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            LIBRARY_PATH: "/software/common/boost/1.87.0/lib"
+            CPATH: "/software/common/{{ boost_module }}/include"
+            INCLUDE: "/software/common/{{ boost_module }}/include"
+            LD_LIBRARY_PATH: "/software/common/{{ boost_module }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "/software/common/{{ boost_module }}/lib"
 
         - name: Copy compiled binary to main directory
           copy:
