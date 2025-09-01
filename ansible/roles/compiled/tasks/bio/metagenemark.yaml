@@ -34,17 +34,18 @@
           args:
             creates: "{{ install_dir }}/src"
 
-        - name: Load boost module and compile MetaGeneMark-2
-          shell: |
-            eval $(modulecmd bash load {{ boost_module }})
-            make -f Makefile.ubuntu -j4
-          args:
+        - name: Compile MetaGeneMark-2 with boost
+          make:
             chdir: "{{ install_dir }}/src"
-            creates: "{{ install_dir }}/src/gmhmmp2"
-            executable: /bin/bash
+            file: "Makefile.ubuntu"
+            jobs: 4
           environment:
             CC: gcc
             CXX: g++
+            CPATH: "/software/common/boost/1.87.0/include"
+            INCLUDE: "/software/common/boost/1.87.0/include"
+            LD_LIBRARY_PATH: "/software/common/boost/1.87.0/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "/software/common/boost/1.87.0/lib"
 
         - name: Copy compiled binary to main directory
           copy:
