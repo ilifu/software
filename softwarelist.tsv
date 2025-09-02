@@ -1,0 +1,33 @@
+ABRicate	https://github.com/tseemann/abricate
+abricate	tseemann/abricate: :mag_right: Mass screening of contigs for antimicrobial and virulence genes
+Ariba	sanger-pathogens/ariba: Antimicrobial Resistance Identification By Assembly
+Bamtools	pezmaster31/bamtools: C++ API & command-line toolkit for working with BAM data
+BBmap	https://sourceforge.net/projects/bbmap/
+cgMLST	aldertzomer/cgmlst: Fork of mlst of tseemann modified for cgmlst. Not very fast when used with organisms with a large number of allelic variants
+checkM	https://github.com/Ecogenomics/CheckM
+checkV	https://pypi.org/project/checkv/
+Das Tool	(https://github.com/cmks/DAS_Tool
+Diamond	https://github.com/bbuchfink/diamond
+DRAM	(https://github.com/WrightonLabCSU/DRAM/wiki
+FastMLST	https://github.com/EnzoAndree/FastMLST
+Fastp	OpenGene/fastp: An ultra-fast all-in-one FASTQ preprocessor (QC/adapters/trimming/filtering/splitting/merging...)
+Gubbins	nickjcroucher/gubbins: Rapid phylogenetic analysis of large samples of recombinant bacterial whole genome sequences using Gubbins
+KmerFInder	genomicepidemiology / kmerfinder — Bitbucket
+MetaGeneMark	https://github.com/gatech-genemark/MetaGeneMark-2
+mlst	https://github.com/tseemann/mlst
+NCBI ResFinderPlus	https://github.com/ncbi/amr/wiki/Installing-AMRFinder
+Panaroo	pezmaster31/bamtools: C++ API & command-line toolkit for working with BAM data
+Prodigal	https://github.com/hyattpd/Prodigal
+Prokka	https://github.com/tseemann/prokka
+pyMLST	Installation — pymlst 2.2 documentation
+QIIME2	
+Quast	https://github.com/ablab/quast
+R	https://www.r-project.org/
+RGI	https://github.com/arpcard/rgi
+Scoary	AdmiralenOla/Scoary: Pan-genome wide association studies
+seqtk	https://github.com/lh3/seqtk
+Snippy	https://github.com/tseemann/snippy
+Spades	https://github.com/ablab/spades/tree/v4.2.0
+SRST2	katholt/srst2: Short Read Sequence Typing for Bacterial Pathogens
+TBProfiler	https://github.com/tseemann/TBProfiler
+virsorter2	https://github.com/jiarong/VirSorter2

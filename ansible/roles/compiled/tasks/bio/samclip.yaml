@@ -1,0 +1,55 @@
+---
+- name: Install samclip {{ item.version_number }}
+  vars:
+    samclip_dir: "{{ bio_dir }}/samclip"
+    samclip_module_dir: "{{ bio_modules }}/samclip"
+    version_number: "{{ item.version_number }}"
+    git_repo: "{{ item.git_repo }}"
+    git_tag: "{{ item.git_tag }}"
+    unzip_dir: "/dev/shm/samclip-{{ version_number }}"
+    install_dir: "{{ samclip_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - samclip{{ item.version_number }}
+  block:
+    - name: Download and install samclip ({{ version_number }})
+      block:
+        - name: Clone samclip repository
+          git:
+            repo: "{{ git_repo }}"
+            dest: "{{ unzip_dir }}"
+            version: "{{ git_tag }}"
+            force: yes
+
+        - name: Create samclip directory
+          file:
+            path: "{{ samclip_dir }}"
+            state: directory
+            mode: "ug=rwx,o=rx"
+            recurse: true
+
+        - name: Copy samclip to install directory
+          command: "cp -r {{ unzip_dir }} {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/samclip"
+
+        - name: Make samclip executable
+          file:
+            path: "{{ install_dir }}/samclip"
+            mode: '0755'
+
+        - name: Create samclip module directory
+          file:
+            path: "{{ samclip_module_dir }}"
+            state: directory
+            mode: "ug=rwx,o=rx"
+
+        - name: Install samclip module file
+          template:
+            src: bio/samclip.lua
+            dest: "{{ samclip_module_dir }}/{{ version_number }}.lua"
+
+        - name: Clean up build directory
+          file:
+            path: "{{ unzip_dir }}"
+            state: absent

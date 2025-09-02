@@ -2368,13 +2368,17 @@
   vars:
     tbprofiler_versions:
       - {
-        version_number: "4.4.0",
+        version_number: "6.6.5",
         python_location: "/software/common/python/3.11.11",
         bwa_module: "bwa/github",
         samtools_module: "samtools/1.22.1",
         bcftools_module: "bcftools/1.22",
         freebayes_module: "freebayes/1.3.10",
-        trimmomatic_module: "trimmomatic/0.39"
+        trimmomatic_module: "trimmomatic/0.39",
+        minimap2_module: "minimap2/2.24",
+        snpeff_module: "snpeff",
+        parallel_module: "parallel/20241022",
+        samclip_module: "samclip/0.4.0"
       }
   include_tasks:
     file: tbprofiler.yaml
@@ -2412,3 +2416,18 @@
   tags:
     - never
     - trnascan_se
+
+- name: Install samclip
+  vars:
+    samclip_versions:
+      - {
+        version_number: "0.4.0",
+        git_repo: "https://github.com/tseemann/samclip.git",
+        git_tag: "v0.4.0"
+      }
+  include_tasks:
+    file: samclip.yaml
+  loop: "{{ samclip_versions }}"
+  tags:
+    - never
+    - samclip

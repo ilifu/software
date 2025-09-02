@@ -1,0 +1,69 @@
+---
+- name: Install parallel {{ item.version_number }}
+  vars:
+    parallel_dir: "{{ common_dir }}/parallel"
+    parallel_module_dir: "{{ common_modules }}/parallel"
+    version_number: "{{ item.version_number }}"
+    url: "{{ item.url }}"
+    checksum: "{{ item.checksum }}"
+    archive_name: "parallel-{{ version_number }}.tar.bz2"
+    unzip_dir: "/dev/shm/parallel-{{ version_number }}"
+    install_dir: "{{ parallel_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - parallel{{ item.version_number }}
+  block:
+    - name: Download and install parallel ({{ version_number }})
+      block:
+        - name: Download parallel {{ version_number }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ common_src }}/{{ archive_name }}"
+            checksum: "{{ checksum }}"
+            timeout: 300
+
+        - name: Extract parallel
+          unarchive:
+            src: "{{ common_src }}/{{ archive_name }}"
+            dest: "/dev/shm"
+            remote_src: yes
+            creates: "{{ unzip_dir }}"
+
+        - name: Create parallel directory
+          file:
+            path: "{{ parallel_dir }}"
+            state: directory
+            mode: "ug=rwx,o=rx"
+            recurse: true
+
+        - name: Configure parallel
+          command: "./configure --prefix={{ install_dir }}"
+          args:
+            chdir: "{{ unzip_dir }}"
+            creates: "{{ unzip_dir }}/Makefile"
+
+        - name: Build parallel
+          make:
+            chdir: "{{ unzip_dir }}"
+            jobs: 4
+
+        - name: Install parallel
+          make:
+            chdir: "{{ unzip_dir }}"
+            target: install
+
+        - name: Create parallel module directory
+          file:
+            path: "{{ parallel_module_dir }}"
+            state: directory
+            mode: "ug=rwx,o=rx"
+
+        - name: Install parallel module file
+          template:
+            src: common/parallel.lua
+            dest: "{{ parallel_module_dir }}/{{ version_number }}.lua"
+
+        - name: Clean up build directory
+          file:
+            path: "{{ unzip_dir }}"
+            state: absent

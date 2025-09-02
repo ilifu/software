@@ -1,0 +1,28 @@
+version = 1
+revision = 1
+requires-python = ">=3.13"
+
+[[package]]
+name = "6-6-5"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "pathogen-profiler" },
+    { name = "tbprofiler" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "pathogen-profiler", git = "https://github.com/jodyphelan/pathogen-profiler.git" },
+    { name = "tbprofiler", git = "https://github.com/jodyphelan/TBProfiler.git" },
+]
+
+[[package]]
+name = "pathogen-profiler"
+version = "5.0.3"
+source = { git = "https://github.com/jodyphelan/pathogen-profiler.git#57a7b35aec7e52059252f43a76c7ef91593c8e25" }
+
+[[package]]
+name = "tbprofiler"
+version = "6.6.6"
+source = { git = "https://github.com/jodyphelan/TBProfiler.git#01474ad9c3b8e1e6b0266750cf98b01fb7ab9d1b" }
