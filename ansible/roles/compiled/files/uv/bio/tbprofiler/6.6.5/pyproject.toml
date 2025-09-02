@@ -4,6 +4,7 @@ version = "6.6.5"
 description = "TBProfiler for M. tuberculosis profiling and drug resistance analysis"
 requires-python = ">=3.11,<3.13"
 dependencies = [
+    "joblib>=1.5.2",
     "pathogen-profiler",
     "pysam>=0.23.3",
     "tbprofiler",
