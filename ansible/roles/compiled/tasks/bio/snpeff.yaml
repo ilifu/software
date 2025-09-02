@@ -15,14 +15,14 @@
       git:
         repo: https://github.com/pcingola/SnpEff.git
         dest: "{{ snpeff_build_dir }}"
-        version: "{{ item.git_tag | default('HEAD') }}"
+        version: "{{ item.snpeff_git_tag | default('HEAD') }}"
         force: yes
 
     - name: Clone SnpSift repository  
       git:
         repo: https://github.com/pcingola/SnpSift.git
         dest: "{{ snpsift_build_dir }}"
-        version: "{{ item.git_tag | default('HEAD') }}"
+        version: "{{ item.snpsift_git_tag | default('HEAD') }}"
         force: yes
 
     - name: Install Maven dependencies for SnpEff libraries
