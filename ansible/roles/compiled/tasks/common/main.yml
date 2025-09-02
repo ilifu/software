@@ -134,6 +134,10 @@
         version_number: 3.6.3,
         checksum: "sha512:c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0"
       }
+      - {
+        version_number: 3.9.11,
+        checksum: "sha512:bcfe4fe305c962ace56ac7b5fc7a08b87d5abd8b7e89027ab251069faebee516b0ded8961445d6d91ec1985dfe30f8153268843c89aa392733d1a3ec956c9978"
+      }
   include_tasks:
     file: apache_maven.yaml
   loop: "{{ apache_maven_versions }}"

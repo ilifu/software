@@ -1,53 +1,131 @@
 ---
-- name: Install snpeff {{ item.version_number }}
+- name: Install snpeff from source {{ item.version_number }}
   vars:
-    snpeff_dir: "{{ bio_dir }}/snpEff"
+    snpeff_dir: "{{ bio_dir }}/snpEff/{{ item.version_number }}"
+    snpeff_build_dir: "{{ bio_src }}/SnpEff-{{ item.version_number }}"
+    snpsift_build_dir: "{{ bio_src }}/SnpSift-{{ item.version_number }}"
     snpeff_module_dir: "{{ bio_modules }}/snpeff"
-    url: "https://snpeff.blob.core.windows.net/versions/snpEff_latest_core.zip"
-    install_dir: "{{ snpeff_dir }}"
-    unzip_dir: "{{ bio_dir }}"
+    java_module: "{{ item.java_module | default('java/openjdk-17.0.2') }}"
+    maven_module: "{{ item.maven_module | default('maven/3.9.11') }}"
   tags:
     - never
-    - snpeff
+    - snpeff{{ item.version_number }}
   block:
-    - name: Download and install snpeff
-      block:
-        - name: Download snpeff from {{ url }}
-          get_url:
-            url: "{{ url }}"
-            dest: "{{ bio_src }}/snpEff_latest_core.zip"
-        - name: Uncompress snpeff
-          unarchive:
-            src: "{{ bio_src }}/snpEff_latest_core.zip"
-            dest: "{{ unzip_dir }}"
-            creates: "{{ snpeff_dir }}"
-        - name: Set snpeff data.dir
-          lineinfile:
-            path: "{{ snpeff_dir }}/snpEff.config"
-            regexp: "data[.]dir =.*"
-            line: "data.dir = ../snpEff.data"
-        - name: Ensure snpEff data dir exists
-          file:
-            path: "{{ bio_dir }}/snpEff.data"
-            state: directory
-            mode: u=rwx,g=rwx,o=rx
-        - name: Install snpEffData
-          command: "java -jar {{ snpeff_dir }}/snpEff.jar download {{ snpeff_data }}"
-          args:
-            chdir: "{{ snpeff_dir }}"
-          with_items:
-            - GRCh38.99
-          loop_control:
-            loop_var: snpeff_data
+    - name: Clone SnpEff repository
+      git:
+        repo: https://github.com/pcingola/SnpEff.git
+        dest: "{{ snpeff_build_dir }}"
+        version: "{{ item.git_tag | default('HEAD') }}"
+        force: yes
 
-    - name: Install snpeff {{ version_number }} module
+    - name: Clone SnpSift repository  
+      git:
+        repo: https://github.com/pcingola/SnpSift.git
+        dest: "{{ snpsift_build_dir }}"
+        version: "{{ item.git_tag | default('HEAD') }}"
+        force: yes
+
+    - name: Install Maven dependencies for SnpEff libraries
+      block:
+        - name: Install Antlr jar to Maven local repository
+          shell: |
+            module load {{ java_module }}
+            module load {{ maven_module }}
+            mvn install:install-file \
+                -Dfile=antlr-4.5.1-complete.jar \
+                -DgroupId=org.antlr \
+                -DartifactId=antlr \
+                -Dversion=4.5.1 \
+                -Dpackaging=jar
+          args:
+            chdir: "{{ snpeff_build_dir }}/lib"
+          environment:
+            MODULEPATH: "{{ software_root }}/modules/common"
+
+        - name: Install BioJava core jar to Maven local repository
+          shell: |
+            module load {{ java_module }}
+            module load {{ maven_module }}
+            mvn install:install-file \
+                -Dfile=biojava3-core-3.0.7.jar \
+                -DgroupId=org.biojava \
+                -DartifactId=biojava3-core \
+                -Dversion=3.0.7 \
+                -Dpackaging=jar
+          args:
+            chdir: "{{ snpeff_build_dir }}/lib"
+          environment:
+            MODULEPATH: "{{ software_root }}/modules/common"
+
+        - name: Install BioJava structure jar to Maven local repository
+          shell: |
+            module load {{ java_module }}
+            module load {{ maven_module }}
+            mvn install:install-file \
+                -Dfile=biojava3-structure-3.0.7.jar \
+                -DgroupId=org.biojava \
+                -DartifactId=biojava3-structure \
+                -Dversion=3.0.7 \
+                -Dpackaging=jar
+          args:
+            chdir: "{{ snpeff_build_dir }}/lib"
+          environment:
+            MODULEPATH: "{{ software_root }}/modules/common"
+
+    - name: Build SnpEff from source
+      shell: |
+        module load {{ java_module }}
+        module load {{ maven_module }}
+        ./scripts_build/make.sh
+      args:
+        chdir: "{{ snpeff_build_dir }}"
+      environment:
+        MODULEPATH: "{{ software_root }}/modules/common"
+
+    - name: Create installation directory
+      file:
+        path: "{{ snpeff_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+
+    - name: Install built SnpEff to target directory
+      shell: |
+        cp -r snpEff.jar snpEff.config SnpSift.jar scripts/ "{{ snpeff_dir }}/"
+      args:
+        chdir: "{{ snpeff_build_dir }}"
+
+    - name: Set snpeff data.dir
+      lineinfile:
+        path: "{{ snpeff_dir }}/snpEff.config"
+        regexp: "data[.]dir =.*"
+        line: "data.dir = ../snpEff.data"
+
+    - name: Ensure snpEff data dir exists
+      file:
+        path: "{{ bio_dir }}/snpEff.data"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+
+    - name: Install snpEffData
+      shell: |
+        module load {{ java_module }}
+        java -jar {{ snpeff_dir }}/snpEff.jar download {{ snpeff_data }}
+      args:
+        chdir: "{{ snpeff_dir }}"
+      environment:
+        MODULEPATH: "{{ software_root }}/modules/common"
+      with_items: "{{ item.databases | default(['GRCh38.99']) }}"
+      loop_control:
+        loop_var: snpeff_data
+
+    - name: Install snpeff {{ item.version_number }} module
       block:
         - name: Check module dir
           file:
             path: "{{ snpeff_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-#        - name: Install JRE module file
-#          template:
-#            src: opensnpeff.lua
-#            dest: "{{ snpeff_module_dir }}/opensnpeff-{{ version_number }}.lua"
+        - name: Install SnpEff module file
+          template:
+            src: bio/snpeff.lua
+            dest: "{{ snpeff_module_dir }}/{{ item.version_number }}.lua"

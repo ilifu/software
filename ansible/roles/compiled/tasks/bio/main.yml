@@ -689,8 +689,18 @@
     - exomiser
 
 - name: Install snpeff
+  vars:
+    snpeff_versions:
+      - {
+        version_number: "5.2",
+        git_tag: "v5.2",
+        java_module: "java/openjdk-17.0.2",
+        maven_module: "maven/3.9.11",
+        databases: ["GRCh38.99", "hg19"]
+      }
   include_tasks:
     file: snpeff.yaml
+  loop: "{{ snpeff_versions }}"
   tags:
     - never
     - snpeff
