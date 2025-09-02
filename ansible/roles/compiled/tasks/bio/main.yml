@@ -2264,7 +2264,7 @@
         version_number: "1.0",
         git_repo: "https://github.com/aldertzomer/cgmlst.git",
         git_tag: "master",
-        blast_module: "blast/2.16.0"
+        blast_module: "blast/2.17.0"
       }
   include_tasks:
     file: cgmlst.yaml
