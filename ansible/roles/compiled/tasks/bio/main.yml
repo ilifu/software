@@ -695,7 +695,7 @@
         version_number: "5.2",
         snpeff_git_tag: "v5.2",
         snpsift_git_tag: "v5.2f",
-        java_module: "java/openjdk-17.0.2",
+        java_module: "java/openjdk-22.0.1",
         maven_module: "maven/3.9.11",
         databases: ["GRCh38.105", "GRCh37.75", "hg19"]
       }
