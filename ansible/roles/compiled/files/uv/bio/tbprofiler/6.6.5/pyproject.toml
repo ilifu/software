@@ -6,7 +6,11 @@ requires-python = ">=3.11,<3.13"
 dependencies = [
     "joblib>=1.5.2",
     "pathogen-profiler",
+    "pydantic>=2.11.7",
     "pysam>=0.23.3",
+    "pyyaml>=6.0.2",
+    "rich>=14.1.0",
+    "rich-argparse>=1.7.1",
     "tbprofiler",
     "tqdm>=4.32.2",
 ]
