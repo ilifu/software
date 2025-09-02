@@ -58,7 +58,7 @@
         chdir: "{{ install_dir }}"
 
     - name: Update TBProfiler database
-      shell: "{{ install_dir }}/.venv/bin/tb-profiler update_tbdb"
+      shell: "{{ install_dir }}/.venv/bin/tb-profiler update_tbdb --db_dir {{ install_dir }}/.tbdb"
       args:
         creates: "{{ install_dir }}/.tbdb"
       environment:
