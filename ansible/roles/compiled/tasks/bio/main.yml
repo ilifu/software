@@ -696,8 +696,7 @@
         snpeff_git_tag: "v5.2",
         snpsift_git_tag: "v5.2f",
         java_module: "java/openjdk-17.0.2",
-        maven_module: "maven/3.9.11",
-        databases: ["GRCh38.99", "hg19"]
+        maven_module: "maven/3.9.11"
       }
   include_tasks:
     file: snpeff.yaml

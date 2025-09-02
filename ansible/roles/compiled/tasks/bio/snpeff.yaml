@@ -140,14 +140,16 @@
         state: directory
         mode: u=rwx,g=rwx,o=rx
 
-    - name: Install snpEffData
+    - name: Install snpEffData (optional)
       shell: |
         /software/common/java/jdk-{{ java_version }}/bin/java -jar {{ snpeff_dir }}/snpEff.jar download {{ snpeff_data }}
       args:
         chdir: "{{ snpeff_dir }}"
-      with_items: "{{ item.databases | default(['GRCh38.99']) }}"
+      with_items: "{{ item.databases | default([]) }}"
       loop_control:
         loop_var: snpeff_data
+      failed_when: false
+      when: item.databases is defined and item.databases | length > 0
 
     - name: Install snpeff {{ item.version_number }} module
       block:
