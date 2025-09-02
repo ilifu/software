@@ -20,13 +20,8 @@
   block:
     - name: Check if SnpEff JAR files already exist
       stat:
-        path: "{{ jar_file }}"
+        path: "{{ snpeff_install_dir }}/snpEff.jar"
       register: jar_check
-      with_items:
-        - "{{ snpeff_build_dir }}/target/SnpEff-5.2-jar-with-dependencies.jar"
-        - "{{ snpsift_build_dir }}/target/SnpSift-5.2-jar-with-dependencies.jar"
-      loop_control:
-        loop_var: jar_file
 
     - name: Build SnpEff from source (if needed)
       block:
@@ -120,7 +115,7 @@
             
             echo "Build done!"
 
-      when: jar_check.results | selectattr('stat.exists', 'equalto', false) | list | length > 0
+      when: not jar_check.stat.exists
 
     - name: Create installation directories
       file:
@@ -139,8 +134,12 @@
         cp "{{ snpeff_build_dir }}/target/SnpEff-5.2-jar-with-dependencies.jar" "{{ snpeff_install_dir }}/snpEff.jar"
         cp "{{ snpeff_build_dir }}/snpEff.config" "{{ snpeff_install_dir }}/"
         
-        # Copy SnpSift JAR files  
-        cp "{{ snpsift_build_dir }}/target/SnpSift-5.2-jar-with-dependencies.jar" "{{ snpeff_install_dir }}/SnpSift.jar"
+        # Copy SnpSift JAR files if it exists
+        if [ -f "{{ snpsift_build_dir }}/target/SnpSift-5.2-jar-with-dependencies.jar" ]; then
+            cp "{{ snpsift_build_dir }}/target/SnpSift-5.2-jar-with-dependencies.jar" "{{ snpeff_install_dir }}/SnpSift.jar"
+        else
+            echo "Warning: SnpSift JAR not found, skipping..."
+        fi
         
         # Copy scripts directory if it exists
         if [ -d "{{ snpeff_build_dir }}/scripts" ]; then
