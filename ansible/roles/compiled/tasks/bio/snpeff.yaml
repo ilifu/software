@@ -74,16 +74,22 @@
               args:
                 chdir: "{{ snpeff_build_dir }}/lib"
 
-        - name: Build SnpEff from source
+        - name: Build SnpEff JAR
           shell: |
             export VERSION=5.2
-            export VERSION_UND=`echo $VERSION | tr '.' '_'`
-            
-            # Build SnpEff
             cd "{{ snpeff_build_dir }}"
             mvn clean compile assembly:single jar:jar
-            
-            # Install SnpEff JAR file in local Maven repo
+
+        - name: Verify SnpEff JAR was created
+          stat:
+            path: "{{ snpeff_build_dir }}/target/SnpEff-5.2-jar-with-dependencies.jar"
+          register: snpeff_jar_check
+          failed_when: not snpeff_jar_check.stat.exists
+
+        - name: Install SnpEff JAR to Maven repository
+          shell: |
+            export VERSION=5.2
+            cd "{{ snpeff_build_dir }}"
             mvn install:install-file \
                 -Dfile=target/SnpEff-$VERSION.jar \
                 -DgroupId=org.snpeff \
@@ -92,12 +98,23 @@
                 -Dpackaging=jar \
                 -DgeneratePom=true \
                 --quiet
-            
-            # Build SnpSift  
+
+        - name: Build SnpSift JAR
+          shell: |
+            export VERSION=5.2
             cd "{{ snpsift_build_dir }}"
             mvn clean compile assembly:single jar:jar
-            
-            # Install SnpSift JAR file in local Maven repo
+
+        - name: Verify SnpSift JAR was created
+          stat:
+            path: "{{ snpsift_build_dir }}/target/SnpSift-5.2-jar-with-dependencies.jar"
+          register: snpsift_jar_check
+          failed_when: not snpsift_jar_check.stat.exists
+
+        - name: Install SnpSift JAR to Maven repository
+          shell: |
+            export VERSION=5.2
+            cd "{{ snpsift_build_dir }}"
             mvn install:install-file \
                 -Dfile=target/SnpSift-$VERSION.jar \
                 -DgroupId=org.snpsift \
@@ -106,14 +123,14 @@
                 -Dpackaging=jar \
                 -DgeneratePom=true \
                 --quiet
-            
-            # Update galaxy databases
+
+        - name: Update galaxy databases (optional)
+          shell: |
             cd "{{ snpeff_build_dir }}"
             if [ -f "./scripts_build/galaxy.sh" ]; then
                 ./scripts_build/galaxy.sh || echo "Galaxy script failed, continuing..."
             fi
-            
-            echo "Build done!"
+          failed_when: false
 
       when: not jar_check.stat.exists
 
