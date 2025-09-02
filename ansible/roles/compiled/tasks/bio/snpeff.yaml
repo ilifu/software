@@ -1,7 +1,8 @@
 ---
 - name: Install snpeff from source {{ item.version_number }}
   vars:
-    snpeff_dir: "{{ bio_dir }}/snpEff/{{ item.version_number }}"
+    snpeff_dir: "{{ bio_dir }}/snpEff"
+    snpeff_install_dir: "{{ snpeff_dir }}/{{ item.version_number }}"
     snpeff_build_dir: "{{ bio_src }}/SnpEff-{{ item.version_number }}"
     snpsift_build_dir: "{{ bio_src }}/SnpSift-{{ item.version_number }}"
     snpeff_module_dir: "{{ bio_modules }}/snpeff"
@@ -121,33 +122,38 @@
 
       when: jar_check.results | selectattr('stat.exists', 'equalto', false) | list | length > 0
 
-    - name: Create installation directory
+    - name: Create installation directories
       file:
-        path: "{{ snpeff_dir }}"
+        path: "{{ dir_path }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
+      with_items:
+        - "{{ snpeff_dir }}"
+        - "{{ snpeff_install_dir }}"
+      loop_control:
+        loop_var: dir_path
 
     - name: Install built SnpEff to target directory
       shell: |
         # Copy SnpEff JAR files
-        cp "{{ snpeff_build_dir }}/target/SnpEff-5.2-jar-with-dependencies.jar" "{{ snpeff_dir }}/snpEff.jar"
-        cp "{{ snpeff_build_dir }}/snpEff.config" "{{ snpeff_dir }}/"
+        cp "{{ snpeff_build_dir }}/target/SnpEff-5.2-jar-with-dependencies.jar" "{{ snpeff_install_dir }}/snpEff.jar"
+        cp "{{ snpeff_build_dir }}/snpEff.config" "{{ snpeff_install_dir }}/"
         
         # Copy SnpSift JAR files  
-        cp "{{ snpsift_build_dir }}/target/SnpSift-5.2-jar-with-dependencies.jar" "{{ snpeff_dir }}/SnpSift.jar"
+        cp "{{ snpsift_build_dir }}/target/SnpSift-5.2-jar-with-dependencies.jar" "{{ snpeff_install_dir }}/SnpSift.jar"
         
         # Copy scripts directory if it exists
         if [ -d "{{ snpeff_build_dir }}/scripts" ]; then
-            cp -r "{{ snpeff_build_dir }}/scripts/" "{{ snpeff_dir }}/"
+            cp -r "{{ snpeff_build_dir }}/scripts/" "{{ snpeff_install_dir }}/"
         fi
 
     - name: Set snpeff data.dir
       lineinfile:
-        path: "{{ snpeff_dir }}/snpEff.config"
+        path: "{{ snpeff_install_dir }}/snpEff.config"
         regexp: "data[.]dir =.*"
         line: "data.dir = {{ snpeff_dir }}/data"
 
-    - name: Ensure snpEff data dir exists
+    - name: Ensure snpEff shared data dir exists
       file:
         path: "{{ snpeff_dir }}/data"
         state: directory
@@ -155,9 +161,9 @@
 
     - name: Install snpEffData (optional)
       shell: |
-        /software/common/java/jdk-{{ java_version }}/bin/java -jar {{ snpeff_dir }}/snpEff.jar download {{ snpeff_data }}
+        /software/common/java/jdk-{{ java_version }}/bin/java -jar {{ snpeff_install_dir }}/snpEff.jar download {{ snpeff_data }}
       args:
-        chdir: "{{ snpeff_dir }}"
+        chdir: "{{ snpeff_install_dir }}"
       with_items: "{{ item.databases | default([]) }}"
       loop_control:
         loop_var: snpeff_data

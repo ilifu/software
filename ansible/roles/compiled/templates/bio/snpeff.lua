@@ -9,12 +9,13 @@ whatis("Description: SnpEff {{ item.version_number }} - Genomic variant annotati
 
 depends_on("{{ item.java_module }}")
 
-local snpeff_dir = "{{ snpeff_dir }}"
+local snpeff_install_dir = "{{ snpeff_install_dir }}"
+local snpeff_data_dir = "{{ snpeff_dir }}/data"
 
-prepend_path('PATH', snpeff_dir)
+prepend_path('PATH', snpeff_install_dir)
 
-setenv('SNPEFF_HOME', snpeff_dir)
-setenv('SNPEFF_DATA', snpeff_dir .. '/data')
+setenv('SNPEFF_HOME', snpeff_install_dir)
+setenv('SNPEFF_DATA', snpeff_data_dir)
 
-set_alias("snpEff", "java -jar " .. snpeff_dir .. "/snpEff.jar")
-set_alias("SnpSift", "java -jar " .. snpeff_dir .. "/SnpSift.jar")
+set_alias("snpEff", "java -jar " .. snpeff_install_dir .. "/snpEff.jar")
+set_alias("SnpSift", "java -jar " .. snpeff_install_dir .. "/SnpSift.jar")
