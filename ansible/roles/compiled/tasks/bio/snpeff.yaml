@@ -31,6 +31,15 @@
         version: "{{ item.snpsift_git_tag | default('HEAD') }}"
         force: yes
 
+    - name: Debug environment variables
+      shell: |
+        echo "JAVA_HOME: $JAVA_HOME"
+        echo "PATH: $PATH"
+        echo "Java version: {{ java_version }}"
+        echo "Maven version: {{ maven_version }}"
+        ls -la /software/common/java/jdk-{{ java_version }} || echo "Java directory not found"
+        ls -la /software/common/maven/{{ maven_version }} || echo "Maven directory not found"
+
     - name: Install Maven dependencies for SnpEff libraries
       block:
         - name: Install Antlr jar to Maven local repository
