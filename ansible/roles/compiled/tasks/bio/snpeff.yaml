@@ -8,7 +8,7 @@
     java_module: "{{ item.java_module | default('java/openjdk-17.0.2') }}"
     maven_module: "{{ item.maven_module | default('maven/3.9.11') }}"
     # Extract paths from module versions
-    java_version: "{{ java_module.split('/')[1] }}"
+    java_version: "{{ java_module.split('/')[1].replace('openjdk-', '') }}"
     maven_version: "{{ maven_module.split('/')[1] }}"
   tags:
     - never
