@@ -17,56 +17,6 @@
     JAVA_HOME: "/software/common/java/jdk-{{ java_version }}"
     PATH: "/software/common/java/jdk-{{ java_version }}/bin:/software/common/maven/{{ maven_version }}/bin:{{ ansible_env.PATH }}"
   block:
-    - name: Clone SnpEff repository
-      git:
-        repo: https://github.com/pcingola/SnpEff.git
-        dest: "{{ snpeff_build_dir }}"
-        version: "{{ item.snpeff_git_tag | default('HEAD') }}"
-        force: yes
-
-    - name: Clone SnpSift repository  
-      git:
-        repo: https://github.com/pcingola/SnpSift.git
-        dest: "{{ snpsift_build_dir }}"
-        version: "{{ item.snpsift_git_tag | default('HEAD') }}"
-        force: yes
-
-
-    - name: Install Maven dependencies for SnpEff libraries
-      block:
-        - name: Install Antlr jar to Maven local repository
-          shell: |
-            /software/common/maven/{{ maven_version }}/bin/mvn install:install-file \
-                -Dfile=antlr-4.5.1-complete.jar \
-                -DgroupId=org.antlr \
-                -DartifactId=antlr \
-                -Dversion=4.5.1 \
-                -Dpackaging=jar
-          args:
-            chdir: "{{ snpeff_build_dir }}/lib"
-
-        - name: Install BioJava core jar to Maven local repository
-          shell: |
-            /software/common/maven/{{ maven_version }}/bin/mvn install:install-file \
-                -Dfile=biojava3-core-3.0.7.jar \
-                -DgroupId=org.biojava \
-                -DartifactId=biojava3-core \
-                -Dversion=3.0.7 \
-                -Dpackaging=jar
-          args:
-            chdir: "{{ snpeff_build_dir }}/lib"
-
-        - name: Install BioJava structure jar to Maven local repository
-          shell: |
-            /software/common/maven/{{ maven_version }}/bin/mvn install:install-file \
-                -Dfile=biojava3-structure-3.0.7.jar \
-                -DgroupId=org.biojava \
-                -DartifactId=biojava3-structure \
-                -Dversion=3.0.7 \
-                -Dpackaging=jar
-          args:
-            chdir: "{{ snpeff_build_dir }}/lib"
-
     - name: Check if SnpEff JAR files already exist
       stat:
         path: "{{ jar_file }}"
@@ -77,46 +27,98 @@
       loop_control:
         loop_var: jar_file
 
-    - name: Build SnpEff from source
-      shell: |
-        export VERSION=5.2
-        export VERSION_UND=`echo $VERSION | tr '.' '_'`
-        
-        # Build SnpEff
-        cd "{{ snpeff_build_dir }}"
-        mvn clean compile assembly:single jar:jar
-        
-        # Install SnpEff JAR file in local Maven repo
-        mvn install:install-file \
-            -Dfile=target/SnpEff-$VERSION.jar \
-            -DgroupId=org.snpeff \
-            -DartifactId=SnpEff \
-            -Dversion=$VERSION \
-            -Dpackaging=jar \
-            -DgeneratePom=true \
-            --quiet
-        
-        # Build SnpSift  
-        cd "{{ snpsift_build_dir }}"
-        mvn clean compile assembly:single jar:jar
-        
-        # Install SnpSift JAR file in local Maven repo
-        mvn install:install-file \
-            -Dfile=target/SnpSift-$VERSION.jar \
-            -DgroupId=org.snpsift \
-            -DartifactId=SnpSift \
-            -Dversion=$VERSION \
-            -Dpackaging=jar \
-            -DgeneratePom=true \
-            --quiet
-        
-        # Update galaxy databases
-        cd "{{ snpeff_build_dir }}"
-        if [ -f "./scripts_build/galaxy.sh" ]; then
-            ./scripts_build/galaxy.sh || echo "Galaxy script failed, continuing..."
-        fi
-        
-        echo "Build done!"
+    - name: Build SnpEff from source (if needed)
+      block:
+        - name: Clone SnpEff repository
+          git:
+            repo: https://github.com/pcingola/SnpEff.git
+            dest: "{{ snpeff_build_dir }}"
+            version: "{{ item.snpeff_git_tag | default('HEAD') }}"
+            force: yes
+
+        - name: Clone SnpSift repository  
+          git:
+            repo: https://github.com/pcingola/SnpSift.git
+            dest: "{{ snpsift_build_dir }}"
+            version: "{{ item.snpsift_git_tag | default('HEAD') }}"
+            force: yes
+
+        - name: Install Maven dependencies for SnpEff libraries
+          block:
+            - name: Install Antlr jar to Maven local repository
+              shell: |
+                /software/common/maven/{{ maven_version }}/bin/mvn install:install-file \
+                    -Dfile=antlr-4.5.1-complete.jar \
+                    -DgroupId=org.antlr \
+                    -DartifactId=antlr \
+                    -Dversion=4.5.1 \
+                    -Dpackaging=jar
+              args:
+                chdir: "{{ snpeff_build_dir }}/lib"
+
+            - name: Install BioJava core jar to Maven local repository
+              shell: |
+                /software/common/maven/{{ maven_version }}/bin/mvn install:install-file \
+                    -Dfile=biojava3-core-3.0.7.jar \
+                    -DgroupId=org.biojava \
+                    -DartifactId=biojava3-core \
+                    -Dversion=3.0.7 \
+                    -Dpackaging=jar
+              args:
+                chdir: "{{ snpeff_build_dir }}/lib"
+
+            - name: Install BioJava structure jar to Maven local repository
+              shell: |
+                /software/common/maven/{{ maven_version }}/bin/mvn install:install-file \
+                    -Dfile=biojava3-structure-3.0.7.jar \
+                    -DgroupId=org.biojava \
+                    -DartifactId=biojava3-structure \
+                    -Dversion=3.0.7 \
+                    -Dpackaging=jar
+              args:
+                chdir: "{{ snpeff_build_dir }}/lib"
+
+        - name: Build SnpEff from source
+          shell: |
+            export VERSION=5.2
+            export VERSION_UND=`echo $VERSION | tr '.' '_'`
+            
+            # Build SnpEff
+            cd "{{ snpeff_build_dir }}"
+            mvn clean compile assembly:single jar:jar
+            
+            # Install SnpEff JAR file in local Maven repo
+            mvn install:install-file \
+                -Dfile=target/SnpEff-$VERSION.jar \
+                -DgroupId=org.snpeff \
+                -DartifactId=SnpEff \
+                -Dversion=$VERSION \
+                -Dpackaging=jar \
+                -DgeneratePom=true \
+                --quiet
+            
+            # Build SnpSift  
+            cd "{{ snpsift_build_dir }}"
+            mvn clean compile assembly:single jar:jar
+            
+            # Install SnpSift JAR file in local Maven repo
+            mvn install:install-file \
+                -Dfile=target/SnpSift-$VERSION.jar \
+                -DgroupId=org.snpsift \
+                -DartifactId=SnpSift \
+                -Dversion=$VERSION \
+                -Dpackaging=jar \
+                -DgeneratePom=true \
+                --quiet
+            
+            # Update galaxy databases
+            cd "{{ snpeff_build_dir }}"
+            if [ -f "./scripts_build/galaxy.sh" ]; then
+                ./scripts_build/galaxy.sh || echo "Galaxy script failed, continuing..."
+            fi
+            
+            echo "Build done!"
+
       when: jar_check.results | selectattr('stat.exists', 'equalto', false) | list | length > 0
 
     - name: Create installation directory
