@@ -143,11 +143,11 @@
       lineinfile:
         path: "{{ snpeff_dir }}/snpEff.config"
         regexp: "data[.]dir =.*"
-        line: "data.dir = ../snpEff.data"
+        line: "data.dir = {{ snpeff_dir }}/data"
 
     - name: Ensure snpEff data dir exists
       file:
-        path: "{{ bio_dir }}/snpEff.data"
+        path: "{{ snpeff_dir }}/data"
         state: directory
         mode: u=rwx,g=rwx,o=rx
 
