@@ -54,7 +54,7 @@
           args:
             creates: "{{ install_dir }}/data"
           environment:
-            PATH: "{{ install_dir }}:{{ ansible_env.PATH }}"
+            PATH: "/software/bio/{{ blast_module }}/bin:{{ install_dir }}:{{ ansible_env.PATH }}"
           ignore_errors: yes
 
     - name: Install amrfinder {{ version_number }} module
