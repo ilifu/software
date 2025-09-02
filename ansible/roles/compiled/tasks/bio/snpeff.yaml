@@ -13,6 +13,9 @@
   tags:
     - never
     - snpeff{{ item.version_number }}
+  environment:
+    JAVA_HOME: "/software/common/java/jdk-{{ java_version }}"
+    PATH: "/software/common/java/jdk-{{ java_version }}/bin:/software/common/maven/{{ maven_version }}/bin:{{ ansible_env.PATH }}"
   block:
     - name: Clone SnpEff repository
       git:
@@ -40,9 +43,6 @@
                 -Dpackaging=jar
           args:
             chdir: "{{ snpeff_build_dir }}/lib"
-          environment:
-            JAVA_HOME: "/software/common/java/jdk-{{ java_version }}"
-            PATH: "/software/common/java/jdk-{{ java_version }}/bin:/software/common/maven/{{ maven_version }}/bin:{{ ansible_env.PATH }}"
 
         - name: Install BioJava core jar to Maven local repository
           shell: |
@@ -54,9 +54,6 @@
                 -Dpackaging=jar
           args:
             chdir: "{{ snpeff_build_dir }}/lib"
-          environment:
-            JAVA_HOME: "/software/common/java/jdk-{{ java_version }}"
-            PATH: "/software/common/java/jdk-{{ java_version }}/bin:/software/common/maven/{{ maven_version }}/bin:{{ ansible_env.PATH }}"
 
         - name: Install BioJava structure jar to Maven local repository
           shell: |
@@ -68,17 +65,11 @@
                 -Dpackaging=jar
           args:
             chdir: "{{ snpeff_build_dir }}/lib"
-          environment:
-            JAVA_HOME: "/software/common/java/jdk-{{ java_version }}"
-            PATH: "/software/common/java/jdk-{{ java_version }}/bin:/software/common/maven/{{ maven_version }}/bin:{{ ansible_env.PATH }}"
 
     - name: Build SnpEff from source
       shell: ./scripts_build/make.sh
       args:
         chdir: "{{ snpeff_build_dir }}"
-      environment:
-        JAVA_HOME: "/software/common/java/jdk-{{ java_version }}"
-        PATH: "/software/common/java/jdk-{{ java_version }}/bin:/software/common/maven/{{ maven_version }}/bin:{{ ansible_env.PATH }}"
 
     - name: Create installation directory
       file:
@@ -109,9 +100,6 @@
         /software/common/java/jdk-{{ java_version }}/bin/java -jar {{ snpeff_dir }}/snpEff.jar download {{ snpeff_data }}
       args:
         chdir: "{{ snpeff_dir }}"
-      environment:
-        JAVA_HOME: "/software/common/java/jdk-{{ java_version }}"
-        PATH: "/software/common/java/jdk-{{ java_version }}/bin:{{ ansible_env.PATH }}"
       with_items: "{{ item.databases | default(['GRCh38.99']) }}"
       loop_control:
         loop_var: snpeff_data
