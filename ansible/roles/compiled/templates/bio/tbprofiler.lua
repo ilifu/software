@@ -18,4 +18,4 @@ prepend_path('PYTHONPATH', '{{ install_dir }}/.venv/lib/python*/site-packages')
 setenv('TBPROFILER_DB', '{{ install_dir }}/.tbdb')
 
 -- Dependencies
-depends_on("{{ bwa_module }}", "{{ samtools_module }}", "{{ bcftools_module }}", "{{ freebayes_module }}", "{{ trimmomatic_module }}", "{{ minimap2_module }}", "{{ snpeff_module }}", "{{ parallel_module }}", "{{ samclip_module }}")
+depends_on("{{ bwa_module }}", "{{ samtools_module }}", "{{ bcftools_module }}", "{{ freebayes_module }}", "{{ trimmomatic_module }}", "{{ minimap2_module }}", "{{ snpeff_module }}", "{{ parallel_module }}", "{{ samclip_module }}", "{{ htslib_module }}")

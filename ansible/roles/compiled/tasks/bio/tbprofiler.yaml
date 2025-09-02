@@ -15,11 +15,17 @@
     snpeff_module: "{{ item.snpeff_module | default('snpeff') }}"
     parallel_module: "{{ item.parallel_module | default('parallel/20241022') }}"
     samclip_module: "{{ item.samclip_module | default('samclip/0.4.0') }}"
+    htslib_module: "{{ item.htslib_module | default('htslib/1.22.1') }}"
   tags:
     - never
     - tbprofiler{{ item.version_number }}
   environment:
-    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ python_location }}/bin:/software/bio/htslib/1.22.1/bin:{{ ansible_env.PATH }}"
+    LD_LIBRARY_PATH: "/software/bio/htslib/1.22.1/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+    LIBRARY_PATH: "/software/bio/htslib/1.22.1/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
+    C_INCLUDE_PATH: "/software/bio/htslib/1.22.1/include:{{ ansible_env.C_INCLUDE_PATH | default('') }}"
+    CPATH: "/software/bio/htslib/1.22.1/include:{{ ansible_env.CPATH | default('') }}"
+    PKG_CONFIG_PATH: "/software/bio/htslib/1.22.1/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
   block:
     - name: Create tbprofiler directory
       file:
