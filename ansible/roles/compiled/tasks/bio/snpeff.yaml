@@ -31,22 +31,6 @@
         version: "{{ item.snpsift_git_tag | default('HEAD') }}"
         force: yes
 
-    - name: Check environment variables
-      shell: |
-        echo "JAVA_HOME: $JAVA_HOME"
-        echo "PATH: $PATH"
-        ls -la /software/common/java/jdk-{{ java_version }} || echo "Java directory not found"
-        ls -la /software/common/maven/{{ maven_version }} || echo "Maven directory not found"
-      register: env_debug
-
-    - name: Display environment debug info
-      debug:
-        msg: |
-          Java version: {{ java_version }}
-          Maven version: {{ maven_version }}
-          Expected JAVA_HOME: /software/common/java/jdk-{{ java_version }}
-          Expected Maven path: /software/common/maven/{{ maven_version }}
-          Environment check output: {{ env_debug.stdout_lines }}
 
     - name: Install Maven dependencies for SnpEff libraries
       block:
@@ -84,9 +68,45 @@
             chdir: "{{ snpeff_build_dir }}/lib"
 
     - name: Build SnpEff from source
-      shell: ./scripts_build/make.sh
-      args:
-        chdir: "{{ snpeff_build_dir }}"
+      shell: |
+        export VERSION=5.2
+        export VERSION_UND=`echo $VERSION | tr '.' '_'`
+        
+        # Build SnpEff
+        cd "{{ snpeff_build_dir }}"
+        mvn clean compile assembly:single jar:jar
+        
+        # Install SnpEff JAR file in local Maven repo
+        mvn install:install-file \
+            -Dfile=target/SnpEff-$VERSION.jar \
+            -DgroupId=org.snpeff \
+            -DartifactId=SnpEff \
+            -Dversion=$VERSION \
+            -Dpackaging=jar \
+            -DgeneratePom=true \
+            --quiet
+        
+        # Build SnpSift  
+        cd "{{ snpsift_build_dir }}"
+        mvn clean compile assembly:single jar:jar
+        
+        # Install SnpSift JAR file in local Maven repo
+        mvn install:install-file \
+            -Dfile=target/SnpSift-$VERSION.jar \
+            -DgroupId=org.snpsift \
+            -DartifactId=SnpSift \
+            -Dversion=$VERSION \
+            -Dpackaging=jar \
+            -DgeneratePom=true \
+            --quiet
+        
+        # Update galaxy databases
+        cd "{{ snpeff_build_dir }}"
+        if [ -f "./scripts_build/galaxy.sh" ]; then
+            ./scripts_build/galaxy.sh || echo "Galaxy script failed, continuing..."
+        fi
+        
+        echo "Build done!"
 
     - name: Create installation directory
       file:
@@ -96,9 +116,17 @@
 
     - name: Install built SnpEff to target directory
       shell: |
-        cp -r snpEff.jar snpEff.config SnpSift.jar scripts/ "{{ snpeff_dir }}/"
-      args:
-        chdir: "{{ snpeff_build_dir }}"
+        # Copy SnpEff JAR files
+        cp "{{ snpeff_build_dir }}/target/SnpEff-5.2-jar-with-dependencies.jar" "{{ snpeff_dir }}/snpEff.jar"
+        cp "{{ snpeff_build_dir }}/snpEff.config" "{{ snpeff_dir }}/"
+        
+        # Copy SnpSift JAR files  
+        cp "{{ snpsift_build_dir }}/target/SnpSift-5.2-jar-with-dependencies.jar" "{{ snpeff_dir }}/SnpSift.jar"
+        
+        # Copy scripts directory if it exists
+        if [ -d "{{ snpeff_build_dir }}/scripts" ]; then
+            cp -r "{{ snpeff_build_dir }}/scripts/" "{{ snpeff_dir }}/"
+        fi
 
     - name: Set snpeff data.dir
       lineinfile:
