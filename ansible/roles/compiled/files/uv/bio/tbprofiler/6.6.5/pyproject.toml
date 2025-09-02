@@ -4,11 +4,19 @@ version = "6.6.5"
 description = "TBProfiler for M. tuberculosis profiling and drug resistance analysis"
 requires-python = ">=3.11,<3.13"
 dependencies = [
+    "docxtpl>=0.20.1",
+    "filelock>=3.19.1",
+    "itol-config",
+    "jinja2>=3.1.6",
     "joblib>=1.5.2",
+    "numpy>=2.3.2",
+    "packaging>=25.0",
     "pathogen-profiler",
     "pydantic>=2.11.7",
     "pysam>=0.23.3",
+    "python-docx>=1.2.0",
     "pyyaml>=6.0.2",
+    "requests>=2.32.5",
     "rich>=14.1.0",
     "rich-argparse>=1.7.1",
     "tbprofiler",
@@ -18,3 +26,4 @@ dependencies = [
 [tool.uv.sources]
 tbprofiler = { git = "https://github.com/jodyphelan/TBProfiler.git" }
 pathogen-profiler = { git = "https://github.com/jodyphelan/pathogen-profiler.git" }
+itol-config = { git = "https://github.com/jodyphelan/itol-config.git" }
