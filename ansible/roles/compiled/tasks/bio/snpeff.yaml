@@ -67,6 +67,14 @@
           args:
             chdir: "{{ snpeff_build_dir }}/lib"
 
+    - name: Check if SnpEff JAR files already exist
+      stat:
+        path: "{{ item }}"
+      register: jar_check
+      with_items:
+        - "{{ snpeff_build_dir }}/target/SnpEff-5.2-jar-with-dependencies.jar"
+        - "{{ snpsift_build_dir }}/target/SnpSift-5.2-jar-with-dependencies.jar"
+
     - name: Build SnpEff from source
       shell: |
         export VERSION=5.2
@@ -107,6 +115,7 @@
         fi
         
         echo "Build done!"
+      when: jar_check.results | selectattr('stat.exists', 'equalto', false) | list | length > 0
 
     - name: Create installation directory
       file:
