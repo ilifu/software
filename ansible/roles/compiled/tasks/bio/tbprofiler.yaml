@@ -68,7 +68,8 @@
       args:
         creates: "{{ install_dir }}/.tbdb/tbdb.dr.json"
       environment:
-        PATH: "{{ install_dir }}/.venv/bin:{{ ansible_env.PATH }}"
+        PATH: "{{ install_dir }}/.venv/bin:/software/bio/snpEff/5.2:{{ ansible_env.PATH }}"
+        SNPEFF_HOME: "/software/bio/snpEff/5.2"
       ignore_errors: yes
 
     - name: "Create tbprofiler module directory {{ tbprofiler_module_dir }}"
