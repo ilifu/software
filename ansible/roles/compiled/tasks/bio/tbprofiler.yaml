@@ -57,10 +57,16 @@
       args:
         chdir: "{{ install_dir }}"
 
+    - name: Create TBProfiler database directory
+      file:
+        path: "{{ install_dir }}/.tbdb"
+        state: directory
+        mode: "ug=rwx,o=rx"
+
     - name: Update TBProfiler database
       shell: "{{ install_dir }}/.venv/bin/tb-profiler update_tbdb --db_dir {{ install_dir }}/.tbdb"
       args:
-        creates: "{{ install_dir }}/.tbdb"
+        creates: "{{ install_dir }}/.tbdb/tbdb.dr.json"
       environment:
         PATH: "{{ install_dir }}/.venv/bin:{{ ansible_env.PATH }}"
       ignore_errors: yes
