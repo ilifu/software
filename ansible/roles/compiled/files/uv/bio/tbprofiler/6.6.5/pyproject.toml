@@ -5,6 +5,7 @@ description = "TBProfiler for M. tuberculosis profiling and drug resistance anal
 requires-python = ">=3.11,<3.13"
 dependencies = [
     "pathogen-profiler",
+    "pysam>=0.23.3",
     "tbprofiler",
     "tqdm>=4.32.2",
 ]
