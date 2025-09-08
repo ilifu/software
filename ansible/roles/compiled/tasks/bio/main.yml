@@ -1714,12 +1714,20 @@
       - htstream
 
 
-#- name: Install VIP
-#  include_tasks:
-#    file: 'vip.yaml'
-#  tags:
-#    - never
-#    - vip
+- name: Install VIP
+  vars:
+    versions:
+      - {
+        version_number: "8.4.2",
+        install_script: "vip_install_v8.4.2.sh",
+        checksum: "sha256:7dc16abadd14149c0dd3b911c0f310eb3bc10c04751dd10b60bbb7c033f87840"
+      }
+  include_tasks:
+    file: 'vip.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - vip
 
 
 #- name: Install Sequence Tube Map

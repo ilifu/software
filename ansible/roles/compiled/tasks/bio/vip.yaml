@@ -1,27 +1,58 @@
-#---
-#- name: Install vip
-#  vars:
-#    vip_dir: "{{ bio_dir }}/vip"
-#    vip_data_dir: "/software/data/bio/vip"
-#    vip_module_dir: "{{ bio_modules_dir }}/vip"
-#  tags:
-#    - never
-#    - vip
-#  environment:
-#    PATH: "/software/common/singularity/4.1.3/bin:{{ ansible_env.PATH }}"
-#  block:
-#    - name: Download VIP installer
-#      get_url:
-#        url: "https://download.molgeniscloud.org/downloads/vip/install.sh"
-#        dest: "{{ bio_src }}/vip_install.sh"
-#        mode: "ugo=rx"
-#        checksum: "sha256:8460872a46873e80b5cc7733d83f17f7b790e8fb79c6309f1c87132c47af1f9f"
-#    - name: Install VIP to {{ vip_dir }}
-#      command:
-#        argv:
-#          - "{{ bio_src }}/vip_install.sh"
-#          - -d
-#          - "{{ vip_data_dir }}"
-#          - -i
-#          - "{{ vip_dir }}"
+---
+- name: Install VIP {{ item.version_number }}
+  vars:
+    vip_dir: "{{ bio_dir }}/VIP"
+    vip_data_dir: "/software/data/bio/vip"
+    vip_module_dir: "{{ bio_modules }}/vip"
+    version_number: "{{ item.version_number }}"
+    install_script: "{{ item.install_script }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ vip_dir }}/{{ version_number }}"
+    data_dir: "{{ vip_data_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - vip{{ item.version_number }}
+  environment:
+    PATH: "/software/common/apptainer/1.4.2/bin:/software/common/java/jdk-22.0.1/bin:{{ ansible_env.PATH }}"
+    JAVA_HOME: "/software/common/java/jdk-22.0.1"
+  block:
+    - name: "Download and install VIP {{ version_number }}"
+      block:
+        - name: "Ensure VIP directory exists"
+          file:
+            path: "{{ vip_dir }}"
+            state: directory
+        - name: "Ensure VIP data directory exists"
+          file:
+            path: "{{ vip_data_dir }}"
+            state: directory
+        - name: "Copy VIP installer {{ install_script }}"
+          copy:
+            src: "bio/{{ install_script }}"
+            dest: "{{ bio_src }}/{{ install_script }}"
+            mode: "ugo=rx"
+        - name: "Install VIP {{ version_number }} to {{ install_dir }}"
+          command:
+            argv:
+              - "{{ bio_src }}/{{ install_script }}"
+              - -d
+              - "{{ data_dir }}"
+              - -i
+              - "{{ install_dir }}"
+              - -v
+              - "v{{ version_number }}"
+          args:
+            creates: "{{ install_dir }}/vip.sh"
+
+    - name: Install VIP {{ version_number }} module
+      block:
+        - name: Check module dir {{ vip_module_dir }}
+          file:
+            path: "{{ vip_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install VIP module file
+          template:
+            src: bio/vip.lua
+            dest: "{{ vip_module_dir }}/{{ version_number }}.lua"
 
