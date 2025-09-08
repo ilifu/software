@@ -2443,3 +2443,18 @@
   tags:
     - never
     - samclip
+
+- name: Install chewBBACA
+  vars:
+    chewbbaca_versions:
+      - {
+        version_number: "3.4.1",
+        python_location: "/software/common/python/3.11.11",
+        blast_module: "blast/2.16.0"
+      }
+  include_tasks:
+    file: chewbbaca.yaml
+  loop: "{{ chewbbaca_versions }}"
+  tags:
+    - never
+    - chewbbaca

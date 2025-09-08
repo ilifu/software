@@ -1,0 +1,55 @@
+---
+- name: Install chewBBACA {{ item.version_number }}
+  vars:
+    chewbbaca_dir: "{{ bio_dir }}/chewBBACA"
+    chewbbaca_module_dir: "{{ bio_modules }}/chewbbaca"
+    version_number: "{{ item.version_number }}"
+    python_location: "{{ item.python_location | default('/software/common/python/3.11.11') }}"
+    install_dir: "{{ chewbbaca_dir }}/{{ version_number }}"
+    blast_module: "{{ item.blast_module | default('blast/2.16.0') }}"
+  tags:
+    - never
+    - chewbbaca{{ item.version_number }}
+  environment:
+    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
+  block:
+    - name: Create chewBBACA directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+
+    - name: Copy uv configuration files for chewBBACA
+      copy:
+        src: "uv/bio/chewbbaca/{{ version_number }}/{{ uv_file }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+        remote_src: false
+        mode: ug=rw,o=r
+      loop:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: uv_file
+
+    - name: Create uv virtual environment for chewBBACA
+      command: "{{ python_location }}/bin/uv venv .venv --python {{ python_location }}/bin/python3"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv/bin/python"
+
+    - name: Install chewBBACA and dependencies with uv
+      command: "{{ python_location }}/bin/uv sync"
+      args:
+        chdir: "{{ install_dir }}"
+
+    - name: "Create chewBBACA module directory {{ chewbbaca_module_dir }}"
+      file:
+          path: "{{ chewbbaca_module_dir }}"
+          state: directory
+          mode: "ug=rwx,o=rx"
+
+    - name: "Install chewBBACA module file"
+      template:
+        src: bio/chewbbaca.lua
+        dest: "{{ chewbbaca_module_dir }}/{{ version_number }}.lua"
