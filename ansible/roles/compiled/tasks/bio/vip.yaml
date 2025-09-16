@@ -6,9 +6,8 @@
     vip_module_dir: "{{ bio_modules }}/vip"
     version_number: "{{ item.version_number }}"
     install_script: "{{ item.install_script }}"
-    checksum: "{{ item.checksum }}"
     install_dir: "{{ vip_dir }}/{{ version_number }}"
-    data_dir: "{{ vip_data_dir }}/{{ version_number }}"
+    data_dir: "{{ vip_data_dir }}"
   tags:
     - never
     - vip{{ item.version_number }}
