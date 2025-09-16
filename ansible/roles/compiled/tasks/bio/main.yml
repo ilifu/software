@@ -1717,10 +1717,10 @@
 - name: Install VIP
   vars:
     versions:
-      - {
-        version_number: "8.4.2",
-        install_script: "vip_install_v8.4.2.sh",
-      }
+#      - {
+#        version_number: "8.4.2",
+#        install_script: "vip_install_v8.4.2.sh",
+#      }
       - {
         version_number: "8.4.5",
         install_script: "vip_install_v8.4.5.sh",
