@@ -1,0 +1,60 @@
+- name: Install squashfuse
+  vars:
+    squashfuse_dir: "{{ common_dir }}/squashfuse"
+    squashfuse_module_dir: "{{ common_modules }}/squashfuse"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ squashfuse_dir }}/{{ version_number }}"
+    go_location: "{{ item.go_location }}"
+  tags:
+    - never
+    - squashfuse{{ item.version_number }}
+  block:
+    - name: Install squashfuse {{ version_number }}
+      vars:
+        unzip_dir: "/dev/shm/squashfuse-{{ version_number }}"
+      block:
+        - name: Download and install squashfuse {{ version_number }}
+          block:
+            - name: Download squashfuse {{ version_number }}
+              get_url:
+                url: "{{ url }}"
+                dest: "{{ common_src }}/squashfuse-{{ version_number }}.tar.gz"
+                checksum: "{{ checksum }}"
+            - name: Unzip squashfuse {{ version_number }}
+              unarchive:
+                src: "{{ common_src }}/squashfuse-{{ version_number }}.tar.gz"
+                dest: "/dev/shm/"
+                creates: "{{ unzip_dir }}"
+            - name: Ensure installation parent exists
+              file:
+                path: "{{ squashfuse_dir }}"
+                state: directory
+                mode: u=rwx,g=rx,o=rx
+            - name: Configure squashfuse
+              command: "./configure --prefix={{ install_dir }}"
+              args:
+                chdir: "{{ unzip_dir }}"
+                creates: "{{ unzip_dir }}/Makefile"
+            - name: Compile squashfuse
+              make:
+                chdir: "{{ unzip_dir }}"
+              environment:
+                MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+            - name: Install squashfuse
+              make:
+                chdir: "{{ unzip_dir }}"
+                target: install
+
+    - name: Install squashfuse {{ version_number }} module
+      block:
+        - name: Check module dir
+          file:
+            path: "{{ squashfuse_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install squashfuse {{ version_number }} module file
+          template:
+            src: common/squashfuse.lua
+            dest: "{{ squashfuse_module_dir }}/{{ version_number }}.lua"
