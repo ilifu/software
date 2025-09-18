@@ -33,7 +33,7 @@
                 state: directory
                 mode: u=rwx,g=rx,o=rx
             - name: Configure apptainer
-              command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir={{ install_dir }}/etc"
+              command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir={{ install_dir }}/etc --with-suid"
               args:
                 chdir: "{{ unzip_dir }}"
                 creates: "{{ unzip_dir }}/builddir/Makefile"
