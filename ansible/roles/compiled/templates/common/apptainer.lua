@@ -6,7 +6,7 @@ whatis("Version: {{ version_number }}")
 whatis("Keywords: apptainer")
 whatis("Description: apptainer {{ version_number }}")
 
-local apptainer_dir = "{{ install_dir }}"
-local bin_dir = pathJoin(apptainer_dir, "bin")
+depends_on('{{ squashfuse_module }}', '{{ gocryptfs_module }}')
 
-prepend_path('PATH', bin_dir)
+prepend_path('PATH', '{{ install_dir }}/bin')
+prepend_path('MANPATH', '{{ install_dir }}')

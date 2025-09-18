@@ -7,6 +7,16 @@
     checksum: "{{ item.checksum }}"
     install_dir: "{{ apptainer_dir }}/{{ version_number }}"
     go_location: "{{ item.go_location }}"
+    squashfuse_location: "{{ item.squashfuse_location }}"
+    gocryptfs_location: "{{ item.gocryptfs_location }}"
+    squashfuse_module: "{{ item.squashfuse_module }}"
+    gocryptfs_module: "{{ item.gocryptfs_module }}"
+  environment:
+    LD_LIBRARY_PATH: "{{ squashfuse_location }}/lib:{{ gocryptfs_location }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+    PKG_CONFIG_PATH: "{{ squashfuse_location }}/lib/pkgconfig:{{ gocryptfs_location }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+    INCLUDE: "{{ squashfuse_location }}/include:{{ gocryptfs_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
+    LIBRARY_PATH: "{{ squashfuse_location }}/lib:{{ gocryptfs_location }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
+    PATH: "{{ squashfuse_location }}/bin:{{ gocryptfs_location }}/bin:{{ ansible_env.PATH }}"
   tags:
     - never
     - apptainer{{ item.version_number }}
@@ -60,7 +70,7 @@
             mode: u=rwx,g=rwx,o=rx
         - name: Install apptainer {{ version_number }} module file
           template:
-            src: apptainer.lua
+            src: common/apptainer.lua
             dest: "{{ apptainer_module_dir }}/{{ version_number }}.lua"
 
     - name: Configure apptainer {{ version_number }}
@@ -75,7 +85,7 @@
           become: true
         - name: Deploy apptainer configuration file
           template:
-            src: apptainer.conf
+            src: common/apptainer.conf
             dest: "{{ install_dir }}/etc/apptainer/apptainer.conf"
             mode: u=rw,g=r,o=r
             owner: root
