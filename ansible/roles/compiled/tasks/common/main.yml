@@ -861,7 +861,7 @@
       }
       - {
         version_number: "4.2.2",
-        checksum: "sha256:",
+        checksum: "sha256:f22c7eee64546abafada639225eb70c993da873abc05a48081402f18f49e47b1",
         url: "https://github.com/sylabs/singularity/releases/download/v4.2.2/singularity-ce-4.2.2.tar.gz",
         go_location: "{{ common_dir }}/golang/1.22.4/bin"
       }
