@@ -831,6 +831,36 @@
     - never
     - singularity
 
+- name: Install squashfuse
+  vars:
+    squashfuse_versions:
+      - {
+        version_number: "0.6.1",
+        checksum: "sha256:7b18a58c40a3161b5c329ae925b72336b5316941f906b446b8ed6c5a90989f8c",
+        url: "https://github.com/vasi/squashfuse/releases/download/0.6.1/squashfuse-0.6.1.tar.gz"
+      }
+  include_tasks:
+    file: squashfuse.yaml
+  loop: "{{ squashfuse_versions }}"
+  tags:
+    - never
+    - squashfuse
+
+- name: Install gocryptfs
+  vars:
+    gocryptfs_versions:
+      - {
+        version_number: "2.6.1",
+        checksum: "sha256:49b8c0eb0f6373b6ac99c394a52909d8478e74c08d0961527c1162967cc28c44",
+        url: "https://github.com/rfjakob/gocryptfs/releases/download/v2.6.1/gocryptfs_v2.6.1_linux-static_amd64.tar.gz"
+      }
+  include_tasks:
+    file: gocryptfs.yaml
+  loop: "{{ gocryptfs_versions }}"
+  tags:
+    - never
+    - gocryptfs
+
 - name: Install apptainer
   vars:
     apptainer_versions:
@@ -838,7 +868,12 @@
         version_number: "1.4.2",
         checksum: "sha256:6dda1dd2ca8e42ed7f498d2bc8574f01d7ad3db68494e453639d76aef4424d1d",
         url: "https://github.com/apptainer/apptainer/releases/download/v1.4.2/apptainer-1.4.2.tar.gz",
-        go_location: "{{ common_dir }}/golang/1.22.4/bin"
+        go_location: "{{ common_dir }}/golang/1.22.4/bin",
+        squashfuse_location: "{{ common_dir }}/squashfuse/0.6.1",
+        gocryptfs_location: "{{ common_dir }}/gocryptfs/2.6.1",
+        squashfuse_module: "squashfuse/0.6.1",
+        gocryptfs_module: "gocryptfs/2.6.1"
+
       }
   include_tasks:
     file: apptainer.yaml
