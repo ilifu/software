@@ -848,7 +848,7 @@
 
 - name: Install gocryptfs
   vars:
-      gocryptfs_versions:
+    gocryptfs_versions:
       - {
         version_number: "2.6.1",
         checksum: "sha256:49b8c0eb0f6373b6ac99c394a52909d8478e74c08d0961527c1162967cc28c44",
