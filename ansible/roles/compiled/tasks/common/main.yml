@@ -338,7 +338,7 @@
         checksum: "sha256:53131e1a57e7270f645707f8b0b65ba56048f5b5ac3f68faabed3eb0d710e449",
         url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.8.tar.bz2",
         ucx_version: "1.19.0",
-        singularity_version: "4.3.3",
+        singularity_version: "4.2.2",
         cuda_root: "/software/common/cuda/12.9.1_575.57.08",
         cuda_module: "cuda/12.9.1_575.57.08",
         pmix: "/software/common/pmix/5.0.9",
@@ -857,6 +857,12 @@
         version_number: "4.1.3",
         checksum: "sha256:0a575292ddb2e7b74ab534b287c4dc8a1bd34d961accc0ba56ffa3714cca9c15",
         url: "https://github.com/sylabs/singularity/releases/download/v4.1.3/singularity-ce-4.1.3.tar.gz",
+        go_location: "{{ common_dir }}/golang/1.22.4/bin"
+      }
+      - {
+        version_number: "4.2.2",
+        checksum: "sha256:",
+        url: "https://github.com/sylabs/singularity/releases/download/v4.2.2/singularity-ce-4.2.2.tar.gz",
         go_location: "{{ common_dir }}/golang/1.22.4/bin"
       }
       - {
