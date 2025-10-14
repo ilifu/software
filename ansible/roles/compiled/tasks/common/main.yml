@@ -858,8 +858,8 @@
     file: gocryptfs.yaml
   loop: "{{ gocryptfs_versions }}"
   tags:
-      - never
-      - gocryptfs
+    - never
+    - gocryptfs
 
 - name: Install apptainer
   vars:
