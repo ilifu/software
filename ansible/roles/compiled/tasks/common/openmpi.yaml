@@ -16,6 +16,8 @@
   tags:
     - never
     - openmpi{{ item.version_number }}
+  environment:
+    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
   block:
     - name: Install OpenMPI {{ version_number }}
       block:
@@ -52,8 +54,6 @@
                 - name: Build OpenMPI {{ version_number }} with gpu
                   make:
                     chdir: "{{ build_dir }}"
-                  environment:
-                    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
                 - name: Install OpenMPI {{ version_number }} with gpu
                   make:
                     chdir: "{{ build_dir }}"
@@ -74,8 +74,6 @@
                 - name: Build OpenMPI {{ version_number }} with no gpu
                   make:
                     chdir: "{{ build_dir }}"
-                  environment:
-                    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
                 - name: Install OpenMPI {{ version_number }} with no gpu
                   make:
                     chdir: "{{ build_dir }}"
