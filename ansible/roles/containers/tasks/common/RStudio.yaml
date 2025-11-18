@@ -1,4 +1,4 @@
-- name: Create RStudio {{ item.version_name }} container
+- name: Create RStudio {{ item.rstudio_version }}-R{{ item.r_version }} container
   vars:
     base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
     container_name: "RStudio{{ item.rstudio_version }}-R{{ item.r_version }}"
