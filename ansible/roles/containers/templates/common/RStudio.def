@@ -70,6 +70,7 @@ From: {{ base_container_image }}
     dirmngr \
     git \
     imagemagick \
+    libfreetype-dev \
     libfribidi-dev \
     libharfbuzz-dev \
     pandoc \
