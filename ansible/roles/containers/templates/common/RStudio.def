@@ -120,6 +120,7 @@ From: {{ base_container_image }}
     libpng-dev \
     libssl-dev \
     libtiff5-dev \
+    libwebp-dev \
     libxml2-dev \
     libxt-dev \
     netcdf-bin \
@@ -132,6 +133,8 @@ From: {{ base_container_image }}
     r-doc-html=${R_VERSION}* \
     systemd \
     wget \
+
+   # libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libwebp-dev
 
   apt-mark hold r-base*
 
