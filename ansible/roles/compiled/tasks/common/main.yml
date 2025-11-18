@@ -1360,6 +1360,13 @@
           womtool_url: "https://github.com/broadinstitute/cromwell/releases/download/86/womtool-86.jar",
           womtool_checksum: "sha512:606a68edb74e91a380f8fdf1408f28802f6f4081d3f4ed2a80ffb5ff7cbb5b11d8a320e02be40eda3d349b41ff7307687c94a6189d5cf8471f3bd850a391a1f2",
       }
+      - {
+        version_number: "91",
+        cromwell_url: "https://github.com/broadinstitute/cromwell/releases/download/91/cromwell-91.jar",
+        cromwell_checksum: "sha256:a1378c7b2df9ba8e86a82adff0e2216d44d4b39a338106e4d39a5034cece4731",
+        womtool_url: "https://github.com/broadinstitute/cromwell/releases/download/91/womtool-91.jar",
+        womtool_checksum: "sha256:96a6a63f3c05dba40d704665024fde88dac8cea2f2575a47c55548d3ba600390",
+      }
   include_tasks:
     file: 'cromwell.yaml'
   loop: "{{ versions }}"
