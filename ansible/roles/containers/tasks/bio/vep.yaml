@@ -1,11 +1,11 @@
 - name: Create base ubuntu {{ item.version_name }} container
   vars:
-    - base_container_name: "vep"
-    - container_recipe: "{{ bio_container_recipe_dir }}/{{ base_container_name }}.def"
-    - container_image: "{{ bio_container_dir }}/{{ base_container_name }}.sif"
-    - data_dir: "{{ bio_data_dir }}/vep"
-    - cache_dir: "/opt/vep/.vep"
-    - vep_module_dir: "{{ bio_modules }}/vep"
+    base_container_name: "vep"
+    container_recipe: "{{ bio_container_recipe_dir }}/{{ base_container_name }}.def"
+    container_image: "{{ bio_container_dir }}/{{ base_container_name }}.sif"
+    data_dir: "{{ bio_data_dir }}/vep"
+    cache_dir: "/opt/vep/.vep"
+    vep_module_dir: "{{ bio_modules }}/vep"
   tags:
     - "vep"
     - never

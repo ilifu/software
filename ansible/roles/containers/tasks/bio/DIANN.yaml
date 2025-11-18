@@ -1,13 +1,13 @@
 - name: Create DIANN {{ item.version_name }} container
   vars:
-    - base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
-    - version_number: "{{ item.version_number }}"
-    - container_name: "DIANN_{{ version_number }}"
-    - container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
-    - container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
-    - diann_binary_dir: "{{ bio_container_dir }}/DIANN/{{ version_number }}"
-    - diann_deb_url: "{{ item.deb_url }}"
-    - diann_module_dir: "{{ bio_modules }}/DIANN"
+    base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
+    version_number: "{{ item.version_number }}"
+    container_name: "DIANN_{{ version_number }}"
+    container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+    diann_binary_dir: "{{ bio_container_dir }}/DIANN/{{ version_number }}"
+    diann_deb_url: "{{ item.deb_url }}"
+    diann_module_dir: "{{ bio_modules }}/DIANN"
   tags:
     - "diann{{ item.version_number }}"
     - never

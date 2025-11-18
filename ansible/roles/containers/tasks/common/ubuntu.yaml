@@ -1,8 +1,8 @@
 - name: Create base ubuntu {{ item.version_name }} container
   vars:
-    - base_container_name: "ubuntu-{{ item.version_name }}"
-    - base_container_recipe: "{{ common_container_recipe_dir }}/{{ base_container_name }}.def"
-    - base_container_image: "{{ common_container_dir }}/{{ base_container_name }}.sif"
+    base_container_name: "ubuntu-{{ item.version_name }}"
+    base_container_recipe: "{{ common_container_recipe_dir }}/{{ base_container_name }}.def"
+    base_container_image: "{{ common_container_dir }}/{{ base_container_name }}.sif"
   tags:
     - never
     - "ubuntu-{{ item.version_name }}"
@@ -21,11 +21,11 @@
 
 - name: Create ubuntu {{ item.version_name }} compile container
   vars:
-    - base_container_name: "ubuntu-{{ item.version_name }}"
-    - base_container_image: "{{ common_container_dir }}/{{ base_container_name }}.sif"
-    - container_name: "ubuntu-{{ item.version_name }}-compile"
-    - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
-    - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
+    base_container_name: "ubuntu-{{ item.version_name }}"
+    base_container_image: "{{ common_container_dir }}/{{ base_container_name }}.sif"
+    container_name: "ubuntu-{{ item.version_name }}-compile"
+    container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
   tags:
     - never
     - "ubuntu-{{ item.version_name }}-compile"
