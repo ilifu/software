@@ -18,6 +18,12 @@
       fail:
         msg: "The container {{ base_container_image }} is missing."
       when: not base_container_exists.stat.exists
+    - name: Install some dependencies on host for RStudio Singularity container
+      apt:
+        name:
+          - libfreetype-dev
+        state: present
+      become: true
     - name: Create RStudio {{ item.rstudio_version }} container
       when: base_container_exists.stat.exists
       block:
