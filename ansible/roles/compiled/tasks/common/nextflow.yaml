@@ -35,7 +35,7 @@
             mode: u=rw,g=r,o=r
         - name: Deploy NextFlow wrapper script
           template:
-            src: nf-ilifu
+            src: nf-ilifu.sh
             dest: "{{ install_dir }}/nf-ilifu"
             mode: u=rwx,g=rx,o=rx
 
