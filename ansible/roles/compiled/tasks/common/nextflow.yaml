@@ -26,13 +26,18 @@
               checksum: "{{ checksum }}"
               mode: u=rwx,g=rx,o=rx
 
-    - name: Deploy NextFlow configuration
+    - name: Deploy NextFlow configuration and wrapper
       block:
         - name: Copy NextFlow config
           copy:
             src: nextflow.config
             dest: "{{ install_dir }}/config"
             mode: u=rw,g=r,o=r
+        - name: Deploy NextFlow wrapper script
+          template:
+            src: nf-ilifu
+            dest: "{{ install_dir }}/nf-ilifu"
+            mode: u=rwx,g=rx,o=rx
 
     - name: Install NextFlow {{ version_number }} module
       block:
