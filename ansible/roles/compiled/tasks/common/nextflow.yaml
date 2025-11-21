@@ -31,7 +31,7 @@
         - name: Copy NextFlow config
           copy:
             src: nextflow.config
-            dest: "{{ install_dir }}/nextflow.config"
+            dest: "{{ install_dir }}/config"
             mode: u=rw,g=r,o=r
 
     - name: Install NextFlow {{ version_number }} module
