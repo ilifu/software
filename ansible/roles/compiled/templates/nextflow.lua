@@ -9,3 +9,4 @@ whatis("Description: NextFlow {{ version_number }}")
 load("{{ java_module }}")
 
 prepend_path('PATH', '{{ install_dir }}')
+setenv('NXF_HOME', '{{ install_dir }}')

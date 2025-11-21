@@ -26,6 +26,14 @@
               checksum: "{{ checksum }}"
               mode: u=rwx,g=rx,o=rx
 
+    - name: Deploy NextFlow configuration
+      block:
+        - name: Copy NextFlow config
+          copy:
+            src: nextflow.config
+            dest: "{{ install_dir }}/nextflow.config"
+            mode: u=rw,g=r,o=r
+
     - name: Install NextFlow {{ version_number }} module
       block:
         - name: Check module dir
