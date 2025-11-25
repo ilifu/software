@@ -1,12 +1,12 @@
 - name: Create python-ml {{ item.version_number }} container
   vars:
-    - base_container_image: "{{ common_container_dir }}/python-ml-base-{{ item.base_version }}.sif"
-    - container_name: "python-ml-{{ item.version_number }}"
-    - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
-    - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
-    - python_ml_module_dir: "{{ common_modules }}/python-ml"
-    - python_ml_binary_dir: "{{ common_container_dir }}/python-ml/{{ item.version_number }}"
-    - python_ml_kernel_dir: "{{ common_container_dir }}/python-ml/{{ item.version_number }}/kernels"
+    base_container_image: "{{ common_container_dir }}/python-ml-base-{{ item.base_version }}.sif"
+    container_name: "python-ml-{{ item.version_number }}"
+    container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
+    python_ml_module_dir: "{{ common_modules }}/python-ml"
+    python_ml_binary_dir: "{{ common_container_dir }}/python-ml/{{ item.version_number }}"
+    python_ml_kernel_dir: "{{ common_container_dir }}/python-ml/{{ item.version_number }}/kernels"
   tags:
     - "python-ml{{ item.version_number }}"
     - never

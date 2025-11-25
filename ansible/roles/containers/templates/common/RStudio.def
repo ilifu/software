@@ -70,6 +70,7 @@ From: {{ base_container_image }}
     dirmngr \
     git \
     imagemagick \
+    libfreetype-dev \
     libfribidi-dev \
     libharfbuzz-dev \
     pandoc \
@@ -104,6 +105,8 @@ From: {{ base_container_image }}
     libcairo2-dev \
     libcurl4-openssl-dev \
     libfontconfig-dev \
+    libfreetype-dev \
+    libfreetype6 \
     libfreetype6-dev \
     libfribidi-bin \
     libfribidi-dev \
@@ -117,6 +120,7 @@ From: {{ base_container_image }}
     libpng-dev \
     libssl-dev \
     libtiff5-dev \
+    libwebp-dev \
     libxml2-dev \
     libxt-dev \
     netcdf-bin \
@@ -129,6 +133,8 @@ From: {{ base_container_image }}
     r-doc-html=${R_VERSION}* \
     systemd \
     wget \
+
+   # libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libwebp-dev
 
   apt-mark hold r-base*
 
