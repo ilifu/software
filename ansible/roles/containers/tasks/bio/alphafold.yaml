@@ -11,8 +11,7 @@
     alphafold_repo_dir: "{{ bio_src }}/alphafold_{{ version_number }}"
     alphafold_binary_dir: "{{ bio_container_dir }}/alphafold/{{ version_number }}"
   tags:
-    - "alphafold_{{ item.version_number }}"
-    - alphafold
+    - "alphafold{{ item.version_number }}"
     - never
   block:
     # Container build block
