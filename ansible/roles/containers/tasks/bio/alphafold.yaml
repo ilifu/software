@@ -1,0 +1,103 @@
+- name: Create AlphaFold container
+  vars:
+    version_number: "{{ item.version_number }}"
+    alphafold_repo_url: "{{ item.alphafold_repo_url }}"
+    alphafold_repo_tag: "{{ item.alphafold_repo_tag }}"
+    container_name: "alphafold_{{ version_number }}"
+    container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
+    alphafold_module_dir: "{{ bio_modules }}/alphafold"
+    alphafold_data_dir: "{{ bio_data_dir }}/alphafold"
+    alphafold_repo_dir: "{{ bio_src }}/alphafold_{{ version_number }}"
+    alphafold_binary_dir: "{{ bio_container_dir }}/alphafold/{{ version_number }}"
+  tags:
+    - "alphafold_{{ item.version_number }}"
+    - alphafold
+    - never
+  block:
+    # Container build block
+    - name: Build AlphaFold {{ version_number }} container
+      tags:
+        - alphafold_build
+      block:
+        - name: Clone AlphaFold repository {{ version_number }}
+          git:
+            repo: "{{ alphafold_repo_url }}"
+            dest: "{{ alphafold_repo_dir }}"
+            version: "{{ alphafold_repo_tag }}"
+            depth: 1
+          args:
+            creates: "{{ alphafold_repo_dir }}"
+
+        - name: Build Docker image for AlphaFold {{ version_number }}
+          command: "docker build -f docker/Dockerfile -t alphafold:{{ version_number }} ."
+          args:
+            chdir: "{{ alphafold_repo_dir }}"
+            creates: "{{ container_image }}"
+          become: true
+          register: docker_build
+          failed_when: docker_build.rc != 0 and 'already exists' not in docker_build.stderr
+
+        - name: Copy recipe {{ container_recipe }}
+          template:
+            src: "bio/alphafold.def"
+            dest: "{{ container_recipe }}"
+
+        - name: Build Singularity container {{ container_image }}
+          command: "{{ singularity }} build {{ container_image }} docker-daemon://alphafold:{{ version_number }}"
+          args:
+            creates: "{{ container_image }}"
+          become: true
+
+    # Database download block (separate tags for long-running task)
+    - name: Download AlphaFold databases (WARNING - 2.6 TB, may take hours/days)
+      tags:
+        - alphafold_data
+        - never
+      block:
+        - name: Ensure AlphaFold data directory exists
+          file:
+            path: "{{ alphafold_data_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+            group: "{{ admin_group }}"
+
+        - name: Download AlphaFold databases using download_all_data.sh
+          command: >
+            bash {{ alphafold_repo_dir }}/scripts/download_all_data.sh {{ alphafold_data_dir }}
+          args:
+            creates: "{{ alphafold_data_dir }}/params"
+          async: 43200
+          poll: 300
+          register: download_result
+
+        - name: Display download result
+          debug:
+            msg: "Database download completed. Data location: {{ alphafold_data_dir }}"
+          when: download_result.changed
+
+    # Module installation block
+    - name: Install AlphaFold {{ container_name }} module
+      block:
+        - name: Ensure wrapper script directory exists
+          file:
+            path: "{{ alphafold_binary_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+
+        - name: Create alphafold wrapper script
+          template:
+            src: "bio/alphafold.sh"
+            dest: "{{ alphafold_binary_dir }}/alphafold"
+            mode: 0755
+
+        - name: Check module directory
+          file:
+            path: "{{ alphafold_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+
+        - name: Install AlphaFold module file
+          template:
+            src: "bio/alphafold.lua"
+            dest: "{{ alphafold_module_dir }}/{{ container_name }}.lua"

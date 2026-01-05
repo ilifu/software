@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: alphafold:{{ version_number }}
+
+%labels
+  Maintainer Dane Kennedy
+  Version {{ version_number }}
+  AlphaFold
+  CUDA 11.0
+
+%help
+  AlphaFold {{ version_number }} - AI-powered protein structure prediction
+
+  This container includes AlphaFold for predicting protein 3D structures from sequences.
+
+  Requirements:
+  - NVIDIA GPU with CUDA 11.0+ support
+  - ~2.6 TB of genetic databases (download separately with alphafold_data tag)
+  - Database location: /software/data/bio/alphafold
+
+  Usage:
+    module load alphafold/alphafold_{{ version_number }}
+    alphafold --help
+
+  Or use the wrapper script for common tasks.
+
+  Databases required:
+  - BFD, MGnify, PDB70, PDB mmCIF, UniRef90/30, UniProt
+
+  For more information: https://github.com/deepmind/alphafold
+
+%environment
+  export ALPHAFOLD_DATA_DIR=/software/data/bio/alphafold
+  export TF_FORCE_UNIFIED_MEMORY=1
+  export XLA_PYTHON_CLIENT_MEM_FRACTION=4.0

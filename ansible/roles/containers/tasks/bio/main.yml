@@ -143,6 +143,21 @@
     - never
     - gatk
 
+- name: Create AlphaFold Containers
+  vars:
+    versions:
+      - {
+          version_number: "2.3.2",
+          alphafold_repo_url: "https://github.com/deepmind/alphafold.git",
+          alphafold_repo_tag: "v2.3.2"
+      }
+  include_tasks:
+    file: alphafold.yaml
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - alphafold
+
 - name: Create proteowizard container
   vars:
     versions:
