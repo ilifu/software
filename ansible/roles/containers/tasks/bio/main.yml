@@ -95,6 +95,18 @@
         cuda_version: "10.2",
         cuda_install: "/software/common/src/cuda_10.2.89_440.33.01_linux.run"
       }
+      - {
+        base_container_name: ubuntu-bionic-compile,
+        base_container_version_name: bionic,
+        beast_version: "1.10.5",
+        beast_url: "https://github.com/beast-dev/beast-mcmc/releases/download/v10.5.0/BEAST_X_v10.5.0.tgz",
+        beast_checksum: "sha256:b4726b4f3b8b7e627df334a7eb52be1a95dca936e73030beba2b9929f9918f8c",
+        beagle_version: "3.1.2",
+        beagle_url: "https://github.com/beagle-dev/beagle-lib/archive/refs/tags/v3.1.2.tar.gz",
+        beagle_checksum: "sha256:dd872b484a3a9f0bce369465e60ccf4e4c0cd7bd5ce41499415366019f236275",
+        cuda_version: "10.2",
+        cuda_install: "/software/common/src/cuda_10.2.89_440.33.01_linux.run"
+      }
   include_tasks:
     file: beast.yaml
   loop: "{{ beast_versions }}"
