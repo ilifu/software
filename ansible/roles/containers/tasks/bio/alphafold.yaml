@@ -19,29 +19,13 @@
       tags:
         - alphafold_build
       block:
-        - name: Clone AlphaFold repository {{ version_number }}
-          git:
-            repo: "{{ alphafold_repo_url }}"
-            dest: "{{ alphafold_repo_dir }}"
-            version: "{{ alphafold_repo_tag }}"
-            depth: 1
-
-        - name: Build Docker image for AlphaFold {{ version_number }}
-          command: "docker build -f docker/Dockerfile -t alphafold:{{ version_number }} ."
-          args:
-            chdir: "{{ alphafold_repo_dir }}"
-            creates: "{{ container_image }}"
-          become: true
-          register: docker_build
-#          failed_when: docker_build.rc != 0 and 'already exists' not in docker_build.stderr
-
         - name: Copy recipe {{ container_recipe }}
           template:
             src: "bio/alphafold.def"
             dest: "{{ container_recipe }}"
 
-        - name: Build Singularity container {{ container_image }}
-          command: "{{ singularity }} build {{ container_image }} docker-daemon://alphafold:{{ version_number }}"
+        - name: Build Singularity container from catgumag/alphafold:{{ version_number }}
+          command: "{{ singularity }} build {{ container_image }} docker://catgumag/alphafold:{{ version_number }}"
           args:
             creates: "{{ container_image }}"
           become: true
@@ -52,6 +36,13 @@
         - alphafold_data
         - never
       block:
+        - name: Clone AlphaFold repository for database download scripts
+          git:
+            repo: "{{ alphafold_repo_url }}"
+            dest: "{{ alphafold_repo_dir }}"
+            version: "{{ alphafold_repo_tag }}"
+            depth: 1
+
         - name: Ensure AlphaFold data directory exists
           file:
             path: "{{ alphafold_data_dir }}"

@@ -6,8 +6,10 @@ This module provides access to AlphaFold for predicting protein 3D structures
 from amino acid sequences using deep learning.
 
 Requirements:
-  - NVIDIA GPU with CUDA 11.0+ support
+  - NVIDIA GPU with CUDA 11.2+ support
   - Genetic databases (~2.6 TB) at /software/data/bio/alphafold
+
+Container source: catgumag/alphafold:{{ version_number }} (community-maintained)
 
 Database Setup:
   If databases are not yet downloaded, run:

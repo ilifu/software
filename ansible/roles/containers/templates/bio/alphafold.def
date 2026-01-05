@@ -1,11 +1,12 @@
 Bootstrap: docker
-From: alphafold:{{ version_number }}
+From: catgumag/alphafold:{{ version_number }}
 
 %labels
   Maintainer Dane Kennedy
   Version {{ version_number }}
   AlphaFold
-  CUDA 11.0
+  CUDA 11.2
+  Source catgumag/alphafold:{{ version_number }}
 
 %help
   AlphaFold {{ version_number }} - AI-powered protein structure prediction
@@ -13,9 +14,12 @@ From: alphafold:{{ version_number }}
   This container includes AlphaFold for predicting protein 3D structures from sequences.
 
   Requirements:
-  - NVIDIA GPU with CUDA 11.0+ support
+  - NVIDIA GPU with CUDA 11.2+ support
   - ~2.6 TB of genetic databases (download separately with alphafold_data tag)
   - Database location: /software/data/bio/alphafold
+
+  Container source: catgumag/alphafold:{{ version_number }} (community-maintained)
+  Original Dockerfile: https://github.com/dialvarezs/alphafold
 
   Usage:
     module load alphafold/{{ version_number }}
