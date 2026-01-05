@@ -1848,3 +1848,18 @@
   tags:
     - never
     - indelible
+
+- name: Install Muscle MSA
+  vars:
+    versions:
+      - {
+        version_number: "5.3",
+        url: "https://github.com/rcedgar/muscle/releases/download/v5.3/muscle-linux-x86.v5.3",
+        checksum: "sha256:318abeb951d786a3e2532714cc81ad3b3d8f79a2b517dc31316eeb5b694db2bc",
+      }
+  include_tasks:
+    file: 'muscle.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - muscle
