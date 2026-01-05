@@ -33,7 +33,7 @@
             creates: "{{ container_image }}"
           become: true
           register: docker_build
-          failed_when: docker_build.rc != 0 and 'already exists' not in docker_build.stderr
+#          failed_when: docker_build.rc != 0 and 'already exists' not in docker_build.stderr
 
         - name: Copy recipe {{ container_recipe }}
           template:
