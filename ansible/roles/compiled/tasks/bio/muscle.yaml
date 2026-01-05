@@ -21,7 +21,7 @@
           file:
             path: "{{ install_dir }}"
             state: directory
-            mode: o=rwx,g=rx,o=rx
+            mode: u=rwx,g=rx,o=rx
         - name: Download Muscle {{ version_number }}
           get_url:
             url: "{{ url }}"
