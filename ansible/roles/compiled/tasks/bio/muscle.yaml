@@ -1,0 +1,43 @@
+- name: Install Muscle Multiple Sequence Alignment Tool
+  vars:
+    muscle_dir: "{{ bio_dir }}/muscle"
+    muscle_module_dir: "{{ bio_modules }}/muscle"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ muscle_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - muscle{{ item.version_number }}
+  block:
+    - name: Check if already installed
+      stat:
+        path: "{{ install_dir }}/muscle"
+      register: muscle_install_dir_stat
+    - name: Install Muscle {{ version_number }}
+      when: not muscle_install_dir_stat.stat.exists
+      block:
+        - name: Ensure installation dir exists
+          file:
+            path: "{{ install_dir }}"
+            state: directory
+            mode: o=rwx,g=rx,o=rx
+        - name: Download Muscle {{ version_number }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ install_dir }}/muscle"
+            checksum: "{{ checksum }}"
+            mode: u=rwx,g=rx,o=rx
+
+
+    - name: Install Muscle {{ version_number }} module
+      block:
+        - name: Check module dir {{ muscle_module_dir }}
+          file:
+            path: "{{ muscle_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Muscle {{ version_number }} module file
+          template:
+            src: bio/muscle.lua
+            dest: "{{ muscle_module_dir }}/{{ version_number }}.lua"
