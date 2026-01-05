@@ -13,8 +13,7 @@ DATA_DIR="{{ alphafold_data_dir }}"
 # Check if databases exist
 if [ ! -d "${DATA_DIR}/params" ]; then
     echo "ERROR: AlphaFold databases not found at ${DATA_DIR}" >&2
-    echo "Please download databases first:" >&2
-    echo "  ansible-playbook containers.yml --tags alphafold_data" >&2
+    echo "Please download databases first" >&2
     exit 1
 fi
 

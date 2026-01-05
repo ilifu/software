@@ -18,7 +18,7 @@ From: alphafold:{{ version_number }}
   - Database location: /software/data/bio/alphafold
 
   Usage:
-    module load alphafold/alphafold_{{ version_number }}
+    module load alphafold/{{ version_number }}
     alphafold --help
 
   Or use the wrapper script for common tasks.

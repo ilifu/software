@@ -99,4 +99,4 @@
         - name: Install AlphaFold module file
           template:
             src: "bio/alphafold.lua"
-            dest: "{{ alphafold_module_dir }}/{{ container_name }}.lua"
+            dest: "{{ alphafold_module_dir }}/{{ item.version_number }}.lua"
