@@ -1,4 +1,4 @@
-- name: Create beast {{ item.version_name }} container
+- name: Create beast {{ item.beast_version }} container
   vars:
     beast_version: "{{ item.beast_version }}"
     beast_url: "{{ item.beast_url }}"
