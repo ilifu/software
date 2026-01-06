@@ -84,7 +84,6 @@ From: {{ base_container_image }}
   make
   make install
   {% else %}
-
   ./autogen.sh
   mkdir build; cd build
   ../configure --with-cuda=/opt/cuda --with-nvcc-ccbin=/opt/cuda/bin/nvcc --prefix=/opt/beagle
