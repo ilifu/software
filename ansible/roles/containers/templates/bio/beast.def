@@ -78,11 +78,18 @@ From: {{ base_container_image }}
   cd /opt
   tar -zxf /opt/beagle_v{{ beagle_version }}.tar.gz
   cd beagle-lib-{{ beagle_version }}
+  {% if beagle_version.split('.')[0] | int >= 4 %}
+  mkdir build; cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/opt/beagle -DCUDA_TOOLKIT_ROOT_DIR=/opt/cuda ..
+  make
+  make install
+  {% else %}
   ./autogen.sh
   mkdir build; cd build
   ../configure --with-cuda=/opt/cuda --with-nvcc-ccbin=/opt/cuda/bin/nvcc --prefix=/opt/beagle
   make
   make install
+  {% endif %}
 
   # Clean beagle
   rm -rf /opt/beagle_v{{ beagle_version }}.tar.gz beagle-lib-{{ beagle_version }}
