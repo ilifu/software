@@ -1,9 +1,9 @@
 - name: Create python-ml-base {{ item.version_number }} container
   vars:
-    - base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
-    - container_name: "python-ml-base-{{ item.version_number }}"
-    - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
-    - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
+    base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
+    container_name: "python-ml-base-{{ item.version_number }}"
+    container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
   tags:
     - "python-ml-base{{ item.version_number }}"
     - never
