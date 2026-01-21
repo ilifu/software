@@ -147,9 +147,8 @@
   vars:
     versions:
       - {
-          version_number: "2.3.2",
-          alphafold_repo_url: "https://github.com/deepmind/alphafold.git",
-          alphafold_repo_tag: "v2.3.2"
+          version_number: "latest",
+          alphafold_repo_url: "https://github.com/google-deepmind/alphafold.git",
       }
   include_tasks:
     file: alphafold.yaml

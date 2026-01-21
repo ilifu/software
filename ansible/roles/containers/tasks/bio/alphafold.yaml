@@ -2,7 +2,6 @@
   vars:
     version_number: "{{ item.version_number }}"
     alphafold_repo_url: "{{ item.alphafold_repo_url }}"
-    alphafold_repo_tag: "{{ item.alphafold_repo_tag }}"
     container_name: "alphafold_{{ version_number }}"
     container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
     container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
@@ -24,8 +23,8 @@
             src: "bio/alphafold.def"
             dest: "{{ container_recipe }}"
 
-        - name: Build Singularity container from catgumag/alphafold:{{ version_number }}
-          command: "{{ singularity }} build {{ container_image }} docker://catgumag/alphafold:{{ version_number }}"
+        - name: Build container {{ container_image }}
+          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: true
@@ -40,7 +39,6 @@
           git:
             repo: "{{ alphafold_repo_url }}"
             dest: "{{ alphafold_repo_dir }}"
-            version: "{{ alphafold_repo_tag }}"
             depth: 1
 
         - name: Ensure AlphaFold data directory exists
