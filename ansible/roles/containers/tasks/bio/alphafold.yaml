@@ -6,8 +6,6 @@
     container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
     container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
     alphafold_module_dir: "{{ bio_modules }}/alphafold"
-    alphafold_data_dir: "{{ bio_data_dir }}/alphafold"
-    alphafold_repo_dir: "{{ bio_src }}/alphafold_{{ version_number }}"
     alphafold_binary_dir: "{{ bio_container_dir }}/alphafold/{{ version_number }}"
   tags:
     - "alphafold{{ item.version_number }}"
@@ -65,6 +63,9 @@
 
 # Database download block (separate tags for long-running task)
 - name: Download AlphaFold databases (WARNING - 2.6 TB, may take hours/days)
+  vars:
+    alphafold_data_dir: "{{ bio_data_dir }}/alphafold"
+    alphafold_repo_dir: "{{ bio_src }}/alphafold"
   tags:
     - alphafold_data
     - never
