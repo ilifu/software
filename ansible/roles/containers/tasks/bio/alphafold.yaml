@@ -7,6 +7,8 @@
     container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
     alphafold_module_dir: "{{ bio_modules }}/alphafold"
     alphafold_binary_dir: "{{ bio_container_dir }}/alphafold/{{ version_number }}"
+    alphafold_data_dir: "{{ bio_data_dir }}/alphafold"
+    alphafold_repo_dir: "{{ bio_src }}/alphafold"
   tags:
     - "alphafold{{ item.version_number }}"
     - never
@@ -66,6 +68,7 @@
   vars:
     alphafold_data_dir: "{{ bio_data_dir }}/alphafold"
     alphafold_repo_dir: "{{ bio_src }}/alphafold"
+    alphafold_repo_url: "{{ item.alphafold_repo_url }}"
   tags:
     - alphafold_data
     - never
