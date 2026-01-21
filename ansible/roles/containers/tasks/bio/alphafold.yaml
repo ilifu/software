@@ -23,11 +23,17 @@
             src: "bio/alphafold.def"
             dest: "{{ container_recipe }}"
 
+        - name: Check for existence of alphafold container
+          stat:
+            path: "{{ container_image }}"
+          register: container_exists
+
         - name: Build container {{ container_image }}
           command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: true
+          when: not container_exists.stat.exists
 
 
 
