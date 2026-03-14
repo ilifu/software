@@ -85,7 +85,7 @@
         mode: u=rwx,g=rwx,o=rx
     - name: Create diann binary
       template:
-        src: "diann.sh"
+        src: "bio/diann.sh"
         dest: "{{ diann_binary_dir }}/diann"
         mode: 0755
 
