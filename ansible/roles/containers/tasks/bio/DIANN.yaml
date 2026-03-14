@@ -1,13 +1,14 @@
-- name: Create DIANN {{ item.version_name }} container
+- name: Create DIANN {{ item.version_number }} container
   vars:
-    - base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
     - version_number: "{{ item.version_number }}"
+    - installer_type: "{{ item.installer_type }}"
+    - installer_url: "{{ item.installer_url }}"
     - container_name: "DIANN_{{ version_number }}"
     - container_recipe: "{{ bio_container_recipe_dir }}/{{ container_name }}.def"
     - container_image: "{{ bio_container_dir }}/{{ container_name }}.sif"
     - diann_binary_dir: "{{ bio_container_dir }}/DIANN/{{ version_number }}"
-    - diann_deb_url: "{{ item.deb_url }}"
     - diann_module_dir: "{{ bio_modules }}/DIANN"
+    - base_container_image: "{{ common_container_dir }}/{{ item.base_container_name | default('') }}.sif"
   tags:
     - "diann{{ item.version_number }}"
     - never
@@ -16,20 +17,45 @@
       stat:
         path: "{{ base_container_image }}"
       register: base_container_exists
+      when: installer_type == 'deb'
     - name: "Missing {{ base_container_image }}"
       fail:
         msg: "The container {{ base_container_image }} is missing."
-      when: not base_container_exists.stat.exists
+      when: installer_type == 'deb' and not base_container_exists.stat.exists
+
     - name: Download DIANN .deb file
       get_url:
-          url: "{{ diann_deb_url }}"
-          dest: "{{ bio_dir }}/src/diann_{{ version_number }}.deb"
-          mode: 0755
-      when: base_container_exists.stat.exists
-    - name: Create DIANN {{ item.diann_version }} container
-      when: base_container_exists.stat.exists
+        url: "{{ installer_url }}"
+        dest: "{{ bio_dir }}/src/diann_{{ version_number }}.deb"
+        mode: 0755
+      when: installer_type == 'deb'
+
+    - name: Download DIANN zip archive
+      get_url:
+        url: "{{ installer_url }}"
+        dest: "{{ bio_dir }}/src/DIA-NN-{{ version_number }}-Academia-Linux.zip"
+        mode: 0644
+      when: installer_type == 'zip'
+
+    - name: Ensure DIANN zip extraction directory exists
+      file:
+        path: "{{ bio_dir }}/src/diann_{{ version_number }}"
+        state: directory
+        mode: 0755
+      when: installer_type == 'zip'
+
+    - name: Extract DIANN zip archive
+      unarchive:
+        src: "{{ bio_dir }}/src/DIA-NN-{{ version_number }}-Academia-Linux.zip"
+        dest: "{{ bio_dir }}/src/diann_{{ version_number }}/"
+        remote_src: yes
+        creates: "{{ bio_dir }}/src/diann_{{ version_number }}/diann-{{ version_number }}"
+      when: installer_type == 'zip'
+
+    - name: Build DIANN deb container
+      when: installer_type == 'deb' and base_container_exists.stat.exists
       block:
-        - name: Copy recipe  {{ container_recipe }}
+        - name: Copy recipe {{ container_recipe }}
           template:
             src: "bio/DIANN.def"
             dest: "{{ container_recipe }}"
@@ -38,6 +64,20 @@
           args:
             creates: "{{ container_image }}"
           become: true
+
+    - name: Build DIANN zip container
+      when: installer_type == 'zip'
+      block:
+        - name: Copy recipe {{ container_recipe }}
+          template:
+            src: "bio/DIANN.2.def"
+            dest: "{{ container_recipe }}"
+        - name: Build container {{ container_image }}
+          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          args:
+            creates: "{{ container_image }}"
+          become: true
+
     - name: Ensure DIANN binary directory exists
       file:
         path: "{{ diann_binary_dir }}"

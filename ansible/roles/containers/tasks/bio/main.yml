@@ -196,11 +196,16 @@
   vars:
     versions:
       - {
-        base_container_name: ubuntu-bionic-compile,
-        base_container_version_name: bionic,
-        version_number: "1.8.1",
-        deb_url: "https://github.com/vdemichev/DiaNN/releases/download/1.8.1/diann_1.8.1.deb",
-      }
+          base_container_name: ubuntu-bionic-compile,
+          version_number: "1.8.1",
+          installer_type: "deb",
+          installer_url: "https://github.com/vdemichev/DiaNN/releases/download/1.8.1/diann_1.8.1.deb",
+        }
+      - {
+          version_number: "2.3.2",
+          installer_type: "zip",
+          installer_url: "https://github.com/vdemichev/DiaNN/releases/download/2.0/DIA-NN-2.3.2-Academia-Linux.zip",
+        }
   include_tasks:
     file: DIANN.yaml
   loop: "{{ versions }}"

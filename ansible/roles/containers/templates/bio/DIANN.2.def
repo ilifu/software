@@ -1,0 +1,41 @@
+Bootstrap: docker
+From: debian:12
+
+%labels
+  Maintainer Dane Kennedy
+  DIANN {{ version_number }}
+
+%help
+  DIANN {{ version_number }} container
+
+%files
+  {{ bio_dir }}/src/diann_{{ version_number }}/diann-{{ version_number }} /diann-{{ version_number }}
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+
+  apt-get update -y
+  apt-get install -y locales libgomp1 build-essential wget && \
+    rm -rf /var/lib/apt/lists/*
+
+  # Configure locales
+  sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+  sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen
+  dpkg-reconfigure --frontend=noninteractive locales
+
+  # Install dotnet-sdk-8.0 via Microsoft package feed
+  apt-get update
+  wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb \
+    -O packages-microsoft-prod.deb
+  dpkg -i packages-microsoft-prod.deb
+  rm packages-microsoft-prod.deb
+  apt-get update && apt-get install -y dotnet-sdk-8.0
+  rm -rf /var/lib/apt/lists/*
+
+  chmod -R 775 /diann-{{ version_number }}
+
+%environment
+  export LD_LIBRARY_PATH=/diann-{{ version_number }}:${LD_LIBRARY_PATH}
+
+%runscript
+  exec /diann-{{ version_number }}/diann-linux "$@"
