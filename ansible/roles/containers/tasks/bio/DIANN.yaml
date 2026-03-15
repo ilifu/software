@@ -27,7 +27,7 @@
       get_url:
         url: "{{ installer_url }}"
         dest: "{{ bio_dir }}/src/diann_{{ version_number }}.deb"
-        mode: 0755
+        mode: 0644
       when: installer_type == 'deb'
 
     - name: Download DIANN zip archive
