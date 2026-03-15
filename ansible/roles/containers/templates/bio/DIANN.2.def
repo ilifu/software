@@ -15,7 +15,7 @@ From: debian:12
   export DEBIAN_FRONTEND=noninteractive
 
   apt-get update -y
-  apt-get install -y locales libgomp1 build-essential wget && \
+  apt-get install -y locales libgomp1 build-essential wget ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
   # Configure locales
