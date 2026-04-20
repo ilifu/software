@@ -1500,6 +1500,11 @@
           url: "https://github.com/pachterlab/kallisto/archive/refs/tags/v0.51.0.tar.gz",
           checksum: "sha256:efeb0191c1a6a0d6de69111fb66f4bda51ff31fb40c513280f072bd44556f80d"
          }
+      - {
+        version_number: "0.52.0",
+        url: "https://github.com/pachterlab/kallisto/archive/refs/tags/v0.52.0.tar.gz",
+        checksum: "sha256:68184e41706d77e409f05a598a87dacdf3cf227f18c028175e2bce8b284bdea4"
+      }
   include_tasks:
     file: 'kallisto.yaml'
   loop: "{{ versions }}"
