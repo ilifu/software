@@ -1,0 +1,41 @@
+---
+- name: Install ollama {{ item.version_number }}
+  vars:
+    ollama_dir: "{{ common_dir }}/ollama"
+    ollama_module_dir: "{{ common_modules }}/ollama"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ ollama_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - ollama{{ item.version_number }}
+
+  block:
+    - name: Download and install ollama {{ version_number }}
+      block:
+        - name: Download ollama {{ version_number }} from {{ url }}
+          get_url:
+            url: "{{ url }}"
+            dest: "{{ common_src }}/ollama-{{ version_number }}-linux-amd64.tar.zst"
+            checksum: "{{ checksum }}"
+        - name: Ensure ollama {{ version_number }} dir exists
+          file:
+            path: "{{ install_dir }}"
+            state: directory
+        - name: Uncompress ollama {{ version_number }}
+          command: "tar -I zstd -xf {{ common_src }}/ollama-{{ version_number }}-linux-amd64.tar.zst -C {{ install_dir }}"
+          args:
+            creates: "{{ install_dir }}/bin/ollama"
+
+    - name: Install ollama {{ version_number }} module
+      block:
+        - name: Check module dir {{ ollama_module_dir }}
+          file:
+            path: "{{ ollama_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install ollama module file
+          template:
+            src: ollama.lua
+            dest: "{{ ollama_module_dir }}/{{ version_number }}.lua"
