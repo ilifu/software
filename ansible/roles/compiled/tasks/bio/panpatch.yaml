@@ -1,0 +1,33 @@
+---
+- name: Install panpatch {{ item.version_number }}
+  vars:
+    panpatch_dir: "{{ bio_dir }}/panpatch"
+    panpatch_module_dir: "{{ bio_modules }}/panpatch"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ panpatch_dir }}/{{ version_number }}"
+  tags:
+    - never
+    - panpatch{{ item.version_number }}
+  block:
+    - name: "Ensure panpatch dir '{{ install_dir }}' exists"
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+    - name: Download panpatch {{ version_number }} from {{ url }} to {{ install_dir }}
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ install_dir }}/panpatch"
+        checksum: "{{ checksum }}"
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Check module dir {{ panpatch_module_dir }}
+      file:
+        path: "{{ panpatch_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+    - name: Install panpatch {{ version_number }} module file
+      template:
+        src: bio/panpatch.lua
+        dest: "{{ panpatch_module_dir }}/{{ version_number }}.lua"
