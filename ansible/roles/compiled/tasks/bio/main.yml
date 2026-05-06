@@ -1030,6 +1030,11 @@
           url: "https://cdn.oxfordnanoportal.com/software/analysis/dorado-0.7.3-linux-x64.tar.gz",
           checksum: "sha512:c00b0a1fe2f2b18ebd2f8189ed7267b4c44b906f43f97ac77d9ff41a2906fa3edfc3ddeee81c1615c279bce9f471b000309a1870dc5775625c07b2192c980c17"
         }
+        - {
+          version_number: "1.4.0",
+          url: "https://cdn.oxfordnanoportal.com/software/analysis/dorado-1.4.0-linux-x64.tar.gz",
+          checksum: "sha512:050cbd5c9c1e0415a1c5b7b916b456eb0d1eceae914117d1c17d15d06079d6c47b0386789bc369bb8dedb55817d7f545b7ad66c148dfe6737befa0c92989d293"
+        }
   include_tasks:
     file: 'dorado.yaml'
   loop: "{{ versions }}"
