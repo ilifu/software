@@ -31,5 +31,5 @@
         - "{{ common_src }}"
         - "{{ common_modules }}"
   tags:
-    - always
+    - never
     - init

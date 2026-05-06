@@ -1617,6 +1617,21 @@
       - never
       - porechop
 
+- name: Install panpatch
+  vars:
+    versions:
+      - {
+        version_number: "0.2",
+        url: "https://github.com/glennhickey/panpatch/releases/download/v0.2/panpatch",
+        checksum: "sha512:9c1b64b7d0d13df982ba4a9fa142715f448d5803cfd009b3685397e365e4d354aa2c86b11617ebc6cf6a791a871e7b7d0fc199a18fb2190588699008517b4577",
+      }
+  include_tasks:
+    file: 'panpatch.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - panpatch
+
 - name: Install nanostat
   vars:
       versions:
