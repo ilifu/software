@@ -1,3 +1,8 @@
+# Graphify local metadata and cache
+graphify-out/cache/
+graphify-out/.graphify_python
+graphify-out/.graphify_root
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

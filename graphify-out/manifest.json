@@ -1,0 +1,1550 @@
+{
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/astro/atfncat.lua": {
+    "mtime": 1753454512.5009694,
+    "hash": "de13b073665f66b96db1cfd40932b72f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/ClinSV.lua": {
+    "mtime": 1753454512.5011153,
+    "hash": "9c7eedc20e5e40755a86fb92a9b883ed"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/beast.lua": {
+    "mtime": 1753454512.5011382,
+    "hash": "e607a20d772c7f4a11744b124d92dd1e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/PopGen.lua": {
+    "mtime": 1753454512.5011153,
+    "hash": "e0c36e21bf09094dce0d9494ad204e59"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/trycycler.lua": {
+    "mtime": 1753454512.5051384,
+    "hash": "3428601ef7c861c80318b10841417227"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/spectronaut.lua": {
+    "mtime": 1753454512.5043972,
+    "hash": "b7dbeabaa2901d33ab8bc8db14d87a22"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/mspipe.lua": {
+    "mtime": 1753454512.5021381,
+    "hash": "4445ed9873a3f198107c68312e30eee8"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/vep.lua": {
+    "mtime": 1753454512.5051384,
+    "hash": "e3666e7ff1b3befc4d2fce5117420011"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/snvstory.lua": {
+    "mtime": 1753454512.5043972,
+    "hash": "00f2f562820fa7c9ad063f2328ec17d7"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/gatk.lua": {
+    "mtime": 1753454512.5011382,
+    "hash": "33523f99643bb97365b09349992f4ae5"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/proteowizard.lua": {
+    "mtime": 1753454512.5031383,
+    "hash": "c52fd95767e199039c5b1834c82fa7c6"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/pggb.lua": {
+    "mtime": 1753454512.5021381,
+    "hash": "ddde501a0a59758c5acf2c11fa58045d"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/bcbio.lua": {
+    "mtime": 1753454512.5011153,
+    "hash": "47bb0cbe9ad5cc12540bf4966a59b0a2"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/tribes.lua": {
+    "mtime": 1753454512.5043972,
+    "hash": "df6af2faa55c74f158c1c6e27e3e242b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/diann.lua": {
+    "mtime": 1753454512.5011382,
+    "hash": "a8c78fd819c4ce233b5fce737d062bbb"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/common/gnuplot.lua": {
+    "mtime": 1753454512.5061383,
+    "hash": "85c614f5100dbd53ee21b2503fd83656"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/common/python-ml.lua": {
+    "mtime": 1757321825.3910854,
+    "hash": "012715fea2c75af8bd59ccdc50d58298"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/common/RStudio.lua": {
+    "mtime": 1753454512.5061383,
+    "hash": "d3984480ebf126fd01cf70f1fcbff25a"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/varfish.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "bd784a0d38bbeb09c89c828c751c3f63"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/pysam.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "8548ad27c8abcbc799646e5d0d3a5797"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/rustup.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "1b25f9910c04c0a7c56989222b61fb1d"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/perlbrew.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "a4be1d6a8db9c3dd91adff51c0e15c78"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/polypolish.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "4a4608596a961896c201da63b72b7e06"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/pmix.lua": {
+    "mtime": 1701328859.624036,
+    "hash": "c4956213a5f02f4ec9f1a5e0a027ccc1"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/julia.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "700d39156b4f1abbb938dbe5122208b6"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/stacks.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "b3c551c8be8fea8c3ec0c028a9eb3af4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bedtools.lua": {
+    "mtime": 1700560138.4705532,
+    "hash": "8e5d46f01931c9b47214a988e24b4633"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/picard.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "a57bf3cef9525c203f97944a03b40269"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/nanoplot.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "f19ef2528ef5b8f1aa966b28ae6309d1"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/neovim.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "9252d77c279a04b767105fc134049793"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/perl.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "f3edd1fb33e0c329bd4da8f3cb83fe5e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/nanocomp.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "73a3cba817af97215eeb37dddbbc4308"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/rust.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "ae583716c12f7364e88a591828ab19e3"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/popdel.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "b1d8e5748172ca118c9928077b382113"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/pandoc.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "5d080ec6c64fea7d235a4b8f33a7ff1e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/meryl.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "db7b5ec70efc0e86c2a04cad92b0c018"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/plink.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "754f2a5b74fca05a4ed07e8a5ba3077f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/graphviz.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "8edd3f5ba39228cd2850d4b9ca269063"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/phyml.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "8a0bd29c6ef799d8d3b76b1250e4e85f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/dorado.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "1c0ef926393e0c06aa3531ba6e83bbe4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/svanna.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "47e294206d63a219f57a92fe1716d01b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/homebrew.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "334beb6428cf54b4d322f180121ada8f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/htslib.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "41ad425ad1389c9a1875c8f9ebe8c09d"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/nextflow.lua": {
+    "mtime": 1763706170.920111,
+    "hash": "183bef622ca36141d114fb8c3acd6e4b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/jre.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "adab22e3e1826db945089345a9adce68"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/canvas.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "f7ca5ac337499dc4f65224b1c3b560e7"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/zstd.lua": {
+    "mtime": 1700560138.4785533,
+    "hash": "658cfbc6a80213aa7b9a8d93d2154d73"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/cromwell.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "3f218e2a7358e1a6aca5b20a77defbc7"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/prsice-2.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "60bc07af58cc703144b864ad451c7b0c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/mpich.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "00dfd9df6cf00780fe852a502614bbd6"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/githubcli.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "dfc7627706d9fba7fa5a94c8ef61df2f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/cmake.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "3954868643ca7775c9ec70ae7d4a5acb"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/ruby.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "d2b73895adcca179f3672773b82e93f6"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/R.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "1ac11ba2f05fc532a53b9e7d47c431dc"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/mono.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "8d5f95379b386d3df572adc672b74139"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/mtoolbox.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "8f9e91671b49fdd391079614e0f22a5c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/mafft.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "f1a846c7e630cd9da00acbb0eac4a1ed"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/fastqc.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "7757e7867834a0b9a1e81318d44cc2b2"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/mdanalysis.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "042fbcc88b73a7ebbb4fea7344358ea9"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/vep.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "8d986f0dcbde5641ec0704600ea42715"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/vcfbub.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "d2beb1475e164351549eb10480e258ee"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/GenomeBrowser.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "7eee773ae564f93eeccba16e358682f5"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/hwloc.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "a73262a3c91a15594a0f8a3a7c552737"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/ollama.lua": {
+    "mtime": 1778055483.420258,
+    "hash": "1dd6bde6e360ce1ce5b84d8e98961916"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/chopper.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "44f2237f46edce9e8b2578d2228883b7"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/vcftools.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "2b4b8e7c41150a5a5ea78a22dc4b3133"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/dotnet.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "d4576df7f5ef757bb39281ddd0644c27"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/singularity.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "8fcd255bd5bf3664800a148e4333ad16"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/openjdk.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "943c7af2d51118ddcb461551b4ace17c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/samtools.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "5fc2273f7e101872dc5e0de75bfcfc69"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/gsl.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "432d22eb81da110ae80a060685440f4c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/mash.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "f421fe31979eaf154b4abbd447002587"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/kraken2.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "6e0f3f4ee47e2eaac1520e548ddb66a3"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/slurm-drmaa.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "d0ca79d711c9f31f5b5de5ff384b4e23"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/apache_maven.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "9b88812ddf91b9cb20e2e09f978c9fa7"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/gfaffix.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "fb74b57183977b775a2acfa09c3975d8"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/cd-hit.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "b8bbfa3c611c679470fbf600050fcf9c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/seqwish.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "35811747bf0cf095962d02165e9c6c18"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/jemalloc.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "9c127a0d7eeed6b68f95f33c5ee8f22f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/hyphy.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "ce0ca4509f3b2455035ea42289a7486a"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/gatk.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "8b6f210397505f630c949da8cf4ccded"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/iqtree.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "b7246e24b29a8697fd45c43dac46a72c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/sra_toolkit.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "624b56c7e1ddbc432673a2ae472f4f1f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/gfastats.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "7ec8f9c7ba30670666364ae8de9d126f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bcftools.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "e6acf6e250a2c1a4055f085a7739cd85"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/openmpi.lua": {
+    "mtime": 1753454512.4901378,
+    "hash": "81ba0e4f2ab1bfe66275ed6fdbbc40c4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/lirical.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "5712f682899ff77724d7a09b37a86e5a"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/medaka.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "978b4df723b8afab2d470fa77faa8e6e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/smoothxg.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "1c2731161f0fcaab431ebff29bf4dd9a"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/seqkit.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "2b02b721e2edd0888e555c3f37ba8143"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/cnvkit.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "899ef471d6df66a72f89d5f0976e9118"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bracken.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "2bd73adacad1b7fea24598e06ddf99b3"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/genomestrip.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "54a0a70b63030469897ba6cf377708f4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/anaconda.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "adcb9bfba0ca158d009376dee1add077"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/biobambam2.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "f588315cfa6204bc65f0d032e4d5bc3b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/latex.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "1e93ecca48ac644be8a172aa805fc4d8"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bwa.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "fc3ad25568fd5033f9cfe612f2b61184"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/minimap2.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "da482e660f58d2ef03d72a82a3e4d4df"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/fftw-precisions.lua": {
+    "mtime": 1711448514.1171544,
+    "hash": "9c4fb7cf4efc2cdecad69814e26e5643"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/fzf.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "33c8d82e7e59cb52e24723ab96bf47a5"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/nodejs.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "f6f4ef24c91d449af73da7cbcd5e3b06"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/wfmash.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "063121cee261bf891eaee9ae2369f6fb"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/fftw.lua": {
+    "mtime": 1711448514.1171544,
+    "hash": "bb98ed2c940ffff045537297c15b9b5e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/fragpipe.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "0cc8de816642f8798334ab84e53d5b37"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/mamba.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "09c09d57b246ac6e127ae82e341609a9"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/disk_management.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "db065d71f32626376f7c1396c7b3ff35"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/lapack.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "f6ceacd6faeead332a55bfae97b59879"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/merqury.lua": {
+    "mtime": 1700560138.474553,
+    "hash": "6f430827797d62935115bc8092374edc"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/cuda.lua": {
+    "mtime": 1699627276.4373121,
+    "hash": "5e1dc9dc58ef5eaaa8cb7f5a8501e42b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/user_tools.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "ac3cfe0c9f850443d580ec7c9edbf826"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/golang.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "dfd9ab406ed5f5412e90f04a12c82312"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/gromacs.lua": {
+    "mtime": 1753454512.489138,
+    "hash": "3da7f5ba480457dcc2053f3bf443e297"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/hisat2.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "f24c1c3d97be501ed5dc00fbf51554c8"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/savvysuite.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "3958fd9df6852cbb3fca909b5f4fb8bc"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/gemini.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "b287ec89c0353f865116d4741014686b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/filtlong.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "74a18bfc222a8417525efba91e5ffceb"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/rclone.lua": {
+    "mtime": 1698780387.3159719,
+    "hash": "ba64828f96b0c2a5c16085884bebfa8d"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/astro/calceph.lua": {
+    "mtime": 1701423736.4565473,
+    "hash": "aee8b6c8a192be3c3dacd93312ea3018"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/astro/cfitsio.lua": {
+    "mtime": 1701423995.2107134,
+    "hash": "95bf37eb69512f255f3ca0853bf57fe2"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/miniwdl.lua": {
+    "mtime": 1753454512.4831376,
+    "hash": "a2f356e839e5e1a29b319503c05acf15"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/glimpse.lua": {
+    "mtime": 1710146481.7684314,
+    "hash": "24879c935febea08d4181aeae066e0ee"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/shapeit5.lua": {
+    "mtime": 1710146481.7684314,
+    "hash": "cdb425eefc1bd4ef5cd54620341c4479"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/htstream.lua": {
+    "mtime": 1753454512.4831376,
+    "hash": "8ef0785c43fda94ce17658c4096783ba"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/nanostat.lua": {
+    "mtime": 1753454512.4841378,
+    "hash": "12122f11006f82125115a9c2949906c8"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/kallisto.lua": {
+    "mtime": 1753454512.4831376,
+    "hash": "a030a5f2454153068b9cdf89245a88c6"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/ambertools.lua": {
+    "mtime": 1711448677.374469,
+    "hash": "f8b51ea8950ad88aa3a1d0d8fd3d26cb"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/multiqc.lua": {
+    "mtime": 1753454512.4841378,
+    "hash": "dafca5eb3f3bf7c6b1538b45e4953569"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/porechop.lua": {
+    "mtime": 1753454512.4841378,
+    "hash": "4638069fc3ed3304c5af0756eab9ffc9"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/cutadapt.lua": {
+    "mtime": 1753454512.4821377,
+    "hash": "1d5aa9c107953e3147cec77a4caa5b5c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/spliceai.lua": {
+    "mtime": 1753454512.4851377,
+    "hash": "576de9d8497893ffcf53017b87b43144"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/yacrd.lua": {
+    "mtime": 1753454512.4861376,
+    "hash": "61d1d2a52e9e33cf61db8cb15ed492e4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/vip.lua": {
+    "mtime": 1758182805.069863,
+    "hash": "d2f7e9d309337252e841475e6ea46874"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/muscle.lua": {
+    "mtime": 1767591141.3204076,
+    "hash": "b1f981788f6e66d2650b9ea2b140a7f0"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/panacus.lua": {
+    "mtime": 1753454512.4841378,
+    "hash": "10ad8f4ab638cb381933063542473283"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/salmon.lua": {
+    "mtime": 1753454512.4851377,
+    "hash": "46f98041e35c68787e5a6439a49f8969"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/trimmomatic.lua": {
+    "mtime": 1753454512.4861376,
+    "hash": "9531a2e19d0cb67f298739a6ef133cde"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/manta.lua": {
+    "mtime": 1753454512.4831376,
+    "hash": "a5040deb048bf14ba2a8f02ff684f15f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/whatshap.lua": {
+    "mtime": 1710146481.7684314,
+    "hash": "329ba315727dec4475f8ef06a74bcc4a"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/hapgen2.lua": {
+    "mtime": 1710146481.7684314,
+    "hash": "2b9c0bcc9a1397178c8ee344c48c651a"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/beast2.lua": {
+    "mtime": 1753454512.4811375,
+    "hash": "03cf8e66cf9b25fa0907b4e87ef97e8b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/hifiasm.lua": {
+    "mtime": 1753454512.4831376,
+    "hash": "5e3c66e4b0db6eb98b27c7c39c16ee34"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/reviewer.lua": {
+    "mtime": 1753454512.4841378,
+    "hash": "0c95a2ef42aad0fdaea5d381eab3d673"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/bismark.lua": {
+    "mtime": 1753454512.4811375,
+    "hash": "b8091a8b10337f156de8638341bda126"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/bamtools.lua": {
+    "mtime": 1707401359.7871315,
+    "hash": "28a762c374e62e7e9071566e0523f870"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/bowtie2.lua": {
+    "mtime": 1753454512.4821377,
+    "hash": "86629388e9f66fb0f03157fd8dc97358"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/cnvpytor.lua": {
+    "mtime": 1753454512.4821377,
+    "hash": "21fbac37b5ff05d76a1b24d07927fbf4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/subread.lua": {
+    "mtime": 1753454512.4851377,
+    "hash": "a9ff57e5a35a1b62c68c0ba84574110e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/panpatch.lua": {
+    "mtime": 1778055483.419258,
+    "hash": "4754e6c04c3738840140c9f30b859d00"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/rfmix.lua": {
+    "mtime": 1753454512.4851377,
+    "hash": "2b017d7a60750bb7ae7c195b333013a5"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/blast.lua": {
+    "mtime": 1707401359.7871315,
+    "hash": "16a5d316e8bafd7cdb395216c6f4da64"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/trimgalore.lua": {
+    "mtime": 1753454512.4861376,
+    "hash": "b4f536dfef9bbc9ca639aa17275b26dd"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/exomiser.lua": {
+    "mtime": 1753454512.4821377,
+    "hash": "a993e00f7dc2fa8d114d3cec66faf605"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/star.lua": {
+    "mtime": 1753454512.4851377,
+    "hash": "41048cc6302e4d323e238ec7161855b4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/gemma.lua": {
+    "mtime": 1710146481.7684314,
+    "hash": "7607699415a3d700ed1d8b21ee1cfe15"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/expansionhunter.lua": {
+    "mtime": 1753454512.4821377,
+    "hash": "649b178f457bebb16be9974b0615a98c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/indelible.lua": {
+    "mtime": 1753454512.4831376,
+    "hash": "736e2756034608bd034d402ca37c672a"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/RSEM.lua": {
+    "mtime": 1753454512.4811375,
+    "hash": "d98f1b5cfdd8f8991b60ed8312974a32"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/vg.lua": {
+    "mtime": 1753454512.4861376,
+    "hash": "fe9ab99095b583ce276a9072e28eb698"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/nanofilt.lua": {
+    "mtime": 1753454512.4841378,
+    "hash": "53c11407a1056fab9422954c81238265"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/bio/impute5.lua": {
+    "mtime": 1710146481.7684314,
+    "hash": "4d00a17d434c41e50cf63ae394f02530"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/common/python.lua": {
+    "mtime": 1753454512.489138,
+    "hash": "f6544cb71169b6f1f9d56eb40d01c6aa"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/common/gocryptfs.lua": {
+    "mtime": 1760426775.439591,
+    "hash": "e1726bf4f7ebf65fdef8610b15812ecb"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/common/boost.lua": {
+    "mtime": 1757321460.4327397,
+    "hash": "542db2cdf5ae84a65ed1cd682d28f148"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/common/openblas.lua": {
+    "mtime": 1701423995.2107134,
+    "hash": "1399f82b98eab74bba21b4729f25c4dd"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/common/gettext.lua": {
+    "mtime": 1753454512.4881377,
+    "hash": "9b906669d178f49e2d15fdc62d426a10"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/common/git.lua": {
+    "mtime": 1753454512.4881377,
+    "hash": "551849778465aebc77678303a32299e9"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/common/micromamba.lua": {
+    "mtime": 1753454512.4881377,
+    "hash": "e1c508702561c45d8daa9395e2df4af4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/common/harfbuzz.lua": {
+    "mtime": 1711455585.0257165,
+    "hash": "97e20ff9c82cf2dc93a9c6aeea6e4b6a"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/common/apptainer.lua": {
+    "mtime": 1760426775.439591,
+    "hash": "cc64e94255c940dc40c30513cb9a28c1"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/common/intel.lua": {
+    "mtime": 1706098450.8927312,
+    "hash": "4be7e7aa88461502240d756d100713c1"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/common/fribidi.lua": {
+    "mtime": 1711455585.0257165,
+    "hash": "bf45600ed8fbdadd42daa224fc1af45e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/common/git-lfs.lua": {
+    "mtime": 1753454512.4881377,
+    "hash": "4756ad073578a3959a1f97267f09326c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/templates/common/squashfuse.lua": {
+    "mtime": 1760426775.439591,
+    "hash": "6f25c7859232284a73da8dc632f4d7aa"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/files/gemini_install.py": {
+    "mtime": 1698780387.2999709,
+    "hash": "71904d5cef88c8afd42fe5939a8ded93"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/all/README.md": {
+    "mtime": 1755091930.9110403,
+    "hash": "e125e18ef89f0ea284d6746e97c21b66"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/all/meta/main.yml": {
+    "mtime": 1698780387.2959707,
+    "hash": "627a5799d0f8269d4721b4b2fa369708"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/all/vars/main.yml": {
+    "mtime": 1698780387.2959707,
+    "hash": "214645192517fcbac26b440eace74b11"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/all/tests/test.yml": {
+    "mtime": 1698780387.2959707,
+    "hash": "caed3467953922c4b32bb8a9657dac57"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/all/tasks/main.yml": {
+    "mtime": 1778055483.417258,
+    "hash": "69afd98ecd4ac567d16c8920405669a0"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/all/handlers/main.yml": {
+    "mtime": 1698780387.2959707,
+    "hash": "c489e048b74e34ff3736b95ca01fd389"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/all/defaults/main.yml": {
+    "mtime": 1698780387.2959707,
+    "hash": "ea27614080c37cab645d83d3b65be156"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/README.md": {
+    "mtime": 1755091930.9110403,
+    "hash": "310b366c89bd90af4c2625eebe92c0b4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/meta/main.yml": {
+    "mtime": 1698780387.3159719,
+    "hash": "627a5799d0f8269d4721b4b2fa369708"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/vars/main.yml": {
+    "mtime": 1698780387.3159719,
+    "hash": "643a2b9d47c2683f5681a1c10d92b28c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/templates/bio/snvstory_requirements.txt": {
+    "mtime": 1753454512.5043972,
+    "hash": "0c9993d287c5c0a609c48446f18ddeab"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tests/test.yml": {
+    "mtime": 1698780387.3159719,
+    "hash": "23fbec41f1b74354e4e32a9fe83298fc"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/main.yml": {
+    "mtime": 1753454512.499138,
+    "hash": "3cbe9aa1915d71fc31c11a8c5f5e2037"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/astro/atfncat.yaml": {
+    "mtime": 1753454512.4901378,
+    "hash": "b1fc782ab043b74c7376cb40bd0c6653"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/astro/main.yml": {
+    "mtime": 1753454512.492138,
+    "hash": "8f6279934f84bbea7919646ae9f34f9e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/spectronaut.yaml": {
+    "mtime": 1753454512.496138,
+    "hash": "1e4fbbc3e54e312164d9d17d9621c1a1"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/ClinSV.yaml": {
+    "mtime": 1753454512.492138,
+    "hash": "900aee56a79e9276a36524a86519a8fc"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/trycycler.yaml": {
+    "mtime": 1753454512.497138,
+    "hash": "e6a19f8b77d5d60bd80e9bc273270059"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/snvstory.yaml": {
+    "mtime": 1753454512.496138,
+    "hash": "7ee704f15c4be04f3a9b7f9fad779155"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/proteowizard.yaml": {
+    "mtime": 1753454512.496138,
+    "hash": "fdc66d127c97bf39cc40b33e69b5824e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/pggb.yaml": {
+    "mtime": 1753454512.496138,
+    "hash": "dc0611ca1832e477d33091a2df660e58"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/main.yml": {
+    "mtime": 1773491703.9279919,
+    "hash": "7511770d42511a08471113dfd22099ef"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/bcbio.yaml": {
+    "mtime": 1753454512.4933217,
+    "hash": "a94a58ccde7bd3d98b729385174eb61b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/gatk.yaml": {
+    "mtime": 1753454512.495138,
+    "hash": "e8021f42b3551f8f88341fd19ac91050"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/vep.yaml": {
+    "mtime": 1767583469.4839017,
+    "hash": "652495ee840f63ec6e7a8952a19cd712"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/mspipe.yaml": {
+    "mtime": 1753454512.495138,
+    "hash": "111407ecc2e7fe68d5ca50e8afc2763b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/PopGen_suite.yaml": {
+    "mtime": 1767583469.4829018,
+    "hash": "067b4616fad87f94d9f730e03ce78d83"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/beast.yaml": {
+    "mtime": 1767591141.3204076,
+    "hash": "a778318009fdd8aafa23e810473155dd"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/TRIBES.yaml": {
+    "mtime": 1753454512.4933217,
+    "hash": "375b8ff2dad36be68ea60de37c8e2ee2"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/bio/DIANN.yaml": {
+    "mtime": 1775030430.8129952,
+    "hash": "a5d4a7e65d79b84a9df0d33847cad0c3"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/common/RStudio.yaml": {
+    "mtime": 1767583469.4839017,
+    "hash": "f803211a52f1ddd2f95e6ef7788f11f7"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/common/python-ml-base.yaml": {
+    "mtime": 1767583469.484902,
+    "hash": "7304bdd6a90d83e7bcb21b64e21b1ec9"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/common/gnuplot.yaml": {
+    "mtime": 1753454512.499138,
+    "hash": "db9d33735510e6060283fe35de13505e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/common/ubuntu.yaml": {
+    "mtime": 1767583469.484902,
+    "hash": "f9d8be010a2148a44efb225e655fe487"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/common/main.yml": {
+    "mtime": 1757321825.3910854,
+    "hash": "6b02932bcb360882ccf94461319f7d4b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/tasks/common/python-ml.yaml": {
+    "mtime": 1767583469.484902,
+    "hash": "2b69ffba78a4a2195af8c7360af22e19"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/handlers/main.yml": {
+    "mtime": 1698780387.3159719,
+    "hash": "2c01d8b32a0f7bc72ca72d3aa8655dac"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/containers/defaults/main.yml": {
+    "mtime": 1698780387.3159719,
+    "hash": "3b8e3a1f0301af889ac079c4e31d641e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/README.md": {
+    "mtime": 1755091930.9110403,
+    "hash": "1a562dc80b2e31492b54893d27e76359"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/meta/main.yml": {
+    "mtime": 1698780387.3119717,
+    "hash": "627a5799d0f8269d4721b4b2fa369708"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/vars/main.yml": {
+    "mtime": 1698780387.3159719,
+    "hash": "d30b7ea5b5c51e812a541178b70c7429"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tests/test.yml": {
+    "mtime": 1698780387.3159719,
+    "hash": "e51c45b960a05418b5db736ca1da56c9"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/main.yml": {
+    "mtime": 1700812059.4484248,
+    "hash": "2c941aca76c91e4ba9e1f892c39c533d"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/ilifu/user_tools.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "9b20a8b7d590e2b6cab9bea4db862795"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/ilifu/disk_management.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "c2aefb37ad80aef4aed74e4528d35251"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/ilifu/main.yml": {
+    "mtime": 1753454512.4811375,
+    "hash": "2dce24bdc4c0e3b2fefe98e65342326b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/astro/main.yml": {
+    "mtime": 1701423995.2107134,
+    "hash": "98d9989cdece92a8dcc3021385fe460d"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/astro/cfitsio.yaml": {
+    "mtime": 1701423995.2107134,
+    "hash": "983565172c61aecfae42fbd6f59cc08c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/astro/calceph.yaml": {
+    "mtime": 1701428408.0535476,
+    "hash": "8f8065b315b91328fe92d6331f508153"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/varfish.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "f1154b9358ab2f3168220cfde39ee468"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/bamtools.yaml": {
+    "mtime": 1707401359.7871315,
+    "hash": "a06f0e16e0f9f3c4906f05221dbf97af"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/spliceai.yaml": {
+    "mtime": 1753454512.4721372,
+    "hash": "8d50bfb5f20362701dda7c2bc58b6c00"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/filtlong.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "8cd4e8b4b354f9b6f3711630636c686e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/expansionhunter.yaml": {
+    "mtime": 1753454512.4661372,
+    "hash": "7bfeef4b9b7f7820cdc19d1aeb791ae7"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/beagle.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "19c3db8ff38cba7ef9bfe75c50a02d45"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/exomiser.yaml": {
+    "mtime": 1753454512.4661372,
+    "hash": "f8a569b5f92f02e5ffd6b9baa338beeb"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/subread.yaml": {
+    "mtime": 1753454512.4731374,
+    "hash": "1ca8ca079ac029829f00db89ac18bf07"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/fragpipe.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "c5bc0b93d1888557b3b608e68eeef108"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/hapgen2.yaml": {
+    "mtime": 1710146481.7684314,
+    "hash": "b6c4276f1de9431a46694619d946d6f8"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/genome_browser.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "303f33c273322357665924fb52118e7f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/seqwish.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "5c43b920538cf1beaa3a53b9a32d7819"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/cnvkit.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "9e67af2f28f8e76bc1e484317939c94b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/iqtree.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "7aa6afa05a4b80c6a7d9a549ffac9509"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/medaka.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "9a45df411914b6debbb51da2f34be275"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/salmon.yaml": {
+    "mtime": 1753454512.4721372,
+    "hash": "742378236216f6370f7fbed9113b16ed"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/htstream.yaml": {
+    "mtime": 1753454512.467137,
+    "hash": "b6b67d01459f2d8334919c9323ce4fbd"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/ambertools.yaml": {
+    "mtime": 1711448677.374469,
+    "hash": "c660c162fd03c7a0fb8deca8d2f2af68"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/vip.yaml": {
+    "mtime": 1758182805.069863,
+    "hash": "eaa290044693e3dad2a86f82e8014dc4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/multiqc.yaml": {
+    "mtime": 1753454512.4691372,
+    "hash": "9da9c60baae4fb3e013e21d106233cda"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/shapeit5.yaml": {
+    "mtime": 1710146481.7684314,
+    "hash": "138657c713763f2aa5216a63456aa876"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/GenomeStrip.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "c5e5f72108daf86819883853220dacee"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/cnvpytor.yaml": {
+    "mtime": 1753454512.465137,
+    "hash": "6a3009d568ab85cf907d700c6b932563"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/phyml.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "158869ff319c487dc7cf62b7131e559e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/wfmash.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "88601e4bb9eee11b8facf24c4008c0d2"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/canvas.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "6d727a359b282c7e2d08daa764244bb5"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/svanna.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "b863662faf46986901c8a4f466c7c024"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/smoothxg.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "eaeb0802694c384869dcf1a843921206"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/libmaus2.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "64d21445cd17bb492d097051d20da7f8"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/vcftools.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "84dc18db8fd94b8587740bb826c5c236"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/plink-ng.yaml": {
+    "mtime": 1753454512.4701374,
+    "hash": "e5c28f29cb5d806c8f78020294e0dd1e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/snpeff.yaml": {
+    "mtime": 1757321460.4326353,
+    "hash": "e682c3eb72e3e6cdc4e718fccfe46140"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/rsem.yaml": {
+    "mtime": 1753454512.4711373,
+    "hash": "9e7e9c7730ff2b6a24fd5f4347be98a3"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/popdel.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "cf4be041c8211ac00bbb090da1f03a6d"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/main.yml": {
+    "mtime": 1778064031.8974872,
+    "hash": "140e38670d3e8745c30d51d07d21e0f1"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/miniwdl.yaml": {
+    "mtime": 1753454512.4691372,
+    "hash": "0cf5a78184f9a4e345a145f070f148b9"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/muscle.yaml": {
+    "mtime": 1767591141.3184075,
+    "hash": "0faaf7f52084c0a1ea8b717173b4190b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/blast.yaml": {
+    "mtime": 1707401359.7871315,
+    "hash": "94070c0811c060ffb27d9e183684b20d"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/sra_toolkit.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "e7ba7c96215d241302dc13c8a3839f49"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/indelible.yaml": {
+    "mtime": 1753454512.467137,
+    "hash": "2caa6ea60c525d3d1ef18a687ae7593e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/nanoplot.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "3b8c02bbcf9c83cb93beb51a01b8b312"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/hifiasm.yaml": {
+    "mtime": 1753454512.467137,
+    "hash": "bf0cd7494c33fe568489ccf90788e491"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/mash.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "04d908b2ca7531dc1cd9637d696f510b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/cdhit.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "667f38a06b6d876d5e136637db44d1a6"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/bcbio.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "b35632a609df291195b713b22aebe167"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/gatk.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "121d57389c58446ef21c7585d92b205d"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/vep.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "505ba9fa6b2e60e44bd07ed7b3098fd7"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/nanocomp.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "f34b541296ac652eaccd1e9904166d18"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/chopper.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "27591c7b5c50d269a5de38492ab4d3aa"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/samtools.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "f9e36d36e6580e9509e03d945e6d2230"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/whatshap.yaml": {
+    "mtime": 1710146481.7684314,
+    "hash": "ac06661caf106f9d88faa2e979cf66ff"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/bowtie2.yaml": {
+    "mtime": 1753454512.465137,
+    "hash": "50354bdd32133ace7483cd33487e42e5"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/star.yaml": {
+    "mtime": 1753454512.4721372,
+    "hash": "84a745f6cb92bd79dd551886b7e55631"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/gfaffix.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "8368d54b2935638de21569e155460e9d"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/hyphy.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "b85b603e4ec57d6e970bdabc44ed9ae8"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/pysam.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "ad58aa356ba452ebc431bb2763d8744f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/dorado.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "10548b56e7550fccefa0233ce82c84da"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/beast2.yaml": {
+    "mtime": 1753454512.4647005,
+    "hash": "df1a2ed01992b2b71562dcf6c21a720b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/reviewer.yaml": {
+    "mtime": 1753454512.4701374,
+    "hash": "59241f015406f8b92082183729c02913"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/impute5.yaml": {
+    "mtime": 1710146481.7684314,
+    "hash": "f8418386280fc735565aa5063d2b1d17"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/gemini.yaml": {
+    "mtime": 1757321460.4326353,
+    "hash": "23ffbfc3c6ecd4906dc8398124ced45f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/nanofilt.yaml": {
+    "mtime": 1753454512.4691372,
+    "hash": "0d38de85d5daf321ca9c6424b023f495"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/bcftools.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "61145a618ac9af18408d127f2acc8002"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/gromacs.yaml": {
+    "mtime": 1753454512.4661372,
+    "hash": "503d0693eb6d70a850ab470fb38d86e1"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/exomiser_data.yaml": {
+    "mtime": 1753454512.4661372,
+    "hash": "321db65425cc88f61efa8b91907df1a6"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/manta.yaml": {
+    "mtime": 1753454512.4681373,
+    "hash": "f73d99e1dfcf6b0ab9aa467a9402abfa"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/merqury.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "33343c6ae4df5036ccc9c970c85c5096"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/bismark.yaml": {
+    "mtime": 1753454512.465137,
+    "hash": "2a1e2eba339f483b7895b6b89596aab8"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/savvysuite.yaml": {
+    "mtime": 1757321460.4326353,
+    "hash": "a55cb1e53b23ef506adbca891781f735"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/hisat2.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "839943ddc3b7e57ff2afd730787f837c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/kraken2.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "7e4e07ebd184450f00d1db7ca27016c5"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/vcfbub.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "a30112693c0988f63299ac86fe1e2fa7"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/seqkit.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "100e6f3835997517604713dfac358756"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/bedtools.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "8b84643dc45c188f46aa3696df5e448c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/stacks.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "a08ccee68ef791593946aa4a20206722"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/polypolish.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "d866bf627c78ffcd9e176849c6463d3a"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/panpatch.yaml": {
+    "mtime": 1778055483.418258,
+    "hash": "d60f7ee1c1ca943f98b72f7eab2eaede"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/gfastats.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "1924c94ecb2092cd2ad2cbfe48c504bc"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/PRSice-2.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "4749ee4394189349e9bf09ddbc70e3bf"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/gemma.yaml": {
+    "mtime": 1710146481.7644312,
+    "hash": "91dac015fbb5f79f3c8cffab5f9fae07"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/bwa.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "9deced538c7a3e0f916b43df7f25516b"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/lirical.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "c1da256d1bcc1fe81f41fdc6768c2e20"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/panacus.yaml": {
+    "mtime": 1753454512.4691372,
+    "hash": "f64c48c3b2c02410b3dbc83997c886e2"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/htslib.yaml": {
+    "mtime": 1710146481.7684314,
+    "hash": "9edcdc1b53e62f25a39752094d9310a5"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/vg.yaml": {
+    "mtime": 1753454512.4741373,
+    "hash": "763412164c8d43c458c90878e7d77dba"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/fastqc.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "33fc0ea6bc1a4fd32a766d406a18979c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/glimpse.yaml": {
+    "mtime": 1710146481.7644312,
+    "hash": "28ba56393c5c59c78e0dd0fb80d21c3a"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/mtoolbox.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "6e905d2915cbd0657e1a1858a7debd87"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/kallisto.yaml": {
+    "mtime": 1776671858.455502,
+    "hash": "ad7ad88c509e54aa3bde12d10d6861a6"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/slivar.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/minimap2.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "fbac45616795423cd5a52b86d596855d"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/trimmomatic.yaml": {
+    "mtime": 1753454512.4741373,
+    "hash": "730b88e4240d2950a28d9de58e37feea"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/meryl.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "de4003af87e244de646035238c7278a9"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/bracken.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "fe87ef4cd9af919048cae7351aa910d9"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/trimgalore.yaml": {
+    "mtime": 1753454512.4731374,
+    "hash": "b0af1df4261a2c94b630effd9e92925f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/picard.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "e2d6b165f968e911df6b79a5dd2b06f0"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/mdanalysis.yaml": {
+    "mtime": 1712844242.5700872,
+    "hash": "6b0a97bdaebb166b75479597d915aa5c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/yacrd.yaml": {
+    "mtime": 1753454512.4751375,
+    "hash": "ba5fd311f95ce86c28bbf1fb9f96deea"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/mafft.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "13f7f178479774cc18da236bf394ca13"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/porechop.yaml": {
+    "mtime": 1753454512.4701374,
+    "hash": "82b8edae56b6853ca0ca9d2d6ad21825"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/biobambam2.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "5cdd1c9e3b276f683bf139f4b2399bc4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/rfmix.yaml": {
+    "mtime": 1753454512.4701374,
+    "hash": "14efedc978de6c8b767f9bf0d3ce0a0c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/cutadapt.yaml": {
+    "mtime": 1753454512.465137,
+    "hash": "ab752b68769367d26c6cd0c6d99c9036"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/bio/nanostat.yaml": {
+    "mtime": 1753454512.4691372,
+    "hash": "b2662cf552dab46383dd207eb4d5827c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/pandoc.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "0f3014ce44e072bae9557699da2e4585"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/fftw_precisions.yaml": {
+    "mtime": 1711448514.1171544,
+    "hash": "8767ccc2d42e9127abce2719b841f27e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/nodejs.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "baf631bfddc379243b16feccb8a8c833"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/julia.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "5418cf630ed5c40f65d78bb987354810"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/zstd.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "c76f79d32a09ea7487ff29ed62f715c7"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/apptainer.yaml": {
+    "mtime": 1760426775.438591,
+    "hash": "dbcc4dda1e288db66cd96a4d8388c4f5"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/openjdk.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "641372bd78ea77ced5eb2f000921bcc3"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/golang.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "a62cc43185f82ed34dc6024a60ed242c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/python.yaml": {
+    "mtime": 1753454512.4801376,
+    "hash": "117f69c2166bdb1eaad262211594a86c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/R.yaml": {
+    "mtime": 1753454512.4751375,
+    "hash": "99a2b27b9448f134a35f6d6b3ee6f187"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/dotnet.yaml": {
+    "mtime": 1753454512.4761374,
+    "hash": "238bb5ca3648e579f8dd88c1f4169cec"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/apache_hadoop.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "6c4d2fb5462c2165b36ccf11b9e2c74f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/harfbuzz.yaml": {
+    "mtime": 1711455585.0257165,
+    "hash": "1a10e7ad4f3cd09d92bf2d9537a32472"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/neovim.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "04e18967582237433b3febac6a06ed0a"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/fftw.yaml": {
+    "mtime": 1711448514.1171544,
+    "hash": "3ed997d0ee5fa3c25af70dbf5a918409"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/mamba.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "3960eb119f3c6b75b7bb13290806ba8e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/mpich.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "d886dea74cfdd8a78ecf98999becc5b9"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/openblas.yaml": {
+    "mtime": 1701423995.2107134,
+    "hash": "95f3a10c91c6a7a1cb29913286085f55"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/gettext.yaml": {
+    "mtime": 1753454512.4771376,
+    "hash": "9e37c9c4ca196caed170ea8f603f5b14"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/mono.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "122b462914d1cf46324ef7980ad927e1"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/gocryptfs.yaml": {
+    "mtime": 1760426775.438591,
+    "hash": "89928773c3f3967123381e5291b66b48"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/perlbrew.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "1e800ed62f0dc7b18888206d8d9bbe2e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/lapack.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "4674406bb98c702683351b828866766e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/main.yml": {
+    "mtime": 1778055483.419258,
+    "hash": "23dd60ec82f179a5c6c4b0957c3b8f20"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/fzf.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "6006406a11a4ef3e53ee664247ca98be"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/pmix.yaml": {
+    "mtime": 1701328859.624036,
+    "hash": "2a0bb1ee4ef0945ff682d2565f404fe5"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/perl.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "416ffd476300027515d88ea8a458507c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/openmpi.yaml": {
+    "mtime": 1767583469.4799016,
+    "hash": "4f23e8b190aac81e9bc1a20e89b99ef2"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/jemalloc.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "0ee5542370b60f6bf805c991df33e8b0"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/ruby.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "d0176b089bc286af20f5bffd6e2702e4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/cmake.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "60c506f431c1215c6faf93229794eff4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/hwloc.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "a3fa00c589d245fec4710c8bfaec196e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/git.yaml": {
+    "mtime": 1753454512.4771376,
+    "hash": "43484a2b44479070dca42df70bd174a8"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/homebrew.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "1154b7504b496f3f393c7299a25bab85"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/git-lfs.yaml": {
+    "mtime": 1753454512.4771376,
+    "hash": "ceb0676d070c409710c977aab58f54b3"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/latex.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "35013f0d792bde0f693466fc598831c2"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/nextflow.yaml": {
+    "mtime": 1767583469.4799016,
+    "hash": "2cfd4d38ec2b8392d436a1ede3b5aa08"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/intel.yaml": {
+    "mtime": 1706098450.888731,
+    "hash": "c5f43036bc7b99c950ab5a2384877c3c"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/slurm-drmaa.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "dc8c791a3d8d71ff21ff6feae6f86a83"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/rustup.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "318e644fbaf46929ed44a4d2c0084648"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/gsl.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "5bf7ab129622cbcd4ea51721f4a521d4"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/rclone.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "d054d8bf4f0783ef97d9755a87624147"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/squashfuse.yaml": {
+    "mtime": 1760426775.438591,
+    "hash": "b8cc4aec46def32a5ba6607eb47fc7ad"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/apache_maven.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "b7dfacef967d93c364c1de8f334d822e"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/cromwell.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "b2cc62c97c8420bdf65d6a7a821c5a87"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/fribidi.yaml": {
+    "mtime": 1711455585.0257165,
+    "hash": "bc2b7ef72bc012c9c792c1a116c835a8"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/graphviz.yaml": {
+    "mtime": 1753454512.4781375,
+    "hash": "6ebd96e9ffe18294f0e4c54596aa086a"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/anaconda.yaml": {
+    "mtime": 1747320950.1436105,
+    "hash": "cbe183ddd4e3a4099e3c21ab46c3e494"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/apache_spark.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "55f95b8d050bfc88a6d40b57b52cd0c9"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/singularity.yaml": {
+    "mtime": 1767583469.4809017,
+    "hash": "73e6d784ca76215f6c5be207c4d7961f"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/jre.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "b62b2b33563772e1d854c3eead81c5a3"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/ucx.yaml": {
+    "mtime": 1767583469.4809017,
+    "hash": "701121c5706e1d4801997b1bb6ca8e54"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/rust.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "a221067266959666894f9766ab84248d"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/ollama.yaml": {
+    "mtime": 1778055483.419258,
+    "hash": "c7f8bb7488599dca97d04c329d8499f8"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/boost.yaml": {
+    "mtime": 1753454512.4761374,
+    "hash": "3ffeb3a279baafda0ff154d362fdabf0"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/githubcli.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "8f7c0e56c291673f9bd9bc29ab636970"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/micromamba.yaml": {
+    "mtime": 1753454512.4791374,
+    "hash": "dd48a8e0fd73eaaa282f9439f1441114"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/cuda.yaml": {
+    "mtime": 1700812059.4484248,
+    "hash": "fc6eccf97fe21766c1d90faa72561ba3"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/handlers/main.yml": {
+    "mtime": 1698780387.3119717,
+    "hash": "dc4f49264f8a532fb78675e5ff706884"
+  },
+  "/home/dane/dev/ilifu/software/ansible/roles/compiled/defaults/main.yml": {
+    "mtime": 1698780387.2959707,
+    "hash": "900e7b9caa10d8e6fd83d919589640ad"
+  }
+}

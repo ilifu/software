@@ -41,12 +41,72 @@ singularity: "/software/common/singularity/4.1.0/bin/singularity"
 
 where `software_root` is probably the most important variable to configure — this is the root directory where all software will be installed. Please also remember to configure the location of your singularity install in the `singularity` variable.
 
+### Software categories
+
+Software is organised into three domain-specific categories, each with its own directory tree under `${software_root}` and its own Lmod module namespace:
+
+| Category | Directory | Modules | Description |
+|----------|-----------|---------|-------------|
+| **common** | `${software_root}/common/` | `modules/common/` | Languages, compilers, MPI, system tools |
+| **bio** | `${software_root}/bio/` | `modules/bio/` | Bioinformatics and life sciences |
+| **astro** | `${software_root}/astro/` | `modules/astro/` | Astronomy and astrophysics |
+
+Both compiled and containerised software follow the same category structure — task files, templates, and modules are split into `common/`, `bio/`, and `astro/` subdirectories within each Ansible role. The compiled role also has an `ilifu/` subdirectory for internal cluster tools.
+
 ### Installing software
-This is a reasonably typical ansible installation. Note that EVERYTHING is disabled by default apart from configuring the directories, which is ALWAYS run. There are typically two classes of software that can be installed: compiled software; and containers. While installation is similar for both, installing containers does require root access (via `sudo`) if the container is built from a recipe.
+Everything is disabled by default, including directory setup (which requires the `init` tag). To install software, both the software name tag and the version-specific tag are required:
 
-So to install, say openmpi 4.0.3, one would run the command: ```ansible-playbook site.yaml -t openmpi,openmpi4.0.3```. Note that both the software name tag and the version-specific tag (comma-separated, e.g., `openmpi,openmpi4.0.3`) are required due to the loop structure. Software to be installed needs to be explicitly tagged, otherwise it will be ignored. Installation of the specific software will also install the appropriate environment module (lmod) in `${software_root}/modules`.
+```bash
+ansible-playbook site.yaml -t openmpi,openmpi4.0.3
+```
 
-Note that your user will need `sudo` rights in order to build containers.
+This two-tag requirement (e.g., `openmpi,openmpi4.0.3`) is intentional — it prevents accidental installation of all versions when only one is needed. Every installation also creates the appropriate Lmod environment module in `${software_root}/modules`.
+
+### Installation approaches
+
+There are two fundamentally different installation methods in this repository, each suited to different software types.
+
+#### Compiled software
+
+The `compiled` Ansible role builds software directly from source on the host system:
+
+1. Downloads a source tarball and verifies its checksum
+2. Extracts to `/dev/shm` for fast in-memory builds
+3. Runs `./configure --prefix=<install_dir>` with appropriate flags
+4. Compiles with `make -j<ncpus>`
+5. Installs native binaries to `${software_root}/${category}/${software}/${version}/`
+6. Creates an Lmod `.lua` module that prepends the `bin/` directory to `PATH`
+
+The result is a native binary optimised for the host CPU. The Lmod module is the only artefact beyond the installation directory — no wrappers or images. **Sudo is not required.**
+
+Best for: compilers, MPI libraries, maths libraries (BLAS, FFTW), programming language runtimes (Python, R, Go, Julia), and any tool where runtime performance or system integration matters.
+
+#### Containerised software
+
+The `containers` Ansible role builds [Singularity](https://sylabs.io/singularity/) container images from definition files:
+
+1. Renders a `.def` definition file from a Jinja2 template
+2. Builds a `.sif` image with `sudo singularity build` (root required for this step)
+3. Creates a thin bash wrapper script that invokes `singularity exec --bind /software:/software <image>.sif <command>`
+4. Creates an Lmod `.lua` module that adds the wrapper script directory to `PATH`
+
+From the user's perspective the wrapper scripts are invisible — loading the module and running the command works identically to compiled software. Containers are often layered: Ubuntu base → compile variant → application.
+
+**Sudo is required** only during the build step; loading and using the module afterwards does not need elevated privileges.
+
+Best for: software with complex or conflicting dependencies (proteomics tools, GUI applications like RStudio), proprietary binaries, and cases where reproducibility across system upgrades is important.
+
+#### Comparison
+
+| | Compiled | Containerised |
+|---|---|---|
+| Build method | Source compilation | Singularity image build |
+| Sudo required | No | Yes (build only) |
+| Runtime execution | Direct binary | `singularity exec` via wrapper script |
+| Dependencies | Linked at build time | Bundled inside the image |
+| Lmod module | Prepends `bin/` to `PATH` | Prepends wrapper script dir to `PATH` |
+| Role templates | `.lua` module only | `.def` + `.sh` wrapper + `.lua` module |
+| Best for | HPC libraries, language runtimes | Complex apps, GUIs, proprietary software |
 
 #### Available software
 
