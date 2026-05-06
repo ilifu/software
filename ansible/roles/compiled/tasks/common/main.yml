@@ -1489,3 +1489,18 @@
   tags:
       - never
       - boost
+
+- name: Install Ollama
+  vars:
+    versions:
+      - {
+        version_number: "0.23.0",
+        checksum: "sha256:581ba6cc0c6da3e80f4f454c274a0260ba07095089a21692b165caba9bf49ad4",
+        url: "https://github.com/ollama/ollama/releases/download/v0.23.0/ollama-linux-amd64.tar.zst"
+      }
+  include_tasks:
+    file: 'ollama.yaml'
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - ollama
