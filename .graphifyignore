@@ -1,0 +1,7 @@
+.venv/
+uv.lock
+tmp/
+.idea/
+.claude/
+graphify-out/
+ansible/output/

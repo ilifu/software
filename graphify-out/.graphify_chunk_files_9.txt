@@ -1,0 +1,13 @@
+/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/anaconda.yaml
+/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/apache_spark.yaml
+/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/singularity.yaml
+/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/jre.yaml
+/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/ucx.yaml
+/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/rust.yaml
+/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/ollama.yaml
+/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/boost.yaml
+/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/githubcli.yaml
+/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/micromamba.yaml
+/home/dane/dev/ilifu/software/ansible/roles/compiled/tasks/common/cuda.yaml
+/home/dane/dev/ilifu/software/ansible/roles/compiled/handlers/main.yml
+/home/dane/dev/ilifu/software/ansible/roles/compiled/defaults/main.yml
