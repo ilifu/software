@@ -41,8 +41,20 @@ singularity: "/software/common/singularity/4.1.0/bin/singularity"
 
 where `software_root` is probably the most important variable to configure — this is the root directory where all software will be installed. Please also remember to configure the location of your singularity install in the `singularity` variable.
 
+### Software categories
+
+Software is organised into three domain-specific categories, each with its own directory tree under `${software_root}` and its own Lmod module namespace:
+
+| Category | Directory | Modules | Description |
+|----------|-----------|---------|-------------|
+| **common** | `${software_root}/common/` | `modules/common/` | Languages, compilers, MPI, system tools |
+| **bio** | `${software_root}/bio/` | `modules/bio/` | Bioinformatics and life sciences |
+| **astro** | `${software_root}/astro/` | `modules/astro/` | Astronomy and astrophysics |
+
+Both compiled and containerised software follow the same category structure — task files, templates, and modules are split into `common/`, `bio/`, and `astro/` subdirectories within each Ansible role.
+
 ### Installing software
-Everything is disabled by default except directory setup, which always runs. To install software, both the software name tag and the version-specific tag are required:
+Everything is disabled by default, including directory setup (which requires the `init` tag). To install software, both the software name tag and the version-specific tag are required:
 
 ```bash
 ansible-playbook site.yaml -t openmpi,openmpi4.0.3
