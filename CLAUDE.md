@@ -9,7 +9,7 @@ ansible/
 ├── group_vars/all        # All path variables — edit here to change software root
 ├── site.yaml             # Top-level playbook (runs all, compiled, containers)
 └── roles/
-    ├── all/              # Creates the full /software directory tree (always runs)
+    ├── all/              # Creates the full /software directory tree (requires -t init)
     ├── compiled/         # Builds software from source
     └── containers/       # Builds Singularity container images
 ```
@@ -30,7 +30,7 @@ Each containerised task needs three templates: `<software>.def`, `<software>.sh`
 
 ## Tagging system
 
-Every task has `tags: [never, <software><version>]`. To install you must supply **both** the software name tag and the version tag — this prevents accidentally installing all versions:
+Tagging works at two levels: the `include_tasks` entry in each category's `main.yml` carries the software name tag (e.g. `samtools`) with `never`, while the leaf task file carries a version-specific tag (e.g. `samtools1.22.1`) also with `never`. You must supply **both** tags to run an installation — this prevents accidentally installing all versions:
 
 ```bash
 ansible-playbook site.yaml -t samtools,samtools1.22.1

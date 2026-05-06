@@ -51,7 +51,7 @@ Software is organised into three domain-specific categories, each with its own d
 | **bio** | `${software_root}/bio/` | `modules/bio/` | Bioinformatics and life sciences |
 | **astro** | `${software_root}/astro/` | `modules/astro/` | Astronomy and astrophysics |
 
-Both compiled and containerised software follow the same category structure — task files, templates, and modules are split into `common/`, `bio/`, and `astro/` subdirectories within each Ansible role.
+Both compiled and containerised software follow the same category structure — task files, templates, and modules are split into `common/`, `bio/`, and `astro/` subdirectories within each Ansible role. The compiled role also has an `ilifu/` subdirectory for internal cluster tools.
 
 ### Installing software
 Everything is disabled by default, including directory setup (which requires the `init` tag). To install software, both the software name tag and the version-specific tag are required:

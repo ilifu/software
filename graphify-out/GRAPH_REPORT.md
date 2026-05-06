@@ -1,4 +1,4 @@
-# Graph Report - /home/dane/dev/ilifu/software/ansible/roles  (2026-05-06)
+# Graph Report - ansible/roles  (2026-05-06)
 
 ## Corpus Check
 - Large corpus: 387 files · ~56,131 words. Semantic extraction will be expensive (many Claude tokens). Consider running on a subfolder, or use --no-semantic to run AST-only.
