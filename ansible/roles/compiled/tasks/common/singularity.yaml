@@ -36,6 +36,11 @@
                 path: "{{ singularity_dir }}"
                 state: directory
                 mode: u=rwx,g=rx,o=rx
+            # localstatedir lives under install_dir on purpose: it holds only empty
+            # mount-point stubs (<1 MiB), written only at `make install` and never at
+            # runtime (the runtime mounts over the stubs). This keeps the install
+            # sudo-free and lets install_dir be mounted/chmod'd read-only.
+            # Do NOT move it back to /usr/local/var.
             - name: Configure singularity
               command: "./mconfig --prefix={{ install_dir }} --localstatedir={{ install_dir }}/var --sysconfdir={{ install_dir }}/etc --without-suid{% if version_number is version('3.10', '>=') %} --without-seccomp{% endif %}{% if version_number is version('3.10', '>=') and version_number is version('4.3', '<') %} --without-conmon{% endif %}"
               args:
