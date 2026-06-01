@@ -51,10 +51,11 @@
             - name: Reminder to disable setuid in singularity.conf
               ansible.builtin.debug:
                 msg: >-
-                  Singularity {{ version_number }} built --without-suid into {{ install_dir }}
-                  (sysconfdir {{ install_dir }}/etc). singularity.conf is managed elsewhere,
-                  NOT by this repo. Ensure 'allow setuid = no' is set there so the runtime
-                  uses unprivileged user namespaces and never the setuid flow.
+                  Singularity {{ version_number }} built --without-suid into {{ install_dir }}.
+                  The config file {{ install_dir }}/etc/singularity/singularity.conf is
+                  managed elsewhere, NOT by this repo. Ensure 'allow setuid = no' is set
+                  there so the runtime uses unprivileged user namespaces and never the
+                  setuid flow.
     - name: Install singularity {{ version_number }}
       when: "version_number.startswith('2')"
       vars:

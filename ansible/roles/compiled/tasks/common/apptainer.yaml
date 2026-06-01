@@ -75,8 +75,8 @@
     - name: Reminder to disable setuid in apptainer.conf
       ansible.builtin.debug:
         msg: >-
-          Apptainer {{ version_number }} built --without-suid into {{ install_dir }}
-          (sysconfdir {{ install_dir }}/etc). apptainer.conf is managed elsewhere,
-          NOT by this repo. Ensure 'allow setuid = no' (and 'allow setuid-mount
-          squashfs = no') is set there so the runtime uses unprivileged user
-          namespaces and never the setuid flow.
+          Apptainer {{ version_number }} built --without-suid into {{ install_dir }}.
+          The config file {{ install_dir }}/etc/apptainer/apptainer.conf is managed
+          elsewhere, NOT by this repo. Ensure 'allow setuid = no' (and 'allow
+          setuid-mount squashfs = no') is set there so the runtime uses unprivileged
+          user namespaces and never the setuid flow.
