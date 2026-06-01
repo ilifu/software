@@ -35,7 +35,7 @@
               file:
                 path: "{{ singularity_dir }}"
                 state: directory
-                mode: o=rwx,g=rx,o=rx
+                mode: u=rwx,g=rx,o=rx
             - name: Configure singularity
               command: "./mconfig --prefix={{ install_dir }} --localstatedir={{ install_dir }}/var --sysconfdir={{ install_dir }}/etc --without-suid{% if version_number is version('3.10', '>=') %} --without-seccomp{% endif %}{% if version_number is version('3.10', '>=') and version_number is version('4.3', '<') %} --without-conmon{% endif %}"
               args:
@@ -77,7 +77,7 @@
               file:
                 path: "{{ singularity_dir }}"
                 state: directory
-                mode: o=rwx,g=rx,o=rx
+                mode: u=rwx,g=rx,o=rx
             - name: Configure singularity (non-go)
               command: "./configure --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir=/usr/local/etc"
               args:
