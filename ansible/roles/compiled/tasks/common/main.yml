@@ -820,6 +820,12 @@
   vars:
     singularity_versions:
       - {
+        version_number: "4.4.2",
+        checksum: "sha256:024edf273f1fa5de9525a7052989eacfd112f7c582726f60cbcbaba9f21d0f96",
+        url: "https://github.com/sylabs/singularity/releases/download/v4.4.2/singularity-ce-4.4.2.tar.gz",
+        go_location: "{{ common_dir }}/golang/1.25.10/bin"
+      }
+      - {
         version_number: "4.4.1",
         checksum: "sha256:5e0611d5e85d471e0a1dcfeef2c4e3bf01a6019bb7bfca10d955cd6c08853417",
         url: "https://github.com/sylabs/singularity/releases/download/v4.4.1/singularity-ce-4.4.1.tar.gz",
