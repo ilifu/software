@@ -442,7 +442,17 @@
     - mpich
 
 
-- name: Install pythons
+- name: Install uv
+  include_tasks:
+    file: uv.yaml
+  tags:
+    - never
+    - uv
+
+# These Pythons have no python-build-standalone build available (all of 2.7 / 3.6 /
+# 3.7, plus a few odd 3.10/3.11 patch releases), so they are still compiled from
+# source. Everything else 3.8+ is installed via uv (see below).
+- name: Install pythons without standalone builds (compiled from source)
   vars:
     python_versions:
       - {
@@ -466,132 +476,57 @@
         checksum: "md5:dd94cab4541b57b88cf3dab32d6336e3"
       }
       - {
-        version_number: "3.8.2",
-        checksum: "sha256:2646e7dc233362f59714c6193017bb2d6f7b38d6ab4a0cb5fbac5c36c4d845df"
-      }
-      - {
-        version_number: "3.8.3",
-        checksum: "sha256:dfab5ec723c218082fe3d5d7ae17ecbdebffa9a1aea4d64aa3a2ecdd2e795864"
-      }
-      - {
-        version_number: "3.8.6",
-        checksum: "sha256:a9e0b79d27aa056eb9cce8d63a427b5f9bab1465dee3f942dcfdb25a82f4ab8a"
-      }
-      - {
-        version_number: "3.8.16",
-        checksum: "md5:621ac153586a3152e2ab7d3a8614df9a"
-      }
-      - {
-        version_number: "3.9.0",
-        checksum: "sha256:9c73e63c99855709b9be0b3cc9e5b072cb60f37311e8c4e50f15576a0bf82854"
-      }
-      - {
-        version_number: "3.9.4",
-        checksum: "sha256:4b0e6644a76f8df864ae24ac500a51bbf68bd098f6a173e27d3b61cdca9aa134"
-      }
-      - {
-        version_number: "3.9.7",
-        checksum: "sha256:f8145616e68c00041d1a6399b76387390388f8359581abc24432bb969b5e3c57"
-      }
-      - {
-        version_number: "3.9.12",
-        checksum: "sha256:2cd94b20670e4159c6d9ab57f91dbf255b97d8c1a1451d1c35f4ec1968adf971"
-      }
-      - {
-        version_number: "3.9.16",
-        checksum: "md5:5738c204eecc375e29751cb2176fc9cc"
-      }
-      - {
-        version_number: "3.9.19",
-        checksum: "md5:87d0f8281237b972ff8b23e0e2c8d325"
-      }
-      - {
-        version_number: "3.9.21",
-        checksum: "md5:e8ab0f9a295f12428310f409abd79e9c"
-      }
-      - {
-        version_number: "3.10.0",
-        checksum: "md5:3e7035d272680f80e3ce4e8eb492d580"
-      }
-      - {
         version_number: "3.10.1",
         checksum: "md5:789210934745a65247a3ebf5da9adb64"
-      }
-      - {
-        version_number: "3.10.4",
-        checksum: "sha256:80bf925f571da436b35210886cf79f6eb5fa5d6c571316b73568343451f77a19"
-      }
-      - {
-        version_number: "3.10.9",
-        checksum: "md5:dc8c0f274b28ee9e95923d20cfc364c9"
-      }
-      - {
-        version_number: "3.10.14",
-        checksum: "md5:05148354ce821ba7369e5b7958435400"
-      }
-      - {
-        version_number: "3.10.16",
-        checksum: "md5:97b3ee1740f32a92905dd0a99dcb04d5"
       }
       - {
         version_number: "3.11.0",
         checksum: "md5:fe92acfa0db9b9f5044958edb451d463"
       }
       - {
-        version_number: "3.11.1",
-        checksum: "md5:4efe92adf28875c77d3b9b2e8d3bc44a"
-      }
-      - {
         version_number: "3.11.2",
         checksum: "md5:a957cffb58a89303b62124896881950b"
       }
-      - {
-          version_number: "3.11.7",
-          checksum: "md5:d96c7e134c35a8c46236f8a0e566b69c",
-      }
-      - {
-        version_number: "3.11.9",
-        checksum: "md5:22ea467e7d915477152e99d5da856ddc",
-      }
-      - {
-        version_number: "3.11.11",
-        checksum: "md5:3e497037b170fe4be5f462c4964596f2",
-      }
-      - {
-          version_number: "3.12.0",
-          checksum: "md5:f6f4616584b23254d165f4db90c247d6"
-      }
-      - {
-          version_number: "3.12.1",
-          checksum: "md5:50f827c800483776c8ef86e6a53831fa"
-      }
-      - {
-        version_number: "3.12.3",
-        checksum: "md5:8defb33f0c37aa4bdd3a38ba52abde4e"
-      }
-      - {
-        version_number: "3.12.8",
-        checksum: "md5:d46e5bf9f2e596a3ba45fc0b3c053dd2"
-      }
-      - {
-        version_number: "3.12.9",
-        checksum: "md5:880942124f7d5c01e7b65cbad62dc873"
-      }
-      - {
-        version_number: "3.13.2",
-        checksum: "md5:4c2d9202ab4db02c9d0999b14655dfe5"
-      }
-    pip_packages:
-      - ansible
-      - pip
-      - pipenv
-      - ipython
-      - ipykernel
-      - ldap3
-      - uv
-      - virtualenv
   include_tasks:
     file: python.yaml
+  loop: "{{ python_versions }}"
+  tags:
+    - never
+    - python
+
+# uv fetches prebuilt standalone interpreters; no per-version checksum needed as
+# uv verifies its own downloads.
+- name: Install pythons (uv)
+  vars:
+    python_versions:
+      - { version_number: "3.8.2" }
+      - { version_number: "3.8.3" }
+      - { version_number: "3.8.6" }
+      - { version_number: "3.8.16" }
+      - { version_number: "3.9.0" }
+      - { version_number: "3.9.4" }
+      - { version_number: "3.9.7" }
+      - { version_number: "3.9.12" }
+      - { version_number: "3.9.16" }
+      - { version_number: "3.9.19" }
+      - { version_number: "3.9.21" }
+      - { version_number: "3.10.0" }
+      - { version_number: "3.10.4" }
+      - { version_number: "3.10.9" }
+      - { version_number: "3.10.14" }
+      - { version_number: "3.10.16" }
+      - { version_number: "3.11.1" }
+      - { version_number: "3.11.7" }
+      - { version_number: "3.11.9" }
+      - { version_number: "3.11.11" }
+      - { version_number: "3.12.0" }
+      - { version_number: "3.12.1" }
+      - { version_number: "3.12.3" }
+      - { version_number: "3.12.8" }
+      - { version_number: "3.12.9" }
+      - { version_number: "3.13.2" }
+  include_tasks:
+    file: python_uv.yaml
   loop: "{{ python_versions }}"
   tags:
     - never
