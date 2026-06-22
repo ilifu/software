@@ -42,8 +42,13 @@
                 path: "{{ apptainer_dir }}"
                 state: directory
                 mode: u=rwx,g=rx,o=rx
+            # localstatedir lives under install_dir on purpose: it holds only empty
+            # mount-point stubs (<1 MiB), written only at `make install` and never at
+            # runtime (the runtime mounts over the stubs). This keeps the install
+            # sudo-free and lets install_dir be mounted/chmod'd read-only.
+            # Do NOT move it back to /usr/local/var.
             - name: Configure apptainer
-              command: "./mconfig --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir={{ install_dir }}/etc --with-suid"
+              command: "./mconfig --prefix={{ install_dir }} --localstatedir={{ install_dir }}/var --sysconfdir={{ install_dir }}/etc --without-suid"
               args:
                 chdir: "{{ unzip_dir }}"
                 creates: "{{ unzip_dir }}/builddir/Makefile"
@@ -59,7 +64,6 @@
               make:
                 chdir: "{{ unzip_dir }}/builddir"
                 target: install
-              become: true
 
     - name: Install apptainer {{ version_number }} module
       block:
@@ -73,22 +77,11 @@
             src: common/apptainer.lua
             dest: "{{ apptainer_module_dir }}/{{ version_number }}.lua"
 
-    - name: Configure apptainer {{ version_number }}
-      block:
-        - name: Ensure apptainer config directory exists
-          file:
-            path: "{{ install_dir }}/etc/apptainer"
-            state: directory
-            mode: u=rwx,g=rx,o=rx
-            owner: root
-            group: root
-          become: true
-        - name: Deploy apptainer configuration file
-          template:
-            src: common/apptainer.conf
-            dest: "{{ install_dir }}/etc/apptainer/apptainer.conf"
-            mode: u=rw,g=r,o=r
-            owner: root
-            group: root
-            backup: yes
-          become: true
+    - name: Reminder to disable setuid in apptainer.conf
+      ansible.builtin.debug:
+        msg: >-
+          Apptainer {{ version_number }} built --without-suid into {{ install_dir }}.
+          The config file {{ install_dir }}/etc/apptainer/apptainer.conf is managed
+          elsewhere, NOT by this repo. Ensure 'allow setuid = no' (and 'allow
+          setuid-mount squashfs = no') is set there so the runtime uses unprivileged
+          user namespaces and never the setuid flow.
