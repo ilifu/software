@@ -25,13 +25,13 @@ python_dir: "{{ common_dir }}/python"
 
 # uv — Python version/package manager. Bootstrapped into the shared tree so the
 # playbook works on hosts without uv preinstalled, and exposed as the python/uv module.
-uv_version: "0.11.18"
+uv_version: "0.11.23"
 uv_dir: "{{ common_dir }}/uv"
 uv: "{{ uv_dir }}/{{ uv_version }}/bin/uv"
 uv_arch: "{{ ansible_architecture }}"   # x86_64 / aarch64
 uv_checksums:
-  x86_64: "sha256:588f3e360f69ce02b6982aa99f2240e803933a6b7e176ac01617830adf955add"
-  aarch64: "sha256:0f03c6648df1c159557f4222c0f37250f84733fb88d6fc3c16770e17c177a8c9"
+  x86_64: "sha256:e12c4cda2fe8c305510a78380a88f2c32a27e90cdcd123cefd2873388f0ebb5f"
+  aarch64: "sha256:1873a77350f6621279ae1a0d2227f2bd8b67131598f14a7eb0ba2215d3da2c98"
 
 # Packages installed into every Python interpreter (compiled and uv-based)
 pip_packages:
