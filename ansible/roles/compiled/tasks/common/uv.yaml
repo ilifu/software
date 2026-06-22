@@ -1,0 +1,54 @@
+---
+- name: Install uv {{ uv_version }}
+  vars:
+    uv_install_dir: "{{ uv_dir }}/{{ uv_version }}"
+    uv_bin_dir: "{{ uv_install_dir }}/bin"
+    uv_module_dir: "{{ common_modules }}/python"
+    uv_tarball: "uv-{{ uv_arch }}-unknown-linux-gnu.tar.gz"
+    uv_url: "https://github.com/astral-sh/uv/releases/download/{{ uv_version }}/uv-{{ uv_arch }}-unknown-linux-gnu.tar.gz"
+  tags:
+    - never
+    - uv
+  block:
+    - name: Check if uv binary already exists
+      stat:
+        path: "{{ uv }}"
+      register: uv_binary
+
+    - name: Download and install uv {{ uv_version }}
+      when: not uv_binary.stat.exists
+      block:
+        - name: Make uv bin directory {{ uv_bin_dir }}
+          file:
+            path: "{{ uv_bin_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+
+        - name: Download uv {{ uv_version }} from {{ uv_url }}
+          get_url:
+            url: "{{ uv_url }}"
+            dest: "{{ common_src }}/{{ uv_tarball }}"
+            checksum: "{{ uv_checksums[uv_arch] }}"
+
+        - name: Unpack uv {{ uv_version }} into {{ uv_bin_dir }}
+          unarchive:
+            src: "{{ common_src }}/{{ uv_tarball }}"
+            dest: "{{ uv_bin_dir }}"
+            extra_opts:
+              - --strip-components=1
+            creates: "{{ uv }}"
+
+        - name: Make uv {{ uv_version }} readable and executable by all users
+          command: "chmod -R a+rX {{ uv_install_dir }}"
+
+    - name: Check uv module dir {{ uv_module_dir }} exists
+      file:
+        path: "{{ uv_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+
+    - name: Install uv module file to {{ uv_module_dir }}/uv.lua
+      template:
+        src: common/uv.lua
+        dest: "{{ uv_module_dir }}/uv.lua"
+        mode: u=rw,g=rw,o=r

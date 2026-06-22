@@ -1,0 +1,72 @@
+---
+- name: Install Python {{ item.version_number }} (uv)
+  vars:
+    python_module_dir: "{{ common_modules }}/python"
+    version_number: "{{ item.version_number }}"
+    major: "{{ version_number.split('.')[0] }}"
+    major_minor: "{{ version_number.split('.')[0] }}.{{ version_number.split('.')[1] }}"
+    install_dir: "{{ python_dir }}/{{ version_number }}"
+    cpython_dir: "{{ python_dir }}/cpython-{{ version_number }}-linux-{{ uv_arch }}-gnu"
+  tags:
+    - never
+    - python{{ item.version_number }}
+  block:
+    - name: Ensure uv is installed at {{ uv }}
+      stat:
+        path: "{{ uv }}"
+      register: uv_binary
+
+    - name: Fail if uv is missing
+      fail:
+        msg: "uv not found at {{ uv }} — run the playbook with -t uv first."
+      when: not uv_binary.stat.exists
+
+    - name: Check if python {{ version_number }} already exists
+      stat:
+        path: "{{ install_dir }}/bin/python"
+      register: python_binary
+
+    - name: Download and install Python {{ version_number }} with uv
+      when: not python_binary.stat.exists
+      environment:
+        UV_PYTHON_INSTALL_DIR: "{{ python_dir }}"
+      block:
+        - name: Make python directory {{ python_dir }}
+          file:
+            path: "{{ python_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+
+        - name: Install Python {{ version_number }} standalone build
+          command: "{{ uv }} python install {{ version_number }}"
+          args:
+            creates: "{{ cpython_dir }}/bin/python"
+
+        - name: Symlink {{ install_dir }} to {{ cpython_dir }}
+          file:
+            src: "{{ cpython_dir }}"
+            dest: "{{ install_dir }}"
+            state: link
+
+        - name: Install python packages into Python {{ version_number }}
+          command: "{{ uv }} pip install --python {{ install_dir }}/bin/python --break-system-packages {{ pip_packages | join(' ') }}"
+
+        - name: Make Python {{ version_number }} readable and executable by all users
+          command: "chmod -R a+rX {{ cpython_dir }}"
+
+    - name: Check python module dir {{ python_module_dir }} exists
+      file:
+        path: "{{ python_module_dir }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+
+    - name: Install Python module file to {{ python_module_dir }}/{{ version_number }}.lua
+      template:
+        src: common/python.lua
+        dest: "{{ python_module_dir }}/{{ version_number }}.lua"
+
+    - name: Update jupyter kernel.json file
+      template:
+        src: common/python.kernel.json
+        dest: "{{ install_dir }}/share/jupyter/kernels/python{{ major }}/kernel.json"
+        mode: u=rw,g=rw,o=r
