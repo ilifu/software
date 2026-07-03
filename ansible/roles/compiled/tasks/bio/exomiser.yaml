@@ -56,7 +56,7 @@
             dest: "{{ exomiser_module_dir }}/{{ version_number }}.lua"
             mode: u=rw,g=r,o=r
 
-- name: Install exomiser data to /exomiser/data {{ bio_dir }}
+- name: Install exomiser data to {{ bio_dir }}/exomiser/data
   vars:
     exomiser_dir: "{{ bio_dir }}/exomiser"
     exomiser_data_dir: "{{ exomiser_dir }}/data"

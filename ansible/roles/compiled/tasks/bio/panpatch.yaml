@@ -11,7 +11,7 @@
     - never
     - panpatch{{ item.version_number }}
   block:
-    - name: "Ensure panpatch dir ' ' exists {{ install_dir }}"
+    - name: "Ensure panpatch dir '{{ install_dir }}' exists"
       ansible.builtin.file:
         path: "{{ install_dir }}"
         state: directory

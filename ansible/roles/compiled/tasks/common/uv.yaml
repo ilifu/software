@@ -47,8 +47,8 @@
         state: directory
         mode: u=rwx,g=rwx,o=rx
 
-    - name: Install uv module file to /uv.lua {{ uv_module_dir }}
+    - name: Install uv module file to {{ uv_module_dir }}/uv.lua
       ansible.builtin.template:
         src: common/uv.lua
         dest: "{{ uv_module_dir }}/uv.lua"
-        mode: u=rw,g=rw,o=r
+        mode: u=rw,g=r,o=r

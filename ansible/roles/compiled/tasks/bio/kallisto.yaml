@@ -31,7 +31,7 @@
         dest: "/dev/shm"
         remote_src: true
         creates: "{{ unarchive_dir }}"
-    - name: Create build directory /build {{ unarchive_dir }}
+    - name: Create build directory {{ unarchive_dir }}/build
       ansible.builtin.file:
         path: "{{ unarchive_dir }}/build"
         state: directory

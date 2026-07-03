@@ -26,7 +26,7 @@
         dest: "/dev/shm"
         remote_src: true
         creates: "{{ uncompress_dir }}"
-    - name: "Ensure Trimmomatic dir ' ' exists {{ trimmomatic_dir }}"
+    - name: "Ensure Trimmomatic dir '{{ trimmomatic_dir }}' exists"
       ansible.builtin.file:
         path: "{{ trimmomatic_dir }}"
         state: directory

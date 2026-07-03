@@ -12,7 +12,7 @@
   block:
     - name: Download, and install homebrew {{ major_minor }}
       block:
-        - name: Download homebrew tarball to /homebrew.2.4.13.tar.gz {{ common_src }}
+        - name: Download homebrew tarball to {{ common_src }}/homebrew.2.4.13.tar.gz
           ansible.builtin.get_url:
             url: "{{ homebrew_url }}"
             dest: "{{ common_src }}/homebrew.2.4.13.tar.gz"
@@ -49,24 +49,24 @@
           with_items: "{{ software_list }}"
         - name: Install treePL module
           block:
-            - name: "Check treePL module dir /treePL {{ bio_modules }}"
+            - name: "Check treePL module dir {{ bio_modules }}/treePL"
               ansible.builtin.file:
                 path: "{{ bio_modules }}/treePL"
                 state: directory
                 mode: u=rwx,g=rwx,o=rx
-            - name: "Install treePL module file to /treePL {{ bio_modules }}"
+            - name: "Install treePL module file to {{ bio_modules }}/treePL"
               ansible.builtin.template:
                 src: homebrew.lua
                 dest: "{{ bio_modules }}/treePL/homebrew.lua"
                 mode: u=rw,g=r,o=r
         - name: Install vcflib module
           block:
-            - name: "Check vcflib module dir /vcflib {{ bio_modules }}"
+            - name: "Check vcflib module dir {{ bio_modules }}/vcflib"
               ansible.builtin.file:
                 path: "{{ bio_modules }}/vcflib"
                 state: directory
                 mode: u=rwx,g=rwx,o=rx
-            - name: "Install vcflib module file to /vcflib {{ bio_modules }}"
+            - name: "Install vcflib module file to {{ bio_modules }}/vcflib"
               ansible.builtin.template:
                 src: homebrew.lua
                 dest: "{{ bio_modules }}/vcflib/homebrew.lua"

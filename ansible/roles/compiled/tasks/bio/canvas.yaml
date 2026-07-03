@@ -39,7 +39,7 @@
           ansible.builtin.file:
             path: "{{ canvas_dir }}"
             state: directory
-            mode: u=wrx,g=rwx,o=rx
+            mode: u=rwx,g=rwx,o=rx
         - name: Move {{ unzip_dir }} to {{ install_dir }}
           ansible.builtin.command: "mv {{ unzip_dir }} {{ install_dir }}"
     - name: Install Canvas module {{ version_number }}

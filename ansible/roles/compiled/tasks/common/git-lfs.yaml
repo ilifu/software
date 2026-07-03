@@ -29,7 +29,7 @@
         src: "{{ common_src }}/git-lfs-{{ version_number }}.tar.gz"
         dest: "/dev/shm/"
         creates: "{{ unzipdir }}"
-    - name: Ensure git-lfs dir " " exists {{ git_lfs_dir }}
+    - name: Ensure git-lfs dir "{{ git_lfs_dir }}" exists
       when: not git_lfs_installed.stat.exists
       ansible.builtin.file:
         path: "{{ git_lfs_dir }}"

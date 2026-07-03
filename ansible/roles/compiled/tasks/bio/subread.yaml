@@ -14,7 +14,7 @@
     - never
     - subread{{ item.version_number }}
   block:
-    - name: Ensure subread installation dir " " exists {{ install_dir }}
+    - name: Ensure subread installation dir "{{ install_dir }}" exists
       ansible.builtin.file:
         path: "{{ subread_dir }}"
         state: directory

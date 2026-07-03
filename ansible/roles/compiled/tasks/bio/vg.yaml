@@ -11,7 +11,7 @@
     - never
     - vg{{ item.version_number }}
   block:
-    - name: "Ensure vg dir ' ' exists {{ install_dir }}"
+    - name: "Ensure vg dir '{{ install_dir }}' exists"
       ansible.builtin.file:
         path: "{{ install_dir }}"
         state: directory
