@@ -54,3 +54,38 @@ ansible-playbook site.yaml -t ubuntu,ubuntu-noble   # base container
 ## Key config
 
 `ansible/group_vars/all` — single source of truth for all paths (`software_root`, category dirs, modules dirs, `singularity` binary path, `admin_group`).
+
+## Linting & CI
+
+Two linters gate the repo; **run both from `ansible/`** so `ansible.cfg` gives
+module/role context and the local `.yamllint` / `.ansible-lint` are discovered:
+
+```bash
+cd ansible
+uv run yamllint .
+uv run ansible-lint        # target profile: production
+```
+
+- **yamllint** (`ansible/.yamllint`) owns YAML validity/style. A PostToolUse hook
+  (`.claude/hooks/lint-yaml.sh`) runs it automatically on every edited
+  `ansible/**/*.y*ml`, so YAML breakage surfaces immediately.
+- **ansible-lint** (`ansible/.ansible-lint`, `production` profile) owns Ansible
+  semantics. Its `skip_list` documents every deliberately-deferred rule
+  (var-naming, multi-template task names, and build-from-source patterns —
+  `no-changed-when`, `command-instead-of-*`, `latest[git]`, `no-handler`).
+  Tighten the profile by emptying that list, never by silencing inline.
+- **CI** (`.github/workflows/lint.yml`) runs the exact same two commands on push/PR.
+- The **`/lint`** skill runs and explains the checks; **`/add-software`** scaffolds
+  a new package end-to-end following the conventions below.
+
+### Conventions the linters enforce
+
+- **Checksums mandatory** on every download (`checksum: "sha256:..."`).
+- **FQCN** for all modules (`ansible.builtin.get_url`, `community.general.make`).
+- **File modes symbolic, never octal**: dirs `u=rwx,g=rwx,o=rx`, source/data files
+  `u=rw,g=r,o=r`, and `mode: preserve` when copying prebuilt binaries (octal like
+  `0644` is a YAML footgun — parsed as a number, wrong permissions).
+- **Block-style** version dicts (`key: val`), not flow (`{ key: val }`). A task
+  `vars:` must be a **mapping, not a list**.
+- Unpack into **`/dev/shm`**; use **`creates:`** on build commands for idempotency.
+- Keep any Jinja template at the **end** of a task `name:`.
