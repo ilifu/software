@@ -1,3 +1,4 @@
+---
 - name: Create GATK container
   vars:
     docker_source: "{{ item.docker_source }}"
@@ -11,37 +12,38 @@
     - "gatk_container{{ item.version_number }}"
     - never
   block:
-    - name: Create GATK {{ version_number }} container
+    - name: Create GATK container {{ version_number }}
       block:
         - name: Copy recipe  {{ container_recipe }}
-          template:
+          ansible.builtin.template:
             src: "bio/gatk.def"
             dest: "{{ container_recipe }}"
+            mode: u=rw,g=r,o=r
         - name: Build container {{ container_image }}
-          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: true
         - name: Ensure gatk binary directory exists
-          file:
+          ansible.builtin.file:
             path: "{{ gatk_binary_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Create gatk binary
-          template:
+          ansible.builtin.template:
             src: "gatk.sh"
             dest: "{{ gatk_binary_dir }}/gatk"
-            mode: 0755
+            mode: u=rwx,g=rx,o=rx
 
-
-    - name: Install GATK {{ container_name }} module
+    - name: Install GATK module {{ container_name }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ GATK_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install GATK module file
-          template:
+          ansible.builtin.template:
             src: bio/gatk.lua
             dest: "{{ GATK_module_dir }}/{{ container_name }}.lua"
+            mode: u=rw,g=r,o=r

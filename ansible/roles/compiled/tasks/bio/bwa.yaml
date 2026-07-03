@@ -15,33 +15,34 @@
     - name: Download and install bwa ({{ version_number }})
       block:
         - name: Clone bwa {{ version_number }} from {{ repo }}
-          git:
+          ansible.builtin.git:
             repo: "{{ repo }}"
             dest: "{{ unzip_dir }}"
-            force: yes
+            force: true
         - name: Ensure bwa dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ install_dir }}"
             state: directory
-            recurse: yes
+            recurse: true
         - name: Make bwa {{ version_number }}
-          make:
+          community.general.make:
             chdir: "{{ unzip_dir }}"
           environment:
             MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
         - name: "Copy bwa and bwakit to {{ install_dir }}"
-          command: "mv {{ unzip_dir }}/bwa {{ unzip_dir }}/bwakit {{ install_dir }}"
+          ansible.builtin.command: "mv {{ unzip_dir }}/bwa {{ unzip_dir }}/bwakit {{ install_dir }}"
           args:
             creates: "{{ install_dir }}/bwa"
 
-    - name: Install bwa {{ version_number }} module
+    - name: Install bwa module {{ version_number }}
       block:
         - name: Check module dir {{ bwa_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ bwa_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install bwa {{ version_number }} module file
-          template:
+        - name: Install bwa module file {{ version_number }}
+          ansible.builtin.template:
             src: bwa.lua
             dest: "{{ bwa_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

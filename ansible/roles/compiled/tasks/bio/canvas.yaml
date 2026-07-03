@@ -1,6 +1,6 @@
 ---
-- name: debug canvas…
-  debug:
+- name: Debug canvas…
+  ansible.builtin.debug:
     msg: "Note tag: canvas{{ item.version_number }}"
 
 - name: Install Canvas {{ item.version_number }}
@@ -18,37 +18,39 @@
 
   block:
     - name: Check if canvas already installed
-      stat: path="{{ install_dir }}"
+      ansible.builtin.stat:
+        path: "{{ install_dir }}"
       register: canvas_stat
     - name: Download and install Canvas {{ version_number }}
       when: not canvas_stat.stat.exists
       block:
         - name: Download Canvas {{ version_number }} from {{ url }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{ bio_src }}/Canvas-{{ version_number }}.tar.gz"
             checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Unzip Canvas {{ version_number }}
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ bio_src }}/Canvas-{{ version_number }}.tar.gz"
             dest: "/dev/shm"
             creates: "{{ unzip_dir }}"
-        - name: Check {{ canvas_dir }} directory
-          file:
+        - name: Check directory {{ canvas_dir }}
+          ansible.builtin.file:
             path: "{{ canvas_dir }}"
             state: directory
-            mode: u=wrx,g=rwx,o=rx
+            mode: u=rwx,g=rwx,o=rx
         - name: Move {{ unzip_dir }} to {{ install_dir }}
-          command: "mv {{ unzip_dir }} {{ install_dir }}"
-
-    - name: Install Canvas {{ version_number }} module
+          ansible.builtin.command: "mv {{ unzip_dir }} {{ install_dir }}"
+    - name: Install Canvas module {{ version_number }}
       block:
-        - name: Check {{ canvas_module_dir }} dir
-          file:
+        - name: Check dir {{ canvas_module_dir }}
+          ansible.builtin.file:
             path: "{{ canvas_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install Canvas module file
-          template:
+          ansible.builtin.template:
             src: canvas.lua
             dest: "{{ canvas_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

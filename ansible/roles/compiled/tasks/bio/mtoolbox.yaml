@@ -16,36 +16,39 @@
     - name: Download and install mtoolbox {{ version_number }}
       block:
         - name: Download mtoolbox {{ version_number }} from {{ url }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{ bio_dir }}/src//mtoolbox-{{ version_number }}.tar.gz"
             checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Ensure mtoolbox dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ mtoolbox_dir }}"
             state: directory
+            mode: u=rwx,g=rwx,o=rx
         - name: Uncompress mtoolbox to {{ unzip_dir }}
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{  bio_dir }}/src/mtoolbox-{{ version_number }}.tar.gz"
             dest: "/dev/shm"
             creates: "{{ unzip_dir }}"
         - name: Move uncompressed mtoolbox from {{ unzip_dir }} to {{ install_dir }}
-          command: "mv {{ unzip_dir }} {{ install_dir }}"
+          ansible.builtin.command: "mv {{ unzip_dir }} {{ install_dir }}"
           args:
             creates: "{{ install_dir }}"
-        - name: Run mtoolbox {{ version_number }} installation
-          command: "./install.sh"
+        - name: Run mtoolbox installation {{ version_number }}
+          ansible.builtin.command: "./install.sh"
           args:
             creates: "{{ install_dir }}/MToolBox/setup.sh"
 
-    - name: Install mtoolbox {{ version_number }} module
+    - name: Install mtoolbox module {{ version_number }}
       block:
         - name: Check module dir {{ mtoolbox_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ mtoolbox_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install mtoolbox {{ version_number }} module file
-          template:
+        - name: Install mtoolbox module file {{ version_number }}
+          ansible.builtin.template:
             src: mtoolbox.lua
             dest: "{{ mtoolbox_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

@@ -16,41 +16,44 @@
     - name: Download and install samtools {{ version_number }}
       block:
         - name: Download samtools {{ version_number }} from {{ url }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{  bio_dir }}/src//samtools.tar.bz2"
             checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Ensure samtools dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ samtools_dir }}"
             state: directory
+            mode: u=rwx,g=rwx,o=rx
         - name: Uncompress samtools to {{ unzip_dir }}
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{  bio_dir }}/src/samtools.tar.bz2"
             dest: "/dev/shm"
             creates: "{{ unzip_dir }}"
-        - name: Run samtools {{ version_number }} configure
-          command: "./configure --prefix={{ install_dir }}"
+        - name: Run samtools configure {{ version_number }}
+          ansible.builtin.command: "./configure --prefix={{ install_dir }}"
           args:
             chdir: "{{ unzip_dir }}"
         - name: Make samtools {{ version_number }}
-          make:
+          community.general.make:
             chdir: "{{ unzip_dir }}"
           environment:
             MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
         - name: Install samtools {{ version_number }} to {{ install_dir }}
-          make:
+          community.general.make:
             chdir: "{{ unzip_dir }}"
             target: "install"
 
-    - name: Install samtools {{ version_number }} module
+    - name: Install samtools module {{ version_number }}
       block:
         - name: Check module dir {{ samtools_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ samtools_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install samtools {{ version_number }} module file
-          template:
+        - name: Install samtools module file {{ version_number }}
+          ansible.builtin.template:
             src: samtools.lua
             dest: "{{ samtools_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

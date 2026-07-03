@@ -11,22 +11,23 @@
     - perl{{ item.version_number }}
 
   block:
-    - name: Install perl {{ version_number }} using perlbrew
-      command: "/bin/bash -c 'module add perlbrew && perlbrew install -j {{ ansible_processor_vcpus }} perl-{{ version_number }}'"
+    - name: Install perl using perlbrew {{ version_number }}
+      ansible.builtin.command: "/bin/bash -c 'module add perlbrew && perlbrew install -j {{ ansible_processor_vcpus }} perl-{{ version_number }}'"
       args:
         creates: "{{ install_dir }}"
 
     - name: Install perl module
       block:
         - name: Check module dir {{ perl_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ perl_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install perl module file to {{ perl_module_dir }}
-          template:
+          ansible.builtin.template:
             src: perl.lua
             dest: "{{ perl_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r
 
     - name: Install cpan modules
-      command: "/bin/bash -c 'module add perl/{{ version_number }} && module add htslib && cpan {{ ' '.join(cpan_modules) }}'"
+      ansible.builtin.command: "/bin/bash -c 'module add perl/{{ version_number }} && module add htslib && cpan {{ ' '.join(cpan_modules) }}'"

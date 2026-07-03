@@ -1,3 +1,4 @@
+---
 - name: Install zstd
   vars:
     zstd_dir: "{{ common_dir }}/zstd"
@@ -13,35 +14,37 @@
     - zstd{{ item.version_number }}
   block:
     - name: Download zstd {{ version_number }}
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ common_src }}/zstd-{{ version_number }}.tar.gz"
         checksum: "{{ checksum }}"
+        mode: u=rw,g=r,o=r
     - name: Unzip zstd {{ version_number }}
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ common_src }}/zstd-{{ version_number }}.tar.gz"
         dest: "/dev/shm/"
         creates: "{{ unzipdir }}"
     - name: Build zstd {{ version_number }}
-      make:
+      community.general.make:
         chdir: "{{ unzipdir }}"
       environment:
         MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
     - name: Install zstd {{ version_number }}
-      make:
+      community.general.make:
         chdir: "{{ unzipdir }}"
         target: install
       environment:
         DESTDIR: "{{ install_dir }}"
 
-    - name: Install zstd {{ version_number }} module
+    - name: Install zstd module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ zstd_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install zstd module file
-          template:
+          ansible.builtin.template:
             src: zstd.lua
             dest: "{{ zstd_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

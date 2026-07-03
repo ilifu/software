@@ -14,32 +14,33 @@
   block:
     - name: Download and install dorado ({{ version_number }})
       block:
-        - name: Download dorado {{ version_number }} source
-          get_url:
-              url: "{{ url }}"
-              dest: "{{ bio_src }}/dorado-{{ version_number }}.tar.gz"
-              mode: "ug=rwx,o=rx"
-              checksum: "{{ checksum }}"
-        - name: Ensure dorado dir exists {{ dorado_dir }} exists
-          file:
+        - name: Download dorado source {{ version_number }}
+          ansible.builtin.get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/dorado-{{ version_number }}.tar.gz"
+            mode: "ug=rwx,o=rx"
+            checksum: "{{ checksum }}"
+        - name: Ensure dorado dir exists {{ dorado_dir }}
+          ansible.builtin.file:
             path: "{{ dorado_dir }}"
             state: directory
-            recurse: yes
+            recurse: true
         - name: Uncompress dorado
-          unarchive:
-              src: "{{ bio_src }}/dorado-{{ version_number }}.tar.gz"
-              dest: "{{ dorado_dir }}"
-              remote_src: yes
-              creates: "{{ install_dir }}"
+          ansible.builtin.unarchive:
+            src: "{{ bio_src }}/dorado-{{ version_number }}.tar.gz"
+            dest: "{{ dorado_dir }}"
+            remote_src: true
+            creates: "{{ install_dir }}"
 
-    - name: Install dorado {{ version_number }} module
+    - name: Install dorado module {{ version_number }}
       block:
         - name: Check module dir {{ dorado_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ dorado_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install dorado module file
-          template:
+          ansible.builtin.template:
             src: dorado.lua
             dest: "{{ dorado_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

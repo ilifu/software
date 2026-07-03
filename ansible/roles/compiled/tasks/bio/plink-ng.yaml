@@ -17,27 +17,30 @@
     - name: Download, compile and install PLINK {{ version_number }}
       block:
         - name: Download PLINK {{ version_number }} from {{ plink_url }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ plink_url }}"
             dest: "{{ bio_src }}/plink2_linux_x86_64.{{ version_number }}.zip"
             checksum: "sha256:{{ checksum }}"
-        - name: Ensure PLINK directory {{ install_dir }} exists
-          file:
+            mode: u=rw,g=r,o=r
+        - name: Ensure PLINK directory exists {{ install_dir }}
+          ansible.builtin.file:
             path: "{{ install_dir }}"
             state: directory
+            mode: u=rwx,g=rwx,o=rx
         - name: Unzip PLINK {{ version_number }}
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ bio_src }}/plink2_linux_x86_64.{{ version_number }}.zip"
             dest: "{{ install_dir }}/"
             creates: "{{ install_dir }}/plink2"
-    - name: Install plink {{ version_number }} module
+    - name: Install plink module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ plink_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install plink module file
-          template:
+          ansible.builtin.template:
             src: plink.lua
             dest: "{{ plink_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

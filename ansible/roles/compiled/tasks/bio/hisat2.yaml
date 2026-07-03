@@ -1,3 +1,4 @@
+---
 - name: Install HISAT2
   vars:
     hisat2_dir: "{{ bio_dir }}/hisat2"
@@ -16,34 +17,36 @@
         - name: Download and install HISAT2 {{ version_number }}
           block:
             - name: Download HISAT2 {{ version_number }}
-              get_url:
+              ansible.builtin.get_url:
                 url: "{{ url }}"
                 dest: "{{ bio_src }}/hisat2-{{ version_number }}.zip"
                 checksum: "{{ checksum }}"
+                mode: u=rw,g=r,o=r
             - name: Unzip HISAT2 {{ version_number }}
-              unarchive:
+              ansible.builtin.unarchive:
                 src: "{{ bio_src }}/hisat2-{{ version_number }}.zip"
                 dest: "/dev/shm"
                 creates: "{{ unzipdir }}"
             - name: Ensure hisat2 dir exists
-              file:
-                  path: "{{ hisat2_dir }}"
-                  state: directory
-                  mode: u=rwx,g=rx,o=rx
+              ansible.builtin.file:
+                path: "{{ hisat2_dir }}"
+                state: directory
+                mode: u=rwx,g=rx,o=rx
             - name: Move HISAT2 dir from {{ unzipdir }} to {{ install_dir }}
-              command:
+              ansible.builtin.command:
                 cmd: "mv {{ unzipdir }} {{ install_dir }}"
               args:
                 creates: "{{ install_dir }}"
 
-    - name: Install HISAT2 {{ version_number }} module
+    - name: Install HISAT2 module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ hisat2_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install hisat2 module file
-          template:
+          ansible.builtin.template:
             src: hisat2.lua
             dest: "{{ hisat2_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

@@ -1,35 +1,35 @@
 ---
 # tasks file for all
 - name: Initialise directory structure
-  become: no
+  become: false
+  tags:
+    - never
+    - init
   block:
     - name: Check common directories
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx,g+s
         group: "{{ admin_group }}"
         # recurse: yes
       loop:
-#        - "{{ software_root }}"
-#        - "{{ modules_dir }}"
-#        - "{{ astro_dir }}"
-#        - "{{ astro_container_dir }}"
+        #        - "{{ software_root }}"
+        #        - "{{ modules_dir }}"
+        #        - "{{ astro_dir }}"
+        #        - "{{ astro_container_dir }}"
         - "{{ astro_container_recipe_dir }}"
         - "{{ astro_src }}"
         - "{{ astro_modules }}"
         - "{{ astro_data_dir }}"
-#        - "{{ bio_dir }}"
-#        - "{{ bio_container_dir }}"
+        #        - "{{ bio_dir }}"
+        #        - "{{ bio_container_dir }}"
         - "{{ bio_container_recipe_dir }}"
         - "{{ bio_src }}"
         - "{{ bio_modules }}"
         - "{{ bio_data_dir }}"
-#        - "{{ common_dir }}"
+        #        - "{{ common_dir }}"
         - "{{ common_container_dir }}"
         - "{{ common_container_recipe_dir }}"
         - "{{ common_src }}"
         - "{{ common_modules }}"
-  tags:
-    - never
-    - init

@@ -14,35 +14,37 @@
     - hifiasm{{ item.version_number }}
   block:
     - name: Create hifiasm directory {{ install_dir }}
-      file:
+      ansible.builtin.file:
         path: "{{ install_dir }}"
         state: directory
         mode: "ug=rwx,o=rx"
         recurse: true
     - name: Download hifiasm
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ bio_src }}/hifiasm.{{ version_number }}.tar.gz"
         checksum: "{{ checksum }}"
+        mode: u=rw,g=r,o=r
     - name: Unzip hifiasm
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ bio_src }}/hifiasm.{{ version_number }}.tar.gz"
         dest: "/dev/shm"
         creates: "/dev/shm/hifiasm-{{ version_number }}"
     - name: Make Hifiasm
-      make:
+      community.general.make:
         chdir: "/dev/shm/hifiasm-{{ version_number }}"
     - name: Move hifiasm executable to install dir
-      command: "mv /dev/shm/hifiasm-{{ version_number }}/hifiasm {{ install_dir }}"
+      ansible.builtin.command: "mv /dev/shm/hifiasm-{{ version_number }}/hifiasm {{ install_dir }}"
       args:
         creates: "{{ install_dir }}/hifiasm"
 
     - name: "Create hifiasm module directory {{ hifiasm_module_dir }}"
-      file:
-          path: "{{ hifiasm_module_dir }}"
-          state: directory
-          mode: "ug=rwx,o=rx"
+      ansible.builtin.file:
+        path: "{{ hifiasm_module_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
     - name: "Install hifiasm module file"
-      template:
+      ansible.builtin.template:
         src: bio/hifiasm.lua
         dest: "{{ hifiasm_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

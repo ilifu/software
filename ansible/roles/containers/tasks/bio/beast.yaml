@@ -1,4 +1,5 @@
-- name: Create beast {{ item.beast_version }} container
+---
+- name: Create beast container {{ item.beast_version }}
   vars:
     beast_version: "{{ item.beast_version }}"
     beast_url: "{{ item.beast_url }}"
@@ -17,47 +18,51 @@
     - "beast{{ item.beast_version }}"
     - never
   block:
-    - name: "Check for existence of {{ base_container_image }} container"
-      stat:
+    - name: "Check for existence of container {{ base_container_image }}"
+      ansible.builtin.stat:
         path: "{{ base_container_image }}"
       register: base_container_exists
     - name: "Missing {{ base_container_image }}"
-      fail:
+      ansible.builtin.fail:
         msg: "The container {{ base_container_image }} is missing."
       when: not base_container_exists.stat.exists
-    - name: Create beast {{ beast_version }} container
+    - name: Create beast container {{ beast_version }}
       when: base_container_exists.stat.exists
       block:
         - name: Download beast {{ beast_version }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ beast_url }}"
             dest: "{{ bio_src }}/BEASTv{{ beast_version }}.tgz"
             checksum: "{{ beast_checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Download beagle {{ beagle_version }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ beagle_url }}"
             dest: "{{ bio_src }}/beagle_v{{ beagle_version }}.tar.gz"
             checksum: "{{ beagle_checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Copy recipe  {{ container_recipe }}
-          template:
+          ansible.builtin.template:
             src: "bio/beast.def"
             dest: "{{ container_recipe }}"
+            mode: u=rw,g=r,o=r
         - name: Build container {{ container_image }}
-          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: true
 #          environment:
 #            SINGULARITY_TMPDIR: "/dev/shm"
 
-    - name: Install beast {{ container_name }} module
+    - name: Install beast module {{ container_name }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ beast_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install beast module file
-          template:
+          ansible.builtin.template:
             src: bio/beast.lua
             dest: "{{ beast_module_dir }}/{{ container_name }}.lua"
+            mode: u=rw,g=r,o=r

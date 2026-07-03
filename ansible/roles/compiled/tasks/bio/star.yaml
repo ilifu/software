@@ -15,22 +15,24 @@
     - star{{ item.version_number }}
   block:
     - name: Ensure STAR install dir exists
-      file:
+      ansible.builtin.file:
         path: "{{ install_dir }}"
         state: directory
+        mode: u=rwx,g=rwx,o=rx
     - name: Download STAR {{ version_number }} from {{ url }}
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ bio_src }}/STAR.{{ version_number }}.tar.gz"
         checksum: "{{ checksum }}"
+        mode: u=rw,g=r,o=r
     - name: Uncompress STAR
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ bio_src }}/STAR.{{ version_number }}.tar.gz"
         dest: "/dev/shm"
-        remote_src: yes
+        remote_src: true
         creates: "{{ unarchive_dir }}"
-    - name: build STAR binaries
-      make:
+    - name: Build STAR binaries
+      community.general.make:
         chdir: "{{ unarchive_dir }}/source"
         target: "{{ build_target }}"
       loop:
@@ -39,9 +41,9 @@
       loop_control:
         loop_var: build_target
     - name: "Move STAR binaries to {{ install_dir }}"
-      command: "mv {{ unarchive_dir }}/source/{{ bin_file }} {{ install_dir }}/"
+      ansible.builtin.command: "mv {{ unarchive_dir }}/source/{{ bin_file }} {{ install_dir }}/"
       args:
-          creates: "{{ install_dir }}/{{ bin_file }}"
+        creates: "{{ install_dir }}/{{ bin_file }}"
       loop:
         - STAR
         - STARlong
@@ -49,11 +51,12 @@
         loop_var: bin_file
 
     - name: Check module dir {{ star_module_dir }}
-      file:
+      ansible.builtin.file:
         path: "{{ star_module_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
-    - name: Install star {{ version_number }} module file
-      template:
+    - name: Install star module file {{ version_number }}
+      ansible.builtin.template:
         src: bio/star.lua
         dest: "{{ star_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

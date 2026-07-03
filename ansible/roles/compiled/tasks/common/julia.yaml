@@ -1,3 +1,4 @@
+---
 - name: Install Julia
   vars:
     julia_dir: "{{ common_dir }}/julia"
@@ -12,29 +13,31 @@
     - julia{{ item.full_version_number }}
   block:
     - name: Download julia {{ full_version_number }}
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ common_src }}/julia-{{ full_version_number }}-linux-x86_64.tar.gz"
         checksum: "{{ checksum }}"
-    - name: Ensure julia dir {{ julia_dir }} exists
-      file:
+        mode: u=rw,g=r,o=r
+    - name: Ensure julia dir exists {{ julia_dir }}
+      ansible.builtin.file:
         path: "{{ julia_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
     - name: Unzip julia {{ full_version_number }}
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ common_src }}/julia-{{ full_version_number }}-linux-x86_64.tar.gz"
         dest: "{{ julia_dir }}"
         creates: "{{ install_dir }}"
 
-    - name: Install julia {{ version_number }} module
+    - name: Install julia module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ julia_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install julia {{ full_version_number }} module file
-          template:
+        - name: Install julia module file {{ full_version_number }}
+          ansible.builtin.template:
             src: julia.lua
             dest: "{{ julia_module_dir }}/{{ full_version_number }}.lua"
+            mode: u=rw,g=r,o=r

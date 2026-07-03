@@ -1,4 +1,5 @@
-- name: Create DIANN {{ item.version_number }} container
+---
+- name: Create DIANN container {{ item.version_number }}
   vars:
     version_number: "{{ item.version_number }}"
     installer_type: "{{ item.installer_type }}"
@@ -13,42 +14,42 @@
     - "diann{{ item.version_number }}"
     - never
   block:
-    - name: "Check for existence of {{ base_container_image }} container"
-      stat:
+    - name: "Check for existence of container {{ base_container_image }}"
+      ansible.builtin.stat:
         path: "{{ base_container_image }}"
       register: base_container_exists
       when: installer_type == 'deb'
     - name: "Missing {{ base_container_image }}"
-      fail:
+      ansible.builtin.fail:
         msg: "The container {{ base_container_image }} is missing."
       when: installer_type == 'deb' and not base_container_exists.stat.exists
 
     - name: Download DIANN .deb file
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ installer_url }}"
         dest: "{{ bio_dir }}/src/diann_{{ version_number }}.deb"
-        mode: 0644
+        mode: u=rw,g=r,o=r
       when: installer_type == 'deb'
 
     - name: Download DIANN zip archive
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ installer_url }}"
         dest: "{{ bio_dir }}/src/DIA-NN-{{ version_number }}-Academia-Linux.zip"
-        mode: 0644
+        mode: u=rw,g=r,o=r
       when: installer_type == 'zip'
 
     - name: Ensure DIANN zip extraction directory exists
-      file:
+      ansible.builtin.file:
         path: "{{ bio_dir }}/src/diann_{{ version_number }}"
         state: directory
-        mode: 0755
+        mode: u=rwx,g=rx,o=rx
       when: installer_type == 'zip'
 
     - name: Extract DIANN zip archive
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ bio_dir }}/src/DIA-NN-{{ version_number }}-Academia-Linux.zip"
         dest: "{{ bio_dir }}/src/diann_{{ version_number }}/"
-        remote_src: yes
+        remote_src: true
         creates: "{{ bio_dir }}/src/diann_{{ version_number }}/diann-{{ version_number }}"
       when: installer_type == 'zip'
 
@@ -56,11 +57,12 @@
       when: installer_type == 'deb' and base_container_exists.stat.exists
       block:
         - name: Copy recipe {{ container_recipe }}
-          template:
+          ansible.builtin.template:
             src: "bio/DIANN.def"
             dest: "{{ container_recipe }}"
+            mode: u=rw,g=r,o=r
         - name: Build container {{ container_image }}
-          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: true
@@ -69,34 +71,36 @@
       when: installer_type == 'zip'
       block:
         - name: Copy recipe {{ container_recipe }}
-          template:
+          ansible.builtin.template:
             src: "bio/DIANN.2.def"
             dest: "{{ container_recipe }}"
+            mode: u=rw,g=r,o=r
         - name: Build container {{ container_image }}
-          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: true
 
     - name: Ensure DIANN binary directory exists
-      file:
+      ansible.builtin.file:
         path: "{{ diann_binary_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
     - name: Create diann binary
-      template:
+      ansible.builtin.template:
         src: "bio/diann.sh"
         dest: "{{ diann_binary_dir }}/diann"
-        mode: 0755
+        mode: u=rwx,g=rx,o=rx
 
-    - name: Install DIANN {{ container_name }} module
+    - name: Install DIANN module {{ container_name }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ diann_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install DIANN module file
-          template:
+          ansible.builtin.template:
             src: bio/diann.lua
             dest: "{{ diann_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

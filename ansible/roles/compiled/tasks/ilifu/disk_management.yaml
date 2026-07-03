@@ -10,32 +10,32 @@
   block:
     - name: Clone git repo, setup venv and install
       block:
-        - name: create private dir to clone to
-          file:
-              path: /dev/shm/admin_tools
-              state: directory
-              mode: "u=rwx,g=,o="
-        - name: clone repo
-          git:
+        - name: Create private dir to clone to
+          ansible.builtin.file:
+            path: /dev/shm/admin_tools
+            state: directory
+            mode: "u=rwx,g=,o="
+        - name: Clone repo
+          ansible.builtin.git:
             repo: "{{ git_repo }}"
             dest: /dev/shm/admin_tools
-            update: yes
+            update: true
         - name: Create virtual_environment
-          pip:
+          ansible.builtin.pip:
             name:
-             - "."
-             - ipython
+              - "."
+              - ipython
             virtualenv: "{{ disk_management_dir }}"
             virtualenv_command: "{{ python_dir }}/bin/virtualenv"
             virtualenv_python: "{{ python_dir }}/bin/python"
             chdir: "/dev/shm/admin_tools/disk_management"
         - name: Clean cloned repo
-          file:
-              path: /dev/shm/admin_tools
-              state: absent
+          ansible.builtin.file:
+            path: /dev/shm/admin_tools
+            state: absent
 
     - name: Install disk_management module file
-      template:
+      ansible.builtin.template:
         src: disk_management.lua
         dest: "{{ common_modules }}/disk_management.lua"
         mode: "u=rwx,g=rx,o="

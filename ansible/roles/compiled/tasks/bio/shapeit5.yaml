@@ -1,3 +1,4 @@
+---
 - name: Install shapeit5
   vars:
     shapeit5_dir: "{{ bio_dir }}/shapeit5"
@@ -11,13 +12,13 @@
     - never
     - shapeit{{ item.version_number }}
   block:
-    - name: Ensure {{ install_dir }} exists
-      file:
+    - name: Ensure exists {{ install_dir }}
+      ansible.builtin.file:
         path: "{{ install_dir }}"
         state: directory
-        mode: o=rwx,g=rx,o=rx
-    - name: Download shapeit5 {{ version_number }} components
-      get_url:
+        mode: u=rwx,g=rx,o=rx
+    - name: Download shapeit5 components {{ version_number }}
+      ansible.builtin.get_url:
         url: "{{ component.url }}"
         dest: "{{ install_dir }}/{{ component.name }}"
         mode: u=rwx,g=rx,o=rx
@@ -27,14 +28,15 @@
         loop_var: component
         label: "{{ component.name }}"
 
-    - name: Install shapeit5 {{ version_number }} module
+    - name: Install shapeit5 module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ shapeit5_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install shapeit5 {{ version_number }} module file
-          template:
+        - name: Install shapeit5 module file {{ version_number }}
+          ansible.builtin.template:
             src: bio/shapeit5.lua
             dest: "{{ shapeit5_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

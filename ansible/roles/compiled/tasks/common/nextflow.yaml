@@ -15,25 +15,26 @@
     - name: Download, compile and install NextFlow {{ version_number }}
       block:
         - name: Ensure nextflow directory exists
-          file:
+          ansible.builtin.file:
             path: "{{ install_dir }}"
             state: directory
             mode: u=rwx,g=rx,o=rx
         - name: Download NextFlow {{ version_number }}
-          get_url:
-              url: "{{ item.url }}"
-              dest: "{{ install_dir }}/nextflow"
-              checksum: "{{ checksum }}"
-              mode: u=rwx,g=rx,o=rx
+          ansible.builtin.get_url:
+            url: "{{ item.url }}"
+            dest: "{{ install_dir }}/nextflow"
+            checksum: "{{ checksum }}"
+            mode: u=rwx,g=rx,o=rx
 
-    - name: Install NextFlow {{ version_number }} module
+    - name: Install NextFlow module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ nextflow_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install NextFlow module file
-          template:
+          ansible.builtin.template:
             src: nextflow.lua
             dest: "{{ nextflow_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

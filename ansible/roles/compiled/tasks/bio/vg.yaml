@@ -12,22 +12,24 @@
     - vg{{ item.version_number }}
   block:
     - name: "Ensure vg dir '{{ install_dir }}' exists"
-      file:
+      ansible.builtin.file:
         path: "{{ install_dir }}"
         state: directory
+        mode: u=rwx,g=rwx,o=rx
     - name: Download vg {{ version_number }} from {{ url }} to {{ install_dir }}
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ install_dir }}/vg"
         checksum: "{{ checksum }}"
         mode: u=rwx,g=rx,o=rx
 
     - name: Check module dir {{ vg_module_dir }}
-      file:
+      ansible.builtin.file:
         path: "{{ vg_module_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
-    - name: Install vg {{ version_number }} module file
-      template:
+    - name: Install vg module file {{ version_number }}
+      ansible.builtin.template:
         src: bio/vg.lua
         dest: "{{ vg_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

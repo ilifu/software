@@ -14,30 +14,31 @@
 
   block:
     - name: Download rust
-      get_url:
-          url: "{{ url }}"
-          dest: "{{ common_src }}/rust_{{ version_number }}.tar.gz"
-          checksum: "{{ checksum }}"
-          mode: "ug=rw,o=r"
+      ansible.builtin.get_url:
+        url: "{{ url }}"
+        dest: "{{ common_src }}/rust_{{ version_number }}.tar.gz"
+        checksum: "{{ checksum }}"
+        mode: "ug=rw,o=r"
     - name: "Uncompress rust to {{ uncompressed_dir }}"
-      unarchive:
-          src: "{{ common_src }}/rust_{{ version_number }}.tar.gz"
-          dest: "/dev/shm"
-          remote_src: yes
-#          mode: "ug=rw,o=r"
-          creates: "{{ uncompressed_dir }}"
+      ansible.builtin.unarchive:
+        src: "{{ common_src }}/rust_{{ version_number }}.tar.gz"
+        dest: "/dev/shm"
+        remote_src: true
+        #          mode: "ug=rw,o=r"
+        creates: "{{ uncompressed_dir }}"
     - name: Run rust install
-      command: "./install.sh --prefix={{ install_dir }}"
+      ansible.builtin.command: "./install.sh --prefix={{ install_dir }}"
       args:
-          chdir: "{{ uncompressed_dir }}"
-          creates: "{{ install_dir }}/bin/rustc"
+        chdir: "{{ uncompressed_dir }}"
+        creates: "{{ install_dir }}/bin/rustc"
 
     - name: "Create rust module directory {{ rust_module_dir }}"
-      file:
-          path: "{{ rust_module_dir }}"
-          state: directory
-          mode: "ug=rwx,o=rx"
+      ansible.builtin.file:
+        path: "{{ rust_module_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
     - name: "Install rust module file"
-      template:
+      ansible.builtin.template:
         src: rust.lua
         dest: "{{ rust_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

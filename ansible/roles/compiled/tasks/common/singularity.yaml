@@ -1,3 +1,4 @@
+---
 - name: Install singularity
   vars:
     singularity_dir: "{{ common_dir }}/singularity"
@@ -22,17 +23,18 @@
         - name: Download and install singularity {{ version_number }}
           block:
             - name: Download singularity {{ version_number }}
-              get_url:
+              ansible.builtin.get_url:
                 url: "{{ url }}"
                 dest: "{{ common_src }}/singularity-{{ version_number }}.tar.gz"
                 checksum: "{{ checksum }}"
+                mode: u=rw,g=r,o=r
             - name: Unzip singularity {{ version_number }}
-              unarchive:
+              ansible.builtin.unarchive:
                 src: "{{ common_src }}/singularity-{{ version_number }}.tar.gz"
                 dest: "/dev/shm/"
                 creates: "{{ unzip_dir }}"
             - name: Ensure installation parent exists
-              file:
+              ansible.builtin.file:
                 path: "{{ singularity_dir }}"
                 state: directory
                 mode: u=rwx,g=rx,o=rx
@@ -42,15 +44,17 @@
             # sudo-free and lets install_dir be mounted/chmod'd read-only.
             # Do NOT move it back to /usr/local/var.
             - name: Configure singularity
-              command: "./mconfig --prefix={{ install_dir }} --localstatedir={{ install_dir }}/var --sysconfdir={{ install_dir }}/etc --without-suid{% if version_number is version('3.10', '>=') %} --without-seccomp{% endif %}{% if version_number is version('3.10', '>=') and version_number is version('4.3', '<') %} --without-conmon{% endif %}{% if version_number is version('4.3', '>=') %} --without-libsubid{% endif %}"
+              ansible.builtin.command: "./mconfig --prefix={{ install_dir }} --localstatedir={{ install_dir }}/var --sysconfdir={{ install_dir }}/etc --without-suid{%
+                if version_number is version('3.10', '>=') %} --without-seccomp{% endif %}{% if version_number is version('3.10', '>=') and version_number is version('4.3',
+                '<') %} --without-conmon{% endif %}{% if version_number is version('4.3', '>=') %} --without-libsubid{% endif %}"
               args:
                 chdir: "{{ unzip_dir }}"
                 creates: "{{ unzip_dir }}/builddir/Makefile"
             - name: Compile singularity
-              make:
+              community.general.make:
                 chdir: "{{ unzip_dir }}/builddir"
             - name: Install singularity
-              make:
+              community.general.make:
                 chdir: "{{ unzip_dir }}/builddir"
                 target: install
             # The build installs a default singularity.conf at {{ install_dir }}/etc.
@@ -78,43 +82,45 @@
         - name: Download and install singularity {{ version_number }}
           block:
             - name: Download singularity {{ version_number }}
-              get_url:
+              ansible.builtin.get_url:
                 url: "https://github.com/singularityware/singularity/releases/download/{{ version_number }}/singularity-{{ version_number }}.tar.gz"
                 dest: "{{ common_src }}/singularity-{{ version_number }}.tar.gz"
                 checksum: "{{ checksum }}"
+                mode: u=rw,g=r,o=r
             - name: Unzip singularity {{ version_number }}
-              unarchive:
+              ansible.builtin.unarchive:
                 src: "{{ common_src }}/singularity-{{ version_number }}.tar.gz"
                 dest: "/dev/shm/"
                 creates: "{{ unzip_dir }}"
             - name: Ensure installation parent exists
-              file:
+              ansible.builtin.file:
                 path: "{{ singularity_dir }}"
                 state: directory
                 mode: u=rwx,g=rx,o=rx
             - name: Configure singularity (non-go)
-              command: "./configure --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir=/usr/local/etc"
+              ansible.builtin.command: "./configure --prefix={{ install_dir }} --localstatedir=/usr/local/var --sysconfdir=/usr/local/etc"
               args:
                 chdir: "{{ unzip_dir }}"
             - name: Compile singularity (non-go)
-              make:
+              community.general.make:
                 chdir: "{{ unzip_dir }}"
               environment:
                 MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
             - name: Install singularity
-              make:
+              community.general.make:
                 chdir: "{{ unzip_dir }}"
                 target: install
               become: true
 
-    - name: Install singularity {{ version_number }} module
+    - name: Install singularity module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ singularity_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install singularity {{ version_number }} module file
-          template:
+        - name: Install singularity module file {{ version_number }}
+          ansible.builtin.template:
             src: singularity.lua
             dest: "{{ singularity_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

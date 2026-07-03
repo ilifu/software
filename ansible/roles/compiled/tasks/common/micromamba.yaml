@@ -9,41 +9,42 @@
     - micromamba
   block:
     - name: Download Micromamba {{ version_number }} from {{ micromamba_url }}
-      get_url:
+      ansible.builtin.get_url:
         url: "https://micro.mamba.pm/api/micromamba/linux-64/latest"
         dest: "{{ common_src }}/micromamba.tar.bz2"
         mode: u=r,g=r,o=r
     - name: Create Micromamba dir
-      file:
+      ansible.builtin.file:
         path: "{{ micromamba_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
     - name: Extract Micromamba from tarball
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ common_src }}/micromamba.tar.bz2"
         dest: "{{ install_dir }}"
-        remote_src: yes
+        remote_src: true
 
     - name: Create shell script
-      command: "{{ install_dir }}/bin/micromamba shell hook -s posix"
+      ansible.builtin.command: "{{ install_dir }}/bin/micromamba shell hook -s posix"
       args:
         creates: "{{ install_dir }}/shell_hook"
         chdir: "{{ install_dir }}"
       register: micromamba_shell_hook
 
     - name: Write contents of shell_hook to file
-      copy:
+      ansible.builtin.copy:
         content: "{{ micromamba_shell_hook.stdout }}"
         dest: "{{ install_dir }}/shell_hook"
         mode: u=rwx,g=rwx,o=rx
       when: micromamba_shell_hook.changed
 
     - name: Check module dir {{ micromamba_module_dir }}
-      file:
+      ansible.builtin.file:
         path: "{{ micromamba_module_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
     - name: Install Micromamba module file to {{ micromamba_module_dir }}
-      template:
+      ansible.builtin.template:
         src: common/micromamba.lua
         dest: "{{ micromamba_module_dir }}/default.lua"
+        mode: u=rw,g=r,o=r

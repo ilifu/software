@@ -1,45 +1,47 @@
-- name: Create RStudio {{ item.version_name }} container
+---
+- name: Create RStudio container {{ item.version_name }}
   vars:
-    - base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
-    - container_name: "RStudio{{ item.rstudio_version }}-R{{ item.r_version }}"
-    - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
-    - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
-    - R_module_dir: "{{ common_modules }}/R"
-    - R_binary_dir: "{{ bio_container_dir }}/RStudio/{{ item.rstudio_version }}-R{{ item.r_version }}"
+    base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
+    container_name: "RStudio{{ item.rstudio_version }}-R{{ item.r_version }}"
+    container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
+    R_module_dir: "{{ common_modules }}/R"
+    R_binary_dir: "{{ bio_container_dir }}/RStudio/{{ item.rstudio_version }}-R{{ item.r_version }}"
   tags:
     - "RStudio{{ item.rstudio_version }}-R{{ item.r_version }}"
     - never
   block:
-    - name: "Check for existence of {{ base_container_image }} container"
-      stat:
+    - name: "Check for existence of container {{ base_container_image }}"
+      ansible.builtin.stat:
         path: "{{ base_container_image }}"
       register: base_container_exists
     - name: "Missing {{ base_container_image }}"
-      fail:
+      ansible.builtin.fail:
         msg: "The container {{ base_container_image }} is missing."
       when: not base_container_exists.stat.exists
-    - name: Create RStudio {{ item.rstudio_version }} container
+    - name: Create RStudio container {{ item.rstudio_version }}
       when: base_container_exists.stat.exists
       block:
         - name: Copy recipe  {{ container_recipe }}
-          template:
+          ansible.builtin.template:
             src: "common/RStudio.def"
             dest: "{{ container_recipe }}"
+            mode: u=rw,g=r,o=r
         - name: Build container {{ container_image }}
-          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: true
     - name: Ensure R binary directory exists
-      file:
+      ansible.builtin.file:
         path: "{{ R_binary_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
     - name: Create R binaries
-      template:
+      ansible.builtin.template:
         src: "common/{{ binary.template }}"
         dest: "{{ R_binary_dir }}/{{ binary.name }}"
-        mode: 0755
+        mode: u=rwx,g=rx,o=rx
       with_items:
         - { name: "R", template: "R.sh" }
         - { name: "Rscript", template: "Rscript.sh" }
@@ -50,14 +52,15 @@
 #          environment:
 #            SINGULARITY_TMPDIR: "/dev/shm"
 
-    - name: Install RStudio {{ container_name }} module
+    - name: Install RStudio module {{ container_name }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ R_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install RStudio module file
-          template:
+          ansible.builtin.template:
             src: common/RStudio.lua
-            dest: "{{ R_module_dir }}/{{ container_name}}.lua"
+            dest: "{{ R_module_dir }}/{{ container_name }}.lua"
+            mode: u=rw,g=r,o=r

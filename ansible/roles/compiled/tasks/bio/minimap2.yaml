@@ -1,3 +1,4 @@
+---
 - name: Install Minimap2
   vars:
     version_number: "{{ item.version_number }}"
@@ -14,33 +15,35 @@
     - name: Download, compile and install Minimap2 {{ version_number }}
       block:
         - name: Download Minimap2 {{ version_number }} from {{ url }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{ bio_src }}/minimap2-{{ version_number }}.tar.tgz"
             checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Unzip Minimap2 {{ version_number }}
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ bio_src }}/minimap2-{{ version_number }}.tar.tgz"
             dest: "/dev/shm"
             creates: "{{ unzipdir }}"
         - name: Ensure Minimap2 dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ minimap2_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Move uncompressed Minimap2 {{ version_number }} to {{ install_dir }}
-          command: "mv {{ unzipdir }} {{ install_dir }}"
+          ansible.builtin.command: "mv {{ unzipdir }} {{ install_dir }}"
           args:
             creates: "{{ install_dir }}"
 
-    - name: Install Minimap2 {{ version_number }} module
+    - name: Install Minimap2 module {{ version_number }}
       block:
-      - name: Check module dir
-        file:
-          path: "{{ minimap2_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install Minimap2 {{ version_number }} module file
-        template:
-          src: minimap2.lua
-          dest: "{{ minimap2_module_dir }}/{{ version_number }}.lua"
+        - name: Check module dir
+          ansible.builtin.file:
+            path: "{{ minimap2_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Minimap2 module file {{ version_number }}
+          ansible.builtin.template:
+            src: minimap2.lua
+            dest: "{{ minimap2_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

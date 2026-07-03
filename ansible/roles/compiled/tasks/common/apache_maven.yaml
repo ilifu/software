@@ -1,3 +1,4 @@
+---
 - name: Install Apache Maven
   vars:
     version_number: "{{ item.version_number }}"
@@ -16,33 +17,35 @@
         - name: Download, compile and install Apache Maven {{ version_number }}
           block:
             - name: Download Apache Maven {{ version_number }}
-              get_url:
+              ansible.builtin.get_url:
                 url: "{{ url }}"
                 dest: "{{ common_src }}/apache-maven-{{ version_number }}.tar.tgz"
                 checksum: "{{ checksum }}"
+                mode: u=rw,g=r,o=r
             - name: Unzip Maven {{ version_number }}
-              unarchive:
+              ansible.builtin.unarchive:
                 src: "{{ common_src }}/apache-maven-{{ version_number }}.tar.tgz"
                 dest: "/dev/shm"
                 creates: "{{ unzipdir }}"
             - name: Ensure Maven dir exists
-              file:
+              ansible.builtin.file:
                 path: "{{ maven_dir }}"
                 state: directory
                 mode: u=rwx,g=rwx,o=rx
             - name: Move uncompressed Maven {{ version_number }} to {{ install_dir }}
-              command: "mv {{ unzipdir }} {{ install_dir }}"
+              ansible.builtin.command: "mv {{ unzipdir }} {{ install_dir }}"
               args:
                 creates: "{{ install_dir }}"
 
-    - name: Install Apache Maven {{ version_number }} module
+    - name: Install Apache Maven module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ maven_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install Apache Maven {{ version_number }} module file
-          template:
+        - name: Install Apache Maven module file {{ version_number }}
+          ansible.builtin.template:
             src: apache_maven.lua
             dest: "{{ maven_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

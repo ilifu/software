@@ -16,35 +16,35 @@
     - name: Download and install FragPipe {{ version_number }}
       block:
         - name: Download FragPipe {{ version_number }} from {{ url }} to {{ bio_src }}/FragPipe-{{ version_number }}.zip
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{ bio_src }}/FragPipe-{{ version_number }}.zip"
             checksum: "{{ checksum }}"
-        - name: Ensure FragPipe dir {{ fragpipe_dir }} exists
-          file:
+            mode: u=rw,g=r,o=r
+        - name: Ensure FragPipe dir exists {{ fragpipe_dir }}
+          ansible.builtin.file:
             path: "{{ fragpipe_dir }}"
             state: directory
-            recurse: yes
+            recurse: true
         - name: Uncompress FragPipe in {{ fragpipe_dir }}
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ bio_src }}/FragPipe-{{ version_number }}.zip"
             dest: "{{ fragpipe_dir }}"
             creates: "{{ fragpipe_dir }}/fragpipe"
         - name: Rename fragpipe to use version number
-          command: "mv {{ fragpipe_dir }}/fragpipe {{ install_dir }}"
+          ansible.builtin.command: "mv {{ fragpipe_dir }}/fragpipe {{ install_dir }}"
           args:
             creates: "{{ install_dir }}"
 
-    - name: Install FragPipe {{ version_number }} module
+    - name: Install FragPipe module {{ version_number }}
       block:
         - name: Check module dir {{ fragpipe_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ fragpipe_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install FragPipe module file
-          template:
+          ansible.builtin.template:
             src: fragpipe.lua
             dest: "{{ fragpipe_module_dir }}/{{ version_number }}.lua"
-
-
+            mode: u=rw,g=r,o=r

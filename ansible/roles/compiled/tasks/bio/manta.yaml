@@ -14,31 +14,33 @@
 
   block:
     - name: Create manta directory
-      file:
+      ansible.builtin.file:
         path: "{{ manta_dir }}"
         state: directory
         mode: "ug=rwx,o=rx"
     - name: Download manta
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ bio_src }}/manta.{{ version_number }}.tar.bz2"
         checksum: "{{ checksum }}"
+        mode: u=rw,g=r,o=r
     - name: Unzip manta
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ bio_src }}/manta.{{ version_number }}.tar.bz2"
         dest: "/dev/shm"
         creates: "/dev/shm/manta-{{ version_number }}.centos6_x86_64"
     - name: Move manta source to install dir
-      command: "mv /dev/shm/manta-{{ version_number }}.centos6_x86_64 {{ install_dir }}"
+      ansible.builtin.command: "mv /dev/shm/manta-{{ version_number }}.centos6_x86_64 {{ install_dir }}"
       args:
-          creates: "{{ install_dir }}"
+        creates: "{{ install_dir }}"
 
     - name: "Create manta module directory {{ manta_module_dir }}"
-      file:
-          path: "{{ manta_module_dir }}"
-          state: directory
-          mode: "ug=rwx,o=rx"
+      ansible.builtin.file:
+        path: "{{ manta_module_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
     - name: "Install manta module file"
-      template:
+      ansible.builtin.template:
         src: bio/manta.lua
         dest: "{{ manta_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

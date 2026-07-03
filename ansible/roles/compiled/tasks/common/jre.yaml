@@ -15,28 +15,31 @@
     - name: Download and install JRE {{ version_number }}
       block:
         - name: Download JRE {{ version_number }} from {{ url }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{ common_src }}/{{ filename }}"
             checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Ensure java dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ java_dir }}"
             state: directory
+            mode: u=rwx,g=rwx,o=rx
         - name: Uncompress OpenJDK
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ common_src }}/{{ filename }}"
             dest: "{{ java_dir }}"
             creates: "{{ install_dir }}"
 
-    - name: Install JRE {{ version_number }} module
+    - name: Install JRE module {{ version_number }}
       block:
         - name: Check module dir {{ java_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ java_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install JRE module file {{ java_module_dir }}/jre-{{ version_number }}.lua
-          template:
+          ansible.builtin.template:
             src: jre.lua
             dest: "{{ java_module_dir }}/jre-{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

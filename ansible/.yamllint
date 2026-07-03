@@ -1,0 +1,38 @@
+---
+# yamllint config for ilifu/software
+# Philosophy: catch genuine YAML breakage (tabs, duplicate keys, unclosed
+# quotes, trailing whitespace), NOT the repo's house style. The Ansible task
+# files use long source URLs/checksums and multi-line inline dicts on purpose,
+# so the stylistic rules that would flag those are relaxed.
+extends: relaxed
+
+rules:
+  # Long lines are unavoidable (download URLs, sha256/sha512 checksums).
+  line-length: disable
+  # The inline-dict version lists have a deliberate, non-standard indentation.
+  indentation: disable
+  comments-indentation: disable
+  # min-spaces-from-content: 1 is required by ansible-lint's --fix mode.
+  comments:
+    min-spaces-from-content: 1
+    require-starting-space: true
+  # `{ version_number: ..., url: ... }` flow mappings are used throughout.
+  # max-spaces-inside: 1 is required by ansible-lint's --fix mode and matches
+  # the repo's actual single-space `{ ... }` style.
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+  # Not every leaf file starts with `---`; harmless and pervasive here.
+  document-start: disable
+  # Ansible uses yes/no/on/off idiomatically.
+  truthy:
+    allowed-values: ["true", "false", "yes", "no"]
+    check-keys: false
+
+  # --- Genuine problems we DO want flagged ---
+  trailing-spaces: enable
+  key-duplicates: enable
+  new-line-at-end-of-file: enable
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true

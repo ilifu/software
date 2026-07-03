@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a problem with an installation, an Lmod module, or the playbook itself.
+title: "[bug] <short summary>"
+labels: ["bug"]
+body:
+  - type: input
+    id: software
+    attributes:
+      label: Software and version
+      description: Which package/module is affected (or "playbook" if it's the Ansible itself).
+      placeholder: e.g. samtools/1.22.1
+    validations:
+      required: true
+  - type: input
+    id: tags
+    attributes:
+      label: Tags / command used
+      placeholder: e.g. ansible-playbook site.yaml -t samtools,samtools1.22.1
+    validations:
+      required: false
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What actually happened?
+      description: Include the exact error output or failing task. Paste logs in a code block.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Environment / context
+      description: Host or partition, Ansible/uv versions, anything else relevant.
+    validations:
+      required: false

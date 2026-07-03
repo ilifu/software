@@ -1,3 +1,4 @@
+---
 - name: Install R
   vars:
     R_dir: "{{ common_dir }}/R"
@@ -22,63 +23,70 @@
     PATH: "{{ fribidi }}/bin:{{ harfbuzz }}/bin:{{ install_dir }}/bin{% if 'PATH' in ansible_env %}:{{ ansible_env.PATH }}{% endif %}"
     INCLUDE: "{{ fribidi }}/include:{{ harfbuzz }}/include{% if 'INCLUDE' in ansible_env %}:{{ ansible_env.INCLUDE }}{% endif %}"
     C_INCLUDE: "{{ fribidi }}/include:{{ harfbuzz }}/include{% if 'C_INCLUDE' in ansible_env %}:{{ ansible_env.C_INCLUDE }}{% endif %}"
-    PKG_CONFIG_PATH: "{{ fribidi }}/lib/pkgconfig:{{ harfbuzz }}/lib/pkgconfig{% if 'PKG_CONFIG_PATH' in ansible_env %}:{{ ansible_env.PKG_CONFIG_PATH }}{% endif %}"
+    PKG_CONFIG_PATH: "{{ fribidi }}/lib/pkgconfig:{{ harfbuzz }}/lib/pkgconfig{% if 'PKG_CONFIG_PATH' in ansible_env %}:{{ ansible_env.PKG_CONFIG_PATH }}{% endif
+      %}"
   block:
-    - name: Download R {{ version_number }} and install
+    - name: Download R and install {{ version_number }}
       when: "'packages_only' not in ansible_run_tags"
       block:
         - name: Download R {{ version_number }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{ common_src }}/R-{{ version_number }}.tar.gz"
             checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Unzip R {{ version_number }}
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ common_src }}/R-{{ version_number }}.tar.gz"
             dest: "/dev/shm/"
             creates: "{{ unzipdir }}"
-        - name: Make R {{ version_number }} build directory
-          file:
+        - name: Make R build directory {{ version_number }}
+          ansible.builtin.file:
             path: "{{ build_dir }}"
             state: directory
-        - name: Run R {{ version_number }} configure
-          command: "../configure --prefix={{ install_dir }} --enable-static --with-x=no"
+            mode: u=rwx,g=rwx,o=rx
+        - name: Run R configure {{ version_number }}
+          ansible.builtin.command: "../configure --prefix={{ install_dir }} --enable-static --with-x=no"
           args:
             chdir: "{{ build_dir }}"
             creates: "{{ build_dir }}/Makefile"
         - name: Build R {{ version_number }}
-          make:
+          community.general.make:
             chdir: "{{ build_dir }}"
         - name: Install R {{ version_number }}
-          make:
+          community.general.make:
             chdir: "{{ build_dir }}"
             target: install
             jobs: "{{ ansible_processor_count }}"
         - name: Ensure Rprofile.site is up-to-date
-          lineinfile:
+          ansible.builtin.lineinfile:
             path: "{{ install_dir }}/lib/R/etc/Rprofile.site"
             create: true
             line: "options(bitmapType='cairo')"
+            mode: u=rw,g=r,o=r
           tags: Rprofile
 
     - name: Install R packages {{ r_packages }}
-      command: "{{ install_dir }}/bin/Rscript -e 'install.packages(c({{ r_packages }}), repos=\"http://cran.rstudio.com/\", Ncpus={{ ansible_processor_vcpus }}, user=FALSE)'"
+      ansible.builtin.command: "{{ install_dir }}/bin/Rscript -e 'install.packages(c({{ r_packages }}), repos=\"http://cran.rstudio.com/\", Ncpus={{ ansible_processor_vcpus
+        }}, user=FALSE)'"
     - name: Install Jupyter Kernel
-      command: "{{ install_dir }}/bin/Rscript -e 'install.packages(\"IRkernel\", repos=\"http://cran.rstudio.com/\", user=FALSE)'"
+      ansible.builtin.command: "{{ install_dir }}/bin/Rscript -e 'install.packages(\"IRkernel\", repos=\"http://cran.rstudio.com/\", user=FALSE)'"
     - name: Update jupyter kernel spec
-      template:
+      ansible.builtin.template:
         src: common/R.kernel.json
         dest: "{{ install_dir }}/lib/R/library/IRkernel/kernelspec/kernel.json"
+        mode: u=rw,g=r,o=r
 
-    - name: Install R {{ version_number }} module
+    - name: Install R module {{ version_number }}
       when: "'packages_only' not in ansible_run_tags"
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ R_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install R {{ version_number }} module file
-          template:
+        - name: Install R module file {{ version_number }}
+          ansible.builtin.template:
             src: R.lua
             dest: "{{ R_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

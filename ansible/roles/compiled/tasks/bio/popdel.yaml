@@ -18,21 +18,23 @@
     - name: Download and install popdel {{ version_number }}
       block:
         - name: Download popdel {{ version_number }} from {{ url }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{ bio_dir }}/src/popdel-{{ version_number }}.tar.gz"
             checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Ensure popdel dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ install_dir }}"
             state: directory
+            mode: u=rwx,g=rwx,o=rx
         - name: Uncompress popdel to {{ unzip_dir }}
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{  bio_dir }}/src/popdel-{{ version_number }}.tar.gz"
             dest: "/dev/shm"
             creates: "{{ unzip_dir }}"
         - name: Make popdel {{ version_number }}
-          make:
+          community.general.make:
             chdir: "{{ unzip_dir }}"
           environment:
             MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
@@ -40,20 +42,20 @@
             LD_LIBRARY_PATH: "{{ htslib_dir }}/lib"
             LIBRARY_PATH: "{{ htslib_dir }}/lib"
         - name: Install popdel {{ version_number }} to {{ install_dir }}
-          copy:
+          ansible.builtin.copy:
             src: "{{ unzip_dir }}/popdel"
             dest: "{{ install_dir }}/popdel"
             mode: u=rwx,g=rx,o=rx
 
-
-    - name: Install popdel {{ version_number }} module
+    - name: Install popdel module {{ version_number }}
       block:
         - name: Check module dir {{ popdel_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ popdel_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install popdel {{ version_number }} module file
-          template:
+        - name: Install popdel module file {{ version_number }}
+          ansible.builtin.template:
             src: popdel.lua
             dest: "{{ popdel_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

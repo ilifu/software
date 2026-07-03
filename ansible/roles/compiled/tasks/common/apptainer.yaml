@@ -1,3 +1,4 @@
+---
 - name: Install apptainer
   vars:
     apptainer_dir: "{{ common_dir }}/apptainer"
@@ -28,17 +29,18 @@
         - name: Download and install apptainer {{ version_number }}
           block:
             - name: Download apptainer {{ version_number }}
-              get_url:
+              ansible.builtin.get_url:
                 url: "{{ url }}"
                 dest: "{{ common_src }}/apptainer-{{ version_number }}.tar.gz"
                 checksum: "{{ checksum }}"
+                mode: u=rw,g=r,o=r
             - name: Unzip apptainer {{ version_number }}
-              unarchive:
+              ansible.builtin.unarchive:
                 src: "{{ common_src }}/apptainer-{{ version_number }}.tar.gz"
                 dest: "/dev/shm/"
                 creates: "{{ unzip_dir }}"
             - name: Ensure installation parent exists
-              file:
+              ansible.builtin.file:
                 path: "{{ apptainer_dir }}"
                 state: directory
                 mode: u=rwx,g=rx,o=rx
@@ -48,34 +50,35 @@
             # sudo-free and lets install_dir be mounted/chmod'd read-only.
             # Do NOT move it back to /usr/local/var.
             - name: Configure apptainer
-              command: "./mconfig --prefix={{ install_dir }} --localstatedir={{ install_dir }}/var --sysconfdir={{ install_dir }}/etc --without-suid"
+              ansible.builtin.command: "./mconfig --prefix={{ install_dir }} --localstatedir={{ install_dir }}/var --sysconfdir={{ install_dir }}/etc --without-suid"
               args:
                 chdir: "{{ unzip_dir }}"
                 creates: "{{ unzip_dir }}/builddir/Makefile"
               environment:
                 PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
             - name: Compile apptainer
-              make:
+              community.general.make:
                 chdir: "{{ unzip_dir }}/builddir"
               environment:
                 PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
                 MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
             - name: Install apptainer
-              make:
+              community.general.make:
                 chdir: "{{ unzip_dir }}/builddir"
                 target: install
 
-    - name: Install apptainer {{ version_number }} module
+    - name: Install apptainer module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ apptainer_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install apptainer {{ version_number }} module file
-          template:
+        - name: Install apptainer module file {{ version_number }}
+          ansible.builtin.template:
             src: common/apptainer.lua
             dest: "{{ apptainer_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r
 
     - name: Reminder to disable setuid in apptainer.conf
       ansible.builtin.debug:

@@ -1,3 +1,4 @@
+---
 - name: Create ProteoWizard container
   vars:
     docker_source: "{{ item.docker_source }}"
@@ -32,40 +33,41 @@
     - "proteowizard{{ item.version_number }}"
     - never
   block:
-    - name: Create ProteoWizard {{ version_number }} container
+    - name: Create ProteoWizard container {{ version_number }}
       block:
         - name: Copy recipe  {{ container_recipe }}
-          template:
+          ansible.builtin.template:
             src: "bio/proteowizard.def"
             dest: "{{ container_recipe }}"
+            mode: u=rw,g=r,o=r
         - name: Build container {{ container_image }}
-          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: true
         - name: Ensure ProteoWizard binary directory exists
-          file:
+          ansible.builtin.file:
             path: "{{ proteowizard_binary_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Create ProteoWizard binaries
-          template:
+          ansible.builtin.template:
             src: "proteowizard_wine_template.sh"
             dest: "{{ proteowizard_binary_dir }}/{{ wine_command }}"
-            mode: 0755
+            mode: u=rwx,g=rx,o=rx
           with_items: "{{ wine_commands }}"
           loop_control:
             loop_var: wine_command
 
-
-    - name: Install ProteoWizard {{ container_name }} module
+    - name: Install ProteoWizard module {{ container_name }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ proteowizard_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install ProteoWizard module file
-          template:
+          ansible.builtin.template:
             src: bio/proteowizard.lua
             dest: "{{ proteowizard_module_dir }}/{{ container_name }}.lua"
+            mode: u=rw,g=r,o=r

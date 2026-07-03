@@ -16,33 +16,33 @@
     - name: Download and install merqury ({{ version_number }})
       block:
         - name: Download merqury
-          get_url:
-              url: "{{ url }}"
-              dest: "{{ bio_src }}/merqury-v{{ version_number }}.tar.xg"
-              mode: "ug=rwx,o=rx"
-              checksum: "{{ checksum }}"
-        - name: Ensure merqury directory {{ install_dir }} exists
-          file:
+          ansible.builtin.get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/merqury-v{{ version_number }}.tar.xg"
+            mode: "ug=rwx,o=rx"
+            checksum: "{{ checksum }}"
+        - name: Ensure merqury directory exists {{ install_dir }}
+          ansible.builtin.file:
             path: "{{ merqury_dir }}"
             state: directory
-            recurse: yes
+            recurse: true
 
         - name: Uncompress merqury
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ bio_src }}/merqury-v{{ version_number }}.tar.xg"
             dest: "{{ merqury_dir }}"
-            remote_src: yes
+            remote_src: true
             creates: "{{ install_dir }}/merqury.sh"
 
-
-    - name: Install merqury {{ version_number }} module
+    - name: Install merqury module {{ version_number }}
       block:
         - name: Check module dir {{ merqury_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ merqury_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install merqury {{ version_number }} module file
-          template:
+        - name: Install merqury module file {{ version_number }}
+          ansible.builtin.template:
             src: merqury.lua
             dest: "{{ merqury_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

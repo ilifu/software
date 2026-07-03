@@ -1,51 +1,53 @@
-- name: Create python-ml {{ item.version_number }} container
+---
+- name: Create python-ml container {{ item.version_number }}
   vars:
-    - base_container_image: "{{ common_container_dir }}/python-ml-base-{{ item.base_version }}.sif"
-    - container_name: "python-ml-{{ item.version_number }}"
-    - container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
-    - container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
-    - python_ml_module_dir: "{{ common_modules }}/python-ml"
-    - python_ml_binary_dir: "{{ common_container_dir }}/python-ml/{{ item.version_number }}"
-    - python_ml_kernel_dir: "{{ common_container_dir }}/python-ml/{{ item.version_number }}/kernels"
+    base_container_image: "{{ common_container_dir }}/python-ml-base-{{ item.base_version }}.sif"
+    container_name: "python-ml-{{ item.version_number }}"
+    container_recipe: "{{ common_container_recipe_dir }}/{{ container_name }}.def"
+    container_image: "{{ common_container_dir }}/{{ container_name }}.sif"
+    python_ml_module_dir: "{{ common_modules }}/python-ml"
+    python_ml_binary_dir: "{{ common_container_dir }}/python-ml/{{ item.version_number }}"
+    python_ml_kernel_dir: "{{ common_container_dir }}/python-ml/{{ item.version_number }}/kernels"
   tags:
     - "python-ml{{ item.version_number }}"
     - never
   block:
-    - name: "Check for existence of {{ base_container_image }} container"
-      stat:
+    - name: "Check for existence of container {{ base_container_image }}"
+      ansible.builtin.stat:
         path: "{{ base_container_image }}"
       register: base_container_exists
     - name: "Missing {{ base_container_image }}"
-      fail:
+      ansible.builtin.fail:
         msg: "The container {{ base_container_image }} is missing. Please build python-ml-base first."
       when: not base_container_exists.stat.exists
-    - name: Create Python ML {{ item.version_number }} container
+    - name: Create Python ML container {{ item.version_number }}
       when: base_container_exists.stat.exists
       block:
         - name: Copy recipe {{ container_recipe }}
-          template:
+          ansible.builtin.template:
             src: "common/python-ml.def"
             dest: "{{ container_recipe }}"
+            mode: u=rw,g=r,o=r
         - name: Build container {{ container_image }}
-          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: true
     - name: Ensure python-ml binary directory exists
-      file:
+      ansible.builtin.file:
         path: "{{ python_ml_binary_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
     - name: Ensure python-ml kernel directory exists
-      file:
+      ansible.builtin.file:
         path: "{{ python_ml_kernel_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
     - name: Create python-ml binaries
-      template:
+      ansible.builtin.template:
         src: "common/{{ binary.template }}"
         dest: "{{ python_ml_binary_dir }}/{{ binary.name }}"
-        mode: 0755
+        mode: u=rwx,g=rx,o=rx
       with_items:
         - { name: "python", template: "python-ml.sh" }
         - { name: "python3", template: "python-ml.sh" }
@@ -57,30 +59,31 @@
         loop_var: binary
 
     - name: Create Jupyter kernel file
-      template:
+      ansible.builtin.template:
         src: "common/python-ml-kernel.json"
         dest: "{{ python_ml_kernel_dir }}/kernel.json"
-        mode: 0644
+        mode: u=rw,g=r,o=r
 
-    - name: Install Python ML {{ container_name }} module
+    - name: Install Python ML module {{ container_name }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ python_ml_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install Python ML module file
-          template:
+          ansible.builtin.template:
             src: common/python-ml.lua
             dest: "{{ python_ml_module_dir }}/{{ item.version_number }}.lua"
+            mode: u=rw,g=r,o=r
 
 # Shared Model Download Tasks
 - name: Create Models Directory
-  file:
+  ansible.builtin.file:
     path: /software/data/common
     state: directory
     group: "{{ admin_group }}"
-    mode: '0755'
+    mode: u=rwx,g=rx,o=rx
   tags:
     - never
     - models
@@ -93,7 +96,7 @@
       - sentence-transformers/all-mpnet-base-v2
       - microsoft/DialoGPT-medium
       - distilbert-base-uncased
-  shell: |
+  ansible.builtin.shell: |
     export HF_HOME=/software/data/common
     export TRANSFORMERS_CACHE=/software/data/common
     {{ common_container_dir }}/python-ml/0.0.1/python3 -c "
@@ -122,7 +125,7 @@
       - microsoft/resnet-50
       - google/vit-base-patch16-224
       - facebook/deit-base-distilled-patch16-224
-  shell: |
+  ansible.builtin.shell: |
     export HF_HOME=/software/data/common
     export TRANSFORMERS_CACHE=/software/data/common
     {{ common_container_dir }}/python-ml/0.0.1/python3 -c "
@@ -152,7 +155,7 @@
       - deepseek-ai/deepseek-llm-7b-base
       - deepseek-ai/deepseek-coder-6.7b-base
       - deepseek-ai/deepseek-math-7b-base
-  shell: |
+  ansible.builtin.shell: |
     export HF_HOME=/software/data/common
     export TRANSFORMERS_CACHE=/software/data/common
     {{ common_container_dir }}/python-ml/0.0.1/python3 -c "

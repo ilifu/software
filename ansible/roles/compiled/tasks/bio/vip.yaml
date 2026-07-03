@@ -18,20 +18,22 @@
     - name: "Download and install VIP {{ version_number }}"
       block:
         - name: "Ensure VIP directory exists"
-          file:
+          ansible.builtin.file:
             path: "{{ vip_dir }}"
             state: directory
+            mode: u=rwx,g=rwx,o=rx
         - name: "Ensure VIP data directory exists"
-          file:
+          ansible.builtin.file:
             path: "{{ vip_data_dir }}"
             state: directory
+            mode: u=rwx,g=rwx,o=rx
         - name: "Copy VIP installer {{ install_script }}"
-          copy:
+          ansible.builtin.copy:
             src: "bio/{{ install_script }}"
             dest: "{{ bio_src }}/{{ install_script }}"
             mode: "ugo=rx"
         - name: "Install VIP {{ version_number }} to {{ install_dir }}"
-          command:
+          ansible.builtin.command:
             argv:
               - "{{ bio_src }}/{{ install_script }}"
               - -d
@@ -43,15 +45,15 @@
           args:
             creates: "{{ install_dir }}/vip.sh"
 
-    - name: Install VIP {{ version_number }} module
+    - name: Install VIP module {{ version_number }}
       block:
         - name: Check module dir {{ vip_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ vip_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install VIP module file
-          template:
+          ansible.builtin.template:
             src: bio/vip.lua
             dest: "{{ vip_module_dir }}/{{ version_number }}.lua"
-
+            mode: u=rw,g=r,o=r

@@ -13,31 +13,34 @@
 
   block:
     - name: Ensure REViewer install dir exists
-      file:
+      ansible.builtin.file:
         path: "{{ install_dir }}"
         state: directory
+        mode: u=rwx,g=rwx,o=rx
     - name: Download REViewer {{ version_number }} from {{ url }}
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ install_dir }}/REViewer.gz"
         checksum: "{{ checksum }}"
+        mode: u=rw,g=r,o=r
     - name: Uncompress REViewer
-      command: "gzip -d {{ install_dir }}/REViewer.gz"
+      ansible.builtin.command: "gzip -d {{ install_dir }}/REViewer.gz"
       args:
         chdir: "{{ install_dir }}"
         creates: "{{ install_dir }}/REViewer"
     - name: Ensure REViewer binary is executable
-      file:
-          path: "{{ install_dir }}/REViewer"
-          state: file
-          mode: u=rwx,g=rwx,o=rx
+      ansible.builtin.file:
+        path: "{{ install_dir }}/REViewer"
+        state: file
+        mode: u=rwx,g=rwx,o=rx
 
     - name: Check module dir {{ reviewer_module_dir }}
-      file:
+      ansible.builtin.file:
         path: "{{ reviewer_module_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
-    - name: Install reviewer {{ version_number }} module file
-      template:
+    - name: Install reviewer module file {{ version_number }}
+      ansible.builtin.template:
         src: bio/reviewer.lua
         dest: "{{ reviewer_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

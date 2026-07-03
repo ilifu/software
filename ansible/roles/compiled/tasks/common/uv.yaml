@@ -11,7 +11,7 @@
     - uv
   block:
     - name: Check if uv binary already exists
-      stat:
+      ansible.builtin.stat:
         path: "{{ uv }}"
       register: uv_binary
 
@@ -19,36 +19,36 @@
       when: not uv_binary.stat.exists
       block:
         - name: Make uv bin directory {{ uv_bin_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ uv_bin_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
 
         - name: Download uv {{ uv_version }} from {{ uv_url }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ uv_url }}"
             dest: "{{ common_src }}/{{ uv_tarball }}"
             checksum: "{{ uv_checksums[uv_arch] }}"
+            mode: u=rw,g=r,o=r
 
         - name: Unpack uv {{ uv_version }} into {{ uv_bin_dir }}
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ common_src }}/{{ uv_tarball }}"
             dest: "{{ uv_bin_dir }}"
             extra_opts:
               - --strip-components=1
             creates: "{{ uv }}"
 
-        - name: Make uv {{ uv_version }} readable and executable by all users
-          command: "chmod -R a+rX {{ uv_install_dir }}"
-
-    - name: Check uv module dir {{ uv_module_dir }} exists
-      file:
+        - name: Make uv readable and executable by all users {{ uv_version }}
+          ansible.builtin.command: "chmod -R a+rX {{ uv_install_dir }}"
+    - name: Check uv module dir exists {{ uv_module_dir }}
+      ansible.builtin.file:
         path: "{{ uv_module_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
 
     - name: Install uv module file to {{ uv_module_dir }}/uv.lua
-      template:
+      ansible.builtin.template:
         src: common/uv.lua
         dest: "{{ uv_module_dir }}/uv.lua"
-        mode: u=rw,g=rw,o=r
+        mode: u=rw,g=r,o=r

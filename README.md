@@ -156,3 +156,38 @@ The repository contains over 200 software packages across three categories. All 
 | calceph      | 2.3.2              | calceph,calceph2.3.2         | calceph/2.3.2 |
 
 For a complete list of available software and versions, check the task files in `ansible/roles/*/tasks/`.
+
+## Agentic Advice
+
+This repo is set up to be worked on with [Claude Code](https://claude.com/claude-code).
+The tooling under `.claude/` encodes the repo's conventions so that adding
+software and keeping the tree lint-clean is largely automated. `CLAUDE.md` is the
+project brief the agent reads on every session.
+
+| Tool | What it does |
+|------|--------------|
+| **`/add-software` skill** | Scaffolds a new package (or version) end-to-end — picks compiled vs. containerised, creates the leaf task file, wires up the double tag, generates the `.lua` / `.def` / `.sh` templates, and lints the result. |
+| **`/lint` skill** | Runs and explains `yamllint` + `ansible-lint` exactly as CI does (from the `ansible/` directory). |
+| **lint-on-edit hook** | `.claude/hooks/lint-yaml.sh` runs `yamllint` automatically on every edited `ansible/**/*.y*ml`, so YAML mistakes surface immediately. |
+
+To use it: open the repo in Claude Code and type `/add-software` (describe the
+package), or `/lint` to check the tree. `.claude/settings.json` (the shared hook
+config) is committed; `.claude/settings.local.json` holds personal settings and
+is gitignored.
+
+Not using Claude Code? Everything the skills automate is documented for humans in
+[`CONTRIBUTING.md`](CONTRIBUTING.md) and `CLAUDE.md` — the skills are a
+convenience, not a requirement.
+
+## Contributing
+
+Contributions are welcome — most are adding a package or a new version. See
+[`CONTRIBUTING.md`](CONTRIBUTING.md) for setup, the add-software workflow, the
+conventions the linters enforce, and the PR process. Please also read our
+[Code of Conduct](CODE_OF_CONDUCT.md). To request a package you can't package
+yourself, open a **Software installation request** issue. Security issues:
+see [`SECURITY.md`](SECURITY.md).
+
+## License
+
+Released under the [MIT License](LICENSE) — Copyright (c) 2020-2026 ilifu.

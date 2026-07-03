@@ -1,0 +1,68 @@
+name: Software installation request
+description: Request a new package, or a new version of an existing one, for the ilifu software stack.
+title: "[software] <name> <version>"
+labels: ["software request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the request! The more of the fields below you can fill in
+        (especially the upstream URL and checksum), the faster it can be packaged.
+  - type: input
+    id: name
+    attributes:
+      label: Software name
+      placeholder: e.g. samtools
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version(s) requested
+      placeholder: e.g. 1.22.1
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - common (languages, compilers, MPI, system tools)
+        - bio (bioinformatics / life sciences)
+        - astro (astronomy / astrophysics)
+        - not sure
+    validations:
+      required: true
+  - type: dropdown
+    id: approach
+    attributes:
+      label: Preferred installation approach
+      description: Leave as "no preference" if unsure — a maintainer will decide.
+      options:
+        - no preference
+        - compiled (build from source)
+        - containerised (Singularity image)
+    validations:
+      required: false
+  - type: input
+    id: url
+    attributes:
+      label: Upstream source / download URL
+      placeholder: e.g. https://github.com/samtools/samtools/releases/download/1.22.1/samtools-1.22.1.tar.bz2
+    validations:
+      required: false
+  - type: input
+    id: checksum
+    attributes:
+      label: sha256 checksum (if known)
+      description: "Run: curl -sL <url> | sha256sum"
+      placeholder: "sha256:..."
+    validations:
+      required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: License constraints, build dependencies, who needs it, deadlines, etc.
+    validations:
+      required: false

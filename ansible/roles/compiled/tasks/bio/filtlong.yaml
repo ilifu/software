@@ -17,36 +17,38 @@
     - name: Download and install filtlong ({{ version_number }})
       block:
         - name: Download filtlong {{ version_number }} from {{ url }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{ bio_src }}/filtlong-{{ version_number }}.tar.gz"
             checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Unzip source to {{ unzip_dir }}
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ bio_src }}/filtlong-{{ version_number }}.tar.gz"
             dest: "/dev/shm"
             creates: "{{ unzip_dir }}"
         - name: Ensure filtlong dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ install_dir }}"
             state: directory
-            recurse: yes
+            recurse: true
         - name: Compile filtlong
-          make:
+          community.general.make:
             chdir: "{{ unzip_dir }}"
-        - name: move filtlong binary to final resting place {{ install_dir }}
-          command: "mv {{ unzip_dir }}/bin/filtlong {{ install_dir }}/filtlong"
+        - name: Move filtlong binary to final resting place {{ install_dir }}
+          ansible.builtin.command: "mv {{ unzip_dir }}/bin/filtlong {{ install_dir }}/filtlong"
           args:
             creates: "{{ install_dir }}/filtlong"
 
-    - name: Install filtlong {{ version_number }} module
+    - name: Install filtlong module {{ version_number }}
       block:
         - name: Check module dir {{ filtlong_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ filtlong_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install filtlong {{ version_number }} module file
-          template:
+        - name: Install filtlong module file {{ version_number }}
+          ansible.builtin.template:
             src: filtlong.lua
             dest: "{{ filtlong_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

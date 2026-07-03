@@ -15,31 +15,34 @@
 
   block:
     - name: Ensure TrimGalore dir exists
-      file:
+      ansible.builtin.file:
         path: "{{ trimgalore_dir }}"
         state: directory
+        mode: u=rwx,g=rwx,o=rx
     - name: Download TrimGalore {{ version_number }} from {{ url }}
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ bio_src }}/TrimGalore.{{ version_number }}.tar.gz"
         checksum: "{{ checksum }}"
+        mode: u=rw,g=r,o=r
     - name: Uncompress TrimGalore
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ bio_src }}/TrimGalore.{{ version_number }}.tar.gz"
         dest: "/dev/shm"
-        remote_src: yes
+        remote_src: true
         creates: "/dev/shm/TrimGalore-{{ version_number }}"
     - name: Move TrimGalore from '/dev/shm/TrimGalore-{{ version_number }}' to install dir '{{ install_dir }}'
-      command: "mv /dev/shm/TrimGalore-{{ version_number }} {{ install_dir }}"
+      ansible.builtin.command: "mv /dev/shm/TrimGalore-{{ version_number }} {{ install_dir }}"
       args:
-          creates: "{{ install_dir }}"
+        creates: "{{ install_dir }}"
 
     - name: Check module dir {{ trimgalore_module_dir }}
-      file:
+      ansible.builtin.file:
         path: "{{ trimgalore_module_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
-    - name: Install trimgalore {{ version_number }} module file
-      template:
+    - name: Install trimgalore module file {{ version_number }}
+      ansible.builtin.template:
         src: bio/trimgalore.lua
         dest: "{{ trimgalore_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

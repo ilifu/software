@@ -16,51 +16,51 @@
 
   block:
     - name: Download vep {{ version_number }}
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ bio_src }}/VEP.{{ version_number }}.tar.gz"
         checksum: "{{ checksum }}"
+        mode: u=rw,g=r,o=r
 
     - name: Print warning message
-      debug:
+      ansible.builtin.debug:
         msg: "If you're getting error with cpan installing XML::DOM::XPath, please check: https://stackoverflow.com/questions/47966512/error-installing-xmldomxpath"
 
     - name: Install Perl Requirements
-      command: "/bin/bash -c 'module add {{ perl_module }} && module add htslib/1.10.2 && cpan {{ ' '.join(cpan_modules) }}'"
-
+      ansible.builtin.command: "/bin/bash -c 'module add {{ perl_module }} && module add htslib/1.10.2 && cpan {{ ' '.join(cpan_modules) }}'"
     - name: Ensure vep dir exists
-      file:
+      ansible.builtin.file:
         path: "{{ vep_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
 
     - name: Uncompress vep {{ version_number }}
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ bio_src }}/VEP.{{ version_number }}.tar.gz"
         dest: "{{ vep_dir }}"
         creates: "{{ install_dir }}"
 
     - name: Rename Uncompressed vep dir
-      command: "mv {{ vep_dir }}/ensembl-vep-release-{{ version_number }} {{ install_dir }}"
+      ansible.builtin.command: "mv {{ vep_dir }}/ensembl-vep-release-{{ version_number }} {{ install_dir }}"
       args:
         creates: "{{ install_dir }}"
 
-
     - name: Install vep {{ version_number }}
-      command: "/bin/bash -c 'module add {{ perl_module }} && module add htslib/1.10.2 && ./INSTALL.pl --AUTO a --NO_HTSLIB --DESTDIR {{ install_dir }} && touch INSTALLED.ansible'"
+      ansible.builtin.command: "/bin/bash -c 'module add {{ perl_module }} && module add htslib/1.10.2 && ./INSTALL.pl --AUTO a --NO_HTSLIB --DESTDIR {{ install_dir
+        }} && touch INSTALLED.ansible'"
       args:
         chdir: "{{ install_dir }}"
         creates: "{{ install_dir }}/INSTALLED.ansible"
 
-
-    - name: Install vep {{ version_number }} module
+    - name: Install vep module {{ version_number }}
       block:
         - name: Check module dir {{ vep_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ vep_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install vep module file to {{ vep_module_dir }}
-          template:
+          ansible.builtin.template:
             src: vep.lua
             dest: "{{ vep_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

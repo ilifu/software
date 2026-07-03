@@ -1,3 +1,4 @@
+---
 - name: Create ClinSV container
   vars:
     docker_source: "{{ item.docker_source }}"
@@ -12,35 +13,38 @@
     - "ClinSV{{ item.version_number }}"
     - never
   block:
-    - name: Create ClinSV {{ version_number }} container
+    - name: Create ClinSV container {{ version_number }}
       block:
         - name: Copy recipe  {{ container_recipe }}
-          template:
+          ansible.builtin.template:
             src: "bio/ClinSV.def"
             dest: "{{ container_recipe }}"
+            mode: u=rw,g=r,o=r
         - name: Build container {{ container_image }}
-          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: true
         - name: Ensure data dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ ClinSV_data_dir }}"
             state: directory
+            mode: u=rwx,g=rwx,o=rx
 #        - name: "Get reference data from {{ reference_data }}"
 #          tags: [never, data]
 #          get_url:
 #            url: "{{ reference_data }}"
 #            dest: "{{ ClinSV_data_dir }}"
 
-    - name: Install ClinSV {{ container_name }} module
+    - name: Install ClinSV module {{ container_name }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ ClinSV_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install ClinSV module file
-          template:
+          ansible.builtin.template:
             src: bio/ClinSV.lua
             dest: "{{ ClinSV_module_dir }}/{{ container_name }}.lua"
+            mode: u=rw,g=r,o=r

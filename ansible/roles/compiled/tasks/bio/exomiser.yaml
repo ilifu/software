@@ -16,42 +16,45 @@
     - name: "Download and install exomiser {{ version_number }}"
       block:
         - name: "Download exomiser {{ version_number }} from {{ url }}"
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{  bio_dir }}/src//exomiser-{{ version_number }}.zip"
             checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Ensure exomiser dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ exomiser_dir }}"
             state: directory
+            mode: u=rwx,g=rwx,o=rx
         - name: "Uncompress exomiser to {{ install_dir }}"
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{  bio_dir }}/src/exomiser-{{ version_number }}.zip"
             dest: "{{ exomiser_dir }}"
             creates: "{{ install_dir }}"
-        - name: "Ensure data dir {{ exomiser_data_dir }} exists"
-          file:
+        - name: "Ensure data dir exists {{ exomiser_data_dir }}"
+          ansible.builtin.file:
             path: "{{ exomiser_data_dir }}"
             state: directory
             mode: "u=rwx,go=rx"
         - name: "Configure data-directory"
-          lineinfile:
+          ansible.builtin.lineinfile:
             path: "{{ install_dir }}/application.properties"
             insertafter: "^#exomiser.data-directory=.*"
             regex: "^exomiser.data-directory=.*"
             line: "exomiser.data-directory={{ exomiser_data_dir }}"
 
-    - name: Install exomiser {{ version_number }} module
+    - name: Install exomiser module {{ version_number }}
       block:
         - name: Check module dir {{ exomiser_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ exomiser_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install exomiser {{ version_number }} module file
-          template:
+        - name: Install exomiser module file {{ version_number }}
+          ansible.builtin.template:
             src: bio/exomiser.lua
             dest: "{{ exomiser_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r
 
 - name: Install exomiser data to {{ bio_dir }}/exomiser/data
   vars:
@@ -60,7 +63,7 @@
   tags:
     - never
     - exomiserdata
-  include_tasks: exomiser_data.yaml
+  ansible.builtin.include_tasks: exomiser_data.yaml
   loop: "{{ exomiser_data }}"
   loop_control:
     loop_var: "the_data"

@@ -15,26 +15,27 @@
   block:
     - name: Download and install libmaus2 {{ version_number }}
       block:
-        - name: git clone libmaus2 repo
-          git:
+        - name: Git clone libmaus2 repo
+          ansible.builtin.git:
             repo: "{{ git_repo }}"
             dest: "{{  repo_dir }}"
             version: "{{ git_tag }}"
         - name: Ensure libmaus2 dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ libmaus2_dir }}"
             state: directory
-        - name: Run libmaus2 {{ version_number }} configure
-          command: "./configure --prefix={{ install_dir }}"
+            mode: u=rwx,g=rwx,o=rx
+        - name: Run libmaus2 configure {{ version_number }}
+          ansible.builtin.command: "./configure --prefix={{ install_dir }}"
           args:
             chdir: "{{ repo_dir }}"
         - name: Make libmaus2 {{ version_number }}
-          make:
+          community.general.make:
             chdir: "{{ repo_dir }}"
           environment:
             MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
         - name: Install libmaus2 {{ version_number }} to {{ install_dir }}
-          make:
+          community.general.make:
             chdir: "{{ repo_dir }}"
             target: "install"
 
