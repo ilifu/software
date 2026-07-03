@@ -18,33 +18,34 @@
     - name: Download and install yacrd ({{ version_number }})
       block:
         - name: Download yacrd
-          get_url:
-              url: "{{ url }}"
-              dest: "{{ bio_src }}/yacrd-{{ version_number }}.tar.gz"
-              mode: "ug=rwx,o=rx"
-              checksum: "{{ checksum }}"
+          ansible.builtin.get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/yacrd-{{ version_number }}.tar.gz"
+            mode: "ug=rwx,o=rx"
+            checksum: "{{ checksum }}"
         - name: Uncompress yacrd
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ bio_src }}/yacrd-{{ version_number }}.tar.gz"
             dest: "/dev/shm"
-            remote_src: yes
+            remote_src: true
             creates: "{{ unzipdir }}"
         - name: Compile yacrd using rust
-          command: "cargo install --path . --root {{ install_dir }}"
+          ansible.builtin.command: "cargo install --path . --root {{ install_dir }}"
           args:
-              chdir: "{{ unzipdir }}"
-              creates: "{{ install_dir }}/bin/yacrd"
+            chdir: "{{ unzipdir }}"
+            creates: "{{ install_dir }}/bin/yacrd"
           environment:
-              PATH: "{{ cargo_dir }}/bin:{{ ansible_env.PATH | default('') }}"
+            PATH: "{{ cargo_dir }}/bin:{{ ansible_env.PATH | default('') }}"
 
-    - name: Install yacrd {{ version_number }} module
+    - name: Install yacrd module {{ version_number }}
       block:
         - name: Check module dir {{ yacrd_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ yacrd_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install yacrd {{ version_number }} module file
-          template:
+        - name: Install yacrd module file {{ version_number }}
+          ansible.builtin.template:
             src: bio/yacrd.lua
             dest: "{{ yacrd_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

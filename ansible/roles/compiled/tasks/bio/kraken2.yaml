@@ -1,3 +1,4 @@
+---
 - name: Install Kraken2
   vars:
     kraken2_dir: "{{ bio_dir }}/kraken2"
@@ -16,36 +17,37 @@
         - name: Download and install Kraken2 {{ version_number }}
           block:
             - name: Download Kraken2 {{ version_number }}
-              get_url:
+              ansible.builtin.get_url:
                 url: "{{ url }}"
                 dest: "{{ bio_src }}/kraken2-{{ version_number }}.tar.gz"
                 checksum: "{{ checksum }}"
+                mode: u=rw,g=r,o=r
             - name: Unzip Kraken2 {{ version_number }}
-              unarchive:
+              ansible.builtin.unarchive:
                 src: "{{ bio_src }}/kraken2-{{ version_number }}.tar.gz"
                 dest: "/dev/shm/"
                 creates: "{{ unzipdir }}"
             - name: Ensure kraken2 dir exists
-              file:
-                  path: "{{ kraken2_dir }}"
-                  state: directory
-                  mode: u=rwx,g=rx,o=rx
+              ansible.builtin.file:
+                path: "{{ kraken2_dir }}"
+                state: directory
+                mode: u=rwx,g=rx,o=rx
             - name: Install Kraken2 {{ version_number }} to {{ install_dir }}
-              command:
+              ansible.builtin.command:
                 cmd: "./install_kraken2.sh {{ install_dir }}"
               args:
                 chdir: "{{ unzipdir }}"
                 creates: "{{ install_dir }}"
 
-
-    - name: Install Kraken2 {{ version_number }} module
+    - name: Install Kraken2 module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ kraken2_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install Kraken2 module file
-          template:
+          ansible.builtin.template:
             src: kraken2.lua
             dest: "{{ kraken2_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

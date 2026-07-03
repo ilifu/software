@@ -5,7 +5,7 @@
   vars:
     libmaus2_version: "{{ item.libmaus2_version }}"
     libmaus2_dir: "{{ bio_dir }}/libmaus2/{{ libmaus2_version }}"
-  stat:
+  ansible.builtin.stat:
     path: "{{ libmaus2_dir }}"
   register: libmaus2
 
@@ -15,11 +15,10 @@
   vars:
     libmaus2_version: "{{ item.libmaus2_version }}"
     libmaus2_dir: "{{ bio_dir }}/libmaus2/{{ libmaus2_version }}"
-  debug:
+  ansible.builtin.debug:
     msg: "Could not find libmaus2 directory: {{ libmaus2_dir }}."
   when: not libmaus2.stat.exists or not libmaus2.stat.isdir
-  failed_when: True
-
+  failed_when: true
 
 - name: Install biobambam2 {{ item.version_number }}
   vars:
@@ -39,38 +38,39 @@
   block:
     - name: Download and install biobambam2 {{ version_number }}
       block:
-
-        - name: git clone biobambam2 repo
-          git:
+        - name: Git clone biobambam2 repo
+          ansible.builtin.git:
             repo: "{{ git_repo }}"
             dest: "{{  repo_dir }}"
             version: "{{ git_tag }}"
         - name: Ensure biobambam2 dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ biobambam2_dir }}"
             state: directory
-        - name: Run biobambam2 {{ version_number }} configure
-          command: "./configure --prefix={{ install_dir }} --with-libmaus2={{ bio_dir }}/libmaus2/{{ libmaus2_version }}"
+            mode: u=rwx,g=rwx,o=rx
+        - name: Run biobambam2 configure {{ version_number }}
+          ansible.builtin.command: "./configure --prefix={{ install_dir }} --with-libmaus2={{ bio_dir }}/libmaus2/{{ libmaus2_version }}"
           args:
             chdir: "{{ repo_dir }}"
         - name: Make biobambam2 {{ version_number }}
-          make:
+          community.general.make:
             chdir: "{{ repo_dir }}"
           environment:
             MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
         - name: Install biobambam2 {{ version_number }} to {{ install_dir }}
-          make:
+          community.general.make:
             chdir: "{{ repo_dir }}"
             target: "install"
 
-    - name: Install biobambam2 {{ version_number }} module
+    - name: Install biobambam2 module {{ version_number }}
       block:
         - name: Check module dir {{ biobambam2_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ biobambam2_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install biobambam2 {{ version_number }} module file
-          template:
+        - name: Install biobambam2 module file {{ version_number }}
+          ansible.builtin.template:
             src: biobambam2.lua
             dest: "{{ biobambam2_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

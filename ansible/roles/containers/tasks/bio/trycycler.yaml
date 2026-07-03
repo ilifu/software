@@ -1,3 +1,4 @@
+---
 - name: Create Trycycler container
   vars:
     docker_source: "{{ item.docker_source }}"
@@ -10,36 +11,38 @@
     - "trycycler.{{ item.version_name }}_{{ item.version_number }}"
     - never
   block:
-    - name: Create Trycycler {{ item.version_number }} container
+    - name: Create Trycycler container {{ item.version_number }}
       block:
         - name: Copy recipe  {{ container_recipe }}
-          template:
+          ansible.builtin.template:
             src: "bio/trycycler.def"
             dest: "{{ container_recipe }}"
+            mode: u=rw,g=r,o=r
         - name: Build container {{ container_image }}
-          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: true
         - name: Ensure Trycycler binary directory exists
-          file:
+          ansible.builtin.file:
             path: "{{ trycycler_binary_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Create Trycycler binary
-          template:
+          ansible.builtin.template:
             src: "trycycler.sh"
             dest: "{{ trycycler_binary_dir }}/trycycler"
-            mode: 0755
+            mode: u=rwx,g=rx,o=rx
 
-    - name: Install Trycycler {{ container_name }} module
+    - name: Install Trycycler module {{ container_name }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ trycycler_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install Trycycler module file
-          template:
+          ansible.builtin.template:
             src: bio/trycycler.lua
             dest: "{{ trycycler_module_dir }}/{{ container_name }}.lua"
+            mode: u=rw,g=r,o=r

@@ -1,3 +1,4 @@
+---
 - name: Create TRIBES container
   vars:
     singularity_sif_url: "{{ item.url }}"
@@ -11,33 +12,34 @@
     - "TRIBES{{ item.version_number }}"
     - never
   block:
-    - name: Create TRIBES {{ version_number }} container
+    - name: Create TRIBES container {{ version_number }}
       block:
-        - name: Copy TRIBES {{version_number }} sif from github
-          get_url:
-              url: "{{ singularity_sif_url }}"
-              dest: "{{ container_image }}"
-              checksum: "{{ checksum }}"
-              mode: 0755
+        - name: Copy TRIBES sif from github {{ version_number }}
+          ansible.builtin.get_url:
+            url: "{{ singularity_sif_url }}"
+            dest: "{{ container_image }}"
+            checksum: "{{ checksum }}"
+            mode: u=rwx,g=rx,o=rx
         - name: Ensure TRIBES binary directory exists
-          file:
+          ansible.builtin.file:
             path: "{{ tribes_binary_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Create TRIBES binary
-          template:
+          ansible.builtin.template:
             src: "tribes.sh"
             dest: "{{ tribes_binary_dir }}/tribes"
-            mode: 0755
+            mode: u=rwx,g=rx,o=rx
 
-    - name: Install TRIBES {{ container_name }} module
+    - name: Install TRIBES module {{ container_name }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ tribes_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install TRIBES module file
-          template:
+          ansible.builtin.template:
             src: bio/tribes.lua
             dest: "{{ tribes_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

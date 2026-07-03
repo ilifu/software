@@ -11,7 +11,7 @@
 
   block:
     - name: Copy gemini installer
-      copy:
+      ansible.builtin.copy:
         src: gemini_install.py
         dest: "{{ bio_src }}/"
         mode: u=rx,g=r,o=r
@@ -19,23 +19,24 @@
       loop:
         - "{{ gemini_dir }}"
         - "{{ gemini_data_dir }}"
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         mode: u=rwx,g=rxs,o=rx
     - name: Install gemini
-      command: "/bin/bash -c 'module add python/2.7.18 && python3 {{ bio_src }}/gemini_install.py {{ gemini_dir }} {{ gemini_data_dir }}'"
+      ansible.builtin.command: "/bin/bash -c 'module add python/2.7.18 && python3 {{ bio_src }}/gemini_install.py {{ gemini_dir }} {{ gemini_data_dir }}'"
       args:
         creates: "{{ gemini_data_dir }}/gemini_data"
 
     - name: Install gemini module
       block:
         - name: Check module dir {{ gemini_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ gemini_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install gemini module file to {{ gemini_module_dir }}
-          template:
+          ansible.builtin.template:
             src: gemini.lua
             dest: "{{ gemini_module_dir }}/gemini.lua"
+            mode: u=rw,g=r,o=r

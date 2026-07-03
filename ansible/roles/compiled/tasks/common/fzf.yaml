@@ -16,30 +16,31 @@
     - name: Download and install fzf ({{ version_number }})
       block:
         - name: Download fzf {{ version_number }} from {{ repo }}
-          get_url:
-              url: "{{ url }}"
-              dest: "{{ source_dir }}/fzf-{{ version_number }}.tar.gz"
-              mode: 0644
+          ansible.builtin.get_url:
+            url: "{{ url }}"
+            dest: "{{ source_dir }}/fzf-{{ version_number }}.tar.gz"
+            mode: u=rw,g=r,o=r
         - name: Ensure fzf dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ install_dir }}"
             state: directory
-            recurse: yes
+            recurse: true
         - name: Extract fzf {{ version_number }}
-          unarchive:
-              src: "{{ source_dir }}/fzf-{{ version_number }}.tar.gz"
-              dest: "{{ install_dir }}"
-              remote_src: yes
-              creates: "{{ install_dir }}/fzf"
+          ansible.builtin.unarchive:
+            src: "{{ source_dir }}/fzf-{{ version_number }}.tar.gz"
+            dest: "{{ install_dir }}"
+            remote_src: true
+            creates: "{{ install_dir }}/fzf"
 
-    - name: Install fzf {{ version_number }} module
+    - name: Install fzf module {{ version_number }}
       block:
         - name: Check module dir {{ fzf_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ fzf_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install fzf {{ version_number }} module file
-          template:
+        - name: Install fzf module file {{ version_number }}
+          ansible.builtin.template:
             src: fzf.lua
             dest: "{{ fzf_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

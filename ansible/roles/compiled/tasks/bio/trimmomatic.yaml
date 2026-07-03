@@ -15,27 +15,28 @@
 
   block:
     - name: Download Trimmomatic {{ version_number }} from {{ url }}
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ bio_src }}/Trimmomatic-{{ version_number }}.zip"
         checksum: "{{ checksum }}"
+        mode: u=rw,g=r,o=r
     - name: "Uncompress Trimmomatic to '{{ uncompress_dir }}'"
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ bio_src }}/Trimmomatic-{{ version_number }}.zip"
         dest: "/dev/shm"
-        remote_src: yes
+        remote_src: true
         creates: "{{ uncompress_dir }}"
-    - name: "Ensure Trimmomatic dir '{{ trimmomatic_dir }}' exists"
-      file:
+    - name: "Ensure Trimmomatic dir ' ' exists {{ trimmomatic_dir }}"
+      ansible.builtin.file:
         path: "{{ trimmomatic_dir }}"
         state: directory
         mode: u=rwx,g=rx,o=rx
     - name: "Move Trimmomatic from '{{ uncompress_dir }}' to install dir '{{ install_dir }}'"
-      command: "mv {{ uncompress_dir }} {{ install_dir }}"
+      ansible.builtin.command: "mv {{ uncompress_dir }} {{ install_dir }}"
       args:
         creates: "{{ install_dir }}"
     - name: Create trimmomatic binary
-      copy:
+      ansible.builtin.copy:
         dest: "{{ install_dir }}/trimmomatic"
         mode: u=rwx,g=rx,o=rx
         content: |
@@ -43,11 +44,12 @@
           java -jar {{ install_dir }}/trimmomatic-{{ version_number }}.jar "$@"
 
     - name: Check module dir {{ trimmomatic_module_dir }}
-      file:
+      ansible.builtin.file:
         path: "{{ trimmomatic_module_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
-    - name: Install trimmomatic {{ version_number }} module file
-      template:
+    - name: Install trimmomatic module file {{ version_number }}
+      ansible.builtin.template:
         src: bio/trimmomatic.lua
         dest: "{{ trimmomatic_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

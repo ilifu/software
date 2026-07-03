@@ -19,26 +19,27 @@
     - name: Download and install smoothxg ({{ version_number }})
       block:
         - name: Clone smoothxg repo
-          git:
-              clone: true
-              repo: https://github.com/pangenome/smoothxg.git
-              dest: "{{ bio_src }}/smoothxg"
-              version: "{{ git_commit }}"
-              recursive: true
-              force: true
+          ansible.builtin.git:
+            clone: true
+            repo: https://github.com/pangenome/smoothxg.git
+            dest: "{{ bio_src }}/smoothxg"
+            version: "{{ git_commit }}"
+            recursive: true
+            force: true
         - name: Run git submodule update
-          shell: "/usr/bin/git submodule update --init --recursive"
+          ansible.builtin.shell: "/usr/bin/git submodule update --init --recursive"
           args:
             chdir: "{{ bio_src }}/smoothxg"
 
         - name: Ensure smoothxg dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ smoothxg_dir }}"
             state: directory
-            recurse: yes
+            recurse: true
 
         - name: Run cmake
-          shell: "/usr/bin/cmake -H. -DCMAKE_BUILD_TYPE=Generic -DEXTRA_FLAGS='-march=native -Ofast' -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -Bbuild ."
+          ansible.builtin.shell: "/usr/bin/cmake -H. -DCMAKE_BUILD_TYPE=Generic -DEXTRA_FLAGS='-march=native -Ofast' -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }}
+            -Bbuild ."
           args:
             chdir: "{{ bio_src }}/smoothxg"
           environment:
@@ -50,7 +51,7 @@
             PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ zstd }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
 
         - name: Run cmake build
-          shell: "/usr/bin/cmake --build build -- -j {{ ansible_processor_vcpus }}"
+          ansible.builtin.shell: "/usr/bin/cmake --build build -- -j {{ ansible_processor_vcpus }}"
           args:
             chdir: "{{ bio_src }}/smoothxg"
           environment:
@@ -61,24 +62,25 @@
             CPATH: "{{ jemalloc }}/include:{{ zstd }}/include:{{ ansible_env.INCLUDE | default('') }}"
             PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ zstd }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
         - name: Copy odgi binary to install dir
-          copy:
+          ansible.builtin.copy:
             src: "{{ bio_src }}/smoothxg/deps/odgi/bin/odgi"
             dest: "{{ install_dir }}/bin/odgi"
             mode: u=rwx,g=rwx,o=rx
 
         - name: Run make install
-          make:
+          community.general.make:
             chdir: "{{ bio_src }}/smoothxg/build"
             target: install
 
-    - name: Install smoothxg {{ version_number }} module
+    - name: Install smoothxg module {{ version_number }}
       block:
         - name: Check module dir {{ smoothxg_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ smoothxg_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install smoothxg {{ version_number }} module file
-          template:
+        - name: Install smoothxg module file {{ version_number }}
+          ansible.builtin.template:
             src: smoothxg.lua
             dest: "{{ smoothxg_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

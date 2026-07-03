@@ -16,32 +16,35 @@
     - name: Download and install Node.js {{ version_number }}
       block:
         - name: Download Node.js {{ version_number }} from {{ url }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{ common_src }}/node-v{{ version_number }}-linux-x64.tar.xz"
             checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Ensure nodejs dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ nodejs_dir }}"
             state: directory
+            mode: u=rwx,g=rwx,o=rx
         - name: Uncompress Node.js
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ common_src }}/node-v{{ version_number }}-linux-x64.tar.xz"
             dest: "/dev/shm"
             creates: "{{ unzipdir }}"
         - name: Move Node.js to final location
-          command: "mv {{ unzipdir }} {{ install_dir }}"
+          ansible.builtin.command: "mv {{ unzipdir }} {{ install_dir }}"
           args:
             creates: "{{ install_dir }}"
 
-    - name: Install Node.js {{ version_number }} module
+    - name: Install Node.js module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ nodejs_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install Nodejs module file
-          template:
+          ansible.builtin.template:
             src: nodejs.lua
             dest: "{{ nodejs_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

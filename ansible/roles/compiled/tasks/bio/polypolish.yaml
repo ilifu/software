@@ -1,3 +1,4 @@
+---
 - name: Install Polypolish
   vars:
     version_number: "{{ item.version_number }}"
@@ -13,30 +14,32 @@
     - name: Download, compile and install Polypolish {{ version_number }}
       block:
         - name: Download Polypolish {{ version_number }} from {{ url }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{ bio_src }}/polypolish-{{ version_number }}.tar.tgz"
             checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Ensure Polypolish dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ install_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-            recurse: yes
+            recurse: true
         - name: Unzip Polypolish {{ version_number }}
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ bio_src }}/polypolish-{{ version_number }}.tar.tgz"
             dest: "{{ install_dir }}"
             creates: "{{ install_dir }}/polypolish"
 
-    - name: Install Polypolish {{ version_number }} module
+    - name: Install Polypolish module {{ version_number }}
       block:
-      - name: Check module dir
-        file:
-          path: "{{ polypolish_module_dir }}"
-          state: directory
-          mode: u=rwx,g=rwx,o=rx
-      - name: Install Polypolish {{ version_number }} module file
-        template:
-          src: polypolish.lua
-          dest: "{{ polypolish_module_dir }}/{{ version_number }}.lua"
+        - name: Check module dir
+          ansible.builtin.file:
+            path: "{{ polypolish_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install Polypolish module file {{ version_number }}
+          ansible.builtin.template:
+            src: polypolish.lua
+            dest: "{{ polypolish_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

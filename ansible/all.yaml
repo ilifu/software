@@ -1,4 +1,5 @@
 ---
-- hosts: all
+- name: Create the full software directory tree
+  hosts: all
   roles:
     - all

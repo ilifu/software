@@ -20,53 +20,55 @@
     - htstream{{ item.version_number }}
   block:
     - name: Check if HTStream is already installed
-      stat:
+      ansible.builtin.stat:
         path: "{{ install_dir }}/bin/hts_Stats"
       register: htstream_installed
     - name: Download and install HTStream ({{ version_number }})
       when: not htstream_installed.stat.exists
       block:
         - name: Download htstream
-          get_url:
-              url: "{{ url }}"
-              dest: "{{ bio_src }}/htstream-{{ version_number }}.tar.gz"
-              mode: "ug=rwx,o=rx"
-              checksum: "{{ checksum }}"
+          ansible.builtin.get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/htstream-{{ version_number }}.tar.gz"
+            mode: "ug=rwx,o=rx"
+            checksum: "{{ checksum }}"
         - name: Ensure HTStream dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ htstream_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Uncompress HTStream
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ bio_src }}/htstream-{{ version_number }}.tar.gz"
             dest: "/dev/shm"
-            remote_src: yes
+            remote_src: true
             creates: "{{ unzipdir }}"
         - name: Ensure build directory exists
-          file:
+          ansible.builtin.file:
             path: "{{ unzipdir }}/build"
             state: directory
+            mode: u=rwx,g=rwx,o=rx
         - name: Run cmake in build dir
-          command: "cmake -DCMAKE_INSTALL_PREFIX={{ install_dir }} .."
+          ansible.builtin.command: "cmake -DCMAKE_INSTALL_PREFIX={{ install_dir }} .."
           args:
-              chdir: "{{ unzipdir }}/build"
-              creates: "{{ unzipdir }}/build/Makefile"
-        - name: run make
-          command: "make"
+            chdir: "{{ unzipdir }}/build"
+            creates: "{{ unzipdir }}/build/Makefile"
+        - name: Run make
+          ansible.builtin.command: "make"
           args:
-              chdir: "{{ unzipdir }}/build"
-        - name: run make install
-          command: "make install"
+            chdir: "{{ unzipdir }}/build"
+        - name: Run make install
+          ansible.builtin.command: "make install"
           args:
-              chdir: "{{ unzipdir }}/build"
+            chdir: "{{ unzipdir }}/build"
 
     - name: Check HTStream module dir {{ htstream_module_dir }}
-      file:
+      ansible.builtin.file:
         path: "{{ htstream_module_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
-    - name: Install HTStream {{ version_number }} module file
-      template:
+    - name: Install HTStream module file {{ version_number }}
+      ansible.builtin.template:
         src: bio/htstream.lua
         dest: "{{ htstream_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

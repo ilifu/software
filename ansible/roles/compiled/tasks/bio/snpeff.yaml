@@ -13,35 +13,36 @@
     - name: Download and install snpeff
       block:
         - name: Download snpeff from {{ url }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{ bio_src }}/snpEff_latest_core.zip"
+            mode: u=rw,g=r,o=r
         - name: Uncompress snpeff
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ bio_src }}/snpEff_latest_core.zip"
             dest: "{{ unzip_dir }}"
             creates: "{{ snpeff_dir }}"
         - name: Set snpeff data.dir
-          lineinfile:
+          ansible.builtin.lineinfile:
             path: "{{ snpeff_dir }}/snpEff.config"
             regexp: "data[.]dir =.*"
             line: "data.dir = ../snpEff.data"
         - name: Ensure snpEff data dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ bio_dir }}/snpEff.data"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install snpEffData
-          command: "java -jar {{ snpeff_dir }}/snpEff.jar download {{ item }}"
+          ansible.builtin.command: "java -jar {{ snpeff_dir }}/snpEff.jar download {{ item }}"
           args:
             chdir: "{{ snpeff_dir }}"
           with_items:
             - GRCh38.99
 
-    - name: Install snpeff {{ version_number }} module
+    - name: Install snpeff module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ snpeff_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx

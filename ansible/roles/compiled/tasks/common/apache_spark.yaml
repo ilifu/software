@@ -1,3 +1,4 @@
+---
 - name: Install Apache Spark
   vars:
     spark_dir: "{{ common_dir }}/spark"
@@ -17,12 +18,13 @@
         - name: Download, compile and install Apache Spark {{ version_number }}
           block:
             - name: Download Apache Spark {{ version_number }}
-              get_url:
+              ansible.builtin.get_url:
                 url: "{{ url }}"
                 dest: "{{ common_src }}/spark-{{ version_number }}.tar.tgz"
                 checksum: "{{ checksum }}"
+                mode: u=rw,g=r,o=r
             - name: Unzip Spark {{ version_number }}
-              unarchive:
+              ansible.builtin.unarchive:
                 src: "{{ common_src }}/spark-{{ version_number }}.tar.tgz"
                 dest: "/dev/shm/"
                 creates: "{{ unzipdir }}"

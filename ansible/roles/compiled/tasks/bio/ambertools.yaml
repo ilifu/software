@@ -1,3 +1,4 @@
+---
 - name: Install Ambertools
   vars:
     ambertools_dir: "{{ bio_dir }}/ambertools"
@@ -22,31 +23,36 @@
     - ambertools{{ item.version_number }}
   environment:
     PATH: "{{ cuda_root }}/bin:{{ mpi_root }}/bin:{{ hwloc_root }}/bin:{{ python_root }}/bin:{{ ansible_env.PATH }}"
-    INCLUDE: "{{ cuda_root }}/include:{{ mpi_root }}/include:{{ hwloc_root }}/include:{{ python_root }}/include{% if 'INCLUDE' in ansible_env %}:{{ ansible_env.INCLUDE }}{% endif %}"
-    LD_LIBRARY_PATH: "{{ cuda_root }}/lib64:{{ mpi_root }}/lib:{{ hwloc_root }}/lib:{{ python_root }}/lib{% if 'LD_LIBRARY_PATH' in ansible_env %}:{{ ansible_env.LD_LIBRARY_PATH }}{% endif %}"
-    PKG_CONFIG_PATH: "{{ cuda_root }}/pkgconfig:{{ mpi_root }}/lib/pkgconfig:{{ hwloc_root }}/lib/pkgconfig:{{ python_root }}/lib/pkgconfig{% if 'PKG_CONFIG_PATH' in ansible_env %}:{{ ansible_env.PKG_CONFIG_PATH }}{% endif %}"
+    INCLUDE: "{{ cuda_root }}/include:{{ mpi_root }}/include:{{ hwloc_root }}/include:{{ python_root }}/include{% if 'INCLUDE' in ansible_env %}:{{ ansible_env.INCLUDE
+      }}{% endif %}"
+    LD_LIBRARY_PATH: "{{ cuda_root }}/lib64:{{ mpi_root }}/lib:{{ hwloc_root }}/lib:{{ python_root }}/lib{% if 'LD_LIBRARY_PATH' in ansible_env %}:{{ ansible_env.LD_LIBRARY_PATH
+      }}{% endif %}"
+    PKG_CONFIG_PATH: "{{ cuda_root }}/pkgconfig:{{ mpi_root }}/lib/pkgconfig:{{ hwloc_root }}/lib/pkgconfig:{{ python_root }}/lib/pkgconfig{% if 'PKG_CONFIG_PATH'
+      in ansible_env %}:{{ ansible_env.PKG_CONFIG_PATH }}{% endif %}"
     MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
     CUDA_PATH: "{{ cuda_root }}"
     CUDA_DIR: "{{ cuda_root }}"
   block:
     - name: Download Ambertools {{ version_number }}
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ bio_src }}/AmberTools{{ version_number }}.tar.bz2"
         checksum: "{{ checksum }}"
+        mode: u=rw,g=r,o=r
     - name: Unzip Ambertools {{ version_number }}
       tags: [build]
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ bio_src }}/AmberTools{{ version_number }}.tar.bz2"
         dest: "/dev/shm/"
         creates: "{{ unzipdir }}"
-    - name: Ensure Ambertools build directory {{ build_dir }} is present
+    - name: Ensure Ambertools build directory is present {{ build_dir }}
       tags: [build]
-      file:
+      ansible.builtin.file:
         path: "{{ build_dir }}"
         state: directory
+        mode: u=rwx,g=rwx,o=rx
     - name: Run cmake for Ambertools {{ version_number }}
-      command: "cmake .. -DCOMPILER=GNU -DMPI=TRUE -DCUDA=TRUE -DOPENMP=TRUE -DCMAKE_INSTALL_PREFIX={{ install_dir }} -DINSTALL_TESTS=TRUE -DDOWNLOAD_MINICONDA=TRUE"
+      ansible.builtin.command: "cmake .. -DCOMPILER=GNU -DMPI=TRUE -DCUDA=TRUE -DOPENMP=TRUE -DCMAKE_INSTALL_PREFIX={{ install_dir }} -DINSTALL_TESTS=TRUE -DDOWNLOAD_MINICONDA=TRUE"
       tags: [build]
       args:
         chdir: "{{ build_dir }}"
@@ -54,22 +60,23 @@
 
     - name: Build Ambertools {{ version_number }}
       tags: [build]
-      make:
+      community.general.make:
         chdir: "{{ build_dir }}"
         target: "all"
 
     - name: Install Ambertools {{ version_number }} to {{ install_dir }}
       tags: [build]
-      make:
+      community.general.make:
         chdir: "{{ build_dir }}"
         target: "install"
 
     - name: Check Ambertools module dir
-      file:
+      ansible.builtin.file:
         path: "{{ ambertools_module_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
-    - name: Install Ambertools {{ version_number }} module file
-      template:
+    - name: Install Ambertools module file {{ version_number }}
+      ansible.builtin.template:
         src: bio/ambertools.lua
         dest: "{{ ambertools_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

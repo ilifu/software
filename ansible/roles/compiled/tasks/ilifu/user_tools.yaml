@@ -10,32 +10,32 @@
   block:
     - name: Clone git repo, setup venv and install
       block:
-        - name: clone repo
-          git:
-            repo: "{{ git_repo}}"
+        - name: Clone repo
+          ansible.builtin.git:
+            repo: "{{ git_repo }}"
             dest: "{{ usertools_dir }}"
-            update: yes
+            update: true
         - name: Create virtual_environment
-          pip:
+          ansible.builtin.pip:
             name: "."
             virtualenv: "{{ usertools_dir }}/.venv"
             virtualenv_command: "{{ python_dir }}/bin/virtualenv"
             virtualenv_python: "{{ python_dir }}/bin/python"
             chdir: "{{ usertools_dir }}"
         - name: Create bin directory
-          file:
+          ansible.builtin.file:
             path: "{{ usertools_dir }}/bin"
             state: directory
             mode: "u=rwx,g=rwx,o=rx"
         - name: Setup usertools tools
-          file:
+          ansible.builtin.file:
             src: "{{ usertools_dir }}/.venv/bin/{{ item.name }}"
             dest: "{{ usertools_dir }}/bin/{{ item.name }}"
             state: link
           loop: "{{ tools }}"
 
-
     - name: Install user_tools module file
-      template:
+      ansible.builtin.template:
         src: user_tools.lua
         dest: "{{ common_modules }}/user_tools.lua"
+        mode: u=rw,g=r,o=r

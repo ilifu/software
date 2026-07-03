@@ -12,26 +12,26 @@
     - name: Download, and install perlbrew {{ major_minor }}
       block:
         - name: Copy perlbrew installer
-          copy:
+          ansible.builtin.copy:
             src: install_perlbrew.sh
             dest: "{{ common_src }}/install_perlbrew.sh"
             mode: u=rx,g=r,o=r
         - name: Run installer
-          command: "{{ common_src }}/install_perlbrew.sh"
+          ansible.builtin.command: "{{ common_src }}/install_perlbrew.sh"
           args:
             creates: "{{ install_dir }}"
           environment:
             PERLBREW_ROOT: "{{ install_dir }}"
 
-
     - name: Install perlbrew module
       block:
         - name: Check module dir {{ perlbrew_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ perlbrew_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install perlbrew module file to {{ perlbrew_module_dir }}
-          template:
+          ansible.builtin.template:
             src: perlbrew.lua
             dest: "{{ perlbrew_module_dir }}/perlbrew.lua"
+            mode: u=rw,g=r,o=r

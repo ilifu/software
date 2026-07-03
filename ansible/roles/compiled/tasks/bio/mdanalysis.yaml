@@ -12,12 +12,13 @@
   block:
     - name: Clone git repo, setup venv and install
       block:
-        - name: ensure mdanalysis dir exists
-          file:
-              path: "{{ mdanalysis_dir }}"
-              state: directory
+        - name: Ensure mdanalysis dir exists
+          ansible.builtin.file:
+            path: "{{ mdanalysis_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
         - name: Create virtual_environment
-          pip:
+          ansible.builtin.pip:
             name:
               - "mdanalysis[analysis]=={{ version_number }}"
               - ipython
@@ -27,12 +28,13 @@
             chdir: "{{ mdanalysis_dir }}"
 
     - name: Ensure mdanalsys module dir exists
-      file:
-          path: "{{ module_dir }}"
-          state: directory
-          mode: "u=rwx,g=rwx,o=rx"
+      ansible.builtin.file:
+        path: "{{ module_dir }}"
+        state: directory
+        mode: "u=rwx,g=rwx,o=rx"
 
     - name: Install mdanalysis module file
-      template:
+      ansible.builtin.template:
         src: mdanalysis.lua
         dest: "{{ module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

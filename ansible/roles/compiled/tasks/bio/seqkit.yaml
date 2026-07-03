@@ -16,33 +16,33 @@
     - name: Download and install seqkit ({{ version_number }})
       block:
         - name: Download seqkit
-          get_url:
-              url: "{{ url }}"
-              dest: "{{ bio_src }}/seqkit.v{{ version_number }}.tar.gz"
-              mode: "ug=rwx,o=rx"
-              checksum: "{{ checksum }}"
-        - name: Ensure installation directory {{ install_dir }} exists
-          file:
+          ansible.builtin.get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/seqkit.v{{ version_number }}.tar.gz"
+            mode: "ug=rwx,o=rx"
+            checksum: "{{ checksum }}"
+        - name: Ensure installation directory exists {{ install_dir }}
+          ansible.builtin.file:
             path: "{{ install_dir }}"
             state: directory
-            recurse: yes
+            recurse: true
 
         - name: Uncompress seqkit
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ bio_src }}/seqkit.v{{ version_number }}.tar.gz"
             dest: "{{ install_dir }}"
-            remote_src: yes
+            remote_src: true
             creates: "{{ install_dir }}/seqkit"
 
-
-    - name: Install seqkit {{ version_number }} module
+    - name: Install seqkit module {{ version_number }}
       block:
         - name: Check module dir {{ seqkit_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ seqkit_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install seqkit {{ version_number }} module file
-          template:
+        - name: Install seqkit module file {{ version_number }}
+          ansible.builtin.template:
             src: seqkit.lua
             dest: "{{ seqkit_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

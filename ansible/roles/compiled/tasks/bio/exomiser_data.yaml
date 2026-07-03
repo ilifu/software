@@ -4,11 +4,12 @@
     - exomiserdata
   block:
     - name: "Download {{ the_data.name }} from {{ the_data.url }} to {{ exomiser_data_dir }}"
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ the_data.url }}"
         dest: "{{ exomiser_data_dir }}/"
         checksum: "{{ the_data.checksum }}"
+        mode: u=rw,g=r,o=r
 
     - name: "Uncompress {{ the_data.name }}"
-      debug:
+      ansible.builtin.debug:
         msg: "Remember to decompressing {{ the_data.name }}"

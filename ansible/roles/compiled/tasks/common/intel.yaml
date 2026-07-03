@@ -19,27 +19,28 @@
     - "intel{{ item.version_number }}"
   block:
     - name: Show message that we are accepting EULA
-      debug:
+      ansible.builtin.debug:
         msg: "Installing Intel toolkits {{ major_minor }}. Note this will accept the EULA."
     - name: Download Intel oneAPI installer ({{ oneapi_version }}) to {{ common_src }}/{{ oneapi_file_name }}
-      get_url:
-          url: "{{ oneapi_url }}"
-          dest: "{{ common_src }}/{{ oneapi_file_name }}"
-          mode: "u=rwx,g=rx,o=rx"
-          checksum: "{{ oneapi_checksum }}"
+      ansible.builtin.get_url:
+        url: "{{ oneapi_url }}"
+        dest: "{{ common_src }}/{{ oneapi_file_name }}"
+        mode: "u=rwx,g=rx,o=rx"
+        checksum: "{{ oneapi_checksum }}"
     - name: Download and install Intel HPC toolkit ({{ hpc_version }})
       block:
         - name: Download Intel HPC installer ({{ hpc_version }}) to {{ common_src }}/{{ hpc_file_name }}
-          get_url:
-              url: "{{ hpc_url }}"
-              dest: "{{ common_src }}/{{ hpc_file_name }}"
-              mode: "u=rwx,g=rwx,o=rx"
-              checksum: "{{ hpc_checksum }}"
+          ansible.builtin.get_url:
+            url: "{{ hpc_url }}"
+            dest: "{{ common_src }}/{{ hpc_file_name }}"
+            mode: "u=rwx,g=rwx,o=rx"
+            checksum: "{{ hpc_checksum }}"
     - name: Run Intel installers ({{ version }}) to {{ install_dir }}
-      command: "{{ installer_filename }} -l /tmp/intelone_install.{{ oneapi_version }}.log -a -s --eula accept --install-dir {{ install_dir }} --action install --components all"
+      ansible.builtin.command: "{{ installer_filename }} -l /tmp/intelone_install.{{ oneapi_version }}.log -a -s --eula accept --install-dir {{ install_dir }} --action
+        install --components all"
       args:
         chdir: "{{ common_src }}"
-#        creates: "{{ install_dir }}"
+      #        creates: "{{ install_dir }}"
       register: intel_install
       failed_when: intel_install.rc != 0 and "It is already installed" not in intel_install.stdout
       changed_when: intel_install.rc == 0
@@ -52,12 +53,12 @@
     - name: Install intel modules
       block:
         - name: Create intel module directory
-          file:
-              path: "{{ intel_module_dir }}"
-              state: directory
-              mode: 0755
+          ansible.builtin.file:
+            path: "{{ intel_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rx,o=rx
         - name: Create intel modulefile {{ intel_module_dir }}/{{ major_minor }}.lua
-          template:
-              src: common/intel.lua
-              dest: "{{ intel_module_dir }}/{{ major_minor }}.lua"
-              mode: "u=rwx,g=rx,o=rx"
+          ansible.builtin.template:
+            src: common/intel.lua
+            dest: "{{ intel_module_dir }}/{{ major_minor }}.lua"
+            mode: "u=rwx,g=rx,o=rx"

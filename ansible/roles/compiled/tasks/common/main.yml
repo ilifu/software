@@ -3,27 +3,19 @@
 - name: Install openjdks
   vars:
     openjdk_versions:
-      - {
-        version_number: "14.0.1",
-        checksum: "sha256:22ce248e0bd69f23028625bede9d1b3080935b68d011eaaf9e241f84d6b9c4cc",
-        url: "https://download.java.net/java/GA/jdk14.0.1/664493ef4a6946b186ff29eb326336a2/7/GPL/openjdk-14.0.1_linux-x64_bin.tar.gz",
-      }
-      - {
-        version_number: "17.0.2",
-        checksum: "sha256:0022753d0cceecacdd3a795dd4cea2bd7ffdf9dc06e22ffd1be98411742fbb44",
-        url: "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz",
-      }
-      - {
-        version_number: "18.0.2",
-        checksum: "sha256:cf06f41a3952038df0550e8cbc2baf0aa877c3ba00cca0dd26f73134f8baf0e6",
-        url: "https://download.java.net/java/GA/jdk18.0.2/f6ad4b4450fd4d298113270ec84f30ee/9/GPL/openjdk-18.0.2_linux-x64_bin.tar.gz",
-      }
-      - {
-        version_number: "22.0.1",
-        checksum: "sha256:133c8b65113304904cdef7c9103274d141cfb64b191ff48ceb6528aca25c67b1",
-        url: "https://download.java.net/java/GA/jdk22.0.1/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-22.0.1_linux-x64_bin.tar.gz",
-      }
-  include_tasks:
+      - version_number: "14.0.1"
+        checksum: "sha256:22ce248e0bd69f23028625bede9d1b3080935b68d011eaaf9e241f84d6b9c4cc"
+        url: "https://download.java.net/java/GA/jdk14.0.1/664493ef4a6946b186ff29eb326336a2/7/GPL/openjdk-14.0.1_linux-x64_bin.tar.gz"
+      - version_number: "17.0.2"
+        checksum: "sha256:0022753d0cceecacdd3a795dd4cea2bd7ffdf9dc06e22ffd1be98411742fbb44"
+        url: "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz"
+      - version_number: "18.0.2"
+        checksum: "sha256:cf06f41a3952038df0550e8cbc2baf0aa877c3ba00cca0dd26f73134f8baf0e6"
+        url: "https://download.java.net/java/GA/jdk18.0.2/f6ad4b4450fd4d298113270ec84f30ee/9/GPL/openjdk-18.0.2_linux-x64_bin.tar.gz"
+      - version_number: "22.0.1"
+        checksum: "sha256:133c8b65113304904cdef7c9103274d141cfb64b191ff48ceb6528aca25c67b1"
+        url: "https://download.java.net/java/GA/jdk22.0.1/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-22.0.1_linux-x64_bin.tar.gz"
+  ansible.builtin.include_tasks:
     file: openjdk.yaml
   loop: "{{ openjdk_versions }}"
   tags:
@@ -33,19 +25,15 @@
 - name: Install Java Runtime Environment
   vars:
     jre_versions:
-      - {
-        version_number: "1.8.0_261",
-        checksum: "sha256:53e33ba35b1a8b799e1be943155c7b3c56a56a82956ddcf5d774325eca1df812",
-        url: "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=242980_a4634525489241b9a9e1aa73d9e118e6",
-        filename: "jre-8u261-linux-x64.tar",
-      }
-      - {
-        version_number: "1.8.0_411",
-        checksum: "sha256:5ae301f00fd45037146debdae55e5dbdf503281f1e8e796d5fa223d1124b2a10",
-        url: "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=249840_43d62d619be4e416215729597d70b8ac",
-        filename: "jre-8u411-linux-x64.tar.gz",
-      }
-  include_tasks:
+      - version_number: "1.8.0_261"
+        checksum: "sha256:53e33ba35b1a8b799e1be943155c7b3c56a56a82956ddcf5d774325eca1df812"
+        url: "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=242980_a4634525489241b9a9e1aa73d9e118e6"
+        filename: "jre-8u261-linux-x64.tar"
+      - version_number: "1.8.0_411"
+        checksum: "sha256:5ae301f00fd45037146debdae55e5dbdf503281f1e8e796d5fa223d1124b2a10"
+        url: "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=249840_43d62d619be4e416215729597d70b8ac"
+        filename: "jre-8u411-linux-x64.tar.gz"
+  ansible.builtin.include_tasks:
     file: jre.yaml
   loop: "{{ jre_versions }}"
   tags:
@@ -55,22 +43,16 @@
 - name: Install nodejs
   vars:
     versions:
-      - {
-        version_number: "18.7.0",
-        checksum: "sha256:8bc6a1b9deaed2586d726fc62d4bee9c1bfc5a30b96c1c4cff7edd15225a11a2",
+      - version_number: "18.7.0"
+        checksum: "sha256:8bc6a1b9deaed2586d726fc62d4bee9c1bfc5a30b96c1c4cff7edd15225a11a2"
         url: "https://nodejs.org/dist/v18.7.0/node-v18.7.0-linux-x64.tar.xz"
-      }
-      - {
-        version_number: "18.13.0",
-        checksum: "sha256:7f5d6922a91986ef059ba8a4396aa435440adacfe6fc6fab60a857c8f2cf5e7a",
+      - version_number: "18.13.0"
+        checksum: "sha256:7f5d6922a91986ef059ba8a4396aa435440adacfe6fc6fab60a857c8f2cf5e7a"
         url: "https://nodejs.org/dist/v18.13.0/node-v18.13.0-linux-x64.tar.xz"
-      }
-      - {
-        version_number: "19.4.0",
-        checksum: "sha256:2f3b7a02e41eeda113326370f51bd1d2a54de6b8a3628b0d36623c40ca4db783",
+      - version_number: "19.4.0"
+        checksum: "sha256:2f3b7a02e41eeda113326370f51bd1d2a54de6b8a3628b0d36623c40ca4db783"
         url: "https://nodejs.org/dist/v19.4.0/node-v19.4.0-linux-x64.tar.xz"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: nodejs.yaml
   loop: "{{ versions }}"
   tags:
@@ -80,25 +62,19 @@
 - name: Install OpenBLAS
   vars:
     openblas_versions:
-      - {
-        version_number: "0.3.9",
-        url: "https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.9/OpenBLAS-0.3.9.tar.gz",
-        checksum: "md5:28cc19a6acbf636f5aab5f10b9a0dfe1",
-        TARGET: "TARGET=SKYLAKEX",
-      }
-      - {
-        version_number: "0.3.20",
-        url: "https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.20/OpenBLAS-0.3.20.tar.gz",
-        checksum: "md5:abfaa43d995046ca4c56ccf14165c93c",
-        TARGET: "TARGET=SKYLAKEX",
-      }
-      - {
-        version_number: "0.3.25",
-        url: "https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.25/OpenBLAS-0.3.25.tar.gz",
-        checksum: "md5:48384e324cd1cdcfbdb0d2e16ca55327",
-        TARGET: "",
-      }
-  include_tasks:
+      - version_number: "0.3.9"
+        url: "https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.9/OpenBLAS-0.3.9.tar.gz"
+        checksum: "md5:28cc19a6acbf636f5aab5f10b9a0dfe1"
+        TARGET: "TARGET=SKYLAKEX"
+      - version_number: "0.3.20"
+        url: "https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.20/OpenBLAS-0.3.20.tar.gz"
+        checksum: "md5:abfaa43d995046ca4c56ccf14165c93c"
+        TARGET: "TARGET=SKYLAKEX"
+      - version_number: "0.3.25"
+        url: "https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.25/OpenBLAS-0.3.25.tar.gz"
+        checksum: "md5:48384e324cd1cdcfbdb0d2e16ca55327"
+        TARGET: ""
+  ansible.builtin.include_tasks:
     file: openblas.yaml
   loop: "{{ openblas_versions }}"
   tags:
@@ -108,19 +84,10 @@
 - name: Install LAPACK
   vars:
     lapack_versions:
-      - {
-        version_number: 3.9.0,
-        checksum: "sha256:106087f1bb5f46afdfba7f569d0cbe23dacb9a07cd24733765a0e89dbe1ad573",
-      }
-      - {
-       version_number: 3.10.1,
-       checksum: "sha256:cd005cd021f144d7d5f7f33c943942db9f03a28d110d6a3b80d718a295f7f714"
-      }
-      - {
-          version_number: 3.12.0,
-          checksum: "sha256:eac9570f8e0ad6f30ce4b963f4f033f0f643e7c3912fc9ee6cd99120675ad48b"
-      }
-  include_tasks:
+      - { version_number: 3.9.0, checksum: "sha256:106087f1bb5f46afdfba7f569d0cbe23dacb9a07cd24733765a0e89dbe1ad573" }
+      - { version_number: 3.10.1, checksum: "sha256:cd005cd021f144d7d5f7f33c943942db9f03a28d110d6a3b80d718a295f7f714" }
+      - { version_number: 3.12.0, checksum: "sha256:eac9570f8e0ad6f30ce4b963f4f033f0f643e7c3912fc9ee6cd99120675ad48b" }
+  ansible.builtin.include_tasks:
     file: lapack.yaml
   loop: "{{ lapack_versions }}"
   tags:
@@ -130,11 +97,9 @@
 - name: Install Apache Maven
   vars:
     apache_maven_versions:
-      - {
-        version_number: 3.6.3,
+      - version_number: 3.6.3
         checksum: "sha512:c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: apache_maven.yaml
   loop: "{{ apache_maven_versions }}"
   tags:
@@ -144,11 +109,9 @@
 - name: Install Apache Hadoop
   vars:
     apache_hadoop_versions:
-      - {
-        version_number: 3.2.1,
+      - version_number: 3.2.1
         checksum: "sha512:d62709c3d7144fcaafc60e18d0fa03d7d477cc813e45526f3646030cd87dbf010aeccf3f4ce795b57b08d2884b3a55f91fe9d74ac144992d2dfe444a4bbf34ee"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: apache_hadoop.yaml
   loop: "{{ apache_hadoop_versions }}"
   tags:
@@ -158,11 +121,9 @@
 - name: Install Apache Spark
   vars:
     apache_spark_versions:
-      - {
-        version_number: 2.4.5,
+      - version_number: 2.4.5
         checksum: "sha512:48B931F5A2614C8B72BA26C0B77B2DD837EE6F6BC352BF41F4D018FDB8D20FAA74FD40730B418EF7FFD5BBCE335756CFB782F6A6F571FC35F5874BFC2CE7C277"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: apache_spark.yaml
   loop: "{{ apache_spark_versions }}"
   tags:
@@ -172,62 +133,40 @@
 - name: Install Cuda
   vars:
     cuda_versions:
-      - {
-          version_number: "12.9.1_575.57.08",
-          url: "https://developer.download.nvidia.com/compute/cuda/12.9.1/local_installers/cuda_12.9.1_575.57.08_linux.run",
-          checksum: "sha256:0f6d806ddd87230d2adbe8a6006a9d20144fdbda9de2d6acc677daa5d036417a"
-      }
-      - {
-        version_number: "12.4.0_550.54.14",
-        url: "https://developer.download.nvidia.com/compute/cuda/12.4.0/local_installers/cuda_12.4.0_550.54.14_linux.run",
+      - version_number: "12.9.1_575.57.08"
+        url: "https://developer.download.nvidia.com/compute/cuda/12.9.1/local_installers/cuda_12.9.1_575.57.08_linux.run"
+        checksum: "sha256:0f6d806ddd87230d2adbe8a6006a9d20144fdbda9de2d6acc677daa5d036417a"
+      - version_number: "12.4.0_550.54.14"
+        url: "https://developer.download.nvidia.com/compute/cuda/12.4.0/local_installers/cuda_12.4.0_550.54.14_linux.run"
         checksum: "sha256:e6a842f4eca9490575cdb68b6b1bb78d47b95a897de48dee292c431892e57d17"
-      }
-      - {
-        version_number: "12.2.0_535.54.03",
-        url: "https://developer.download.nvidia.com/compute/cuda/12.2.0/local_installers/cuda_12.2.0_535.54.03_linux.run",
+      - version_number: "12.2.0_535.54.03"
+        url: "https://developer.download.nvidia.com/compute/cuda/12.2.0/local_installers/cuda_12.2.0_535.54.03_linux.run"
         checksum: "sha256:ecf3d2afadcbac029f0f4505785810d52d006e4b87ba79ff3f984336a2bbf518"
-      }
-      - {
-        version_number: "12.1.0_530.30.02",
-        url: "https://developer.download.nvidia.com/compute/cuda/12.1.0/local_installers/cuda_12.1.0_530.30.02_linux.run",
+      - version_number: "12.1.0_530.30.02"
+        url: "https://developer.download.nvidia.com/compute/cuda/12.1.0/local_installers/cuda_12.1.0_530.30.02_linux.run"
         checksum: "md5:6b6583fad98b905574a1fd37a471ef92"
-      }
-      - {
-        version_number: "11.8.0_520.61.05",
-        url: "https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda_11.8.0_520.61.05_linux.run",
+      - version_number: "11.8.0_520.61.05"
+        url: "https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda_11.8.0_520.61.05_linux.run"
         checksum: "md5:d6cf26349e5a4104b8683e26b717fa22"
-      }
-      - {
-        version_number: "11.6.0_510.39.01",
-        url: "https://developer.download.nvidia.com/compute/cuda/11.6.0/local_installers/cuda_11.6.0_510.39.01_linux.run",
+      - version_number: "11.6.0_510.39.01"
+        url: "https://developer.download.nvidia.com/compute/cuda/11.6.0/local_installers/cuda_11.6.0_510.39.01_linux.run"
         checksum: "md5:685ef40564b829eb8e6892563e9d8b80"
-      }
-      - {
-        version_number: "11.4.2_470.57.02",
-        url: "https://developer.download.nvidia.com/compute/cuda/11.4.2/local_installers/cuda_11.4.2_470.57.02_linux.run",
+      - version_number: "11.4.2_470.57.02"
+        url: "https://developer.download.nvidia.com/compute/cuda/11.4.2/local_installers/cuda_11.4.2_470.57.02_linux.run"
         checksum: "sha256:bbd87ca0e913f837454a796367473513cddef555082e4d86ed9a38659cc81f0a"
-      }
-      - {
-        version_number: "11.0.2_450.51.05",
-        url: "http://developer.download.nvidia.com/compute/cuda/11.0.2/local_installers/cuda_11.0.2_450.51.05_linux.run",
+      - version_number: "11.0.2_450.51.05"
+        url: "http://developer.download.nvidia.com/compute/cuda/11.0.2/local_installers/cuda_11.0.2_450.51.05_linux.run"
         checksum: "sha256:48247ada0e3f106051029ae8f70fbd0c238040f58b0880e55026374a959a69c1"
-      }
-      - {
-        version_number: "10.2.89_440.33.01",
-        url: "http://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run",
-        checksum: "md5:3d816c583759efa8567a92c1a2af90db",
-      }
-      - {
-        version_number: "10.1.243_418.87.00",
-        url: "http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_418.87.00_linux.run",
-        checksum: "md5:a71f703ed688eeca637dc27df714e854",
-      }
-      - {
-        version_number: "10.0.130_410.48",
-        url: "https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux",
-        checksum: "md5:9375304c8dc8d42e7f9a9ae37e80b42b",
-      }
-  include_tasks:
+      - version_number: "10.2.89_440.33.01"
+        url: "http://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run"
+        checksum: "md5:3d816c583759efa8567a92c1a2af90db"
+      - version_number: "10.1.243_418.87.00"
+        url: "http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_418.87.00_linux.run"
+        checksum: "md5:a71f703ed688eeca637dc27df714e854"
+      - version_number: "10.0.130_410.48"
+        url: "https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux"
+        checksum: "md5:9375304c8dc8d42e7f9a9ae37e80b42b"
+  ansible.builtin.include_tasks:
     file: cuda.yaml
   loop: "{{ cuda_versions }}"
   tags:
@@ -237,28 +176,14 @@
 - name: Install UCX
   vars:
     ucx_versions:
-      - {
-        version_number: "1.9.0",
-        url: "https://github.com/openucx/ucx/releases/download/v1.9.0/ucx-1.9.0.tar.gz",
-        checksum: "sha256:a7a2c8841dc0d5444088a4373dc9b9cc68dbffcd917c1eba92ca8ed8e5e635fb",
-      }
-      - {
-        version_number: "1.13.0",
-        cuda_root: "/software/common/cuda/11.6.0_510.39.01",
-      }
-      - {
-        version_number: "1.15.0",
-        cuda_root: "/software/common/cuda/12.2.0_535.54.03",
-      }
-      - {
-        version_number: "1.16.0",
-        cuda_root: "/software/common/cuda/12.2.0_535.54.03",
-      }
-      - {
-        version_number: "1.19.0",
-        cuda_root: "/software/common/cuda/12.9.1_575.57.08",
-      }
-  include_tasks:
+      - version_number: "1.9.0"
+        url: "https://github.com/openucx/ucx/releases/download/v1.9.0/ucx-1.9.0.tar.gz"
+        checksum: "sha256:a7a2c8841dc0d5444088a4373dc9b9cc68dbffcd917c1eba92ca8ed8e5e635fb"
+      - { version_number: "1.13.0", cuda_root: "/software/common/cuda/11.6.0_510.39.01" }
+      - { version_number: "1.15.0", cuda_root: "/software/common/cuda/12.2.0_535.54.03" }
+      - { version_number: "1.16.0", cuda_root: "/software/common/cuda/12.2.0_535.54.03" }
+      - { version_number: "1.19.0", cuda_root: "/software/common/cuda/12.9.1_575.57.08" }
+  ansible.builtin.include_tasks:
     file: ucx.yaml
   loop: "{{ ucx_versions }}"
   tags:
@@ -268,27 +193,19 @@
 - name: Install hwloc
   vars:
     hwloc_versions:
-      - {
-        version_number: "1.11.13",
-        url: "https://download.open-mpi.org/release/hwloc/v1.11/hwloc-1.11.13.tar.gz",
-        checksum: "sha1:e3384557e6b4aca110209f8cb45a8f604e993d53",
-      }
-      - {
-          version_number: "2.9.3",
-          url: "https://download.open-mpi.org/release/hwloc/v2.9/hwloc-2.9.3.tar.gz",
-          checksum: "sha256:5985db3a30bbe51234c2cd26ebe4ae9b4c3352ab788b1a464c40c0483bf4de59"
-      }
-      - {
-        version_number: "2.10.0",
-        url: "https://download.open-mpi.org/release/hwloc/v2.10/hwloc-2.10.0.tar.gz",
+      - version_number: "1.11.13"
+        url: "https://download.open-mpi.org/release/hwloc/v1.11/hwloc-1.11.13.tar.gz"
+        checksum: "sha1:e3384557e6b4aca110209f8cb45a8f604e993d53"
+      - version_number: "2.9.3"
+        url: "https://download.open-mpi.org/release/hwloc/v2.9/hwloc-2.9.3.tar.gz"
+        checksum: "sha256:5985db3a30bbe51234c2cd26ebe4ae9b4c3352ab788b1a464c40c0483bf4de59"
+      - version_number: "2.10.0"
+        url: "https://download.open-mpi.org/release/hwloc/v2.10/hwloc-2.10.0.tar.gz"
         checksum: "sha256:c7fd8a1404a9719c76aadc642864b9f77aed1dc1fc8882d6af861a9260ba240d"
-      }
-      - {
-        version_number: "2.12.2",
-        url: "https://download.open-mpi.org/release/hwloc/v2.12/hwloc-2.12.2.tar.gz",
+      - version_number: "2.12.2"
+        url: "https://download.open-mpi.org/release/hwloc/v2.12/hwloc-2.12.2.tar.gz"
         checksum: "sha256:ff7d309fdff7ceddfe15c1e79eaff25f3126a134f29f44d4e85571f187a6bab8"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: hwloc.yaml
   loop: "{{ hwloc_versions }}"
   tags:
@@ -298,127 +215,96 @@
 - name: Install PMIx
   vars:
     versions:
-      - {
-        version_number: "4.1.1",
-        url: "https://github.com/openpmix/openpmix/releases/download/v4.1.1/pmix-4.1.1.tar.gz",
-        checksum: "sha1:eafc9a349a9dc184a15236320f600b238622029a",
+      - version_number: "4.1.1"
+        url: "https://github.com/openpmix/openpmix/releases/download/v4.1.1/pmix-4.1.1.tar.gz"
+        checksum: "sha1:eafc9a349a9dc184a15236320f600b238622029a"
         hwloc: "/software/common/hwloc/2.9.3"
-      }
-      - {
-        version_number: "4.2.9",
-        url: "https://github.com/openpmix/openpmix/releases/download/v4.2.9/pmix-4.2.9.tar.gz",
-        checksum: "sha1:912c70f567098dd0a7c0a03a816c5e6ecfaf1962",
+      - version_number: "4.2.9"
+        url: "https://github.com/openpmix/openpmix/releases/download/v4.2.9/pmix-4.2.9.tar.gz"
+        checksum: "sha1:912c70f567098dd0a7c0a03a816c5e6ecfaf1962"
         hwloc: "/software/common/hwloc/2.10.0"
-      }
-      - {
-        version_number: "5.0.2",
-        url: "https://github.com/openpmix/openpmix/releases/download/v5.0.2/pmix-5.0.2.tar.gz",
-        checksum: "sha1:85a17290ed51b5231094f4d9c19fb266e5fb672a",
+      - version_number: "5.0.2"
+        url: "https://github.com/openpmix/openpmix/releases/download/v5.0.2/pmix-5.0.2.tar.gz"
+        checksum: "sha1:85a17290ed51b5231094f4d9c19fb266e5fb672a"
         hwloc: "/software/common/hwloc/2.10.0"
-      }
-      - {
-        version_number: "5.0.9",
-        url: "https://github.com/openpmix/openpmix/releases/download/v5.0.9/pmix-5.0.9.tar.gz",
-        checksum: "sha1:856bdac81a8546769973f3159af96c1ada6d3c36",
+      - version_number: "5.0.9"
+        url: "https://github.com/openpmix/openpmix/releases/download/v5.0.9/pmix-5.0.9.tar.gz"
+        checksum: "sha1:856bdac81a8546769973f3159af96c1ada6d3c36"
         hwloc: "/software/common/hwloc/2.12.2"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: pmix.yaml
   loop: "{{ versions }}"
   tags:
-      - never
-      - pmix
-
+    - never
+    - pmix
 
 - name: Install openmpis
   vars:
     openmpi_versions:
-      - {
-        version_number: "5.0.8",
-        checksum: "sha256:53131e1a57e7270f645707f8b0b65ba56048f5b5ac3f68faabed3eb0d710e449",
-        url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.8.tar.bz2",
-        ucx_version: "1.19.0",
-        singularity_version: "4.2.2",
-        cuda_root: "/software/common/cuda/12.9.1_575.57.08",
-        cuda_module: "cuda/12.9.1_575.57.08",
-        pmix: "/software/common/pmix/5.0.9",
-      }
-      - {
-        version_number: "5.0.3",
-        checksum: "sha256:990582f206b3ab32e938aa31bbf07c639368e4405dca196fabe7f0f76eeda90b",
-        url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.3.tar.bz2",
-        ucx_version: "1.16.0",
-        singularity_version: "3.11.3",
-        cuda_root: "/software/common/cuda/12.2.0_535.54.03",
-        cuda_module: "cuda/12.2.0_535.54.03",
-        pmix: "/software/common/pmix/5.0.2",
-      }
-      - {
-        version_number: "5.0.2",
-        checksum: "sha256:ee46ad8eeee2c3ff70772160bff877cbf38c330a0bc3b3ddc811648b3396698f",
-        url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.2.tar.bz2",
-        ucx_version: "1.15.0",
-        singularity_version: "3.11.3",
-        cuda_root: "/software/common/cuda/12.1.0_530.30.02",
-        cuda_module: "cuda/12.1.0_530.30.02",
-        pmix: "/software/common/pmix/4.2.9",
-      }
-      - {
-        version_number: "4.1.5",
-        checksum: "sha256:a640986bc257389dd379886fdae6264c8cfa56bc98b71ce3ae3dfbd8ce61dbe3",
-        url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.5.tar.bz2",
-        ucx_version: "1.15.0",
-        singularity_version: "3.11.3",
-        cuda_root: "/software/common/cuda/12.2.0_535.54.03",
-        cuda_module: "cuda/12.2.0_535.54.03",
-        pmix: "/software/common/pmix/4.1.1",
-      }
-      - {
-        version_number: "4.1.4",
-        checksum: "sha256:92912e175fd1234368c8730c03f4996fe5942e7479bb1d10059405e7f2b3930d",
-        url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.4.tar.bz2",
-        ucx_version: "1.13.0",
-        singularity_version: "3.9.1",
-        cuda_root: "/software/common/cuda/11.6.0_510.39.01",
-        cuda_module: "cuda/11.6.0_510.39.01",
-      }
-      - {
-        version_number: "4.1.0",
-        checksum: "sha256:73866fb77090819b6a8c85cb8539638d37d6877455825b74e289d647a39fd5b5",
-        url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.0.tar.bz2",
-        ucx_version: "1.9.0",
-      }
-      - {
-        version_number: "4.0.5",
-        checksum: "sha256:c58f3863b61d944231077f344fe6b4b8fbb83f3d1bc93ab74640bf3e5acac009",
-        url: "https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.5.tar.bz2",
-        ucx_version: "1.9.0",
-      }
-      - {
-        version_number: "4.0.3",
-        checksum: "sha256:1402feced8c3847b3ab8252165b90f7d1fa28c23b6b2ca4632b6e4971267fd03",
-        url: "https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.3.tar.bz2",
-        ucx_version: "1.9.0",
-      }
-      - {
-        version_number: "3.1.6",
-        checksum: "sha256:50131d982ec2a516564d74d5616383178361c2f08fdd7d1202b80bdf66a0d279",
-        url: "https://download.open-mpi.org/release/open-mpi/v3.1/openmpi-3.1.6.tar.bz2",
-        ucx_version: "1.9.0",
-      }
-      - {
-        version_number: "2.1.6",
-        checksum: "sha1:7a1d7f1b7efe2258bda3929b8b1729bfb7a51f08",
-        url: "https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.6.tar.bz2",
-        ucx_version: "1.9.0",
-      }
-      - {
-        version_number: "2.1.1",
-        checksum: "sha1:3aaee35c17b6ef02f4cee274f2670d5b7b2c968a",
-        url: "https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.1.tar.bz2",
-        ucx_version: "1.9.0",
-      }
-  include_tasks:
+      - version_number: "5.0.8"
+        checksum: "sha256:53131e1a57e7270f645707f8b0b65ba56048f5b5ac3f68faabed3eb0d710e449"
+        url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.8.tar.bz2"
+        ucx_version: "1.19.0"
+        singularity_version: "4.2.2"
+        cuda_root: "/software/common/cuda/12.9.1_575.57.08"
+        cuda_module: "cuda/12.9.1_575.57.08"
+        pmix: "/software/common/pmix/5.0.9"
+      - version_number: "5.0.3"
+        checksum: "sha256:990582f206b3ab32e938aa31bbf07c639368e4405dca196fabe7f0f76eeda90b"
+        url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.3.tar.bz2"
+        ucx_version: "1.16.0"
+        singularity_version: "3.11.3"
+        cuda_root: "/software/common/cuda/12.2.0_535.54.03"
+        cuda_module: "cuda/12.2.0_535.54.03"
+        pmix: "/software/common/pmix/5.0.2"
+      - version_number: "5.0.2"
+        checksum: "sha256:ee46ad8eeee2c3ff70772160bff877cbf38c330a0bc3b3ddc811648b3396698f"
+        url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.2.tar.bz2"
+        ucx_version: "1.15.0"
+        singularity_version: "3.11.3"
+        cuda_root: "/software/common/cuda/12.1.0_530.30.02"
+        cuda_module: "cuda/12.1.0_530.30.02"
+        pmix: "/software/common/pmix/4.2.9"
+      - version_number: "4.1.5"
+        checksum: "sha256:a640986bc257389dd379886fdae6264c8cfa56bc98b71ce3ae3dfbd8ce61dbe3"
+        url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.5.tar.bz2"
+        ucx_version: "1.15.0"
+        singularity_version: "3.11.3"
+        cuda_root: "/software/common/cuda/12.2.0_535.54.03"
+        cuda_module: "cuda/12.2.0_535.54.03"
+        pmix: "/software/common/pmix/4.1.1"
+      - version_number: "4.1.4"
+        checksum: "sha256:92912e175fd1234368c8730c03f4996fe5942e7479bb1d10059405e7f2b3930d"
+        url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.4.tar.bz2"
+        ucx_version: "1.13.0"
+        singularity_version: "3.9.1"
+        cuda_root: "/software/common/cuda/11.6.0_510.39.01"
+        cuda_module: "cuda/11.6.0_510.39.01"
+      - version_number: "4.1.0"
+        checksum: "sha256:73866fb77090819b6a8c85cb8539638d37d6877455825b74e289d647a39fd5b5"
+        url: "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.0.tar.bz2"
+        ucx_version: "1.9.0"
+      - version_number: "4.0.5"
+        checksum: "sha256:c58f3863b61d944231077f344fe6b4b8fbb83f3d1bc93ab74640bf3e5acac009"
+        url: "https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.5.tar.bz2"
+        ucx_version: "1.9.0"
+      - version_number: "4.0.3"
+        checksum: "sha256:1402feced8c3847b3ab8252165b90f7d1fa28c23b6b2ca4632b6e4971267fd03"
+        url: "https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.3.tar.bz2"
+        ucx_version: "1.9.0"
+      - version_number: "3.1.6"
+        checksum: "sha256:50131d982ec2a516564d74d5616383178361c2f08fdd7d1202b80bdf66a0d279"
+        url: "https://download.open-mpi.org/release/open-mpi/v3.1/openmpi-3.1.6.tar.bz2"
+        ucx_version: "1.9.0"
+      - version_number: "2.1.6"
+        checksum: "sha1:7a1d7f1b7efe2258bda3929b8b1729bfb7a51f08"
+        url: "https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.6.tar.bz2"
+        ucx_version: "1.9.0"
+      - version_number: "2.1.1"
+        checksum: "sha1:3aaee35c17b6ef02f4cee274f2670d5b7b2c968a"
+        url: "https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.1.tar.bz2"
+        ucx_version: "1.9.0"
+  ansible.builtin.include_tasks:
     file: openmpi.yaml
   loop: "{{ openmpi_versions }}"
   tags:
@@ -428,22 +314,19 @@
 - name: Install mpich
   vars:
     mpich_versions:
-      - {
-        version_number: "3.3a2",
-        checksum: "sha256:5d408e31917c5249bf5e35d1341afc34928e15483473dbb4e066b76c951125cf",
-        url: "https://www.mpich.org/static/downloads/3.3a2/mpich-3.3a2.tar.gz",
+      - version_number: "3.3a2"
+        checksum: "sha256:5d408e31917c5249bf5e35d1341afc34928e15483473dbb4e066b76c951125cf"
+        url: "https://www.mpich.org/static/downloads/3.3a2/mpich-3.3a2.tar.gz"
         hwloc_version: "1.11.13"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: mpich.yaml
   loop: "{{ mpich_versions }}"
   tags:
     - never
     - mpich
 
-
 - name: Install uv
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: uv.yaml
   tags:
     - never
@@ -455,39 +338,15 @@
 - name: Install pythons without standalone builds (compiled from source)
   vars:
     python_versions:
-      - {
-        version_number: "2.7.18",
-        checksum: "sha256:b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43"
-      }
-      - {
-        version_number: "3.6.15",
-        checksum: "md5:bc04aa6c2a1a172a35012abd668538cd"
-      }
-      - {
-        version_number: "3.7.7",
-        checksum: "sha256:06a0a9f1bf0d8cd1e4121194d666c4e28ddae4dd54346de6c343206599f02136"
-      }
-      - {
-        version_number: "3.7.16",
-        checksum: "md5:df3b8ad6e2ab8f198d65ecf68816bf42"
-      }
-      - {
-        version_number: "3.7.17",
-        checksum: "md5:dd94cab4541b57b88cf3dab32d6336e3"
-      }
-      - {
-        version_number: "3.10.1",
-        checksum: "md5:789210934745a65247a3ebf5da9adb64"
-      }
-      - {
-        version_number: "3.11.0",
-        checksum: "md5:fe92acfa0db9b9f5044958edb451d463"
-      }
-      - {
-        version_number: "3.11.2",
-        checksum: "md5:a957cffb58a89303b62124896881950b"
-      }
-  include_tasks:
+      - { version_number: "2.7.18", checksum: "sha256:b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43" }
+      - { version_number: "3.6.15", checksum: "md5:bc04aa6c2a1a172a35012abd668538cd" }
+      - { version_number: "3.7.7", checksum: "sha256:06a0a9f1bf0d8cd1e4121194d666c4e28ddae4dd54346de6c343206599f02136" }
+      - { version_number: "3.7.16", checksum: "md5:df3b8ad6e2ab8f198d65ecf68816bf42" }
+      - { version_number: "3.7.17", checksum: "md5:dd94cab4541b57b88cf3dab32d6336e3" }
+      - { version_number: "3.10.1", checksum: "md5:789210934745a65247a3ebf5da9adb64" }
+      - { version_number: "3.11.0", checksum: "md5:fe92acfa0db9b9f5044958edb451d463" }
+      - { version_number: "3.11.2", checksum: "md5:a957cffb58a89303b62124896881950b" }
+  ansible.builtin.include_tasks:
     file: python.yaml
   loop: "{{ python_versions }}"
   tags:
@@ -532,7 +391,7 @@
       - { version_number: "3.13.2" }
       - { version_number: "3.13.14" }
       - { version_number: "3.14.6" }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: python_uv.yaml
   loop: "{{ python_versions }}"
   tags:
@@ -542,32 +401,22 @@
 - name: Install Anacondas
   vars:
     anaconda_versions:
-      - {
-        version_number: "2020.07",
-        url: "https://repo.anaconda.com/archive/Anaconda3-2020.07-Linux-x86_64.sh",
+      - version_number: "2020.07"
+        url: "https://repo.anaconda.com/archive/Anaconda3-2020.07-Linux-x86_64.sh"
         checksum: "sha512:ed810aaf6c08e8e50d4031958e396740d4e1e9994309c43e19f7cd5e8ef71f26d37296a7ad7bee5d863f9122a690f72f212a9b5cd40727eb40a111bb5bd9a7a5"
-      }
-      - {
-        version_number: "2021.05",
-        url: "https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh",
+      - version_number: "2021.05"
+        url: "https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh"
         checksum: "sha512:e1126ffc8c35b4d22959a3fd50282a3e1e7e31471f2d1d2996d9948ed44550d76a94fcecaeebad5cbd7a1b8aeaa1b8f8abaf78672634424ec00fd269ad08cf2d"
-      }
-      - {
-        version_number: "2021.11",
-        url: "https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh",
+      - version_number: "2021.11"
+        url: "https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh"
         checksum: "sha512:f38b3ffc5d8bccbbb1b9c0538bc608043013c41a1be32b3992b12bf043f7ef0c0cd75469b7dc672f9b544d1095cd7896de5fa8aabd60f2cccaec1dd07a638baa"
-      }
-      - {
-          version_number: "2023.07",
-          url: "https://repo.anaconda.com/archive/Anaconda3-2023.07-2-Linux-x86_64.sh",
-          checksum: "sha512:2d9250848f92ac38acb7a4b4699bd01252eefaeeb17a5ca489bb06d06a89e02681fe3944ccf17cb92e07261e96d6b96cb9530d27a2d8d5cab37df44734aef492"
-      }
-      - {
-          version_number: "2024.10",
-          url: "https://repo.anaconda.com/archive/Anaconda3-2024.10-1-Linux-x86_64.sh",
-          checksum: "sha512:cd9af4f8e31527d81f0a8308ae5395a35bf9bf9b56f697b1b81c9e8742ae1a0bb83f6ceb049e785e8144b9cbd13329fd292cdfbdaace3450b2457922e0a59508"
-      }
-  include_tasks:
+      - version_number: "2023.07"
+        url: "https://repo.anaconda.com/archive/Anaconda3-2023.07-2-Linux-x86_64.sh"
+        checksum: "sha512:2d9250848f92ac38acb7a4b4699bd01252eefaeeb17a5ca489bb06d06a89e02681fe3944ccf17cb92e07261e96d6b96cb9530d27a2d8d5cab37df44734aef492"
+      - version_number: "2024.10"
+        url: "https://repo.anaconda.com/archive/Anaconda3-2024.10-1-Linux-x86_64.sh"
+        checksum: "sha512:cd9af4f8e31527d81f0a8308ae5395a35bf9bf9b56f697b1b81c9e8742ae1a0bb83f6ceb049e785e8144b9cbd13329fd292cdfbdaace3450b2457922e0a59508"
+  ansible.builtin.include_tasks:
     file: anaconda.yaml
   loop: "{{ anaconda_versions }}"
   tags:
@@ -577,131 +426,99 @@
 - name: Install harfbuzz
   vars:
     harfbuzz_versions:
-      - {
-        version_number: "8.3.1",
-        url: "https://github.com/harfbuzz/harfbuzz/releases/download/8.3.1/harfbuzz-8.3.1.tar.xz",
+      - version_number: "8.3.1"
+        url: "https://github.com/harfbuzz/harfbuzz/releases/download/8.3.1/harfbuzz-8.3.1.tar.xz"
         checksum: "sha256:f73e1eacd7e2ffae687bc3f056bb0c705b7a05aee86337686e09da8fc1c2030c"
-      }
-      - {
-        version_number: "8.5.0",
-        url: "https://github.com/harfbuzz/harfbuzz/releases/download/8.5.0/harfbuzz-8.5.0.tar.xz",
+      - version_number: "8.5.0"
+        url: "https://github.com/harfbuzz/harfbuzz/releases/download/8.5.0/harfbuzz-8.5.0.tar.xz"
         checksum: "sha256:77e4f7f98f3d86bf8788b53e6832fb96279956e1c3961988ea3d4b7ca41ddc27"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: harfbuzz.yaml
   loop: "{{ harfbuzz_versions }}"
   tags:
-      - never
-      - harfbuzz
+    - never
+    - harfbuzz
 
 - name: Install fribidi
   vars:
-      fribidi_versions:
-      - {
-        version_number: "1.0.13",
-        url: "https://github.com/fribidi/fribidi/releases/download/v1.0.13/fribidi-1.0.13.tar.xz",
+    fribidi_versions:
+      - version_number: "1.0.13"
+        url: "https://github.com/fribidi/fribidi/releases/download/v1.0.13/fribidi-1.0.13.tar.xz"
         checksum: "sha256:7fa16c80c81bd622f7b198d31356da139cc318a63fc7761217af4130903f54a2"
-      }
-      - {
-        version_number: "1.0.15",
-        url: "https://github.com/fribidi/fribidi/releases/download/v1.0.15/fribidi-1.0.15.tar.xz",
+      - version_number: "1.0.15"
+        url: "https://github.com/fribidi/fribidi/releases/download/v1.0.15/fribidi-1.0.15.tar.xz"
         checksum: "sha256:0bbc7ff633bfa208ae32d7e369cf5a7d20d5d2557a0b067c9aa98bcbf9967587"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: fribidi.yaml
   loop: "{{ fribidi_versions }}"
   tags:
-      - never
-      - fribidi
+    - never
+    - fribidi
 
 - name: Install Rs
   vars:
     R_versions:
-      - {
-        version_number: "4.0.0",
-        checksum: "sha256:06beb0291b569978484eb0dcb5d2339665ec745737bdfb4e873e7a5a75492940",
-        url: "https://cran.r-project.org/src/base/R-4/R-4.0.0.tar.gz",
-        harfbuzz: "/software/common/harfbuzz/8.5.0",
+      - version_number: "4.0.0"
+        checksum: "sha256:06beb0291b569978484eb0dcb5d2339665ec745737bdfb4e873e7a5a75492940"
+        url: "https://cran.r-project.org/src/base/R-4/R-4.0.0.tar.gz"
+        harfbuzz: "/software/common/harfbuzz/8.5.0"
         fribidi: "/software/common/fribidi/1.0.15"
-      }
-      - {
-        version_number: "4.0.2",
-        checksum: "sha256:d3bceab364da0876625e4097808b42512395fdf41292f4915ab1fd257c1bbe75",
-        url: "https://cran.r-project.org/src/base/R-4/R-4.0.2.tar.gz",
-        harfbuzz: "/software/common/harfbuzz/8.5.0",
+      - version_number: "4.0.2"
+        checksum: "sha256:d3bceab364da0876625e4097808b42512395fdf41292f4915ab1fd257c1bbe75"
+        url: "https://cran.r-project.org/src/base/R-4/R-4.0.2.tar.gz"
+        harfbuzz: "/software/common/harfbuzz/8.5.0"
         fribidi: "/software/common/fribidi/1.0.15"
-      }
-      - {
-        version_number: "4.0.3",
-        checksum: "sha256:09983a8a78d5fb6bc45d27b1c55f9ba5265f78fa54a55c13ae691f87c5bb9e0d",
-        url: "https://cran.r-project.org/src/base/R-4/R-4.0.3.tar.gz",
-        harfbuzz: "/software/common/harfbuzz/8.5.0",
+      - version_number: "4.0.3"
+        checksum: "sha256:09983a8a78d5fb6bc45d27b1c55f9ba5265f78fa54a55c13ae691f87c5bb9e0d"
+        url: "https://cran.r-project.org/src/base/R-4/R-4.0.3.tar.gz"
+        harfbuzz: "/software/common/harfbuzz/8.5.0"
         fribidi: "/software/common/fribidi/1.0.15"
-      }
-      - {
-        version_number: "4.1.0",
-        checksum: "sha256:e8e68959d7282ca147360fc9644ada9bd161bab781bab14d33b8999a95182781",
-        url: "https://cran.r-project.org/src/base/R-4/R-4.1.0.tar.gz",
-        harfbuzz: "/software/common/harfbuzz/8.5.0",
+      - version_number: "4.1.0"
+        checksum: "sha256:e8e68959d7282ca147360fc9644ada9bd161bab781bab14d33b8999a95182781"
+        url: "https://cran.r-project.org/src/base/R-4/R-4.1.0.tar.gz"
+        harfbuzz: "/software/common/harfbuzz/8.5.0"
         fribidi: "/software/common/fribidi/1.0.15"
-      }
-      - {
-        version_number: "4.1.1",
-        checksum: "sha256:515e03265752257d0b7036f380f82e42b46ed8473f54f25c7b67ed25bbbdd364",
-        url: "https://cran.r-project.org/src/base/R-4/R-4.1.1.tar.gz",
-        harfbuzz: "/software/common/harfbuzz/8.5.0",
+      - version_number: "4.1.1"
+        checksum: "sha256:515e03265752257d0b7036f380f82e42b46ed8473f54f25c7b67ed25bbbdd364"
+        url: "https://cran.r-project.org/src/base/R-4/R-4.1.1.tar.gz"
+        harfbuzz: "/software/common/harfbuzz/8.5.0"
         fribidi: "/software/common/fribidi/1.0.15"
-      }
-      - {
-        version_number: "4.2.0",
-        checksum: "sha256:38eab7719b7ad095388f06aa090c5a2b202791945de60d3e2bb0eab1f5097488",
-        url: "https://cran.r-project.org/src/base/R-4/R-4.2.0.tar.gz",
-        harfbuzz: "/software/common/harfbuzz/8.5.0",
+      - version_number: "4.2.0"
+        checksum: "sha256:38eab7719b7ad095388f06aa090c5a2b202791945de60d3e2bb0eab1f5097488"
+        url: "https://cran.r-project.org/src/base/R-4/R-4.2.0.tar.gz"
+        harfbuzz: "/software/common/harfbuzz/8.5.0"
         fribidi: "/software/common/fribidi/1.0.15"
-      }
-      - {
-        version_number: "4.2.2",
-        checksum: "sha256:0ff62b42ec51afa5713caee7c4fde7a0c45940ba39bef8c5c9487fef0c953df5",
-        url: "https://cran.r-project.org/src/base/R-4/R-4.2.2.tar.gz",
-        harfbuzz: "/software/common/harfbuzz/8.5.0",
+      - version_number: "4.2.2"
+        checksum: "sha256:0ff62b42ec51afa5713caee7c4fde7a0c45940ba39bef8c5c9487fef0c953df5"
+        url: "https://cran.r-project.org/src/base/R-4/R-4.2.2.tar.gz"
+        harfbuzz: "/software/common/harfbuzz/8.5.0"
         fribidi: "/software/common/fribidi/1.0.15"
-      }
-      - {
-        version_number: "4.3.1",
-        checksum: "sha256:8dd0bf24f1023c6f618c3b317383d291b4a494f40d73b983ac22ffea99e4ba99",
-        url: "https://cran.r-project.org/src/base/R-4/R-4.3.1.tar.gz",
-        harfbuzz: "/software/common/harfbuzz/8.5.0",
+      - version_number: "4.3.1"
+        checksum: "sha256:8dd0bf24f1023c6f618c3b317383d291b4a494f40d73b983ac22ffea99e4ba99"
+        url: "https://cran.r-project.org/src/base/R-4/R-4.3.1.tar.gz"
+        harfbuzz: "/software/common/harfbuzz/8.5.0"
         fribidi: "/software/common/fribidi/1.0.15"
-      }
-      - {
-        version_number: "4.3.2",
-        checksum: "sha256:b3f5760ac2eee8026a3f0eefcb25b47723d978038eee8e844762094c860c452a",
-        url: "https://cran.r-project.org/src/base/R-4/R-4.3.2.tar.gz",
-        harfbuzz: "/software/common/harfbuzz/8.5.0",
+      - version_number: "4.3.2"
+        checksum: "sha256:b3f5760ac2eee8026a3f0eefcb25b47723d978038eee8e844762094c860c452a"
+        url: "https://cran.r-project.org/src/base/R-4/R-4.3.2.tar.gz"
+        harfbuzz: "/software/common/harfbuzz/8.5.0"
         fribidi: "/software/common/fribidi/1.0.15"
-      }
-      - {
-        version_number: "4.3.3",
-        checksum: "sha256:80851231393b85bf3877ee9e39b282e750ed864c5ec60cbd68e6e139f0520330",
-        url: "https://cran.r-project.org/src/base/R-4/R-4.3.3.tar.gz",
-        harfbuzz: "/software/common/harfbuzz/8.5.0",
+      - version_number: "4.3.3"
+        checksum: "sha256:80851231393b85bf3877ee9e39b282e750ed864c5ec60cbd68e6e139f0520330"
+        url: "https://cran.r-project.org/src/base/R-4/R-4.3.3.tar.gz"
+        harfbuzz: "/software/common/harfbuzz/8.5.0"
         fribidi: "/software/common/fribidi/1.0.15"
-      }
-      - {
-        version_number: "4.4.1",
-        checksum: "sha256:b4cb675deaaeb7299d3b265d218cde43f192951ce5b89b7bb1a5148a36b2d94d",
-        url: "https://cloud.r-project.org/src/base/R-4/R-4.4.1.tar.gz",
-        harfbuzz: "/software/common/harfbuzz/8.5.0",
+      - version_number: "4.4.1"
+        checksum: "sha256:b4cb675deaaeb7299d3b265d218cde43f192951ce5b89b7bb1a5148a36b2d94d"
+        url: "https://cloud.r-project.org/src/base/R-4/R-4.4.1.tar.gz"
+        harfbuzz: "/software/common/harfbuzz/8.5.0"
         fribidi: "/software/common/fribidi/1.0.15"
-      }
-      - {
-        version_number: "4.5.2",
-        checksum: "sha256:0d71ff7106ec69cd7c67e1e95ed1a3cee355880931f2eb78c530014a9e379f20",
-        url: "https://cloud.r-project.org/src/base/R-4/R-4.5.2.tar.gz",
-        harfbuzz: "/software/common/harfbuzz/8.5.0",
+      - version_number: "4.5.2"
+        checksum: "sha256:0d71ff7106ec69cd7c67e1e95ed1a3cee355880931f2eb78c530014a9e379f20"
+        url: "https://cloud.r-project.org/src/base/R-4/R-4.5.2.tar.gz"
+        harfbuzz: "/software/common/harfbuzz/8.5.0"
         fribidi: "/software/common/fribidi/1.0.15"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: R.yaml
   loop: "{{ R_versions }}"
   tags:
@@ -711,47 +528,31 @@
 - name: Install Go
   vars:
     go_versions:
-      - {
-        version_number: "1.16.3",
-        checksum: "sha256:951a3c7c6ce4e56ad883f97d9db74d3d6d80d5fec77455c6ada6c1f7ac4776d2",
-        url: "https://golang.org/dl/go1.16.3.linux-amd64.tar.gz",
-      }
-      - {
-        version_number: "1.17.3",
-        checksum: "sha256:550f9845451c0c94be679faf116291e7807a8d78b43149f9506c1b15eb89008c",
-        url: "https://golang.org/dl/go1.17.3.linux-amd64.tar.gz",
-      }
-      - {
-        version_number: "1.18.4",
-        checksum: "sha256:c9b099b68d93f5c5c8a8844a89f8db07eaa58270e3a1e01804f17f4cf8df02f5",
-        url: "https://golang.org/dl/go1.18.4.linux-amd64.tar.gz",
-      }
-      - {
-        version_number: "1.20.4",
-        checksum: "sha256:698ef3243972a51ddb4028e4a1ac63dc6d60821bf18e59a807e051fee0a385bd",
-        url: "https://golang.org/dl/go1.20.4.linux-amd64.tar.gz",
-      }
-      - {
-        version_number: "1.21.6",
-        checksum: "sha256:3f934f40ac360b9c01f616a9aa1796d227d8b0328bf64cb045c7b8c4ee9caea4",
-        url: "https://golang.org/dl/go1.21.6.linux-amd64.tar.gz",
-      }
-      - {
-        version_number: "1.22.4",
-        checksum: "sha256:ba79d4526102575196273416239cca418a651e049c2b099f3159db85e7bade7d",
-        url: "https://golang.org/dl/go1.22.4.linux-amd64.tar.gz",
-      }
-      - {
-        version_number: "1.25.3",
-        checksum: "sha256:0335f314b6e7bfe08c3d0cfaa7c19db961b7b99fb20be62b0a826c992ad14e0f",
-        url: "https://golang.org/dl/go1.25.3.linux-amd64.tar.gz",
-      }
-      - {
-        version_number: "1.25.10",
-        checksum: "sha256:42d4f7a32316aa66591eca7e89867256057a4264451aca10570a715b3637ba70",
-        url: "https://golang.org/dl/go1.25.10.linux-amd64.tar.gz",
-      }
-  include_tasks:
+      - version_number: "1.16.3"
+        checksum: "sha256:951a3c7c6ce4e56ad883f97d9db74d3d6d80d5fec77455c6ada6c1f7ac4776d2"
+        url: "https://golang.org/dl/go1.16.3.linux-amd64.tar.gz"
+      - version_number: "1.17.3"
+        checksum: "sha256:550f9845451c0c94be679faf116291e7807a8d78b43149f9506c1b15eb89008c"
+        url: "https://golang.org/dl/go1.17.3.linux-amd64.tar.gz"
+      - version_number: "1.18.4"
+        checksum: "sha256:c9b099b68d93f5c5c8a8844a89f8db07eaa58270e3a1e01804f17f4cf8df02f5"
+        url: "https://golang.org/dl/go1.18.4.linux-amd64.tar.gz"
+      - version_number: "1.20.4"
+        checksum: "sha256:698ef3243972a51ddb4028e4a1ac63dc6d60821bf18e59a807e051fee0a385bd"
+        url: "https://golang.org/dl/go1.20.4.linux-amd64.tar.gz"
+      - version_number: "1.21.6"
+        checksum: "sha256:3f934f40ac360b9c01f616a9aa1796d227d8b0328bf64cb045c7b8c4ee9caea4"
+        url: "https://golang.org/dl/go1.21.6.linux-amd64.tar.gz"
+      - version_number: "1.22.4"
+        checksum: "sha256:ba79d4526102575196273416239cca418a651e049c2b099f3159db85e7bade7d"
+        url: "https://golang.org/dl/go1.22.4.linux-amd64.tar.gz"
+      - version_number: "1.25.3"
+        checksum: "sha256:0335f314b6e7bfe08c3d0cfaa7c19db961b7b99fb20be62b0a826c992ad14e0f"
+        url: "https://golang.org/dl/go1.25.3.linux-amd64.tar.gz"
+      - version_number: "1.25.10"
+        checksum: "sha256:42d4f7a32316aa66591eca7e89867256057a4264451aca10570a715b3637ba70"
+        url: "https://golang.org/dl/go1.25.10.linux-amd64.tar.gz"
+  ansible.builtin.include_tasks:
     file: golang.yaml
   loop: "{{ go_versions }}"
   tags:
@@ -761,85 +562,81 @@
 - name: Install singularity
   vars:
     singularity_versions:
-      - {
-        version_number: "4.4.2",
-        checksum: "sha256:024edf273f1fa5de9525a7052989eacfd112f7c582726f60cbcbaba9f21d0f96",
-        url: "https://github.com/sylabs/singularity/releases/download/v4.4.2/singularity-ce-4.4.2.tar.gz",
+      - version_number: "4.4.2"
+        checksum: "sha256:024edf273f1fa5de9525a7052989eacfd112f7c582726f60cbcbaba9f21d0f96"
+        url: "https://github.com/sylabs/singularity/releases/download/v4.4.2/singularity-ce-4.4.2.tar.gz"
         go_location: "{{ common_dir }}/golang/1.25.10/bin"
-      }
-      - {
-        version_number: "4.4.1",
-        checksum: "sha256:5e0611d5e85d471e0a1dcfeef2c4e3bf01a6019bb7bfca10d955cd6c08853417",
-        url: "https://github.com/sylabs/singularity/releases/download/v4.4.1/singularity-ce-4.4.1.tar.gz",
+      - version_number: "4.4.1"
+        checksum: "sha256:5e0611d5e85d471e0a1dcfeef2c4e3bf01a6019bb7bfca10d955cd6c08853417"
+        url: "https://github.com/sylabs/singularity/releases/download/v4.4.1/singularity-ce-4.4.1.tar.gz"
         go_location: "{{ common_dir }}/golang/1.25.10/bin"
-      }
-      # Older versions retained for reference only. We now install only the
-      # latest singularity, built --without-suid (see singularity.yaml).
-      # - {
-      #   version_number: "3.8.0",
-      #   checksum: "sha256:5fa2c0e7ef2b814d8aa170826b833f91e5031a85d85cd1292a234e6c55da1be1",
-      #   url: "https://github.com/sylabs/singularity/releases/download/v3.8.0/singularity-ce-3.8.0.tar.gz",
-      #   go_location: "{{ common_dir }}/golang/1.16.3/bin"
-      # }
-      # - {
-      #   version_number: "3.8.3",
-      #   checksum: "sha256:9ecb6f01f1a3f2cd8d0f73d9806201ec1b25b23c9722d374a6430eeba0785981",
-      #   url: "https://github.com/sylabs/singularity/releases/download/v3.8.3/singularity-ce-3.8.3.tar.gz",
-      #   go_location: "{{ common_dir }}/golang/1.16.3/bin"
-      # }
-      # - {
-      #   version_number: "2.6.1",
-      #   checksum: "sha256:f38d46a225e8368eb4693137806d2dc96e925a50bdf7f6983662848831041df2"
-      # }
-      # - {
-      #   version_number: "3.9.0",
-      #   checksum: "sha256:3569928cbd907fe90c52f6a809f5f8e99f597237c5a25a9dce07e3efb3b1447a",
-      #   url: "https://github.com/sylabs/singularity/releases/download/v3.9.0/singularity-ce-3.9.0.tar.gz",
-      #   go_location: "{{ common_dir }}/golang/1.16.3/bin"
-      # }
-      # - {
-      #   version_number: "3.9.1",
-      #   checksum: "sha256:1ba3bb1719a420f48e9b0a6afdb5011f6c786d0f107ef272528c632fff9fd153",
-      #   url: "https://github.com/sylabs/singularity/releases/download/v3.9.1/singularity-ce-3.9.1.tar.gz",
-      #   go_location: "{{ common_dir }}/golang/1.17.3/bin"
-      # }
-      # - {
-      #   version_number: "3.10.1",
-      #   checksum: "sha256:e3af12edc0260bc3a3a481459a3a4457de9235025e6b37288da80e3cdc011a7a",
-      #   url: "https://github.com/sylabs/singularity/releases/download/v3.10.1/singularity-ce-3.10.1.tar.gz",
-      #   go_location: "{{ common_dir }}/golang/1.18.4/bin"
-      # }
-      # - {
-      #     version_number: "3.11.3",
-      #     checksum: "sha256:a77ede063fd115f85f98f82d2e30459b5565db7d098665497bcd684bf8edaec9",
-      #     url: "https://github.com/sylabs/singularity/releases/download/v3.11.3/singularity-ce-3.11.3.tar.gz",
-      #     go_location: "{{ common_dir }}/golang/1.20.4/bin"
-      # }
-      # - {
-      #     version_number: "4.1.0",
-      #     checksum: "sha256:119667f18e76a750b7d4f8612d7878c18a824ee171852795019aa68875244813",
-      #     url: "https://github.com/sylabs/singularity/releases/download/v4.1.0/singularity-ce-4.1.0.tar.gz",
-      #     go_location: "{{ common_dir }}/golang/1.21.6/bin"
-      # }
-      # - {
-      #   version_number: "4.1.3",
-      #   checksum: "sha256:0a575292ddb2e7b74ab534b287c4dc8a1bd34d961accc0ba56ffa3714cca9c15",
-      #   url: "https://github.com/sylabs/singularity/releases/download/v4.1.3/singularity-ce-4.1.3.tar.gz",
-      #   go_location: "{{ common_dir }}/golang/1.22.4/bin"
-      # }
-      # - {
-      #   version_number: "4.2.2",
-      #   checksum: "sha256:f22c7eee64546abafada639225eb70c993da873abc05a48081402f18f49e47b1",
-      #   url: "https://github.com/sylabs/singularity/releases/download/v4.2.2/singularity-ce-4.2.2.tar.gz",
-      #   go_location: "{{ common_dir }}/golang/1.22.4/bin"
-      # }
-      # - {
-      #   version_number: "4.3.3",
-      #   checksum: "sha256:3b1517179f697293d1f09f75eadc43d25c92be132c279369c1096142ce9194be",
-      #   url: "https://github.com/sylabs/singularity/releases/download/v4.3.3/singularity-ce-4.3.3.tar.gz",
-      #   go_location: "{{ common_dir }}/golang/1.25.3/bin"
-      # }
-  include_tasks:
+  # Older versions retained for reference only. We now install only the
+  # latest singularity, built --without-suid (see singularity.yaml).
+  # - {
+  #   version_number: "3.8.0",
+  #   checksum: "sha256:5fa2c0e7ef2b814d8aa170826b833f91e5031a85d85cd1292a234e6c55da1be1",
+  #   url: "https://github.com/sylabs/singularity/releases/download/v3.8.0/singularity-ce-3.8.0.tar.gz",
+  #   go_location: "{{ common_dir }}/golang/1.16.3/bin"
+  # }
+  # - {
+  #   version_number: "3.8.3",
+  #   checksum: "sha256:9ecb6f01f1a3f2cd8d0f73d9806201ec1b25b23c9722d374a6430eeba0785981",
+  #   url: "https://github.com/sylabs/singularity/releases/download/v3.8.3/singularity-ce-3.8.3.tar.gz",
+  #   go_location: "{{ common_dir }}/golang/1.16.3/bin"
+  # }
+  # - {
+  #   version_number: "2.6.1",
+  #   checksum: "sha256:f38d46a225e8368eb4693137806d2dc96e925a50bdf7f6983662848831041df2"
+  # }
+  # - {
+  #   version_number: "3.9.0",
+  #   checksum: "sha256:3569928cbd907fe90c52f6a809f5f8e99f597237c5a25a9dce07e3efb3b1447a",
+  #   url: "https://github.com/sylabs/singularity/releases/download/v3.9.0/singularity-ce-3.9.0.tar.gz",
+  #   go_location: "{{ common_dir }}/golang/1.16.3/bin"
+  # }
+  # - {
+  #   version_number: "3.9.1",
+  #   checksum: "sha256:1ba3bb1719a420f48e9b0a6afdb5011f6c786d0f107ef272528c632fff9fd153",
+  #   url: "https://github.com/sylabs/singularity/releases/download/v3.9.1/singularity-ce-3.9.1.tar.gz",
+  #   go_location: "{{ common_dir }}/golang/1.17.3/bin"
+  # }
+  # - {
+  #   version_number: "3.10.1",
+  #   checksum: "sha256:e3af12edc0260bc3a3a481459a3a4457de9235025e6b37288da80e3cdc011a7a",
+  #   url: "https://github.com/sylabs/singularity/releases/download/v3.10.1/singularity-ce-3.10.1.tar.gz",
+  #   go_location: "{{ common_dir }}/golang/1.18.4/bin"
+  # }
+  # - {
+  #     version_number: "3.11.3",
+  #     checksum: "sha256:a77ede063fd115f85f98f82d2e30459b5565db7d098665497bcd684bf8edaec9",
+  #     url: "https://github.com/sylabs/singularity/releases/download/v3.11.3/singularity-ce-3.11.3.tar.gz",
+  #     go_location: "{{ common_dir }}/golang/1.20.4/bin"
+  # }
+  # - {
+  #     version_number: "4.1.0",
+  #     checksum: "sha256:119667f18e76a750b7d4f8612d7878c18a824ee171852795019aa68875244813",
+  #     url: "https://github.com/sylabs/singularity/releases/download/v4.1.0/singularity-ce-4.1.0.tar.gz",
+  #     go_location: "{{ common_dir }}/golang/1.21.6/bin"
+  # }
+  # - {
+  #   version_number: "4.1.3",
+  #   checksum: "sha256:0a575292ddb2e7b74ab534b287c4dc8a1bd34d961accc0ba56ffa3714cca9c15",
+  #   url: "https://github.com/sylabs/singularity/releases/download/v4.1.3/singularity-ce-4.1.3.tar.gz",
+  #   go_location: "{{ common_dir }}/golang/1.22.4/bin"
+  # }
+  # - {
+  #   version_number: "4.2.2",
+  #   checksum: "sha256:f22c7eee64546abafada639225eb70c993da873abc05a48081402f18f49e47b1",
+  #   url: "https://github.com/sylabs/singularity/releases/download/v4.2.2/singularity-ce-4.2.2.tar.gz",
+  #   go_location: "{{ common_dir }}/golang/1.22.4/bin"
+  # }
+  # - {
+  #   version_number: "4.3.3",
+  #   checksum: "sha256:3b1517179f697293d1f09f75eadc43d25c92be132c279369c1096142ce9194be",
+  #   url: "https://github.com/sylabs/singularity/releases/download/v4.3.3/singularity-ce-4.3.3.tar.gz",
+  #   go_location: "{{ common_dir }}/golang/1.25.3/bin"
+  # }
+  ansible.builtin.include_tasks:
     file: singularity.yaml
   loop: "{{ singularity_versions }}"
   tags:
@@ -849,12 +646,10 @@
 - name: Install squashfuse
   vars:
     squashfuse_versions:
-      - {
-        version_number: "0.6.1",
-        checksum: "sha256:7b18a58c40a3161b5c329ae925b72336b5316941f906b446b8ed6c5a90989f8c",
+      - version_number: "0.6.1"
+        checksum: "sha256:7b18a58c40a3161b5c329ae925b72336b5316941f906b446b8ed6c5a90989f8c"
         url: "https://github.com/vasi/squashfuse/releases/download/0.6.1/squashfuse-0.6.1.tar.gz"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: squashfuse.yaml
   loop: "{{ squashfuse_versions }}"
   tags:
@@ -864,12 +659,10 @@
 - name: Install gocryptfs
   vars:
     gocryptfs_versions:
-      - {
-        version_number: "2.6.1",
-        checksum: "sha256:49b8c0eb0f6373b6ac99c394a52909d8478e74c08d0961527c1162967cc28c44",
+      - version_number: "2.6.1"
+        checksum: "sha256:49b8c0eb0f6373b6ac99c394a52909d8478e74c08d0961527c1162967cc28c44"
         url: "https://github.com/rfjakob/gocryptfs/releases/download/v2.6.1/gocryptfs_v2.6.1_linux-static_amd64.tar.gz"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: gocryptfs.yaml
   loop: "{{ gocryptfs_versions }}"
   tags:
@@ -879,29 +672,27 @@
 - name: Install apptainer
   vars:
     apptainer_versions:
-      - {
-        version_number: "1.5.0",
-        checksum: "sha256:36d67d57ef959397fa4f59169cf7deb92220537160e761e0c1cff84624ad81e3",
-        url: "https://github.com/apptainer/apptainer/releases/download/v1.5.0/apptainer-1.5.0.tar.gz",
-        go_location: "{{ common_dir }}/golang/1.25.10/bin",
-        squashfuse_location: "{{ common_dir }}/squashfuse/0.6.1",
-        gocryptfs_location: "{{ common_dir }}/gocryptfs/2.6.1",
-        squashfuse_module: "squashfuse/0.6.1",
+      - version_number: "1.5.0"
+        checksum: "sha256:36d67d57ef959397fa4f59169cf7deb92220537160e761e0c1cff84624ad81e3"
+        url: "https://github.com/apptainer/apptainer/releases/download/v1.5.0/apptainer-1.5.0.tar.gz"
+        go_location: "{{ common_dir }}/golang/1.25.10/bin"
+        squashfuse_location: "{{ common_dir }}/squashfuse/0.6.1"
+        gocryptfs_location: "{{ common_dir }}/gocryptfs/2.6.1"
+        squashfuse_module: "squashfuse/0.6.1"
         gocryptfs_module: "gocryptfs/2.6.1"
-      }
-      # Older version retained for reference only. We now install only the
-      # latest apptainer, built --without-suid (see apptainer.yaml).
-      # - {
-      #   version_number: "1.4.2",
-      #   checksum: "sha256:6dda1dd2ca8e42ed7f498d2bc8574f01d7ad3db68494e453639d76aef4424d1d",
-      #   url: "https://github.com/apptainer/apptainer/releases/download/v1.4.2/apptainer-1.4.2.tar.gz",
-      #   go_location: "{{ common_dir }}/golang/1.22.4/bin",
-      #   squashfuse_location: "{{ common_dir }}/squashfuse/0.6.1",
-      #   gocryptfs_location: "{{ common_dir }}/gocryptfs/2.6.1",
-      #   squashfuse_module: "squashfuse/0.6.1",
-      #   gocryptfs_module: "gocryptfs/2.6.1"
-      # }
-  include_tasks:
+  # Older version retained for reference only. We now install only the
+  # latest apptainer, built --without-suid (see apptainer.yaml).
+  # - {
+  #   version_number: "1.4.2",
+  #   checksum: "sha256:6dda1dd2ca8e42ed7f498d2bc8574f01d7ad3db68494e453639d76aef4424d1d",
+  #   url: "https://github.com/apptainer/apptainer/releases/download/v1.4.2/apptainer-1.4.2.tar.gz",
+  #   go_location: "{{ common_dir }}/golang/1.22.4/bin",
+  #   squashfuse_location: "{{ common_dir }}/squashfuse/0.6.1",
+  #   gocryptfs_location: "{{ common_dir }}/gocryptfs/2.6.1",
+  #   squashfuse_module: "squashfuse/0.6.1",
+  #   gocryptfs_module: "gocryptfs/2.6.1"
+  # }
+  ansible.builtin.include_tasks:
     file: apptainer.yaml
   loop: "{{ apptainer_versions }}"
   tags:
@@ -911,12 +702,10 @@
 - name: Install monos
   vars:
     mono_versions:
-      - {
-        version_number: "6.8.0.123",
-        url: "https://download.mono-project.com/sources/mono/mono-6.8.0.123.tar.xz",
-        checksum: "sha256:e2e42d36e19f083fc0d82f6c02f7db80611d69767112af353df2f279744a2ac5",
-      }
-  include_tasks:
+      - version_number: "6.8.0.123"
+        url: "https://download.mono-project.com/sources/mono/mono-6.8.0.123.tar.xz"
+        checksum: "sha256:e2e42d36e19f083fc0d82f6c02f7db80611d69767112af353df2f279744a2ac5"
+  ansible.builtin.include_tasks:
     file: mono.yaml
   loop: "{{ mono_versions }}"
   tags:
@@ -926,21 +715,18 @@
 - name: Install DRMAA for Slurm
   vars:
     drmaa_slurm_versions:
-      - {
-        version_number: "1.1.1",
-        url: "https://github.com/natefoo/slurm-drmaa/releases/download/1.1.1/slurm-drmaa-1.1.1.tar.gz",
-        checksum: "sha512:be3b93090eb94aa4a32f4bb6960d5455ab7c0869a719b1cd00c33db066a7c6e4290bbd1dc468488ee0d8ac68a5d4829812593893341f9cc65c5bffa43bb15487",
-      }
-  include_tasks:
+      - version_number: "1.1.1"
+        url: "https://github.com/natefoo/slurm-drmaa/releases/download/1.1.1/slurm-drmaa-1.1.1.tar.gz"
+        checksum: "sha512:be3b93090eb94aa4a32f4bb6960d5455ab7c0869a719b1cd00c33db066a7c6e4290bbd1dc468488ee0d8ac68a5d4829812593893341f9cc65c5bffa43bb15487"
+  ansible.builtin.include_tasks:
     file: slurm-drmaa.yaml
   loop: "{{ drmaa_slurm_versions }}"
   tags:
     - never
     - drmaa
 
-
 - name: Install PerlBrew
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: perlbrew.yaml
   tags:
     - never
@@ -949,12 +735,8 @@
 - name: Install Perl
   vars:
     perl_versions:
-      - {
-        version_number: "5.33.0",
-      }
-      - {
-        version_number: "5.24.4",
-      }
+      - { version_number: "5.33.0" }
+      - { version_number: "5.24.4" }
     cpan_modules:
       - CPAN::DistnameInfo
       - inc::latest
@@ -978,7 +760,7 @@
       - Bio::DB::BioFetch
       - Bio::SeqFeature::Lite
       - Bio::DB:HTS
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: perl.yaml
   loop: "{{ perl_versions }}"
   tags:
@@ -988,12 +770,10 @@
 - name: Install ruby
   vars:
     ruby_versions:
-      - {
-        version_number: "2.6.6",
-        url: "https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.6.tar.gz",
-        checksum: "sha256:364b143def360bac1b74eb56ed60b1a0dca6439b00157ae11ff77d5cd2e92291",
-      }
-  include_tasks:
+      - version_number: "2.6.6"
+        url: "https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.6.tar.gz"
+        checksum: "sha256:364b143def360bac1b74eb56ed60b1a0dca6439b00157ae11ff77d5cd2e92291"
+  ansible.builtin.include_tasks:
     file: ruby.yaml
   loop: "{{ ruby_versions }}"
   tags:
@@ -1003,19 +783,15 @@
 - name: Install julia
   vars:
     julia_versions:
-      - {
-        full_version_number: "1.5.3",
-        major_minor_version_number: "1.5.3",
-        url: "https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.3-linux-x86_64.tar.gz",
-        checksum: "sha256:f190c938dd6fed97021953240523c9db448ec0a6760b574afd4e9924ab5615f1",
-      }
-      - {
-        full_version_number: "1.10.4",
-        major_minor_version_number: "1.10.4",
-        url: "https://julialang-s3.julialang.org/bin/linux/x64/1.10/julia-1.10.4-linux-x86_64.tar.gz",
-        checksum: "sha256:079f61757c3b5b40d2ade052b3cc4816f50f7ef6df668825772562b3746adff1",
-      }
-  include_tasks:
+      - full_version_number: "1.5.3"
+        major_minor_version_number: "1.5.3"
+        url: "https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.3-linux-x86_64.tar.gz"
+        checksum: "sha256:f190c938dd6fed97021953240523c9db448ec0a6760b574afd4e9924ab5615f1"
+      - full_version_number: "1.10.4"
+        major_minor_version_number: "1.10.4"
+        url: "https://julialang-s3.julialang.org/bin/linux/x64/1.10/julia-1.10.4-linux-x86_64.tar.gz"
+        checksum: "sha256:079f61757c3b5b40d2ade052b3cc4816f50f7ef6df668825772562b3746adff1"
+  ansible.builtin.include_tasks:
     file: julia.yaml
   loop: "{{ julia_versions }}"
   tags:
@@ -1027,7 +803,7 @@
     software_list:
       - brewsci/bio/treepl
       - brewsci/bio/vcflib
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: homebrew.yaml
   tags:
     - never
@@ -1036,32 +812,22 @@
 - name: Install dotnet
   vars:
     dotnet_versions:
-      - {
-        version_number: "2.1.202",
-        url: "https://download.microsoft.com/download/f/c/1/fc16c864-b374-4668-83a2-f9f880928b2d/dotnet-sdk-2.1.202-linux-x64.tar.gz",
-        checksum: "sha512:e785b9b488b5570708eb060f9a4cb5cf94597d99a8b0a3ee449d2e5df83771c1ba643a87db17ae6727d0e2acb401eca292fb8c68ad92eeb59d7f0d75eab1c20a",
-      }
-      - {
-        version_number: "5.0.301",
-        url: "https://download.visualstudio.microsoft.com/download/pr/e1c236ec-c392-4eaa-a846-c600c82bb7f6/b13bd8b69f875f87cf83fc6f5457bcdf/dotnet-sdk-5.0.301-linux-x64.tar.gz",
-        checksum: "sha512:81cd7a3550a262d5c907030677429fa9a1cb515071274931ab760bd8bb2a14f40c9384c8757e1c1aa681b1de22035f16bf20b41ed208becd054cc9bb1f620322",
-      }
-      - {
-        version_number: "6.0.423",
-        url: "https://download.visualstudio.microsoft.com/download/pr/111a63f5-e1d4-4d07-b8b2-98642b5fcc59/389661b982fa5b83b09a1f50b9da247a/dotnet-sdk-6.0.423-linux-x64.tar.gz",
-        checksum: "sha512:4b4a0e66634211ae04fa030e18ae9e22640f5828307ba85c4bae596ab2d31260519197828dae3b2ec73d6772635e0b375536ea6591b03c67c2b7a5566f016952",
-      }
-      - {
-        version_number: "7.0.20",
-        url: "https://download.visualstudio.microsoft.com/download/pr/0ddc1522-2361-4394-97e9-52318bf51951/c5aef30601a86810f1f8ea89d42c26a0/dotnet-sdk-7.0.410-linux-x64.tar.gz",
-        checksum: "sha512:20b8e02979328e4c4a14493f7791ed419aabd0175233db80cd60e2c004b829b3e8301281ea86b27ba818372473accf5a6d553e5354c54917c8e84d25f5855caa",
-      }
-      - {
-        version_number: "8.0.301",
-        url: "https://download.visualstudio.microsoft.com/download/pr/86497c4f-3dc8-4ee7-9f6a-9e0464059427/293d074c28bbfd9410f4db8e021fa290/dotnet-sdk-8.0.301-linux-x64.tar.gz",
-        checksum: "sha512:6e2e1ad5fe3f00e6974ad3eac9c5b74cd09521f19e06eb9aff45a44d6c55e4a2c1cd489364735215d2ea53cec2a7d45892a5ede344a8421be9ad15872c3496a2",
-      }
-  include_tasks:
+      - version_number: "2.1.202"
+        url: "https://download.microsoft.com/download/f/c/1/fc16c864-b374-4668-83a2-f9f880928b2d/dotnet-sdk-2.1.202-linux-x64.tar.gz"
+        checksum: "sha512:e785b9b488b5570708eb060f9a4cb5cf94597d99a8b0a3ee449d2e5df83771c1ba643a87db17ae6727d0e2acb401eca292fb8c68ad92eeb59d7f0d75eab1c20a"
+      - version_number: "5.0.301"
+        url: "https://download.visualstudio.microsoft.com/download/pr/e1c236ec-c392-4eaa-a846-c600c82bb7f6/b13bd8b69f875f87cf83fc6f5457bcdf/dotnet-sdk-5.0.301-linux-x64.tar.gz"
+        checksum: "sha512:81cd7a3550a262d5c907030677429fa9a1cb515071274931ab760bd8bb2a14f40c9384c8757e1c1aa681b1de22035f16bf20b41ed208becd054cc9bb1f620322"
+      - version_number: "6.0.423"
+        url: "https://download.visualstudio.microsoft.com/download/pr/111a63f5-e1d4-4d07-b8b2-98642b5fcc59/389661b982fa5b83b09a1f50b9da247a/dotnet-sdk-6.0.423-linux-x64.tar.gz"
+        checksum: "sha512:4b4a0e66634211ae04fa030e18ae9e22640f5828307ba85c4bae596ab2d31260519197828dae3b2ec73d6772635e0b375536ea6591b03c67c2b7a5566f016952"
+      - version_number: "7.0.20"
+        url: "https://download.visualstudio.microsoft.com/download/pr/0ddc1522-2361-4394-97e9-52318bf51951/c5aef30601a86810f1f8ea89d42c26a0/dotnet-sdk-7.0.410-linux-x64.tar.gz"
+        checksum: "sha512:20b8e02979328e4c4a14493f7791ed419aabd0175233db80cd60e2c004b829b3e8301281ea86b27ba818372473accf5a6d553e5354c54917c8e84d25f5855caa"
+      - version_number: "8.0.301"
+        url: "https://download.visualstudio.microsoft.com/download/pr/86497c4f-3dc8-4ee7-9f6a-9e0464059427/293d074c28bbfd9410f4db8e021fa290/dotnet-sdk-8.0.301-linux-x64.tar.gz"
+        checksum: "sha512:6e2e1ad5fe3f00e6974ad3eac9c5b74cd09521f19e06eb9aff45a44d6c55e4a2c1cd489364735215d2ea53cec2a7d45892a5ede344a8421be9ad15872c3496a2"
+  ansible.builtin.include_tasks:
     file: dotnet.yaml
   loop: "{{ dotnet_versions }}"
   tags:
@@ -1071,12 +837,10 @@
 - name: Install githubcli
   vars:
     githubcli_versions:
-      - {
-          version_number: "2.0.0",
-          url: "https://github.com/cli/cli/releases/download/v2.0.0/gh_2.0.0_linux_amd64.tar.gz",
-          checksum: "sha512:aadcb431d719f89dd8c6b5ee22f099b919a2f10fd24583fce2824d10032678fa1e194c9eb23843730c57336e108ba9f5dbf281422af7e554ff5a7c5d61e90723"
-      }
-  include_tasks:
+      - version_number: "2.0.0"
+        url: "https://github.com/cli/cli/releases/download/v2.0.0/gh_2.0.0_linux_amd64.tar.gz"
+        checksum: "sha512:aadcb431d719f89dd8c6b5ee22f099b919a2f10fd24583fce2824d10032678fa1e194c9eb23843730c57336e108ba9f5dbf281422af7e554ff5a7c5d61e90723"
+  ansible.builtin.include_tasks:
     file: githubcli.yaml
   loop: "{{ githubcli_versions }}"
   tags:
@@ -1085,30 +849,26 @@
 
 - name: Install gettext
   vars:
-      gettext_versions:
-      - {
-        version_number: "0.22.5",
-        url: "https://ftp.gnu.org/pub/gnu/gettext/gettext-0.22.5.tar.gz",
+    gettext_versions:
+      - version_number: "0.22.5"
+        url: "https://ftp.gnu.org/pub/gnu/gettext/gettext-0.22.5.tar.gz"
         checksum: "sha256:ec1705b1e969b83a9f073144ec806151db88127f5e40fe5a94cb6c8fa48996a0"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: gettext.yaml
   loop: "{{ gettext_versions }}"
   tags:
-      - never
-      - gettext
+    - never
+    - gettext
 
 - name: Install git
   vars:
-      git_versions:
-      - {
-        version_number: "2.45.2",
-        url: "https://www.kernel.org/pub/software/scm/git/git-2.45.2.tar.gz",
-        checksum: "sha256:98b26090ed667099a3691b93698d1e213e1ded73d36a2fde7e9125fce28ba234",
-        gettext_dir: "{{ common_dir }}/gettext/0.22.5",
+    git_versions:
+      - version_number: "2.45.2"
+        url: "https://www.kernel.org/pub/software/scm/git/git-2.45.2.tar.gz"
+        checksum: "sha256:98b26090ed667099a3691b93698d1e213e1ded73d36a2fde7e9125fce28ba234"
+        gettext_dir: "{{ common_dir }}/gettext/0.22.5"
         gettext_module: "gettext/0.22.5"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: git.yaml
   loop: "{{ git_versions }}"
   tags:
@@ -1117,33 +877,27 @@
 
 - name: Install git-lfs
   vars:
-      git_lfs_versions:
-      - {
-        version_number: "3.5.1",
-        url: "https://github.com/git-lfs/git-lfs/releases/download/v3.5.1/git-lfs-linux-amd64-v3.5.1.tar.gz",
+    git_lfs_versions:
+      - version_number: "3.5.1"
+        url: "https://github.com/git-lfs/git-lfs/releases/download/v3.5.1/git-lfs-linux-amd64-v3.5.1.tar.gz"
         checksum: "sha256:6f28eb19faa7a968882dca190d92adc82493378b933958d67ceaeb9ebe4d731e"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: git-lfs.yaml
   loop: "{{ git_lfs_versions }}"
   tags:
-      - never
-      - git-lfs
+    - never
+    - git-lfs
 
 - name: Install graphviz
   vars:
     graphviz_versions:
-      - {
-          version_number: "2.49.1",
-          url: "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/2.49.1/graphviz-2.49.1.tar.gz",
-          checksum: "sha256:ba1aa7a209025cb3fc5aca1f2c0114e18ea3ad29c481d75e4d445ad44e0fb0f7"
-      }
-      - {
-        version_number: "11.0.0",
-        url: "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/11.0.0/graphviz-11.0.0.tar.gz",
+      - version_number: "2.49.1"
+        url: "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/2.49.1/graphviz-2.49.1.tar.gz"
+        checksum: "sha256:ba1aa7a209025cb3fc5aca1f2c0114e18ea3ad29c481d75e4d445ad44e0fb0f7"
+      - version_number: "11.0.0"
+        url: "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/11.0.0/graphviz-11.0.0.tar.gz"
         checksum: "sha256:83eae0455463a0027de7e90b2af0671d0d78025a5645d832587c0a6602cd7cec"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: graphviz.yaml
   loop: "{{ graphviz_versions }}"
   tags:
@@ -1153,12 +907,10 @@
 - name: Install Pandoc
   vars:
     pandoc_versions:
-      - {
-        version_number: "2.18",
-        checksum: "sha256:103df36dc21081b7205d763ef7705e340eb0ea7e18694239b328a549892cc007",
-        url: "https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-linux-amd64.tar.gz",
-      }
-  include_tasks:
+      - version_number: "2.18"
+        checksum: "sha256:103df36dc21081b7205d763ef7705e340eb0ea7e18694239b328a549892cc007"
+        url: "https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-linux-amd64.tar.gz"
+  ansible.builtin.include_tasks:
     file: pandoc.yaml
   loop: "{{ pandoc_versions }}"
   tags:
@@ -1168,20 +920,16 @@
 - name: Install rclone
   vars:
     versions:
-      - {
-        version_number: "1.60.1",
-        checksum: "sha512:fabfe4913f25496c612f4b63a4ecbd5149c2a69eef2f12b0e916589dc7ef764c4722f7d114e1108687369b63b436606d54eb3b94622d215d885c7dcff0a12417",
-        url: "https://downloads.rclone.org/v1.60.1/rclone-v1.60.1-linux-amd64.zip",
-        creates: 'rclone-v1.60.1-linux-amd64'
-      }
-      - {
-        version_number: "1.70.3",
-        checksum: "sha512:472165c3989671f4163242c67cdb9da4c3d3e4548cd1222015f552d6d2fda1cbd616b133ec45e78d8efb088368e18cc314bfeea764e253b6a5d6a693d67a11ef",
-        url: "https://downloads.rclone.org/v1.70.3/rclone-v1.70.3-linux-amd64.zip",
-        creates: 'rclone-v1.70.3-linux-amd64'
-      }
-  include_tasks:
-    file: 'rclone.yaml'
+      - version_number: "1.60.1"
+        checksum: "sha512:fabfe4913f25496c612f4b63a4ecbd5149c2a69eef2f12b0e916589dc7ef764c4722f7d114e1108687369b63b436606d54eb3b94622d215d885c7dcff0a12417"
+        url: "https://downloads.rclone.org/v1.60.1/rclone-v1.60.1-linux-amd64.zip"
+        creates: "rclone-v1.60.1-linux-amd64"
+      - version_number: "1.70.3"
+        checksum: "sha512:472165c3989671f4163242c67cdb9da4c3d3e4548cd1222015f552d6d2fda1cbd616b133ec45e78d8efb088368e18cc314bfeea764e253b6a5d6a693d67a11ef"
+        url: "https://downloads.rclone.org/v1.70.3/rclone-v1.70.3-linux-amd64.zip"
+        creates: "rclone-v1.70.3-linux-amd64"
+  ansible.builtin.include_tasks:
+    file: "rclone.yaml"
   loop: "{{ versions }}"
   tags:
     - never
@@ -1190,18 +938,14 @@
 - name: Install neovim
   vars:
     versions:
-      - {
-        version_number: "0.8.2",
-        checksum: "sha256:27aef92fba0d3f51ebb8b98f3689895f9bbe48f11b74920d89280bc58fbe8e28",
+      - version_number: "0.8.2"
+        checksum: "sha256:27aef92fba0d3f51ebb8b98f3689895f9bbe48f11b74920d89280bc58fbe8e28"
         url: "https://github.com/neovim/neovim/releases/download/v0.8.2/nvim-linux64.tar.gz"
-      }
-      - {
-        version_number: "0.9.4",
-        checksum: "sha256:dbf4eae83647ca5c3ce1cd86939542a7b6ae49cd78884f3b4236f4f248e5d447",
+      - version_number: "0.9.4"
+        checksum: "sha256:dbf4eae83647ca5c3ce1cd86939542a7b6ae49cd78884f3b4236f4f248e5d447"
         url: "https://github.com/neovim/neovim/releases/download/v0.9.4/nvim-linux64.tar.gz"
-      }
-  include_tasks:
-    file: 'neovim.yaml'
+  ansible.builtin.include_tasks:
+    file: "neovim.yaml"
   loop: "{{ versions }}"
   tags:
     - never
@@ -1210,13 +954,11 @@
 - name: Install Gnu Scientific Library (libgsl)
   vars:
     versions:
-      - {
-        version_number: "2.7.1",
-        checksum: "sha512:3300a748b63b583374701d5ae2a9db7349d0de51061a9f98e7c145b2f7de9710b3ad58b3318d0be2a9a287ace4cc5735bb9348cdf48075b98c1f6cc1029df131",
-        url: "https://mirror.ihost.md/gnu/gsl/gsl-2.7.1.tar.gz",
-      }
-  include_tasks:
-    file: 'gsl.yaml'
+      - version_number: "2.7.1"
+        checksum: "sha512:3300a748b63b583374701d5ae2a9db7349d0de51061a9f98e7c145b2f7de9710b3ad58b3318d0be2a9a287ace4cc5735bb9348cdf48075b98c1f6cc1029df131"
+        url: "https://mirror.ihost.md/gnu/gsl/gsl-2.7.1.tar.gz"
+  ansible.builtin.include_tasks:
+    file: "gsl.yaml"
   loop: "{{ versions }}"
   tags:
     - never
@@ -1226,28 +968,20 @@
   vars:
     java_module: "java/openjdk-18.0.2"
     versions:
-      - {
-         version_number: "22.10.7",
-         url: "https://github.com/nextflow-io/nextflow/releases/download/v22.10.7/nextflow-22.10.7-all",
-         checksum: "sha512:478f215e233de41bb68b22c4dab58eaa7c574f8ec26f6b74b82e583928bbf0d3679972c1f4bc09fadc64deeac9e00615178581dd8c698d062d43e69dc56971c3"
-      }
-      - {
-        version_number: "23.04.4",
-        url: "https://github.com/nextflow-io/nextflow/releases/download/v23.04.4/nextflow-23.04.4-all",
+      - version_number: "22.10.7"
+        url: "https://github.com/nextflow-io/nextflow/releases/download/v22.10.7/nextflow-22.10.7-all"
+        checksum: "sha512:478f215e233de41bb68b22c4dab58eaa7c574f8ec26f6b74b82e583928bbf0d3679972c1f4bc09fadc64deeac9e00615178581dd8c698d062d43e69dc56971c3"
+      - version_number: "23.04.4"
+        url: "https://github.com/nextflow-io/nextflow/releases/download/v23.04.4/nextflow-23.04.4-all"
         checksum: "sha512:90712d34ddedc9fae5fe75bc78bb333b6b3da864a089489df380ee313fbf312dd28d3094bc2ac67472f9fafb854d2bba2ff8f8dbafc01b6ef176ad8ea469b4f3"
-      }
-      - {
-        version_number: "24.04.4",
-        url: "https://github.com/nextflow-io/nextflow/releases/download/v24.04.4/nextflow-24.04.4-all",
+      - version_number: "24.04.4"
+        url: "https://github.com/nextflow-io/nextflow/releases/download/v24.04.4/nextflow-24.04.4-all"
         checksum: "sha512:2ce7cb79516a0342e2d1499d9aacf3e4516f760aa49411e58145e1ddef7f2f0a76314207999a39658a1edd1360eace17a4d42393ae1c5b841ba34b1c65431ff9"
-      }
-      - {
-        version_number: "25.04.6",
-        url: "https://github.com/nextflow-io/nextflow/releases/download/v25.04.6/nextflow",
+      - version_number: "25.04.6"
+        url: "https://github.com/nextflow-io/nextflow/releases/download/v25.04.6/nextflow"
         checksum: "sha256:a94f8bd1db9c0271ad58ec40b9c71f812d081a66f782396928b9b1f740f0be5f"
-      }
-  include_tasks:
-    file: 'nextflow.yaml'
+  ansible.builtin.include_tasks:
+    file: "nextflow.yaml"
   loop: "{{ versions }}"
   tags:
     - never
@@ -1256,13 +990,11 @@
 - name: Install rust
   vars:
     versions:
-      - {
-        version_number: "1.68.0",
-        url: "https://static.rust-lang.org/dist/rust-1.68.0-x86_64-unknown-linux-gnu.tar.gz",
+      - version_number: "1.68.0"
+        url: "https://static.rust-lang.org/dist/rust-1.68.0-x86_64-unknown-linux-gnu.tar.gz"
         checksum: "sha512:b696c6c00608433360e606f9697112c6ef5b7b35b870aa5ff759594a754035b0b4a1e69c42f7cc012f2121f7ae8ff22905555ddc3aa7bbb56fda62667ecde6ea"
-      }
-  include_tasks:
-    file: 'rust.yaml'
+  ansible.builtin.include_tasks:
+    file: "rust.yaml"
   loop: "{{ versions }}"
   tags:
     - never
@@ -1271,13 +1003,11 @@
 - name: Install fzf
   vars:
     versions:
-      - {
-        version_number: "0.42.0",
-        url: "https://github.com/junegunn/fzf/releases/download/0.42.0/fzf-0.42.0-linux_amd64.tar.gz",
+      - version_number: "0.42.0"
+        url: "https://github.com/junegunn/fzf/releases/download/0.42.0/fzf-0.42.0-linux_amd64.tar.gz"
         checksum: "sha256:e1c28b67b9199c329280598b4f344ac943dd3d31ee04f351d89084933a8efed7"
-      }
-  include_tasks:
-    file: 'fzf.yaml'
+  ansible.builtin.include_tasks:
+    file: "fzf.yaml"
   loop: "{{ versions }}"
   tags:
     - never
@@ -1285,14 +1015,12 @@
 
 - name: Install cmake
   vars:
-      versions:
-      - {
-        version_number: "3.27.0",
-        url: "https://github.com/Kitware/CMake/releases/download/v3.27.0/cmake-3.27.0-linux-x86_64.tar.gz",
+    versions:
+      - version_number: "3.27.0"
+        url: "https://github.com/Kitware/CMake/releases/download/v3.27.0/cmake-3.27.0-linux-x86_64.tar.gz"
         checksum: "sha256:89c7e74d29f442e4734954310e09dd12d13636991f2d90d0ed1bececb8bf9b9c"
-      }
-  include_tasks:
-    file: 'cmake.yaml'
+  ansible.builtin.include_tasks:
+    file: "cmake.yaml"
   loop: "{{ versions }}"
   tags:
     - never
@@ -1301,17 +1029,13 @@
 - name: Install Mamba
   vars:
     mamba_versions:
-      - {
-        version_number: "23.3.1-0",
-        url: "https://github.com/conda-forge/miniforge/releases/download/23.3.1-0/Mambaforge-23.3.1-0-Linux-x86_64.sh",
+      - version_number: "23.3.1-0"
+        url: "https://github.com/conda-forge/miniforge/releases/download/23.3.1-0/Mambaforge-23.3.1-0-Linux-x86_64.sh"
         checksum: "sha512:45debde31bce3a124057148dba18143a6a83446556fb05d2910d54f5058767f1c2d1a1bb658d5fc7ef93606111c00af09497c569eb6d3629c654235cf3190fae"
-      }
-      - {
-        version_number: "24.11.0-1",
-        url: "https://github.com/conda-forge/miniforge/releases/download/24.11.0-1/Mambaforge-24.11.0-1-Linux-x86_64.sh",
+      - version_number: "24.11.0-1"
+        url: "https://github.com/conda-forge/miniforge/releases/download/24.11.0-1/Mambaforge-24.11.0-1-Linux-x86_64.sh"
         checksum: "sha256:fad8afeb7a0247e8e8fd7a82e9306c694421d2e9b6b341752c73737fbebe4d73"
-      }
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: mamba.yaml
   loop: "{{ mamba_versions }}"
   tags:
@@ -1321,69 +1045,61 @@
 - name: Install LaTeX
   vars:
     versions:
-      - {
-          texlive_install_file: "texlive/install-tl-unx.2023.tar.gz",
-          texlive_profile: "texlive/texlive.profile.2023",
-          version_number: "20230927",
-          short_version: "2023",
-      }
-  include_tasks:
-    file: 'latex.yaml'
+      - texlive_install_file: "texlive/install-tl-unx.2023.tar.gz"
+        texlive_profile: "texlive/texlive.profile.2023"
+        version_number: "20230927"
+        short_version: "2023"
+  ansible.builtin.include_tasks:
+    file: "latex.yaml"
   loop: "{{ versions }}"
   tags:
-      - never
-      - latex
+    - never
+    - latex
 
 - name: Install cromwell and womtool
   vars:
     versions:
-      - {
-          version_number: "86",
-          cromwell_url: "https://github.com/broadinstitute/cromwell/releases/download/86/cromwell-86.jar",
-          cromwell_checksum: "sha512:1024d3c4e3501529f6bae6a96cc112baa63007a44fbfd6133f85c5b52803580d28c55fcc4da34589c8678006ba3b3037673142e00dc2661902c0838e6ace2cf2",
-          womtool_url: "https://github.com/broadinstitute/cromwell/releases/download/86/womtool-86.jar",
-          womtool_checksum: "sha512:606a68edb74e91a380f8fdf1408f28802f6f4081d3f4ed2a80ffb5ff7cbb5b11d8a320e02be40eda3d349b41ff7307687c94a6189d5cf8471f3bd850a391a1f2",
-      }
-  include_tasks:
-    file: 'cromwell.yaml'
+      - version_number: "86"
+        cromwell_url: "https://github.com/broadinstitute/cromwell/releases/download/86/cromwell-86.jar"
+        cromwell_checksum: "sha512:1024d3c4e3501529f6bae6a96cc112baa63007a44fbfd6133f85c5b52803580d28c55fcc4da34589c8678006ba3b3037673142e00dc2661902c0838e6ace2cf2"
+        womtool_url: "https://github.com/broadinstitute/cromwell/releases/download/86/womtool-86.jar"
+        womtool_checksum: "sha512:606a68edb74e91a380f8fdf1408f28802f6f4081d3f4ed2a80ffb5ff7cbb5b11d8a320e02be40eda3d349b41ff7307687c94a6189d5cf8471f3bd850a391a1f2"
+  ansible.builtin.include_tasks:
+    file: "cromwell.yaml"
   loop: "{{ versions }}"
   tags:
-      - never
-      - cromwell
+    - never
+    - cromwell
 
 - name: Install jemalloc
   vars:
     versions:
-      - {
-        version_number: "5.3.0",
-        url: "https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2",
+      - version_number: "5.3.0"
+        url: "https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2"
         checksum: "sha256:2db82d1e7119df3e71b7640219b6dfe84789bc0537983c3b7ac4f7189aecfeaa"
-      }
-  include_tasks:
-    file: 'jemalloc.yaml'
+  ansible.builtin.include_tasks:
+    file: "jemalloc.yaml"
   loop: "{{ versions }}"
   tags:
-      - never
-      - jemalloc
+    - never
+    - jemalloc
 
 - name: Install Zstandard (zstd)
   vars:
     versions:
-      - {
-        version_number: "1.5.5",
-        url: "https://github.com/facebook/zstd/releases/download/v1.5.5/zstd-1.5.5.tar.gz",
+      - version_number: "1.5.5"
+        url: "https://github.com/facebook/zstd/releases/download/v1.5.5/zstd-1.5.5.tar.gz"
         checksum: "sha256:9c4396cc829cfae319a6e2615202e82aad41372073482fce286fac78646d3ee4"
-      }
-  include_tasks:
-    file: 'zstd.yaml'
+  ansible.builtin.include_tasks:
+    file: "zstd.yaml"
   loop: "{{ versions }}"
   tags:
-      - never
-      - zstd
+    - never
+    - zstd
 
 - name: Install rustup
-  include_tasks:
-    file: 'rustup.yaml'
+  ansible.builtin.include_tasks:
+    file: "rustup.yaml"
   tags:
     - never
     - rustup
@@ -1391,87 +1107,78 @@
 - name: Install fftw
   vars:
     versions:
-      - {
-        version_number: "3.3.8",
-        url: "http://www.fftw.org/fftw-3.3.8.tar.gz",
-        checksum: "sha256:6113262f6e92c5bd474f2875fa1b01054c4ad5040f6b0da7c03c98821d9ae303",
-        mpi_module: "openmpi/4.1.5",
-        mpi_dir: "/software/common/openmpi/4.1.5",
-      }
-      - {
-        version_number: "3.3.10",
-        url: "http://www.fftw.org/fftw-3.3.10.tar.gz",
-        checksum: "sha256:56c932549852cddcfafdab3820b0200c7742675be92179e59e6215b340e26467",
-        mpi_module: "openmpi/4.1.5",
-        mpi_dir: "/software/common/openmpi/4.1.5",
-      }
+      - version_number: "3.3.8"
+        url: "http://www.fftw.org/fftw-3.3.8.tar.gz"
+        checksum: "sha256:6113262f6e92c5bd474f2875fa1b01054c4ad5040f6b0da7c03c98821d9ae303"
+        mpi_module: "openmpi/4.1.5"
+        mpi_dir: "/software/common/openmpi/4.1.5"
+      - version_number: "3.3.10"
+        url: "http://www.fftw.org/fftw-3.3.10.tar.gz"
+        checksum: "sha256:56c932549852cddcfafdab3820b0200c7742675be92179e59e6215b340e26467"
+        mpi_module: "openmpi/4.1.5"
+        mpi_dir: "/software/common/openmpi/4.1.5"
     precisions:
-      - { name: "single", flags: "--enable-float --enable-shared --enable-threads --enable-openmp --enable-mpi --enable-sse2 --enable-sse --enable-avx --enable-avx2" }
+      - name: "single"
+        flags: "--enable-float --enable-shared --enable-threads --enable-openmp --enable-mpi --enable-sse2 --enable-sse --enable-avx --enable-avx2"
       - { name: "double", flags: "--enable-shared --enable-threads --enable-openmp --enable-mpi --enable-sse2 --enable-avx --enable-avx2" }
       - { name: "long-double", flags: "--enable-long-double --enable-shared --enable-threads --enable-openmp --enable-mpi" }
-#      - { name: "quad", flags: "--enable-quad-precision --enable-shared --enable-threads --enable-openmp" }
-  include_tasks:
-    file: 'fftw.yaml'
+  #      - { name: "quad", flags: "--enable-quad-precision --enable-shared --enable-threads --enable-openmp" }
+  ansible.builtin.include_tasks:
+    file: "fftw.yaml"
   loop: "{{ versions }}"
   tags:
-      - never
-      - fftw
+    - never
+    - fftw
 
 - name: Install Intel Toolkits
   vars:
     versions:
-      - {
-        version_number: "2024.0.1",
-        oneapi_version: "2024.0.1.46",
-        oneapi_url: "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/163da6e4-56eb-4948-aba3-debcec61c064/l_BaseKit_p_2024.0.1.46_offline.sh",
-        oneapi_checksum: "sha384:7b9d71a0b412c65efe0b6083c6a48a64ffeeb9070f4e2af125333314e8e897490ec566e1d0c2c3cdb3c4aa0820ea44b4",
-        hpc_version: "2024.0.1.38",
-        hpc_url: "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/67c08c98-f311-4068-8b85-15d79c4f277a/l_HPCKit_p_2024.0.1.38_offline.sh",
-        hpc_checksum: "sha384:df6509544dfc38cd0f58862545c98853b9a254c52eba105d988b98740cf987412872f9695584ba6985429d1a0b50a9e4",
-      }
-  include_tasks:
-    file: 'intel.yaml'
+      - version_number: "2024.0.1"
+        oneapi_version: "2024.0.1.46"
+        oneapi_url: "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/163da6e4-56eb-4948-aba3-debcec61c064/l_BaseKit_p_2024.0.1.46_offline.sh"
+        oneapi_checksum: "sha384:7b9d71a0b412c65efe0b6083c6a48a64ffeeb9070f4e2af125333314e8e897490ec566e1d0c2c3cdb3c4aa0820ea44b4"
+        hpc_version: "2024.0.1.38"
+        hpc_url: "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/67c08c98-f311-4068-8b85-15d79c4f277a/l_HPCKit_p_2024.0.1.38_offline.sh"
+        hpc_checksum: "sha384:df6509544dfc38cd0f58862545c98853b9a254c52eba105d988b98740cf987412872f9695584ba6985429d1a0b50a9e4"
+  ansible.builtin.include_tasks:
+    file: "intel.yaml"
   loop: "{{ versions }}"
   tags:
-      - never
-      - intel
-      - inteloneapi
-      - intelmkl
+    - never
+    - intel
+    - inteloneapi
+    - intelmkl
 
 - name: Install Micromamba
-  include_tasks:
-    file: 'micromamba.yaml'
+  ansible.builtin.include_tasks:
+    file: "micromamba.yaml"
   tags:
     - never
     - micromamba
 
 - name: Install Boost Library
   vars:
-      versions:
-      - {
-        version_number: "1.87.0",
-        url: "https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.bz2",
-        checksum: "sha256:af57be25cb4c4f4b413ed692fe378affb4352ea50fbe294a11ef548f4d527d89",
-        python_dir: "/software/common/python/3.12.3",
+    versions:
+      - version_number: "1.87.0"
+        url: "https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.bz2"
+        checksum: "sha256:af57be25cb4c4f4b413ed692fe378affb4352ea50fbe294a11ef548f4d527d89"
+        python_dir: "/software/common/python/3.12.3"
         python_version: "3.12.3"
-      }
-  include_tasks:
-    file: 'boost.yaml'
+  ansible.builtin.include_tasks:
+    file: "boost.yaml"
   loop: "{{ versions }}"
   tags:
-      - never
-      - boost
+    - never
+    - boost
 
 - name: Install Ollama
   vars:
     versions:
-      - {
-        version_number: "0.23.0",
-        checksum: "sha256:581ba6cc0c6da3e80f4f454c274a0260ba07095089a21692b165caba9bf49ad4",
+      - version_number: "0.23.0"
+        checksum: "sha256:581ba6cc0c6da3e80f4f454c274a0260ba07095089a21692b165caba9bf49ad4"
         url: "https://github.com/ollama/ollama/releases/download/v0.23.0/ollama-linux-amd64.tar.zst"
-      }
-  include_tasks:
-    file: 'ollama.yaml'
+  ansible.builtin.include_tasks:
+    file: "ollama.yaml"
   loop: "{{ versions }}"
   tags:
     - never

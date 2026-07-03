@@ -8,49 +8,53 @@
     checksum: "{{ item.checksum }}"
     unarchive_dir: "/dev/shm/kallisto-{{ version_number }}"
     install_dir: "{{ kallisto_dir }}/{{ version_number }}"
-#  environment:
-#    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+  #  environment:
+  #    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
   tags:
     - never
     - kallisto{{ item.version_number }}
   block:
     - name: Ensure kallisto dir exists
-      file:
+      ansible.builtin.file:
         path: "{{ kallisto_dir }}"
         state: directory
+        mode: u=rwx,g=rwx,o=rx
     - name: Download kallisto {{ version_number }} from {{ url }}
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ bio_src }}/kallisto-{{ version_number }}.tar.gz"
         checksum: "{{ checksum }}"
+        mode: u=rw,g=r,o=r
     - name: Uncompress kallisto
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ bio_src }}/kallisto-{{ version_number }}.tar.gz"
         dest: "/dev/shm"
-        remote_src: yes
+        remote_src: true
         creates: "{{ unarchive_dir }}"
-    - name: Create build directory {{ unarchive_dir }}/build
-      file:
+    - name: Create build directory /build {{ unarchive_dir }}
+      ansible.builtin.file:
         path: "{{ unarchive_dir }}/build"
         state: directory
+        mode: u=rwx,g=rwx,o=rx
     - name: Run cmake in build dir
-      command: cmake -DCMAKE_INSTALL_PREFIX={{ install_dir }} ..
+      ansible.builtin.command: cmake -DCMAKE_INSTALL_PREFIX={{ install_dir }} ..
       args:
-          chdir: "{{ unarchive_dir }}/build"
+        chdir: "{{ unarchive_dir }}/build"
     - name: Run make in build dir
-      make:
+      community.general.make:
         chdir: "{{ unarchive_dir }}/build"
     - name: Run make install in build dir
-      make:
-          chdir: "{{ unarchive_dir }}/build"
-          target: install
+      community.general.make:
+        chdir: "{{ unarchive_dir }}/build"
+        target: install
 
     - name: Check module dir {{ kallisto_module_dir }}
-      file:
+      ansible.builtin.file:
         path: "{{ kallisto_module_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
-    - name: Install kallisto {{ version_number }} module file
-      template:
+    - name: Install kallisto module file {{ version_number }}
+      ansible.builtin.template:
         src: bio/kallisto.lua
         dest: "{{ kallisto_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

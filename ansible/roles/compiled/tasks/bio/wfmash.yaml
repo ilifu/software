@@ -21,27 +21,28 @@
     - name: Download and install wfmash ({{ version_number }})
       block:
         - name: Clone wfmash repo
-          git:
-              clone: true
-              repo: https://github.com/waveygang/wfmash.git
-              dest: "{{ bio_src }}/wfmash"
-              version: "{{ git_commit }}"
-              recursive: true
-              track_submodules: true
-              force: true
+          ansible.builtin.git:
+            clone: true
+            repo: https://github.com/waveygang/wfmash.git
+            dest: "{{ bio_src }}/wfmash"
+            version: "{{ git_commit }}"
+            recursive: true
+            track_submodules: true
+            force: true
         - name: Run git submodule update
-          shell: "/usr/bin/git submodule update --init --recursive"
+          ansible.builtin.shell: "/usr/bin/git submodule update --init --recursive"
           args:
             chdir: "{{ bio_src }}/wfmash"
 
         - name: Ensure wfmash dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ wfmash_dir }}"
             state: directory
-            recurse: yes
+            recurse: true
 
         - name: Run cmake
-          shell: "/usr/bin/cmake -H. -DCMAKE_BUILD_TYPE=Generic -DEXTRA_FLAGS='-march=native -Ofast' -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -Bbuild ."
+          ansible.builtin.shell: "/usr/bin/cmake -H. -DCMAKE_BUILD_TYPE=Generic -DEXTRA_FLAGS='-march=native -Ofast' -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }}
+            -Bbuild ."
           args:
             chdir: "{{ bio_src }}/wfmash"
           environment:
@@ -54,7 +55,7 @@
             PKG_CONFIG_PATH: "{{ htslib }}/lib/pkgconfig:{{ libgsl }}/lib/pkgconfig:{{ jemalloc }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
 
         - name: Run cmake build
-          shell: "/usr/bin/cmake --build build -- -j {{ ansible_processor_vcpus }}"
+          ansible.builtin.shell: "/usr/bin/cmake --build build -- -j {{ ansible_processor_vcpus }}"
           args:
             chdir: "{{ bio_src }}/wfmash"
           environment:
@@ -67,18 +68,19 @@
             PKG_CONFIG_PATH: "{{ htslib }}/lib/pkgconfig:{{ libgsl }}/lib/pkgconfig:{{ jemalloc }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
 
         - name: Run make install
-          make:
+          community.general.make:
             chdir: "{{ bio_src }}/wfmash/build"
             target: install
 
-    - name: Install wfmash {{ version_number }} module
+    - name: Install wfmash module {{ version_number }}
       block:
         - name: Check module dir {{ wfmash_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ wfmash_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install wfmash {{ version_number }} module file
-          template:
+        - name: Install wfmash module file {{ version_number }}
+          ansible.builtin.template:
             src: wfmash.lua
             dest: "{{ wfmash_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

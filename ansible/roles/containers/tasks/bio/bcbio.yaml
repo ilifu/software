@@ -1,3 +1,4 @@
+---
 - name: Create bcbio container
   vars:
     base_container_image: "{{ common_container_dir }}/{{ base_container_name }}.sif"
@@ -9,37 +10,39 @@
     - "bcbio_container"
     - never
   block:
-    - name: "Check for existence of {{ base_container_image }} container"
-      stat:
+    - name: "Check for existence of container {{ base_container_image }}"
+      ansible.builtin.stat:
         path: "{{ base_container_image }}"
       register: base_container_exists
     - name: "Missing {{ base_container_image }}"
-      fail:
+      ansible.builtin.fail:
         msg: "The container {{ base_container_image }} is missing."
       when: not base_container_exists.stat.exists
     - name: Create bcbio container
       when: base_container_exists.stat.exists
       block:
         - name: Copy bcbio recipe  {{ container_recipe }}
-          template:
+          ansible.builtin.template:
             src: "bio/bcbio.def"
             dest: "{{ container_recipe }}"
+            mode: u=rw,g=r,o=r
         - name: Build container {{ container_image }}
-          command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
           become: true
           environment:
             SINGULARITY_TMPDIR: "/dev/shm"
 
-    - name: Install bcbio {{ container_name }} module
+    - name: Install bcbio module {{ container_name }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install bcbio module file
-          template:
+          ansible.builtin.template:
             src: bio/bcbio.lua
             dest: "{{ module_dir }}/{{ container_name }}_container.lua"
+            mode: u=rw,g=r,o=r

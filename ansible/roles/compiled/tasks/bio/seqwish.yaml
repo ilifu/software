@@ -17,27 +17,28 @@
     - name: Download and install seqwish ({{ version_number }})
       block:
         - name: Clone seqwish repo
-          git:
-              clone: true
-              repo: https://github.com/ekg/seqwish.git
-              dest: "{{ bio_src }}/seqwish"
-              version: "{{ git_commit }}"
-              recursive: true
-              track_submodules: true
-              force: true
+          ansible.builtin.git:
+            clone: true
+            repo: https://github.com/ekg/seqwish.git
+            dest: "{{ bio_src }}/seqwish"
+            version: "{{ git_commit }}"
+            recursive: true
+            track_submodules: true
+            force: true
         - name: Run git submodule update
-          shell: "/usr/bin/git submodule update --init --recursive"
+          ansible.builtin.shell: "/usr/bin/git submodule update --init --recursive"
           args:
             chdir: "{{ bio_src }}/seqwish"
 
         - name: Ensure seqwish dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ seqwish_dir }}"
             state: directory
-            recurse: yes
+            recurse: true
 
         - name: Run cmake
-          shell: "/usr/bin/cmake -H. -DCMAKE_BUILD_TYPE=Generic -DEXTRA_FLAGS='-march=native -Ofast' -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -Bbuild ."
+          ansible.builtin.shell: "/usr/bin/cmake -H. -DCMAKE_BUILD_TYPE=Generic -DEXTRA_FLAGS='-march=native -Ofast' -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }}
+            -Bbuild ."
           args:
             chdir: "{{ bio_src }}/seqwish"
           environment:
@@ -49,7 +50,7 @@
             PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
 
         - name: Run cmake build
-          shell: "/usr/bin/cmake --build build -- -j {{ ansible_processor_vcpus }}"
+          ansible.builtin.shell: "/usr/bin/cmake --build build -- -j {{ ansible_processor_vcpus }}"
           args:
             chdir: "{{ bio_src }}/seqwish"
           environment:
@@ -61,18 +62,19 @@
             PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
 
         - name: Run make install
-          make:
+          community.general.make:
             chdir: "{{ bio_src }}/seqwish/build"
             target: install
 
-    - name: Install seqwish {{ version_number }} module
+    - name: Install seqwish module {{ version_number }}
       block:
         - name: Check module dir {{ seqwish_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ seqwish_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install seqwish {{ version_number }} module file
-          template:
+        - name: Install seqwish module file {{ version_number }}
+          ansible.builtin.template:
             src: seqwish.lua
             dest: "{{ seqwish_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

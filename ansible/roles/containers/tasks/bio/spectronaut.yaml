@@ -1,3 +1,4 @@
+---
 - name: Create Spectronaut container
   vars:
     base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
@@ -17,43 +18,46 @@
     - "spectronaut{{ item.version_number }}"
     - never
   block:
-    - name: "Fetch spectronaut {{ spectronaut_version }} deb file"
-      get_url:
+    - name: "Fetch spectronaut deb file {{ spectronaut_version }}"
+      ansible.builtin.get_url:
         url: "{{ spectronaut_deb_url }}"
         dest: "{{ spectronaut_deb_file }}"
         checksum: "{{ spectronaut_deb_checksum }}"
-    - name: Create Spectronaut {{ version_number }} container
+        mode: u=rw,g=r,o=r
+    - name: Create Spectronaut container {{ version_number }}
       block:
         - name: "Copy singularity definition file to {{ bio_container_recipe_dir }}/{{ container_name }}.{{ version_number }}.def"
-          template:
-              src: "bio/spectronaut.def"
-              dest: "{{ bio_container_recipe_dir }}/{{ container_name }}.{{ version_number }}.def"
+          ansible.builtin.template:
+            src: "bio/spectronaut.def"
+            dest: "{{ bio_container_recipe_dir }}/{{ container_name }}.{{ version_number }}.def"
+            mode: u=rw,g=r,o=r
         - name: "Build singularity container {{ container_image }}"
-          command: "{{ singularity }} build {{ container_image }} {{ bio_container_recipe_dir }}/{{ container_name }}.{{ version_number }}.def"
+          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ bio_container_recipe_dir }}/{{ container_name }}.{{ version_number }}.def"
           args:
-              creates: "{{ container_image }}"
+            creates: "{{ container_image }}"
           become: true
           environment:
-              SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"
+            SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm') }}"
         - name: Ensure spectronaut binary directory exists
-          file:
+          ansible.builtin.file:
             path: "{{ spectronaut_binary_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Create spectronaut binary
-          template:
+          ansible.builtin.template:
             src: "bio/spectronaut.sh"
             dest: "{{ spectronaut_binary_dir }}/spectronaut"
-            mode: 0755
+            mode: u=rwx,g=rx,o=rx
 
-    - name: Install Spectronaut {{ container_name }} module
+    - name: Install Spectronaut module {{ container_name }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ spectronaut_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install spectronaut module file
-          template:
+          ansible.builtin.template:
             src: bio/spectronaut.lua
             dest: "{{ spectronaut_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

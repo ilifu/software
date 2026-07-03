@@ -14,42 +14,42 @@
     - beast2-{{ item.version_number }}
   block:
     - name: Check if beast2 is already installed
-      stat:
+      ansible.builtin.stat:
         path: "{{ install_dir }}/bin/beast"
       register: beast2_installed
     - name: Download and install beast2 ({{ version_number }})
       when: not beast2_installed.stat.exists
       block:
         - name: Download beast2
-          get_url:
-              url: "{{ url }}"
-              dest: "{{ bio_src }}/beast2-{{ version_number }}.linux.x86.tgz"
-              mode: "ug=rwx,o=rx"
-              checksum: "{{ checksum }}"
+          ansible.builtin.get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/beast2-{{ version_number }}.linux.x86.tgz"
+            mode: "ug=rwx,o=rx"
+            checksum: "{{ checksum }}"
         - name: Ensure beast2 dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ beast2_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Uncompress beast2
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ bio_src }}/beast2-{{ version_number }}.linux.x86.tgz"
             dest: "{{ beast2_dir }}"
-            remote_src: yes
+            remote_src: true
             creates: "{{ unzipdir }}"
 
-
         - name: Move beast2 to install dir
-          command: "mv {{ unzipdir }} {{ install_dir }}"
+          ansible.builtin.command: "mv {{ unzipdir }} {{ install_dir }}"
           args:
-              creates: "{{ install_dir }}/bin/beast"
+            creates: "{{ install_dir }}/bin/beast"
 
     - name: Check module dir {{ beast2_module_dir }}
-      file:
+      ansible.builtin.file:
         path: "{{ beast2_module_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
-    - name: Install beast2 {{ version_number }} module file
-      template:
+    - name: Install beast2 module file {{ version_number }}
+      ansible.builtin.template:
         src: bio/beast2.lua
         dest: "{{ beast2_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

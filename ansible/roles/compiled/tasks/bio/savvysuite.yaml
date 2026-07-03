@@ -16,11 +16,11 @@
     - name: Download, compile and install SavvySuite {{ version_number }}
       block:
         - name: Checkout savvysuite from git repository to {{ install_dir }}
-          git:
+          ansible.builtin.git:
             repo: "https://github.com/rdemolgen/SavvySuite.git"
             dest: "{{ install_dir }}"
         - name: Compile savvysuite in {{ install_dir }}
-          command: "{{ java_location }}/bin/javac {{ item }}"
+          ansible.builtin.command: "{{ java_location }}/bin/javac {{ item }}"
           args:
             chdir: "{{ install_dir }}"
           environment:
@@ -31,15 +31,15 @@
           loop_control:
             label: "{{ item }}"
 
-
-    - name: Install SavvySuite {{ version_number }} module
+    - name: Install SavvySuite module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ savvysuite_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install SavvySuite module file
-          template:
+          ansible.builtin.template:
             src: savvysuite.lua
             dest: "{{ savvysuite_module_dir }}/git.lua"
+            mode: u=rw,g=r,o=r

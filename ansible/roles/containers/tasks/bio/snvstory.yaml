@@ -1,3 +1,4 @@
+---
 - name: Create snvstory container
   vars:
     container_name: "snvstory"
@@ -10,40 +11,42 @@
     - never
   block:
     - name: Copy snvstory recipe  {{ container_recipe }}
-      template:
+      ansible.builtin.template:
         src: "bio/snvstory.def"
         dest: "{{ container_recipe }}"
-    - name: git clone snvstory to /dev/shm/snv_story_build
-      git:
+        mode: u=rw,g=r,o=r
+    - name: Git clone snvstory to /dev/shm/snv_story_build
+      ansible.builtin.git:
         repo: git@github.com:nch-igm/snvstory.git
         dest: "/dev/shm/snv_story_build"
     - name: Build singularity container
-      command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+      ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
       args:
-          creates: "{{ container_image }}"
-          chdir: "/dev/shm/snv_story_build"
+        creates: "{{ container_image }}"
+        chdir: "/dev/shm/snv_story_build"
       become: true
       environment:
-          SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"
+        SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm') }}"
     - name: Ensure snvstory binary directory exists
-      file:
+      ansible.builtin.file:
         path: "{{ snvstory_binary_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
     - name: Create snvstory binary
-      template:
+      ansible.builtin.template:
         src: "bio/snvstory.sh"
         dest: "{{ snvstory_binary_dir }}/snvstory"
-        mode: 0755
+        mode: u=rwx,g=rx,o=rx
 
-    - name: Install {{ container_name }} module
+    - name: Install module {{ container_name }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ snvstory_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install snvstory module file
-          template:
+          ansible.builtin.template:
             src: bio/snvstory.lua
             dest: "{{ snvstory_module_dir }}/default.lua"
+            mode: u=rw,g=r,o=r

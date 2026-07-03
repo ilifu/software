@@ -12,19 +12,20 @@
   block:
     - name: Download, and install GenomeBrowser
       block:
-        - name: rsync GenomeBrowser from {{ GenomeBrowser_url }}
+        - name: Rsync GenomeBrowser from {{ GenomeBrowser_url }}
           ansible.posix.synchronize:
-            src: '{{ GenomeBrowser_url }}'
-            dest: '{{ install_dir }}'
+            src: "{{ GenomeBrowser_url }}"
+            dest: "{{ install_dir }}"
 
     - name: Install GenomeBrowser {{ version_number }} module to {{ GenomeBrowser_module_dir }}
       block:
         - name: Check module dir {{ GenomeBrowser_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ GenomeBrowser_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install GenomeBrowser module file to {{ GenomeBrowser_module_dir }}/{{ version_number }}.lua
-          template:
+          ansible.builtin.template:
             src: GenomeBrowser.lua
             dest: "{{ GenomeBrowser_module_dir }}/cli.lua"
+            mode: u=rw,g=r,o=r

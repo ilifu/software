@@ -1,3 +1,4 @@
+---
 - name: Install UCX
   vars:
     ucx_dir: "{{ common_dir }}/ucx"
@@ -17,33 +18,34 @@
       block:
         - name: Download, compile and install UCX {{ version_number }}
           block:
-            - name: clone ucx and checkout {{ version_number }}
-              git:
+            - name: Clone ucx and checkout {{ version_number }}
+              ansible.builtin.git:
                 repo: "https://github.com/openucx/ucx.git"
                 dest: "{{ unzipdir }}"
                 version: "tags/v{{ version_number }}"
-                force: yes
-            - name: Make UCX {{ version_number }} build directory
-              file:
+                force: true
+            - name: Make UCX build directory {{ version_number }}
+              ansible.builtin.file:
                 path: "{{ build_dir }}"
                 state: directory
+                mode: u=rwx,g=rwx,o=rx
             - name: Run autogen for UCX {{ version_number }}
-              command: "./autogen.sh"
+              ansible.builtin.command: "./autogen.sh"
               args:
                 chdir: "{{ unzipdir }}"
                 creates: "{{ unzipdir }}/configure"
-            - name: Run UCX {{ version_number }} configure
-              command: "../contrib/configure-release --prefix={{ install_dir }} --enable-optimizations --with-cuda={{ cuda_root }}"
+            - name: Run UCX configure {{ version_number }}
+              ansible.builtin.command: "../contrib/configure-release --prefix={{ install_dir }} --enable-optimizations --with-cuda={{ cuda_root }}"
               args:
                 chdir: "{{ build_dir }}"
                 creates: "{{ build_dir }}/Makefile"
             - name: Build UCX {{ version_number }}
-              make:
+              community.general.make:
                 chdir: "{{ build_dir }}"
               environment:
                 MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
             - name: Install UCX {{ version_number }} to {{ install_dir }}
-              make:
+              community.general.make:
                 chdir: "{{ build_dir }}"
                 target: install
 

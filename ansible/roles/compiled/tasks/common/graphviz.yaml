@@ -1,3 +1,4 @@
+---
 - name: Install graphviz
   vars:
     graphviz_dir: "{{ common_dir }}/graphviz"
@@ -17,42 +18,45 @@
         - name: Download, compile and install graphviz {{ version_number }}
           block:
             - name: Download graphviz {{ version_number }}
-              get_url:
+              ansible.builtin.get_url:
                 url: "{{ url }}"
                 dest: "{{ common_src }}/graphviz-{{ version_number }}.tar.gz"
                 checksum: "{{ checksum }}"
+                mode: u=rw,g=r,o=r
             - name: Unzip graphviz {{ version_number }}
-              unarchive:
+              ansible.builtin.unarchive:
                 src: "{{ common_src }}/graphviz-{{ version_number }}.tar.gz"
                 dest: "/dev/shm/"
                 creates: "{{ unzipdir }}"
-            - name: Make graphviz {{ version_number }} build directory
-              file:
+            - name: Make graphviz build directory {{ version_number }}
+              ansible.builtin.file:
                 path: "{{ build_dir }}"
                 state: directory
-            - name: Run graphviz {{ version_number }} configure
-              command: "../configure --prefix={{ install_dir }} --enable-static"
+                mode: u=rwx,g=rwx,o=rx
+            - name: Run graphviz configure {{ version_number }}
+              ansible.builtin.command: "../configure --prefix={{ install_dir }} --enable-static"
               args:
                 chdir: "{{ build_dir }}"
                 creates: "{{ build_dir }}/Makefile"
             - name: Build graphviz {{ version_number }}
-              make:
+              community.general.make:
                 chdir: "{{ build_dir }}"
               environment:
                 MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
             - name: Install graphviz {{ version_number }}
-              make:
+              community.general.make:
                 chdir: "{{ build_dir }}"
                 target: install
 
-    - name: Install graphviz {{ version_number }} module
+    - name: Install graphviz module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ graphviz_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install graphviz {{ version_number }} module file
-          template:
+        - name: Install graphviz module file {{ version_number }}
+          ansible.builtin.template:
             src: graphviz.lua
             dest: "{{ graphviz_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

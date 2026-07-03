@@ -15,31 +15,34 @@
     - salmon{{ item.version_number }}
   block:
     - name: Ensure Salmon dir exists
-      file:
+      ansible.builtin.file:
         path: "{{ salmon_dir }}"
         state: directory
+        mode: u=rwx,g=rwx,o=rx
     - name: Download Salmon {{ version_number }} from {{ url }}
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ bio_src }}/salmon-{{ version_number }}.tar.gz"
         checksum: "{{ checksum }}"
+        mode: u=rw,g=r,o=r
     - name: Uncompress Salmon
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ bio_src }}/salmon-{{ version_number }}.tar.gz"
         dest: "/dev/shm"
-        remote_src: yes
+        remote_src: true
         creates: "{{ unarchive_dir }}"
     - name: Move {{ unarchive_dir }} to {{ install_dir }}
-      command: "mv {{ unarchive_dir }} {{ install_dir }}"
+      ansible.builtin.command: "mv {{ unarchive_dir }} {{ install_dir }}"
       args:
         creates: "{{ install_dir }}"
 
     - name: Check module dir {{ salmon_module_dir }}
-      file:
+      ansible.builtin.file:
         path: "{{ salmon_module_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
-    - name: Install salmon {{ version_number }} module file
-      template:
+    - name: Install salmon module file {{ version_number }}
+      ansible.builtin.template:
         src: bio/salmon.lua
         dest: "{{ salmon_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

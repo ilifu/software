@@ -1,3 +1,46 @@
-skip_list:  # or 'skip_list' to silence them completely
-  - meta-incorrect  # meta/main.yml default values should be changed
-  - meta-no-info  # meta/main.yml should contain relevant info
+---
+# ansible-lint config for ilifu/software
+#
+# Run from this directory (ansible/) so ansible.cfg provides module/role
+# context and the sibling .yamllint owns YAML style:
+#     cd ansible && uv run ansible-lint
+#
+# Target profile is `production` (the strictest). Everything the repo does not
+# yet satisfy is listed below with a justification, so the profile can be
+# tightened incrementally by emptying the skip_list. CI gates at this exact
+# configuration, so a green run means "no new violations were introduced".
+profile: production
+
+skip_list:
+  # --- Role metadata: these roles are internal, never published to Galaxy ---
+  - meta-incorrect        # meta/main.yml default author/license values
+  - meta-no-info          # meta/main.yml optional galaxy_info fields
+
+  # --- Variable naming: deferred. Renaming vars means chasing every reference
+  #     through the .lua/.def/.sh templates, which is high-risk for zero
+  #     runtime benefit. Revisit per-role if templates are refactored.
+  - var-naming[pattern]
+  - var-naming[no-role-prefix]
+  - var-naming[no-reserved]
+
+  # --- Cosmetic task names with a Jinja template mid-string. The 346 cleanly
+  #     rewordable cases were fixed; the remaining multi-template names read
+  #     awkwardly when mechanically reworded. Task names have no runtime effect.
+  - name[template]
+
+  # --- Build-from-source patterns that are intentional for this playbook -----
+  # These roles compile software, so the "idiomatic" rewrites below are either
+  # inappropriate or would break the build:
+  - no-changed-when            # build/install commands genuinely change state
+  - command-instead-of-shell   # cmake calls use shell quoting (e.g. -DEXTRA_FLAGS='...')
+  - command-instead-of-module  # git submodule --recursive, `tar -I zstd` (unarchive lacks zstd)
+  - latest[git]                # some clones track upstream HEAD by design;
+                               # pin a `version:` per-repo to remove individually
+  - no-handler                 # `when: x.changed` gates sequential build steps;
+                               # real handlers (fire at play-end) would reorder them
+
+exclude_paths:
+  - output/
+  - roles/all/tests/
+  - roles/compiled/tests/
+  - roles/containers/tests/

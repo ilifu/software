@@ -15,36 +15,37 @@
     - name: Download and install bamtools ({{ version_number }})
       block:
         - name: Download bamtools
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ url }}"
             dest: "{{ bio_src }}/bamtools.{{ version_number }}.tar.gz"
             mode: ug=rw,o=r
         - name: Extract bamtools
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ bio_src }}/bamtools.{{ version_number }}.tar.gz"
             dest: "/dev/shm"
-            remote_src: yes
+            remote_src: true
             creates: "{{ unzip_dir }}"
 
         - name: Ensure bamtools dir exists
-          file:
+          ansible.builtin.file:
             path: "{{ bamtools_dir }}"
             state: directory
-            recurse: yes
+            recurse: true
 
         - name: Create build directory
-          file:
+          ansible.builtin.file:
             path: "{{ unzip_dir }}/build"
             state: directory
+            mode: u=rwx,g=rwx,o=rx
 
         - name: Run cmake -DCMAKE_INSTALL_PREFIX={{ install_dir }}"
-          shell: "/usr/bin/cmake -DCMAKE_INSTALL_PREFIX={{ install_dir }} .."
+          ansible.builtin.shell: "/usr/bin/cmake -DCMAKE_INSTALL_PREFIX={{ install_dir }} .."
           args:
             chdir: "{{ unzip_dir }}/build"
             creates: "{{ unzip_dir }}/build/Makefile"
 
         - name: Run make
-          make:
+          community.general.make:
             chdir: "{{ unzip_dir }}/build"
             target: all
             jobs: "{{ ansible_processor_count }}"
@@ -54,20 +55,19 @@
             MAKEFLAGS: "-j {{ ansible_processor_count }}"
 
         - name: Run make install
-          make:
+          community.general.make:
             chdir: "{{ unzip_dir }}/build"
             target: install
 
-
-
-    - name: Install bamtools {{ version_number }} module
+    - name: Install bamtools module {{ version_number }}
       block:
         - name: Check module dir {{ bamtools_module_dir }}
-          file:
+          ansible.builtin.file:
             path: "{{ bamtools_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install bamtools {{ version_number }} module file
-          template:
+        - name: Install bamtools module file {{ version_number }}
+          ansible.builtin.template:
             src: bio/bamtools.lua
             dest: "{{ bamtools_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

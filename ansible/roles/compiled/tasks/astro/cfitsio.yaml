@@ -1,3 +1,4 @@
+---
 - name: Install cfitsio
   vars:
     cfitsio_dir: "{{ astro_dir }}/cfitsio"
@@ -12,48 +13,50 @@
     - cfitsio{{ item.version_number }}
   block:
     - name: Download cfitsio {{ version_number }}
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ astro_src }}/cfitsio-{{ version_number }}.tar.gz"
         checksum: "{{ checksum }}"
+        mode: u=rw,g=r,o=r
     - name: Unzip cfitsio {{ version_number }}
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ astro_src }}/cfitsio-{{ version_number }}.tar.gz"
         dest: "/dev/shm/"
         creates: "{{ unzipdir }}"
 
-    - name: Run cfitsio {{ version_number }} configure
-      command: "./configure --prefix={{ install_dir }}"
+    - name: Run cfitsio configure {{ version_number }}
+      ansible.builtin.command: "./configure --prefix={{ install_dir }}"
       args:
         chdir: "{{ unzipdir }}"
 
     - name: Build cfitsio {{ version_number }}
-      make:
+      community.general.make:
         chdir: "{{ unzipdir }}"
       environment:
         MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
 
-    - name: Build cfitsio {{ version_number }} shared
+    - name: Build cfitsio shared {{ version_number }}
       when: "'3.' in version_number"
-      make:
+      community.general.make:
         chdir: "{{ unzipdir }}"
         target: shared
       environment:
         MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
 
     - name: Install cfitsio {{ version_number }}
-      make:
+      community.general.make:
         chdir: "{{ unzipdir }}"
         target: install
 
-    - name: Install cfitsio {{ version_number }} module
+    - name: Install cfitsio module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ cfitsio_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install cfitsio {{ version_number }} module file
-          template:
+        - name: Install cfitsio module file {{ version_number }}
+          ansible.builtin.template:
             src: astro/cfitsio.lua
             dest: "{{ cfitsio_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

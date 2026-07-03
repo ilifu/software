@@ -14,44 +14,46 @@
     - never
     - subread{{ item.version_number }}
   block:
-    - name: Ensure subread installation dir "{{ install_dir }}" exists
-      file:
+    - name: Ensure subread installation dir " " exists {{ install_dir }}
+      ansible.builtin.file:
         path: "{{ subread_dir }}"
         state: directory
+        mode: u=rwx,g=rwx,o=rx
     - name: Download subread {{ version_number }} from {{ url }}
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ bio_src }}/subread-{{ version_number }}.tar.gz"
         checksum: "{{ checksum }}"
+        mode: u=rw,g=r,o=r
     - name: Uncompress subread
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ bio_src }}/subread-{{ version_number }}.tar.gz"
         dest: "/dev/shm"
-        remote_src: yes
+        remote_src: true
         creates: "{{ unarchive_dir }}"
     - name: Compile subread
-      make:
+      community.general.make:
         chdir: "{{ unarchive_dir }}/src"
         file: Makefile.Linux
     - name: Copy binaries to install dir
-      copy:
+      ansible.builtin.copy:
         src: "{{ file_name }}"
         dest: "{{ install_dir }}/"
-        remote_src: yes
+        remote_src: true
         mode: u=rwx,g=rx,o=rx
       with_fileglob:
-          - "{{ unarchive_dir }}/bin/*"
-          - "{{ unarchive_dir }}/bin/utilities/*"
+        - "{{ unarchive_dir }}/bin/*"
+        - "{{ unarchive_dir }}/bin/utilities/*"
       loop_control:
         loop_var: file_name
 
-
     - name: Check module dir {{ subread_module_dir }}
-      file:
+      ansible.builtin.file:
         path: "{{ subread_module_dir }}"
         state: directory
         mode: u=rwx,g=rwx,o=rx
-    - name: Install subread {{ version_number }} module file
-      template:
+    - name: Install subread module file {{ version_number }}
+      ansible.builtin.template:
         src: bio/subread.lua
         dest: "{{ subread_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

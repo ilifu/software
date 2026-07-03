@@ -1,3 +1,4 @@
+---
 - name: Install fftw
   vars:
     fftw_dir: "{{ common_dir }}/fftw"
@@ -20,35 +21,36 @@
         - name: Download, compile and install fftw {{ version_number }}
           block:
             - name: Download fftw {{ version_number }}
-              get_url:
+              ansible.builtin.get_url:
                 url: "{{ url }}"
                 dest: "{{ common_src }}/fftw-{{ version_number }}.tar.gz"
                 checksum: "{{ checksum }}"
+                mode: u=rw,g=r,o=r
             - name: Unzip fftw {{ version_number }}
-              unarchive:
+              ansible.builtin.unarchive:
                 src: "{{ common_src }}/fftw-{{ version_number }}.tar.gz"
                 dest: "/dev/shm/"
                 creates: "{{ unzipdir }}"
-            - name: Make fftw {{ version_number }} build directory
-              file:
+            - name: Make fftw build directory {{ version_number }}
+              ansible.builtin.file:
                 path: "{{ build_dir }}"
                 state: directory
+                mode: u=rwx,g=rwx,o=rx
             - name: Build different precisions of fftw
-              include_tasks: "fftw_precisions.yaml"
+              ansible.builtin.include_tasks: "fftw_precisions.yaml"
               loop: "{{ precisions }}"
               loop_control:
                 loop_var: precision
-        
 
-    - name: Install fftw {{ version_number }} all precisions module
+    - name: Install fftw all precisions module {{ version_number }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ fftw_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
-        - name: Install fftw {{ version_number }} all precisions module file
-          template:
+        - name: Install fftw all precisions module file {{ version_number }}
+          ansible.builtin.template:
             src: fftw.lua
             dest: "{{ fftw_module_dir }}/{{ version_number }}.lua"
-
+            mode: u=rw,g=r,o=r

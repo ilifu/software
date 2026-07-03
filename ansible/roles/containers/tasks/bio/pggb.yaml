@@ -1,3 +1,4 @@
+---
 - name: Create pggb container
   vars:
     checksum: "{{ item.checksum }}"
@@ -9,28 +10,30 @@
     - "pggb{{ item.tag }}"
     - never
   block:
-    - name: Create pggb {{ version_number }} container
+    - name: Create pggb container {{ version_number }}
       block:
         - name: Copy singularity definition file
-          template:
-              src: "bio/pggb.def"
-              dest: "{{ bio_container_recipe_dir }}/{{ container_name }}.{{ tag }}.def"
+          ansible.builtin.template:
+            src: "bio/pggb.def"
+            dest: "{{ bio_container_recipe_dir }}/{{ container_name }}.{{ tag }}.def"
+            mode: u=rw,g=r,o=r
         - name: Build singularity container
-          command: "{{ singularity }} build {{ container_image }} {{ bio_container_recipe_dir }}/{{ container_name }}.{{ tag }}.def"
+          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ bio_container_recipe_dir }}/{{ container_name }}.{{ tag }}.def"
           args:
-              creates: "{{ container_image }}"
+            creates: "{{ container_image }}"
           become: true
           environment:
-              SINGULARITY_TMPDIR: "{{ lookup('env','SINGULARITY_TMPDIR') | default('/dev/shm') }}"
+            SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm') }}"
 
-    - name: Install pggb {{ container_name }} module
+    - name: Install pggb module {{ container_name }}
       block:
         - name: Check module dir
-          file:
+          ansible.builtin.file:
             path: "{{ pggb_module_dir }}"
             state: directory
             mode: u=rwx,g=rwx,o=rx
         - name: Install pggb module file
-          template:
+          ansible.builtin.template:
             src: bio/pggb.lua
             dest: "{{ pggb_module_dir }}/{{ tag }}.lua"
+            mode: u=rw,g=r,o=r

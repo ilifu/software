@@ -19,34 +19,35 @@
     - name: Download, compile and install BEAGLE {{ version_number }}
       block:
         - name: Download BEAGLE {{ version_number }} from {{ beagle_url }}
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ beagle_url }}"
             dest: "{{ common_src }}/beagle-v{{ version_number }}.tar.gz"
             checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
         - name: Unzip BEAGLE {{ version_number }}
-          unarchive:
+          ansible.builtin.unarchive:
             src: "{{ common_src }}/beagle-v{{ version_number }}.tar.gz"
             dest: "/dev/shm/"
             creates: "{{ unzipdir }}"
-#        - name: Make BEAGLE {{ version_number }} build directory
-#          file:
-#            path: "{{ build_dir }}"
-#            state: directory
+        #        - name: Make BEAGLE {{ version_number }} build directory
+        #          file:
+        #            path: "{{ build_dir }}"
+        #            state: directory
         - name: Run autogen BEAGLE {{ version_number }}
-          command: "./autogen.sh"
+          ansible.builtin.command: "./autogen.sh"
           args:
             chdir: "{{ unzipdir }}"
             creates: "{{ unzipdir }}/configure"
           environment:
-#            PATH: "{{ cuda_location }}/bin:{{ ansible_env.PATH }}"
-#            LD_LIBRARY_PATH: "{{ cuda_location }}/lib64:{{ cuda_location }}/extras/CUPTI/lib64:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-#            LIBRARY_PATH: "{{ cuda_location }}/lib64:{{ cuda_location }}/extras/CUPTI/lib64:{{ ansible_env.LIBRARY_PATH | default('') }}"
-#            INCLUDE: "{{ cuda_location }}/include:{{ cuda_location }}/extras/CUPTI/include:{{ ansible_env.INCLUDE | default('') }}"
-#            C_INCLUDE: "{{ cuda_location }}/include:{{ cuda_location }}/extras/CUPTI/include:{{ ansible_env.C_INCLUDE | default('') }}"
-#            PKG_CONFIG_PATH: "{{ cuda_location }}/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+            #            PATH: "{{ cuda_location }}/bin:{{ ansible_env.PATH }}"
+            #            LD_LIBRARY_PATH: "{{ cuda_location }}/lib64:{{ cuda_location }}/extras/CUPTI/lib64:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            #            LIBRARY_PATH: "{{ cuda_location }}/lib64:{{ cuda_location }}/extras/CUPTI/lib64:{{ ansible_env.LIBRARY_PATH | default('') }}"
+            #            INCLUDE: "{{ cuda_location }}/include:{{ cuda_location }}/extras/CUPTI/include:{{ ansible_env.INCLUDE | default('') }}"
+            #            C_INCLUDE: "{{ cuda_location }}/include:{{ cuda_location }}/extras/CUPTI/include:{{ ansible_env.C_INCLUDE | default('') }}"
+            #            PKG_CONFIG_PATH: "{{ cuda_location }}/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
             CFLAGS: "-fstack-protector -Wformat"
         - name: Run configure BEAGLE {{ version_number }}
-          command: "./configure --prefix={{ install_dir }} --with-cuda={{ cuda_location }} --with-jdk={{ java_location }}"
+          ansible.builtin.command: "./configure --prefix={{ install_dir }} --with-cuda={{ cuda_location }} --with-jdk={{ java_location }}"
           args:
             chdir: "{{ unzipdir }}"
             creates: "{{ unzipdir }}/Makefile"
@@ -56,40 +57,40 @@
             CC: "gcc-8"
             CXX: "g++-8"
             PATH: "{{ java_location }}/bin:{{ ansible_env.PATH }}"
-#            LD_LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-#            LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
-#            INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
-#            C_INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.C_INCLUDE | default('') }}"
+            #            LD_LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            #            LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
+            #            INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            #            C_INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.C_INCLUDE | default('') }}"
             CFLAGS: "-fstack-protector -Wformat"
-#            GCC_EXEC_PREFIX: "-8"
-#        - name: Run cmake BEAGLE {{ version_number }} configure
-#          command: "cmake -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -DBUILD_OPENCL=OFF .."
-#          args:
-#            chdir: "{{ build_dir }}"
-##            creates: "{{ build_dir }}/Makefile"
-#          environment:
-#            PATH: "{{ cuda_location }}/bin:{{ ansible_env.PATH }}"
-#            LD_LIBRARY_PATH: "{{ cuda_location }}/lib64:{{ cuda_location }}/extras/CUPTI/lib64:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-#            LIBRARY_PATH: "{{ cuda_location }}/lib64:{{ cuda_location }}/extras/CUPTI/lib64:{{ ansible_env.LIBRARY_PATH | default('') }}"
-#            INCLUDE: "{{ cuda_location }}/include:{{ cuda_location }}/extras/CUPTI/include:{{ ansible_env.INCLUDE | default('') }}"
-#            C_INCLUDE: "{{ cuda_location }}/include:{{ cuda_location }}/extras/CUPTI/include:{{ ansible_env.C_INCLUDE | default('') }}"
-#            PKG_CONFIG_PATH: "{{ cuda_location }}/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
-#            CFLAGS: "-fstack-protector -Wformat"
+        #            GCC_EXEC_PREFIX: "-8"
+        #        - name: Run cmake BEAGLE {{ version_number }} configure
+        #          command: "cmake -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -DBUILD_OPENCL=OFF .."
+        #          args:
+        #            chdir: "{{ build_dir }}"
+        ##            creates: "{{ build_dir }}/Makefile"
+        #          environment:
+        #            PATH: "{{ cuda_location }}/bin:{{ ansible_env.PATH }}"
+        #            LD_LIBRARY_PATH: "{{ cuda_location }}/lib64:{{ cuda_location }}/extras/CUPTI/lib64:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+        #            LIBRARY_PATH: "{{ cuda_location }}/lib64:{{ cuda_location }}/extras/CUPTI/lib64:{{ ansible_env.LIBRARY_PATH | default('') }}"
+        #            INCLUDE: "{{ cuda_location }}/include:{{ cuda_location }}/extras/CUPTI/include:{{ ansible_env.INCLUDE | default('') }}"
+        #            C_INCLUDE: "{{ cuda_location }}/include:{{ cuda_location }}/extras/CUPTI/include:{{ ansible_env.C_INCLUDE | default('') }}"
+        #            PKG_CONFIG_PATH: "{{ cuda_location }}/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+        #            CFLAGS: "-fstack-protector -Wformat"
         - name: Build BEAGLE {{ version_number }}
-          make:
+          community.general.make:
             chdir: "{{ unzipdir }}"
           environment:
             MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
             JAVA_HOME: "{{ java_location }}"
             JDK_HOME: "{{ java_location }}"
             PATH: "{{ java_location }}/bin:{{ ansible_env.PATH }}"
-#            LD_LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-#            LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
-#            INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
-#            C_INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.C_INCLUDE | default('') }}"
-#            GCC_EXEC_PREFIX: "-8"
+        #            LD_LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+        #            LIBRARY_PATH: "{{ cuda_location }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
+        #            INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
+        #            C_INCLUDE: "{{ cuda_location }}/include:{{ ansible_env.C_INCLUDE | default('') }}"
+        #            GCC_EXEC_PREFIX: "-8"
         - name: Install BEAGLE {{ version_number }}
-          make:
+          community.general.make:
             chdir: "{{ unzipdir }}"
             target: install
 
