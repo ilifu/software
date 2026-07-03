@@ -20,7 +20,7 @@
             dest: "{{ bio_src }}/dorado-{{ version_number }}.tar.gz"
             mode: "ug=rwx,o=rx"
             checksum: "{{ checksum }}"
-        - name: Ensure dorado dir exists exists {{ dorado_dir }}
+        - name: Ensure dorado dir exists {{ dorado_dir }}
           ansible.builtin.file:
             path: "{{ dorado_dir }}"
             state: directory
