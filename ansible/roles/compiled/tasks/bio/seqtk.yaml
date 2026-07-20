@@ -1,0 +1,60 @@
+---
+- name: Install seqtk {{ item.version_number }}
+  vars:
+    seqtk_dir: "{{ bio_dir }}/seqtk"
+    seqtk_module_dir: "{{ bio_modules }}/seqtk"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ seqtk_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/seqtk-{{ version_number }}"
+  tags:
+    - never
+    - seqtk{{ item.version_number }}
+
+  block:
+    - name: Download and install seqtk {{ version_number }}
+      block:
+        - name: Download seqtk {{ version_number }} from {{ url }}
+          ansible.builtin.get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/seqtk-{{ version_number }}.tar.gz"
+            checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
+        - name: Ensure seqtk bin dir exists {{ install_dir }}
+          ansible.builtin.file:
+            path: "{{ install_dir }}/bin"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Uncompress seqtk to {{ unzip_dir }}
+          ansible.builtin.unarchive:
+            src: "{{ bio_src }}/seqtk-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        # seqtk ships a bare Makefile with no configure and no install target,
+        # so the binary is built in place and copied out by hand.
+        - name: Make seqtk {{ version_number }}
+          community.general.make:
+            chdir: "{{ unzip_dir }}"
+          environment:
+            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+        - name: Copy seqtk {{ version_number }} binary to {{ install_dir }}
+          ansible.builtin.copy:
+            src: "{{ unzip_dir }}/seqtk"
+            dest: "{{ install_dir }}/bin/seqtk"
+            remote_src: true
+            force: true
+            mode: preserve
+
+    - name: Install seqtk module {{ version_number }}
+      block:
+        - name: Check module dir {{ seqtk_module_dir }}
+          ansible.builtin.file:
+            path: "{{ seqtk_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install seqtk module file {{ version_number }}
+          ansible.builtin.template:
+            src: bio/seqtk.lua
+            dest: "{{ seqtk_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r
