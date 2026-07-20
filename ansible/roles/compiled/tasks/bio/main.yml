@@ -470,6 +470,13 @@
         cuda_module: "cuda/12.2.0_535.54.03"
         hwloc_module: "hwloc/2.10.0"
         hwloc_root: "/software/common/hwloc/2.10.0"
+      - version_number: "2026.3"
+        checksum: "sha256:1094b7bbc6a3960223827114626657110b40096cdf9598a727935fc84ebf8aa0"
+        url: "https://ftp.gromacs.org/gromacs/gromacs-2026.3.tar.gz"
+        cuda_root: "/software/common/cuda/12.9.1_575.57.08"
+        cuda_module: "cuda/12.9.1_575.57.08"
+        hwloc_module: "hwloc/2.12.2"
+        hwloc_root: "/software/common/hwloc/2.12.2"
   ansible.builtin.include_tasks:
     file: gromacs.yaml
   loop: "{{ versions }}"
