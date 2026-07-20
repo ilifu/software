@@ -1326,6 +1326,9 @@
       - version_number: "0.2"
         url: "https://github.com/glennhickey/panpatch/releases/download/v0.2/panpatch"
         checksum: "sha512:9c1b64b7d0d13df982ba4a9fa142715f448d5803cfd009b3685397e365e4d354aa2c86b11617ebc6cf6a791a871e7b7d0fc199a18fb2190588699008517b4577"
+      - version_number: "0.3"
+        url: "https://github.com/glennhickey/panpatch/releases/download/v0.3/panpatch"
+        checksum: "sha512:4007e97c43d408911acb0b0e1a36524bf9bbf6d0f8bb59f1743a0412cc226de98423a978a4de2761d0046bce34c1749b977ecf00d0fbed00ea9d650bf0896a90"
   ansible.builtin.include_tasks:
     file: "panpatch.yaml"
   loop: "{{ versions }}"
