@@ -38,7 +38,7 @@
       community.general.make:
         chdir: "{{ build_dir }}"
       environment:
-        MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+        MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
     - name: Install jemalloc {{ version_number }}
       community.general.make:
         chdir: "{{ build_dir }}"

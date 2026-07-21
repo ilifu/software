@@ -42,7 +42,7 @@
               community.general.make:
                 chdir: "{{ unzip_dir }}"
               environment:
-                MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+                MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
             - name: Install squashfuse
               community.general.make:
                 chdir: "{{ unzip_dir }}"

@@ -34,7 +34,7 @@
             chdir: "{{ unzip_dir }}"
             creates: "{{ install_dir }}/bin/gfaffix"
           environment:
-            PATH: "{{ cargo_dir }}/bin:{{ ansible_env.PATH | default('') }}"
+            PATH: "{{ cargo_dir }}/bin:{{ ansible_facts['env'].PATH | default('') }}"
 
     - name: Install GFAffix module {{ version_number }}
       block:

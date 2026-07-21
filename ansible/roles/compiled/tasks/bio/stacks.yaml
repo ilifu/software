@@ -40,7 +40,7 @@
           community.general.make:
             chdir: "{{ unzip_dir }}"
           environment:
-            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+            MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
         - name: Install stacks {{ version_number }} to {{ install_dir }}
           community.general.make:
             chdir: "{{ unzip_dir }}"

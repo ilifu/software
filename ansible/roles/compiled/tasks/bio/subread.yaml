@@ -9,7 +9,7 @@
     unarchive_dir: "/dev/shm/subread-{{ version_number }}-source"
     install_dir: "{{ subread_dir }}/{{ version_number }}"
   environment:
-    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+    MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
   tags:
     - never
     - subread{{ item.version_number }}

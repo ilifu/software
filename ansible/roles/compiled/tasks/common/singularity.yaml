@@ -12,8 +12,8 @@
     - never
     - singularity{{ item.version_number }}
   environment:
-    PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
-    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+    PATH: "{{ go_location }}:{{ ansible_facts['env'].PATH }}"
+    MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
   block:
     - name: Install singularity {{ version_number }}
       when: "version_number.startswith('3') or version_number.startswith('4')"
@@ -105,7 +105,7 @@
               community.general.make:
                 chdir: "{{ unzip_dir }}"
               environment:
-                MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+                MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
             - name: Install singularity
               community.general.make:
                 chdir: "{{ unzip_dir }}"

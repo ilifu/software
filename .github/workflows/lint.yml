@@ -31,3 +31,17 @@ jobs:
       - name: ansible-lint
         working-directory: ansible
         run: uv run ansible-lint
+
+      # ansible-lint ships no rule for this, so it needs its own gate. Facts must
+      # be read as ansible_facts['name']; the bare injected form is deprecated in
+      # ansible-core 2.21 and removed in 2.24. Covers the non-YAML templates
+      # (.def/.sh/.lua/.j2) that neither linter looks at.
+      - name: Reject bare injected facts
+        working-directory: ansible
+        run: |
+          if grep -rnE '\bansible_(env|processor_vcpus|processor_count|architecture)\b' \
+               --include='*.yml' --include='*.yaml' --include='*.def' \
+               --include='*.j2' --include='*.lua' --include='*.sh' .; then
+            echo "::error::Use ansible_facts['name'] - top-level fact injection is removed in ansible-core 2.24"
+            exit 1
+          fi

@@ -39,21 +39,21 @@
           args:
             chdir: "{{ unzip_dir }}/"
           environment:
-            PATH: "{{ mpi_dir }}/bin:{{ ansible_env.PATH }}"
-            LD_LIBRARY_PATH: "{{ mpi_dir }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            LIBRARY_PATH: "{{ mpi_dir }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            INCLUDE: "{{ mpi_dir }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            C_INCLUDE: "{{ mpi_dir }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            PATH: "{{ mpi_dir }}/bin:{{ ansible_facts['env'].PATH }}"
+            LD_LIBRARY_PATH: "{{ mpi_dir }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ mpi_dir }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ mpi_dir }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            C_INCLUDE: "{{ mpi_dir }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
         - name: Make hyphy MPI {{ version_number }}
           community.general.make:
             chdir: "{{ unzip_dir }}"
             target: HYPHYMPI
           environment:
-            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
-            LD_LIBRARY_PATH: "{{ mpi_dir }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            LIBRARY_PATH: "{{ mpi_dir }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            INCLUDE: "{{ mpi_dir }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            C_INCLUDE: "{{ mpi_dir }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
+            LD_LIBRARY_PATH: "{{ mpi_dir }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ mpi_dir }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ mpi_dir }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            C_INCLUDE: "{{ mpi_dir }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
 
         - name: Install hyphy {{ version_number }}
           community.general.make:

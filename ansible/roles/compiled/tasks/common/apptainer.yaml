@@ -13,11 +13,11 @@
     squashfuse_module: "{{ item.squashfuse_module }}"
     gocryptfs_module: "{{ item.gocryptfs_module }}"
   environment:
-    LD_LIBRARY_PATH: "{{ squashfuse_location }}/lib:{{ gocryptfs_location }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-    PKG_CONFIG_PATH: "{{ squashfuse_location }}/lib/pkgconfig:{{ gocryptfs_location }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
-    INCLUDE: "{{ squashfuse_location }}/include:{{ gocryptfs_location }}/include:{{ ansible_env.INCLUDE | default('') }}"
-    LIBRARY_PATH: "{{ squashfuse_location }}/lib:{{ gocryptfs_location }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
-    PATH: "{{ squashfuse_location }}/bin:{{ gocryptfs_location }}/bin:{{ ansible_env.PATH }}"
+    LD_LIBRARY_PATH: "{{ squashfuse_location }}/lib:{{ gocryptfs_location }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+    PKG_CONFIG_PATH: "{{ squashfuse_location }}/lib/pkgconfig:{{ gocryptfs_location }}/lib/pkgconfig:{{ ansible_facts['env'].PKG_CONFIG_PATH | default('') }}"
+    INCLUDE: "{{ squashfuse_location }}/include:{{ gocryptfs_location }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+    LIBRARY_PATH: "{{ squashfuse_location }}/lib:{{ gocryptfs_location }}/lib:{{ ansible_facts['env'].LIBRARY_PATH | default('') }}"
+    PATH: "{{ squashfuse_location }}/bin:{{ gocryptfs_location }}/bin:{{ ansible_facts['env'].PATH }}"
   tags:
     - never
     - apptainer{{ item.version_number }}
@@ -55,13 +55,13 @@
                 chdir: "{{ unzip_dir }}"
                 creates: "{{ unzip_dir }}/builddir/Makefile"
               environment:
-                PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
+                PATH: "{{ go_location }}:{{ ansible_facts['env'].PATH }}"
             - name: Compile apptainer
               community.general.make:
                 chdir: "{{ unzip_dir }}/builddir"
               environment:
-                PATH: "{{ go_location }}:{{ ansible_env.PATH }}"
-                MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+                PATH: "{{ go_location }}:{{ ansible_facts['env'].PATH }}"
+                MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
             - name: Install apptainer
               community.general.make:
                 chdir: "{{ unzip_dir }}/builddir"

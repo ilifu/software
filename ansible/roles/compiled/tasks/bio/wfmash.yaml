@@ -46,26 +46,26 @@
           args:
             chdir: "{{ bio_src }}/wfmash"
           environment:
-            PATH: "{{ htslib }}/bin:{{ libgsl }}/bin:{{ ansible_env.PATH }}"
-            LD_LIBRARY_PATH: "{{ htslib }}/lib:{{ libgsl }}/lib:{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            LIBRARY_PATH: "{{ htslib }}/lib:{{ libgsl }}/lib:{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            INCLUDE: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            C_INCLUDE: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            CPATH: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            PKG_CONFIG_PATH: "{{ htslib }}/lib/pkgconfig:{{ libgsl }}/lib/pkgconfig:{{ jemalloc }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+            PATH: "{{ htslib }}/bin:{{ libgsl }}/bin:{{ ansible_facts['env'].PATH }}"
+            LD_LIBRARY_PATH: "{{ htslib }}/lib:{{ libgsl }}/lib:{{ jemalloc }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ htslib }}/lib:{{ libgsl }}/lib:{{ jemalloc }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            C_INCLUDE: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            CPATH: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            PKG_CONFIG_PATH: "{{ htslib }}/lib/pkgconfig:{{ libgsl }}/lib/pkgconfig:{{ jemalloc }}/lib/pkgconfig:{{ ansible_facts['env'].PKG_CONFIG_PATH | default('') }}"
 
         - name: Run cmake build
-          ansible.builtin.shell: "/usr/bin/cmake --build build -- -j {{ ansible_processor_vcpus }}"
+          ansible.builtin.shell: "/usr/bin/cmake --build build -- -j {{ ansible_facts['processor_vcpus'] }}"
           args:
             chdir: "{{ bio_src }}/wfmash"
           environment:
-            PATH: "{{ htslib }}/bin:{{ libgsl }}/bin:{{ ansible_env.PATH }}"
-            LD_LIBRARY_PATH: "{{ htslib }}/lib:{{ libgsl }}/lib:{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            LIBRARY_PATH: "{{ htslib }}/lib:{{ libgsl }}/lib:{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            INCLUDE: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            C_INCLUDE: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            CPATH: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            PKG_CONFIG_PATH: "{{ htslib }}/lib/pkgconfig:{{ libgsl }}/lib/pkgconfig:{{ jemalloc }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+            PATH: "{{ htslib }}/bin:{{ libgsl }}/bin:{{ ansible_facts['env'].PATH }}"
+            LD_LIBRARY_PATH: "{{ htslib }}/lib:{{ libgsl }}/lib:{{ jemalloc }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ htslib }}/lib:{{ libgsl }}/lib:{{ jemalloc }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            C_INCLUDE: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            CPATH: "{{ htslib }}/include:{{ libgsl }}/include:{{ jemalloc }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            PKG_CONFIG_PATH: "{{ htslib }}/lib/pkgconfig:{{ libgsl }}/lib/pkgconfig:{{ jemalloc }}/lib/pkgconfig:{{ ansible_facts['env'].PKG_CONFIG_PATH | default('') }}"
 
         - name: Run make install
           community.general.make:

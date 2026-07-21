@@ -160,7 +160,7 @@ From: {{ base_container_image }}
       "shiny",
       "tidyverse",
       "xtable"
-    ), Ncpus={{ ansible_processor_vcpus }})'
+    ), Ncpus={{ ansible_facts['processor_vcpus'] }})'
   Rscript -e 'update.packages(ask=FALSE)'
   Rscript -e 'devtools::install_github("hadley/devtools")'
 
@@ -168,12 +168,12 @@ From: {{ base_container_image }}
   chmod ugo+w /var/run/rstudio-server
   chmod +t /var/run/rstudio-server
 
-  Rscript -e 'install.packages("BiocManager", Ncpus={{ ansible_processor_vcpus }})'
+  Rscript -e 'install.packages("BiocManager", Ncpus={{ ansible_facts['processor_vcpus'] }})'
   Rscript -e 'BiocManager::install(ask=FALSE, update=TRUE)'
 
   Rscript -e 'BiocManager::install(
     pkgs = c("DESeq2", "edgeR", "limma", "MethylSeekR", "methylKit", "bsseq"),
-    dependencies = TRUE, Ncpus={{ ansible_processor_vcpus }}
+    dependencies = TRUE, Ncpus={{ ansible_facts['processor_vcpus'] }}
   )'
 
   Rscript -e 'install.packages(
@@ -182,7 +182,7 @@ From: {{ base_container_image }}
         "https://r.acidgenomics.com",
         BiocManager::repositories()
     ),
-    dependencies = TRUE, Ncpus={{ ansible_processor_vcpus }}
+    dependencies = TRUE, Ncpus={{ ansible_facts['processor_vcpus'] }}
   )'
 
   Rscript -e 'install.packages(
@@ -191,7 +191,7 @@ From: {{ base_container_image }}
         "https://r.acidgenomics.com",
         BiocManager::repositories()
     ),
-    dependencies = TRUE, Ncpus={{ ansible_processor_vcpus }}
+    dependencies = TRUE, Ncpus={{ ansible_facts['processor_vcpus'] }}
   )'
 
   # Cleanup the container

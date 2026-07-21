@@ -32,7 +32,7 @@
           community.general.make:
             chdir: "{{ unzipdir }}"
           environment:
-            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+            MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
         - name: Ensure installation directory exists {{ install_dir }}
           ansible.builtin.file:
             path: "{{ install_dir }}"

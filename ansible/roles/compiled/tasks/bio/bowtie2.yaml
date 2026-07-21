@@ -9,7 +9,7 @@
     unarchive_dir: "/dev/shm/bowtie2-{{ version_number }}-linux-x86_64"
     install_dir: "{{ bowtie2_dir }}/{{ version_number }}"
   environment:
-    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+    MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
   tags:
     - never
     - bowtie2-{{ item.version_number }}

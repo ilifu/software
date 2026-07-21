@@ -9,7 +9,7 @@
     unarchive_dir: "/dev/shm/kallisto-{{ version_number }}"
     install_dir: "{{ kallisto_dir }}/{{ version_number }}"
   #  environment:
-  #    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+  #    MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
   tags:
     - never
     - kallisto{{ item.version_number }}

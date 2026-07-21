@@ -12,10 +12,10 @@
     gettext_dir: "{{ item.gettext_dir }}"
     gettext_module: "{{ item.gettext_module }}"
   environment:
-    PATH: "{{ gettext_dir }}/bin:{{ ansible_env.PATH }}"
-    LD_LIBRARY_PATH: "{{ gettext_dir }}/lib{% if 'LD_LIBRARY_PATH' in ansible_env %}:{{ ansible_env.LD_LIBRARY_PATH }}{% endif %}"
-    INCLUDE: "{{ gettext_dir }}/include{% if 'INCLUDE' in ansible_env %}:{{ ansible_env.INCLUDE }}{% endif %}"
-    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+    PATH: "{{ gettext_dir }}/bin:{{ ansible_facts['env'].PATH }}"
+    LD_LIBRARY_PATH: "{{ gettext_dir }}/lib{% if 'LD_LIBRARY_PATH' in ansible_facts['env'] %}:{{ ansible_facts['env'].LD_LIBRARY_PATH }}{% endif %}"
+    INCLUDE: "{{ gettext_dir }}/include{% if 'INCLUDE' in ansible_facts['env'] %}:{{ ansible_facts['env'].INCLUDE }}{% endif %}"
+    MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
   tags:
     - never
     - git{{ item.version_number }}

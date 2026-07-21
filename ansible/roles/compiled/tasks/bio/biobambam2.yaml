@@ -56,7 +56,7 @@
           community.general.make:
             chdir: "{{ repo_dir }}"
           environment:
-            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+            MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
         - name: Install biobambam2 {{ version_number }} to {{ install_dir }}
           community.general.make:
             chdir: "{{ repo_dir }}"

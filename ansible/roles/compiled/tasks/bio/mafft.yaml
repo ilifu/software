@@ -46,7 +46,7 @@
           community.general.make:
             chdir: "{{ unzip_dir }}/{{ sub_dir }}"
           environment:
-            MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+            MAKEFLAGS: "-j {{  ansible_facts['processor_vcpus'] }}"
           loop:
             - "core"
             - "extensions"
@@ -58,7 +58,7 @@
             chdir: "{{ unzip_dir }}/{{ sub_dir }}"
             target: "install"
           environment:
-            MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+            MAKEFLAGS: "-j {{  ansible_facts['processor_vcpus'] }}"
           loop:
             - "core"
             - "extensions"

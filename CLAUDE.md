@@ -89,3 +89,8 @@ uv run ansible-lint        # target profile: production
   `vars:` must be a **mapping, not a list**.
 - Unpack into **`/dev/shm`**; use **`creates:`** on build commands for idempotency.
 - Keep any Jinja template at the **end** of a task `name:`.
+- **Facts via `ansible_facts['name']`**, never the bare injected `ansible_processor_vcpus`
+  / `ansible_env` form — top-level injection is deprecated in ansible-core 2.21 and removed
+  in 2.24. `ansible.cfg` sets `inject_facts_as_vars = False`, so a bare reference fails at
+  runtime; a CI grep step gates it at PR time (ansible-lint has no rule for this). Magic and
+  connection vars (`ansible_run_tags`, `ansible_connection`) are unaffected.
