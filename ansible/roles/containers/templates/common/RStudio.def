@@ -73,7 +73,7 @@ From: {{ base_container_image }}
     libfribidi-dev \
     libharfbuzz-dev \
     pandoc \
-    pandoc-citeproc \
+    {% if item.base_container_version_name not in ["noble"] %}pandoc-citeproc{% endif %} \
     python-is-python3 \
     pkg-config \
     texlive \
@@ -104,7 +104,7 @@ From: {{ base_container_image }}
     libcairo2-dev \
     libcurl4-openssl-dev \
     libfontconfig-dev \
-    libfreetype6-dev \
+    {% if item.base_container_version_name in ["noble"] %}libfreetype-dev{% else %}libfreetype6-dev{% endif %} \
     libfribidi-bin \
     libfribidi-dev \
     libgit2-dev \
