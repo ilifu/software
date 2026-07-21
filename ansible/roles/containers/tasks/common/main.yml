@@ -33,7 +33,7 @@
         base_container_version_name: noble
         rstudio_deb_release: jammy
         r_version: 4.6.1
-        rstudio_version: 2026.07.0-139
+        rstudio_version: 2026.07.1-147
   ansible.builtin.include_tasks:
     file: RStudio.yaml
   loop: "{{ rstudio_versions }}"
