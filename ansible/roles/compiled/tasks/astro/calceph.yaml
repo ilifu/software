@@ -1,7 +1,7 @@
 ---
 - name: Install calceph
   environment:
-    MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+    MAKEFLAGS: "-j {{  ansible_facts['processor_vcpus'] }}"
     FFLAGS: "-fallow-argument-mismatch"
     CC: "gcc-10"
     FC: "gfortran-10"

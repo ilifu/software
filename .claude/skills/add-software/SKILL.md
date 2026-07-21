@@ -83,7 +83,7 @@ An install runs **only when both tags are supplied**:
       community.general.make:
         chdir: "{{ unzip_dir }}"
       environment:
-        MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+        MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
     - name: Install <software> {{ version_number }}
       community.general.make:
         chdir: "{{ unzip_dir }}"

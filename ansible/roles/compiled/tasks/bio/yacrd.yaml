@@ -35,7 +35,7 @@
             chdir: "{{ unzipdir }}"
             creates: "{{ install_dir }}/bin/yacrd"
           environment:
-            PATH: "{{ cargo_dir }}/bin:{{ ansible_env.PATH | default('') }}"
+            PATH: "{{ cargo_dir }}/bin:{{ ansible_facts['env'].PATH | default('') }}"
 
     - name: Install yacrd module {{ version_number }}
       block:

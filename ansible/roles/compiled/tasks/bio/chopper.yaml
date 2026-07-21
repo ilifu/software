@@ -35,7 +35,7 @@
             chdir: "{{ unzipdir }}"
             creates: "{{ install_dir }}/bin/chopper"
           environment:
-            PATH: "{{ cargo_dir }}/bin:{{ ansible_env.PATH | default('') }}"
+            PATH: "{{ cargo_dir }}/bin:{{ ansible_facts['env'].PATH | default('') }}"
 
     - name: Install chopper module {{ version_number }}
       block:

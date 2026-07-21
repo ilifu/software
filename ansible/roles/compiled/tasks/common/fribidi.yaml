@@ -13,7 +13,7 @@
     - never
     - fribidi{{ item.version_number }}
   environment:
-    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+    MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
   block:
     - name: Download fribidi {{ version_number }}
       ansible.builtin.get_url:

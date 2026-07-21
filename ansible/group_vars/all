@@ -28,7 +28,7 @@ python_dir: "{{ common_dir }}/python"
 uv_version: "0.11.23"
 uv_dir: "{{ common_dir }}/uv"
 uv: "{{ uv_dir }}/{{ uv_version }}/bin/uv"
-uv_arch: "{{ ansible_architecture }}"   # x86_64 / aarch64
+uv_arch: "{{ ansible_facts['architecture'] }}"   # x86_64 / aarch64
 uv_checksums:
   x86_64: "sha256:e12c4cda2fe8c305510a78380a88f2c32a27e90cdcd123cefd2873388f0ebb5f"
   aarch64: "sha256:1873a77350f6621279ae1a0d2227f2bd8b67131598f14a7eb0ba2215d3da2c98"

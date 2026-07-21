@@ -28,7 +28,7 @@
           community.general.make:
             chdir: "{{ unzip_dir }}"
           environment:
-            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+            MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
         - name: "Copy bwa and bwakit to {{ install_dir }}"
           ansible.builtin.command: "mv {{ unzip_dir }}/bwa {{ unzip_dir }}/bwakit {{ install_dir }}"
           args:

@@ -33,7 +33,7 @@
               community.general.make:
                 chdir: "{{ build_dir }}"
               environment:
-                MAKEFLAGS: "-j {{ ansible_processor_count }} {{ TARGET }}"
+                MAKEFLAGS: "-j {{ ansible_facts['processor_count'] }} {{ TARGET }}"
             - name: Install OpenBLAS {{ version_number }}
               community.general.make:
                 chdir: "{{ build_dir }}"

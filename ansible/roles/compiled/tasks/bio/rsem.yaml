@@ -16,12 +16,12 @@
     - never
     - rsem{{ item.version_number }}
   environment:
-    MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
-    LD_LIBRARY_PATH: "{{ r_dir }}/lib{% if 'LD_LIBRARY_PATH' in ansible_env %}:{{ ansible_env.LD_LIBRARY_PATH }}{% endif %}"
-    LIBRARY_PATH: "{{ r_dir }}/lib{% if 'LIBRARY_PATH' in ansible_env %}:{{ ansible_env.LIBRARY_PATH }}{% endif %}"
-    PATH: "{{ r_dir }}/bin{% if 'PATH' in ansible_env %}:{{ ansible_env.PATH }}{% endif %}"
-    INCLUDE: "{{ r_dir }}/include{% if 'INCLUDE' in ansible_env %}:{{ ansible_env.INCLUDE }}{% endif %}"
-    C_INCLUDE: "{{ r_dir }}/include{% if 'C_INCLUDE' in ansible_env %}:{{ ansible_env.C_INCLUDE }}{% endif %}"
+    MAKEFLAGS: "-j {{  ansible_facts['processor_vcpus'] }}"
+    LD_LIBRARY_PATH: "{{ r_dir }}/lib{% if 'LD_LIBRARY_PATH' in ansible_facts['env'] %}:{{ ansible_facts['env'].LD_LIBRARY_PATH }}{% endif %}"
+    LIBRARY_PATH: "{{ r_dir }}/lib{% if 'LIBRARY_PATH' in ansible_facts['env'] %}:{{ ansible_facts['env'].LIBRARY_PATH }}{% endif %}"
+    PATH: "{{ r_dir }}/bin{% if 'PATH' in ansible_facts['env'] %}:{{ ansible_facts['env'].PATH }}{% endif %}"
+    INCLUDE: "{{ r_dir }}/include{% if 'INCLUDE' in ansible_facts['env'] %}:{{ ansible_facts['env'].INCLUDE }}{% endif %}"
+    C_INCLUDE: "{{ r_dir }}/include{% if 'C_INCLUDE' in ansible_facts['env'] %}:{{ ansible_facts['env'].C_INCLUDE }}{% endif %}"
   block:
     - name: Download RSEM {{ version_number }}
       ansible.builtin.get_url:

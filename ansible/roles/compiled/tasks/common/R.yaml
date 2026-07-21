@@ -17,13 +17,13 @@
     - never
     - R{{ item.version_number }}
   environment:
-    MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
-    LD_LIBRARY_PATH: "{{ fribidi }}/lib:{{ harfbuzz }}/lib{% if 'LD_LIBRARY_PATH' in ansible_env %}:{{ ansible_env.LD_LIBRARY_PATH }}{% endif %}"
-    LIBRARY_PATH: "{{ fribidi }}/lib:{{ harfbuzz }}/lib{% if 'LIBRARY_PATH' in ansible_env %}:{{ ansible_env.LIBRARY_PATH }}{% endif %}"
-    PATH: "{{ fribidi }}/bin:{{ harfbuzz }}/bin:{{ install_dir }}/bin{% if 'PATH' in ansible_env %}:{{ ansible_env.PATH }}{% endif %}"
-    INCLUDE: "{{ fribidi }}/include:{{ harfbuzz }}/include{% if 'INCLUDE' in ansible_env %}:{{ ansible_env.INCLUDE }}{% endif %}"
-    C_INCLUDE: "{{ fribidi }}/include:{{ harfbuzz }}/include{% if 'C_INCLUDE' in ansible_env %}:{{ ansible_env.C_INCLUDE }}{% endif %}"
-    PKG_CONFIG_PATH: "{{ fribidi }}/lib/pkgconfig:{{ harfbuzz }}/lib/pkgconfig{% if 'PKG_CONFIG_PATH' in ansible_env %}:{{ ansible_env.PKG_CONFIG_PATH }}{% endif
+    MAKEFLAGS: "-j {{  ansible_facts['processor_vcpus'] }}"
+    LD_LIBRARY_PATH: "{{ fribidi }}/lib:{{ harfbuzz }}/lib{% if 'LD_LIBRARY_PATH' in ansible_facts['env'] %}:{{ ansible_facts['env'].LD_LIBRARY_PATH }}{% endif %}"
+    LIBRARY_PATH: "{{ fribidi }}/lib:{{ harfbuzz }}/lib{% if 'LIBRARY_PATH' in ansible_facts['env'] %}:{{ ansible_facts['env'].LIBRARY_PATH }}{% endif %}"
+    PATH: "{{ fribidi }}/bin:{{ harfbuzz }}/bin:{{ install_dir }}/bin{% if 'PATH' in ansible_facts['env'] %}:{{ ansible_facts['env'].PATH }}{% endif %}"
+    INCLUDE: "{{ fribidi }}/include:{{ harfbuzz }}/include{% if 'INCLUDE' in ansible_facts['env'] %}:{{ ansible_facts['env'].INCLUDE }}{% endif %}"
+    C_INCLUDE: "{{ fribidi }}/include:{{ harfbuzz }}/include{% if 'C_INCLUDE' in ansible_facts['env'] %}:{{ ansible_facts['env'].C_INCLUDE }}{% endif %}"
+    PKG_CONFIG_PATH: "{{ fribidi }}/lib/pkgconfig:{{ harfbuzz }}/lib/pkgconfig{% if 'PKG_CONFIG_PATH' in ansible_facts['env'] %}:{{ ansible_facts['env'].PKG_CONFIG_PATH }}{% endif
       %}"
   block:
     - name: Download R and install {{ version_number }}
@@ -57,7 +57,7 @@
           community.general.make:
             chdir: "{{ build_dir }}"
             target: install
-            jobs: "{{ ansible_processor_count }}"
+            jobs: "{{ ansible_facts['processor_count'] }}"
         - name: Ensure Rprofile.site is up-to-date
           ansible.builtin.lineinfile:
             path: "{{ install_dir }}/lib/R/etc/Rprofile.site"
@@ -67,7 +67,7 @@
           tags: Rprofile
 
     - name: Install R packages {{ r_packages }}
-      ansible.builtin.command: "{{ install_dir }}/bin/Rscript -e 'install.packages(c({{ r_packages }}), repos=\"http://cran.rstudio.com/\", Ncpus={{ ansible_processor_vcpus
+      ansible.builtin.command: "{{ install_dir }}/bin/Rscript -e 'install.packages(c({{ r_packages }}), repos=\"http://cran.rstudio.com/\", Ncpus={{ ansible_facts['processor_vcpus']
         }}, user=FALSE)'"
     - name: Install Jupyter Kernel
       ansible.builtin.command: "{{ install_dir }}/bin/Rscript -e 'install.packages(\"IRkernel\", repos=\"http://cran.rstudio.com/\", user=FALSE)'"

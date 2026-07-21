@@ -12,7 +12,7 @@
 
   block:
     - name: Install perl using perlbrew {{ version_number }}
-      ansible.builtin.command: "/bin/bash -c 'module add perlbrew && perlbrew install -j {{ ansible_processor_vcpus }} perl-{{ version_number }}'"
+      ansible.builtin.command: "/bin/bash -c 'module add perlbrew && perlbrew install -j {{ ansible_facts['processor_vcpus'] }} perl-{{ version_number }}'"
       args:
         creates: "{{ install_dir }}"
 

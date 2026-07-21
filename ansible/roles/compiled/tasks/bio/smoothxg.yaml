@@ -43,24 +43,24 @@
           args:
             chdir: "{{ bio_src }}/smoothxg"
           environment:
-            LD_LIBRARY_PATH: "{{ jemalloc }}/lib:{{ zstd }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            LIBRARY_PATH: "{{ jemalloc }}/lib:{{ zstd }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            INCLUDE: "{{ jemalloc }}/include:{{ zstd }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            C_INCLUDE: "{{ jemalloc }}/include:{{ zstd }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            CPATH: "{{ jemalloc }}/include:{{ zstd }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ zstd }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+            LD_LIBRARY_PATH: "{{ jemalloc }}/lib:{{ zstd }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ jemalloc }}/lib:{{ zstd }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ jemalloc }}/include:{{ zstd }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            C_INCLUDE: "{{ jemalloc }}/include:{{ zstd }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            CPATH: "{{ jemalloc }}/include:{{ zstd }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ zstd }}/lib/pkgconfig:{{ ansible_facts['env'].PKG_CONFIG_PATH | default('') }}"
 
         - name: Run cmake build
-          ansible.builtin.shell: "/usr/bin/cmake --build build -- -j {{ ansible_processor_vcpus }}"
+          ansible.builtin.shell: "/usr/bin/cmake --build build -- -j {{ ansible_facts['processor_vcpus'] }}"
           args:
             chdir: "{{ bio_src }}/smoothxg"
           environment:
-            LD_LIBRARY_PATH: "{{ jemalloc }}/lib:{{ zstd }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            LIBRARY_PATH: "{{ jemalloc }}/lib:{{ zstd }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            INCLUDE: "{{ jemalloc }}/include:{{ zstd }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            C_INCLUDE: "{{ jemalloc }}/include:{{ zstd }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            CPATH: "{{ jemalloc }}/include:{{ zstd }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ zstd }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+            LD_LIBRARY_PATH: "{{ jemalloc }}/lib:{{ zstd }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ jemalloc }}/lib:{{ zstd }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ jemalloc }}/include:{{ zstd }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            C_INCLUDE: "{{ jemalloc }}/include:{{ zstd }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            CPATH: "{{ jemalloc }}/include:{{ zstd }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ zstd }}/lib/pkgconfig:{{ ansible_facts['env'].PKG_CONFIG_PATH | default('') }}"
         - name: Copy odgi binary to install dir
           ansible.builtin.copy:
             src: "{{ bio_src }}/smoothxg/deps/odgi/bin/odgi"

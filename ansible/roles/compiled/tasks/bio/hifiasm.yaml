@@ -8,7 +8,7 @@
     version_number: "{{ item.version_number }}"
     url: "{{ item.url }}"
   environment:
-    MAKEFLAGS: "-j{{ ansible_processor_vcpus | default(1) }}"
+    MAKEFLAGS: "-j{{ ansible_facts['processor_vcpus'] | default(1) }}"
   tags:
     - never
     - hifiasm{{ item.version_number }}

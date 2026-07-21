@@ -9,7 +9,7 @@
     unarchive_dir: "/dev/shm/Bismark-{{ version_number }}"
     install_dir: "{{ bismark_dir }}/{{ version_number }}"
   environment:
-    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+    MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
   tags:
     - never
     - bismark{{ item.version_number }}

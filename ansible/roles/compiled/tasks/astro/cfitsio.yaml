@@ -33,7 +33,7 @@
       community.general.make:
         chdir: "{{ unzipdir }}"
       environment:
-        MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+        MAKEFLAGS: "-j {{  ansible_facts['processor_vcpus'] }}"
 
     - name: Build cfitsio shared {{ version_number }}
       when: "'3.' in version_number"
@@ -41,7 +41,7 @@
         chdir: "{{ unzipdir }}"
         target: shared
       environment:
-        MAKEFLAGS: "-j {{  ansible_processor_vcpus }}"
+        MAKEFLAGS: "-j {{  ansible_facts['processor_vcpus'] }}"
 
     - name: Install cfitsio {{ version_number }}
       community.general.make:

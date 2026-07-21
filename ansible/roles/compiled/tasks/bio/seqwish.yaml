@@ -42,24 +42,24 @@
           args:
             chdir: "{{ bio_src }}/seqwish"
           environment:
-            LD_LIBRARY_PATH: "{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            LIBRARY_PATH: "{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            INCLUDE: "{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            C_INCLUDE: "{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            CPATH: "{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+            LD_LIBRARY_PATH: "{{ jemalloc }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ jemalloc }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ jemalloc }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            C_INCLUDE: "{{ jemalloc }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            CPATH: "{{ jemalloc }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ ansible_facts['env'].PKG_CONFIG_PATH | default('') }}"
 
         - name: Run cmake build
-          ansible.builtin.shell: "/usr/bin/cmake --build build -- -j {{ ansible_processor_vcpus }}"
+          ansible.builtin.shell: "/usr/bin/cmake --build build -- -j {{ ansible_facts['processor_vcpus'] }}"
           args:
             chdir: "{{ bio_src }}/seqwish"
           environment:
-            LD_LIBRARY_PATH: "{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            LIBRARY_PATH: "{{ jemalloc }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
-            INCLUDE: "{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            C_INCLUDE: "{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            CPATH: "{{ jemalloc }}/include:{{ ansible_env.INCLUDE | default('') }}"
-            PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+            LD_LIBRARY_PATH: "{{ jemalloc }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ jemalloc }}/lib:{{ ansible_facts['env'].LD_LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ jemalloc }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            C_INCLUDE: "{{ jemalloc }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            CPATH: "{{ jemalloc }}/include:{{ ansible_facts['env'].INCLUDE | default('') }}"
+            PKG_CONFIG_PATH: "{{ jemalloc }}/lib/pkgconfig:{{ ansible_facts['env'].PKG_CONFIG_PATH | default('') }}"
 
         - name: Run make install
           community.general.make:

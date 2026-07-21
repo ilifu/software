@@ -41,7 +41,7 @@
 #            make:
 #              chdir: "{{ build_dir }}"
 #            environment:
-#              MAKEFLAGS: "-j {{ ansible_processor_count }}"
+#              MAKEFLAGS: "-j {{ ansible_facts['processor_count'] }}"
 #          - name: Install OpenMPI {{ version_number }}
 #            make:
 #              chdir: "{{ build_dir }}"

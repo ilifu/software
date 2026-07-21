@@ -18,7 +18,7 @@
     - never
     - openmpi{{ item.version_number }}
   environment:
-    MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+    MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
   block:
     - name: Install OpenMPI {{ version_number }}
       block:

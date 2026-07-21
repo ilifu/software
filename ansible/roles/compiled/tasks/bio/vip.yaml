@@ -12,7 +12,7 @@
     - never
     - vip{{ item.version_number }}
   environment:
-    PATH: "/software/common/apptainer/1.4.2/bin:/software/common/java/jdk-22.0.1/bin:{{ ansible_env.PATH }}"
+    PATH: "/software/common/apptainer/1.4.2/bin:/software/common/java/jdk-22.0.1/bin:{{ ansible_facts['env'].PATH }}"
     JAVA_HOME: "/software/common/java/jdk-22.0.1"
   block:
     - name: "Download and install VIP {{ version_number }}"

@@ -10,7 +10,7 @@
     - never
     - spliceai{{ item.version_number }}
   environment:
-    PATH: "{{ python_location }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ python_location }}/bin:{{ ansible_facts['env'].PATH }}"
   block:
     - name: Create spliceai directory
       ansible.builtin.file:

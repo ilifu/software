@@ -12,7 +12,7 @@
     boost_dir: "{{ item.boost_dir }}"
     boost_module: "{{ item.boost_module }}"
   environment:
-    LD_LIBRARY_PATH: "{{ boost_dir }}/lib:{{ ansible_env.PATH }}"
+    LD_LIBRARY_PATH: "{{ boost_dir }}/lib:{{ ansible_facts['env'].PATH }}"
     INCLUDE: "{{ boost_dir }}/include"
     MAKEFLAGS: "-j 1"
   tags:

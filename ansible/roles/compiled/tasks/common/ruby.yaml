@@ -42,7 +42,7 @@
               community.general.make:
                 chdir: "{{ build_dir }}"
               environment:
-                MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+                MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
             - name: Install ruby {{ version_number }}
               community.general.make:
                 chdir: "{{ build_dir }}"

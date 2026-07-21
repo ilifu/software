@@ -48,11 +48,11 @@
           community.general.make:
             chdir: "{{ unzip_dir }}/build"
             target: all
-            jobs: "{{ ansible_processor_count }}"
+            jobs: "{{ ansible_facts['processor_count'] }}"
             params:
               DESTDIR: "{{ unzip_dir }}/staging"
           environment:
-            MAKEFLAGS: "-j {{ ansible_processor_count }}"
+            MAKEFLAGS: "-j {{ ansible_facts['processor_count'] }}"
 
         - name: Run make install
           community.general.make:

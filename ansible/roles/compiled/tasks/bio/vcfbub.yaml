@@ -28,7 +28,7 @@
             chdir: "{{ bio_src }}/vcfbub"
             creates: "{{ install_dir }}/bin/vcfbub"
           environment:
-            PATH: "{{ cargo_dir }}/bin:{{ ansible_env.PATH | default('') }}"
+            PATH: "{{ cargo_dir }}/bin:{{ ansible_facts['env'].PATH | default('') }}"
 
     - name: Install vcfbub module {{ version_number }}
       block:
