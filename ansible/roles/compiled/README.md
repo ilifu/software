@@ -31,10 +31,10 @@ Software Categories
 
 ### Bioinformatics (`bio/`)
 - **Analysis Tools**: SAMtools, BCFtools, GATK, VEP, Picard
-- **Aligners**: BWA, Bowtie2, STAR, Minimap2, HISAT2
+- **Aligners**: BWA, Bowtie2, STAR, Minimap2, HISAT2, MashMap
 - **Quality Control**: FastQC, MultiQC, TrimGalore
 - **Variant Calling**: Manta, ExpansionHunter, CNVkit
-- **Assembly**: Hifiasm, vg, wfmash
+- **Assembly**: Hifiasm, vg, wfmash, verkko-fillet
 - **Population Genetics**: PLINK, Shapeit5, IMPUTE5, GLIMPSE
 
 ### Common Software (`common/`)

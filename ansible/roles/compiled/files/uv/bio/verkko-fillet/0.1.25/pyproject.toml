@@ -1,0 +1,29 @@
+[project]
+name = "ilifu-verkko-fillet"
+version = "0.1.0"
+# Upper bound pins the python3.12 path segment that the Lmod module prepends to
+# PATH (verkkofillet ships its CLI scripts inside site-packages, not as entry
+# points, so the interpreter version is baked into that path).
+requires-python = ">=3.12,<3.13"
+# verkkofillet declares an empty install_requires and has no entry points, so
+# every runtime dependency below was derived by grepping src/verkkofillet for
+# third-party imports. Do not use the upstream requirements.txt - it is a Sphinx
+# docs list concatenated with a pip freeze of the author's whole environment.
+dependencies = [
+    "verkkofillet==0.1.25",
+    "biopython",
+    "ipykernel",
+    "ipython",
+    "matplotlib",
+    "natsort",
+    "networkx",
+    "numpy",
+    "packaging",
+    "pandas",
+    "pillow",
+    "plotly",
+    "scikit-learn",
+    "seaborn",
+    "session-info",
+    "tqdm",
+]

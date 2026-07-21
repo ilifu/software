@@ -623,6 +623,9 @@
       - version_number: "2.24"
         url: "https://github.com/lh3/minimap2/releases/download/v2.24/minimap2-2.24_x64-linux.tar.bz2"
         checksum: "sha512:5e27233f75d0ae776707c4b56d43925c0f0f2a25b868e18d43d1a33b67fb730013df04ca881949859d22667aba803681ee0da1c95b01ce0d3dcb7458b12603d9"
+      - version_number: "2.28"
+        url: "https://github.com/lh3/minimap2/releases/download/v2.28/minimap2-2.28_x64-linux.tar.bz2"
+        checksum: "sha256:51f2cf0e486d0f9f88ace1aa58fdc56571382a676ea0889ae607301c60693377"
   ansible.builtin.include_tasks:
     file: "minimap2.yaml"
   loop: "{{ versions }}"
@@ -879,6 +882,59 @@
   tags:
     - never
     - seqkit
+
+- name: Install seqtk
+  vars:
+    versions:
+      - version_number: "1.5"
+        url: "https://github.com/lh3/seqtk/archive/refs/tags/v1.5.tar.gz"
+        checksum: "sha256:384aa1e3cecf4f70403839d586cbb29d469b7c6f773a64bc5af48a6e4b8220a6"
+  ansible.builtin.include_tasks:
+    file: "seqtk.yaml"
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - seqtk
+
+- name: Install mashmap
+  vars:
+    versions:
+      - version_number: "3.1.3"
+        url: "https://github.com/marbl/MashMap/archive/refs/tags/v3.1.3.tar.gz"
+        checksum: "sha256:7719dd6b3c25e650e16218252eaae7dbf424a10890d717ec3ad0920b102fd05a"
+        cmake_dir: "{{ common_dir }}/cmake/3.27.0"
+        gsl_dir: "{{ common_dir }}/libgsl/2.7.1"
+        gsl_version: "2.7.1"
+        htslib_dir: "{{ bio_dir }}/htslib/1.22.1"
+        htslib_version: "1.22.1"
+  ansible.builtin.include_tasks:
+    file: "mashmap.yaml"
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - mashmap
+
+- name: Install verkko-fillet
+  vars:
+    versions:
+      - version_number: "0.1.25"
+        python_location: "/software/common/python/3.12.9"
+        # Must match the interpreter above - it is the site-packages path
+        # segment the module prepends to PATH.
+        python_abi: "python3.12"
+        samtools_module: "samtools/1.22.1"
+        htslib_module: "htslib/1.22.1"
+        seqtk_module: "seqtk/1.5"
+        mashmap_module: "mashmap/3.1.3"
+        bedtools_module: "bedtools/2.31.1"
+        meryl_module: "meryl/1.4.1"
+        minimap2_module: "minimap2/2.28"
+  ansible.builtin.include_tasks:
+    file: "verkko-fillet.yaml"
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - verkko-fillet
 
 - name: Install chopper
   vars:

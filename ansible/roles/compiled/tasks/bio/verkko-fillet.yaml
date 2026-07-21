@@ -1,0 +1,54 @@
+---
+- name: Install verkko-fillet
+  vars:
+    verkko_fillet_dir: "{{ bio_dir }}/verkko-fillet"
+    verkko_fillet_module_dir: "{{ bio_modules }}/verkko-fillet"
+    install_dir: "{{ verkko_fillet_dir }}/{{ item.version_number }}"
+    python_location: "{{ item.python_location }}"
+    python_abi: "{{ item.python_abi }}"
+    version_number: "{{ item.version_number }}"
+  tags:
+    - never
+    - verkko-fillet{{ item.version_number }}
+
+  block:
+    - name: Create verkko-fillet directory {{ install_dir }}
+      ansible.builtin.file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+        recurse: true
+
+    - name: Copy uv files
+      ansible.builtin.copy:
+        src: "uv/bio/verkko-fillet/{{ version_number }}/{{ uv_file }}"
+        dest: "{{ install_dir }}/{{ uv_file }}"
+        mode: u=rw,g=r,o=r
+      with_items:
+        - "uv.lock"
+        - "pyproject.toml"
+      loop_control:
+        loop_var: uv_file
+
+    - name: Initialise virtual environment
+      ansible.builtin.command: "{{ python_location }}/bin/uv venv"
+      args:
+        chdir: "{{ install_dir }}"
+        creates: "{{ install_dir }}/.venv"
+
+    - name: Synchronise Virtual Environment
+      ansible.builtin.command: "{{ python_location }}/bin/uv sync --frozen"
+      args:
+        chdir: "{{ install_dir }}"
+
+    - name: Create verkko-fillet module directory {{ verkko_fillet_module_dir }}
+      ansible.builtin.file:
+        path: "{{ verkko_fillet_module_dir }}"
+        state: directory
+        mode: "ug=rwx,o=rx"
+
+    - name: Install verkko-fillet module file
+      ansible.builtin.template:
+        src: bio/verkko-fillet.lua
+        dest: "{{ verkko_fillet_module_dir }}/{{ version_number }}.lua"
+        mode: u=rw,g=r,o=r

@@ -1,0 +1,79 @@
+---
+- name: Install mashmap {{ item.version_number }}
+  vars:
+    mashmap_dir: "{{ bio_dir }}/mashmap"
+    mashmap_module_dir: "{{ bio_modules }}/mashmap"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ mashmap_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/MashMap-{{ version_number }}"
+    cmake_bin: "{{ item.cmake_dir }}/bin/cmake"
+    gsl: "{{ item.gsl_dir }}"
+    htslib: "{{ item.htslib_dir }}"
+  tags:
+    - never
+    - mashmap{{ item.version_number }}
+
+  block:
+    - name: Download and install mashmap {{ version_number }}
+      block:
+        - name: Download mashmap {{ version_number }} from {{ url }}
+          ansible.builtin.get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/mashmap-{{ version_number }}.tar.gz"
+            checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
+        - name: Ensure mashmap bin dir exists {{ install_dir }}
+          ansible.builtin.file:
+            path: "{{ install_dir }}/bin"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Uncompress mashmap to {{ unzip_dir }}
+          ansible.builtin.unarchive:
+            src: "{{ bio_src }}/mashmap-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        # MashMap needs C++17, CMake >= 3.21, GSL, zlib and htslib. The GSL and
+        # htslib module trees are injected below rather than relying on system
+        # copies, so the build is reproducible on any host.
+        - name: Run cmake for mashmap {{ version_number }}
+          ansible.builtin.shell: "{{ cmake_bin }} -H. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH={{ install_dir }} -Bbuild ."
+          args:
+            chdir: "{{ unzip_dir }}"
+            creates: "{{ unzip_dir }}/build/Makefile"
+          environment: &mashmap_build_env
+            LD_LIBRARY_PATH: "{{ gsl }}/lib:{{ htslib }}/lib:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+            LIBRARY_PATH: "{{ gsl }}/lib:{{ htslib }}/lib:{{ ansible_env.LIBRARY_PATH | default('') }}"
+            INCLUDE: "{{ gsl }}/include:{{ htslib }}/include:{{ ansible_env.INCLUDE | default('') }}"
+            C_INCLUDE_PATH: "{{ gsl }}/include:{{ htslib }}/include:{{ ansible_env.C_INCLUDE_PATH | default('') }}"
+            CPATH: "{{ gsl }}/include:{{ htslib }}/include:{{ ansible_env.CPATH | default('') }}"
+            PKG_CONFIG_PATH: "{{ gsl }}/lib/pkgconfig:{{ htslib }}/lib/pkgconfig:{{ ansible_env.PKG_CONFIG_PATH | default('') }}"
+        - name: Run cmake build for mashmap {{ version_number }}
+          ansible.builtin.shell: "{{ cmake_bin }} --build build -- -j {{ ansible_processor_vcpus }}"
+          args:
+            chdir: "{{ unzip_dir }}"
+            creates: "{{ unzip_dir }}/build/bin/mashmap"
+          environment: *mashmap_build_env
+        # MashMap's CMakeLists has no reliable install target; upstream INSTALL.txt
+        # documents build/bin/mashmap as the product, so copy it out directly.
+        - name: Copy mashmap {{ version_number }} binary to {{ install_dir }}
+          ansible.builtin.copy:
+            src: "{{ unzip_dir }}/build/bin/mashmap"
+            dest: "{{ install_dir }}/bin/mashmap"
+            remote_src: true
+            force: true
+            mode: preserve
+
+    - name: Install mashmap module {{ version_number }}
+      block:
+        - name: Check module dir {{ mashmap_module_dir }}
+          ansible.builtin.file:
+            path: "{{ mashmap_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install mashmap module file {{ version_number }}
+          ansible.builtin.template:
+            src: bio/mashmap.lua
+            dest: "{{ mashmap_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r
