@@ -20,11 +20,10 @@
         repo: git@github.com:nch-igm/snvstory.git
         dest: "/dev/shm/snv_story_build"
     - name: Build singularity container
-      ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+      ansible.builtin.command: "{{ singularity }} build --fakeroot {{ container_image }} {{ container_recipe }}"
       args:
         creates: "{{ container_image }}"
         chdir: "/dev/shm/snv_story_build"
-      become: true
       environment:
         SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm') }}"
     - name: Ensure snvstory binary directory exists

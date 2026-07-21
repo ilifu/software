@@ -19,10 +19,9 @@
             dest: "{{ container_recipe }}"
             mode: u=rw,g=r,o=r
         - name: Build container {{ container_image }}
-          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          ansible.builtin.command: "{{ singularity }} build --fakeroot {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
-          become: true
         - name: Ensure Trycycler binary directory exists
           ansible.builtin.file:
             path: "{{ trycycler_binary_dir }}"

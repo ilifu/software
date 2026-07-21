@@ -52,4 +52,7 @@ common_modules: "{{ modules_dir }}/common"
 
 admin_group: "idia-admins"
 
-singularity: "/software/common/singularity/4.1.0/bin/singularity"
+# 4.4.1 is built --without-suid (see roles/compiled/tasks/common/singularity.yaml);
+# 4.1.0 still ships a setuid starter-suid. Note 4.4.2 is registered in
+# roles/compiled/tasks/common/main.yml but is not yet installed on /software.
+singularity: "/software/common/singularity/4.4.1/bin/singularity"
