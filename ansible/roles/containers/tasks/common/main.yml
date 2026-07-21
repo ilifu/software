@@ -28,6 +28,12 @@
       - { base_container_name: ubuntu-focal-compile, base_container_version_name: focal, r_version: 4.3.3, rstudio_version: 2023.06.1-524 }
       - { base_container_name: ubuntu-jammy-compile, base_container_version_name: jammy, r_version: 4.4.1, rstudio_version: 2023.06.1-524 }
       - { base_container_name: ubuntu-jammy-compile, base_container_version_name: jammy, r_version: 4.5.1, rstudio_version: 2025.05.1-513 }
+      # Posit publishes a single .deb for Ubuntu 22 and 24, under the jammy path.
+      - base_container_name: ubuntu-noble-compile
+        base_container_version_name: noble
+        rstudio_deb_release: jammy
+        r_version: 4.6.1
+        rstudio_version: 2026.07.0-139
   ansible.builtin.include_tasks:
     file: RStudio.yaml
   loop: "{{ rstudio_versions }}"

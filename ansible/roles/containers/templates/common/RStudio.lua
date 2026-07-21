@@ -14,6 +14,8 @@ whatis("Description: RStudio container")
 
 local singularity_image = "{{ container_image }}"
 
+load("singularity")
+
 setenv ("R_INSTALL_STAGED" ,"false")
 
 prepend_path("PATH", "{{ R_binary_dir }}")
