@@ -518,6 +518,11 @@
         url: "https://cloud.r-project.org/src/base/R-4/R-4.5.2.tar.gz"
         harfbuzz: "/software/common/harfbuzz/8.5.0"
         fribidi: "/software/common/fribidi/1.0.15"
+      - version_number: "4.6.1"
+        checksum: "sha256:4da6e61d2c0aac5f14a2e7e432cb5fcc269efe83da4293050ba7f03dff4e2cf4"
+        url: "https://cloud.r-project.org/src/base/R-4/R-4.6.1.tar.gz"
+        harfbuzz: "/software/common/harfbuzz/8.5.0"
+        fribidi: "/software/common/fribidi/1.0.15"
   ansible.builtin.include_tasks:
     file: R.yaml
   loop: "{{ R_versions }}"
