@@ -117,6 +117,7 @@ From: {{ base_container_image }}
     libpng-dev \
     libssl-dev \
     libtiff5-dev \
+    libuv1-dev \
     libxml2-dev \
     libxt-dev \
     netcdf-bin \
