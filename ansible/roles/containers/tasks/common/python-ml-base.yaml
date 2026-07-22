@@ -47,3 +47,5 @@
           args:
             creates: "{{ container_image }}"
             chdir: "{{ common_src }}"
+          environment:
+            SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm', true) }}"
