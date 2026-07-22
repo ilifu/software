@@ -24,7 +24,7 @@
           args:
             creates: "{{ container_image }}"
           environment:
-            SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm') }}"
+            SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm', true) }}"
         - name: Ensure mspipe binary directory exists
           ansible.builtin.file:
             path: "{{ mspipe_binary_dir }}"

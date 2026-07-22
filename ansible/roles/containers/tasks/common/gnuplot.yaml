@@ -22,7 +22,7 @@
           args:
             creates: "{{ container_image }}"
           environment:
-            SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm') }}"
+            SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm', true) }}"
         - name: Ensure Gnuplot binary directory exists
           ansible.builtin.file:
             path: "{{ gnuplot_binary_dir }}"

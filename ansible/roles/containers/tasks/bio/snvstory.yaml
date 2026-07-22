@@ -25,7 +25,7 @@
         creates: "{{ container_image }}"
         chdir: "/dev/shm/snv_story_build"
       environment:
-        SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm') }}"
+        SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm', true) }}"
     - name: Ensure snvstory binary directory exists
       ansible.builtin.file:
         path: "{{ snvstory_binary_dir }}"
