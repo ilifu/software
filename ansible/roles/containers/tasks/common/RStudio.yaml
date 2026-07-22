@@ -32,7 +32,10 @@
           args:
             creates: "{{ container_image }}"
           environment:
-            SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm') }}"
+            # `| default(x)` alone is not enough: lookup('env') returns '' (not
+            # undefined) when unset, and singularity treats '' exactly like
+            # unset, falling back to /tmp. The `true` makes '' take the default.
+            SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm', true) }}"
     - name: Ensure R binary directory exists
       ansible.builtin.file:
         path: "{{ R_binary_dir }}"
