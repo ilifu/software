@@ -37,7 +37,7 @@
           community.general.make:
             chdir: "{{ unzip_dir }}"
           environment:
-            MAKEFLAGS: "-j {{ ansible_processor_vcpus }}"
+            MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
         - name: Copy seqtk {{ version_number }} binary to {{ install_dir }}
           ansible.builtin.copy:
             src: "{{ unzip_dir }}/seqtk"

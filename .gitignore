@@ -136,3 +136,9 @@ dmypy.json
 
 # ansible-lint / ansible runtime cache
 ansible/.ansible/
+
+# Playbook logs (ansible.cfg sets log_path = ./logs/ansible.log).
+# The directory itself is tracked so ansible has somewhere to write.
+ansible/logs/*
+!ansible/logs/.gitkeep
+!ansible/logs/README.md

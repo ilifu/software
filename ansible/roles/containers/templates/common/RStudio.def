@@ -73,7 +73,7 @@ From: {{ base_container_image }}
     libfribidi-dev \
     libharfbuzz-dev \
     pandoc \
-    pandoc-citeproc \
+    {% if item.base_container_version_name not in ["noble"] %}pandoc-citeproc{% endif %} \
     python-is-python3 \
     pkg-config \
     texlive \
@@ -104,11 +104,11 @@ From: {{ base_container_image }}
     libcairo2-dev \
     libcurl4-openssl-dev \
     libfontconfig-dev \
-    libfreetype6-dev \
+    {% if item.base_container_version_name in ["noble"] %}libfreetype-dev{% else %}libfreetype6-dev{% endif %} \
     libfribidi-bin \
     libfribidi-dev \
     libgit2-dev \
-    {% if item.base_container_version_name != "jammy" %}libgsl23{% else %}libgsl27{% endif %} \
+    {% if item.base_container_version_name in ["jammy", "noble"] %}libgsl27{% else %}libgsl23{% endif %} \
     libgsl-dev \
     libharfbuzz-dev \
     libhdf5-dev \
@@ -117,6 +117,7 @@ From: {{ base_container_image }}
     libpng-dev \
     libssl-dev \
     libtiff5-dev \
+    libuv1-dev \
     libxml2-dev \
     libxt-dev \
     netcdf-bin \
@@ -140,7 +141,7 @@ From: {{ base_container_image }}
   echo "R_LIBS_SITE=/library:\${R_LIBS_SITE}" >> /usr/lib/R/etc/Renviron.site
 
   cd /tmp
-  wget https://download2.rstudio.org/server/{{ item.base_container_version_name }}/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb
+  wget https://download2.rstudio.org/server/{{ item.rstudio_deb_release | default(item.base_container_version_name) }}/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb
   gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb
   rm rstudio-server-${RSTUDIO_VERSION}-amd64.deb
 

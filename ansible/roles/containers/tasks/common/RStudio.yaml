@@ -1,5 +1,5 @@
 ---
-- name: Create RStudio container {{ item.version_name }}
+- name: Create RStudio container RStudio{{ item.rstudio_version }}-R{{ item.r_version }}
   vars:
     base_container_image: "{{ common_container_dir }}/{{ item.base_container_name }}.sif"
     container_name: "RStudio{{ item.rstudio_version }}-R{{ item.r_version }}"
@@ -28,10 +28,14 @@
             dest: "{{ container_recipe }}"
             mode: u=rw,g=r,o=r
         - name: Build container {{ container_image }}
-          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          ansible.builtin.command: "{{ singularity }} build --fakeroot {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
-          become: true
+          environment:
+            # `| default(x)` alone is not enough: lookup('env') returns '' (not
+            # undefined) when unset, and singularity treats '' exactly like
+            # unset, falling back to /tmp. The `true` makes '' take the default.
+            SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm', true) }}"
     - name: Ensure R binary directory exists
       ansible.builtin.file:
         path: "{{ R_binary_dir }}"
@@ -49,8 +53,6 @@
         - { name: "rstudio", template: "RStudio.sh" }
       loop_control:
         loop_var: binary
-#          environment:
-#            SINGULARITY_TMPDIR: "/dev/shm"
 
     - name: Install RStudio module {{ container_name }}
       block:

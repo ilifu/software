@@ -41,10 +41,11 @@
             dest: "{{ container_recipe }}"
             mode: u=rw,g=r,o=r
         - name: Build container {{ container_image }}
-          ansible.builtin.command: "{{ singularity }} build {{ container_image }} {{ container_recipe }}"
+          ansible.builtin.command: "{{ singularity }} build --fakeroot {{ container_image }} {{ container_recipe }}"
           args:
             creates: "{{ container_image }}"
-          become: true
+          environment:
+            SINGULARITY_TMPDIR: "{{ lookup('env', 'SINGULARITY_TMPDIR') | default('/dev/shm', true) }}"
         - name: Ensure ProteoWizard binary directory exists
           ansible.builtin.file:
             path: "{{ proteowizard_binary_dir }}"
