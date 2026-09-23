@@ -118,6 +118,7 @@ From: {{ base_container_image }}
     libssl-dev \
     libtiff5-dev \
     libuv1-dev \
+    libwebp-dev \
     libxml2-dev \
     libxt-dev \
     netcdf-bin \
