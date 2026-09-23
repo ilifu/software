@@ -243,6 +243,14 @@
 - name: Install openmpis
   vars:
     openmpi_versions:
+      - version_number: "5.0.11"
+        checksum: "sha256:e668a3c4acd50c41dc204c8a6dd98a611e0f26af89cf677577fa9be8a2698003"
+        url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.11.tar.bz2"
+        ucx_version: "1.22.0"
+        singularity_version: "4.2.2"
+        cuda_root: "/software/common/cuda/12.9.1_575.57.08"
+        cuda_module: "cuda/12.9.1_575.57.08"
+        pmix: "/software/common/pmix/5.0.9"
       - version_number: "5.0.8"
         checksum: "sha256:53131e1a57e7270f645707f8b0b65ba56048f5b5ac3f68faabed3eb0d710e449"
         url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.8.tar.bz2"
