@@ -971,7 +971,7 @@
 
 - name: Install NextFlow
   vars:
-    java_module: "java/openjdk-18.0.2"
+    java_module: "java/openjdk-22.0.1"
     versions:
       - version_number: "22.10.7"
         url: "https://github.com/nextflow-io/nextflow/releases/download/v22.10.7/nextflow-22.10.7-all"
@@ -985,6 +985,14 @@
       - version_number: "25.04.6"
         url: "https://github.com/nextflow-io/nextflow/releases/download/v25.04.6/nextflow"
         checksum: "sha256:a94f8bd1db9c0271ad58ec40b9c71f812d081a66f782396928b9b1f740f0be5f"
+      # The -dist asset is the self-contained build; the bare `nextflow` asset is a
+      # launcher that fetches the runtime into each user's ~/.nextflow on first run.
+      - version_number: "25.10.7"
+        url: "https://github.com/nextflow-io/nextflow/releases/download/v25.10.7/nextflow-25.10.7-dist"
+        checksum: "sha256:00c0fa276c87e4f6cec6d4c256fc556abbc9340aa84c31230d594c07658d0a52"
+      - version_number: "26.04.6"
+        url: "https://github.com/nextflow-io/nextflow/releases/download/v26.04.6/nextflow-26.04.6-dist"
+        checksum: "sha256:182a63c74074e2dc7956ffa3c8cd59de952ed2c44394e21faf5e1736b945444c"
   ansible.builtin.include_tasks:
     file: "nextflow.yaml"
   loop: "{{ versions }}"
