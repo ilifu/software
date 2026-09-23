@@ -52,6 +52,10 @@ common_modules: "{{ modules_dir }}/common"
 
 admin_group: "idia-admins"
 
+# SSH jump host printed in the connection instructions of interactive containers
+# (RStudio, PopGen). Override with -e login_host=... or in the inventory.
+login_host: "slurm.ilifu.ac.za"
+
 # 4.4.1 is built --without-suid (see roles/compiled/tasks/common/singularity.yaml);
 # 4.1.0 still ships a setuid starter-suid. Note 4.4.2 is registered in
 # roles/compiled/tasks/common/main.yml but is not yet installed on /software.
