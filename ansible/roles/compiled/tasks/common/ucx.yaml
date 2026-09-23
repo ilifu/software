@@ -9,7 +9,10 @@
     install_dir: "{{ ucx_dir }}/{{ version_number }}"
     unzipdir: "/dev/shm/ucx"
     build_dir: "{{ unzipdir }}/build"
-    cuda_root: "{{ item.cuda_root }}"
+    cuda_root: "{{ item.cuda_root | default('') }}"
+    # Run with --skip-tags ucx_cuda to build without CUDA support, e.g. on a host
+    # without the toolkit. Entries with no cuda_root (1.9.0) never get the flag.
+    cuda_configure_flag: "{{ '--with-cuda=' ~ cuda_root if cuda_root and 'ucx_cuda' not in ansible_skip_tags else '' }}"
   tags:
     - never
     - ucx{{ item.version_number }}
@@ -35,7 +38,7 @@
                 chdir: "{{ unzipdir }}"
                 creates: "{{ unzipdir }}/configure"
             - name: Run UCX configure {{ version_number }}
-              ansible.builtin.command: "../contrib/configure-release --prefix={{ install_dir }} --enable-optimizations --with-cuda={{ cuda_root }}"
+              ansible.builtin.command: "../contrib/configure-release --prefix={{ install_dir }} --enable-optimizations {{ cuda_configure_flag }}"
               args:
                 chdir: "{{ build_dir }}"
                 creates: "{{ build_dir }}/Makefile"
