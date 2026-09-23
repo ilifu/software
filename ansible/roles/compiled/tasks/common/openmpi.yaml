@@ -11,7 +11,11 @@
     unzipdir: "/dev/shm/openmpi-{{ version_number }}"
     build_dir: "{{ unzipdir }}/build"
     ucx_dir: "{{ common_dir }}/ucx/{{ item.ucx_version }}"
-    singularity_dir: "{{ common_dir }}/singularity/{{ item.singularity_version }}"
+    # Follow the cluster's current Singularity (group_vars `singularity`) rather
+    # than pinning a version per entry. OpenMPI 5 dropped --with-singularity
+    # (its configure no longer recognises the option), so only 4.x gets the flag.
+    singularity_dir: "{{ singularity | dirname | dirname }}"
+    singularity_configure_flag: "{{ '--with-singularity=' ~ singularity_dir if version_number is version('5.0', '<') else '' }}"
     cuda_root: "{{ item.cuda_root }}"
     cuda_module: "{{ item.cuda_module }}"
   tags:
@@ -42,7 +46,7 @@
                 mode: u=rwx,g=rwx,o=rx
             - name: Run OpenMPI configure ( 4.1.4 and below ) {{ version_number }}
               when: item.version_number < "4.1.5"
-              ansible.builtin.command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity={{ singularity_dir }} --with-ucx={{ ucx_dir }}
+              ansible.builtin.command: "../configure --prefix={{ install_dir }} --enable-static {{ singularity_configure_flag }} --with-ucx={{ ucx_dir }}
                 --with-cuda={{ cuda_root }} --with-pmix=/opt/slurm --with-pmi-libdir=/opt/slurm/lib"
               args:
                 chdir: "{{ build_dir }}"
@@ -56,7 +60,7 @@
                 - openmpi_gpu
               block:
                 - name: Configure OpenMPI for gpu {{ version_number }}
-                  ansible.builtin.command: "../configure --prefix={{ install_dir_gpu }} --enable-static --with-singularity={{ singularity_dir }} --with-ucx={{ ucx_dir
+                  ansible.builtin.command: "../configure --prefix={{ install_dir_gpu }} --enable-static {{ singularity_configure_flag }} --with-ucx={{ ucx_dir
                     }} --with-cuda={{ cuda_root }} --with-pmix={{ item.pmix }} --with-pmix-libdir={{ item.pmix }}/lib"
                   args:
                     chdir: "{{ build_dir }}"
@@ -80,7 +84,7 @@
               when: item.version_number >= "4.1.5"
               block:
                 - name: Configure OpenMPI for no gpu {{ version_number }}
-                  ansible.builtin.command: "../configure --prefix={{ install_dir }} --enable-static --with-singularity={{ singularity_dir }} --with-ucx={{ ucx_dir
+                  ansible.builtin.command: "../configure --prefix={{ install_dir }} --enable-static {{ singularity_configure_flag }} --with-ucx={{ ucx_dir
                     }} --with-pmix={{ item.pmix }} --with-pmix-libdir={{ item.pmix }}/lib"
                   args:
                     chdir: "{{ build_dir }}"
