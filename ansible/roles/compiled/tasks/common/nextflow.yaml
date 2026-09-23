@@ -5,8 +5,6 @@
     nextflow_module_dir: "{{ bio_modules }}/nextflow"
     checksum: "{{ item.checksum }}"
     install_dir: "{{ nextflow_dir }}/{{ item.version_number }}"
-    java_module: "{{ item.java_module }}"
-    java_location: "{{ item.java_location }}"
     version_number: "{{ item.version_number }}"
   tags:
     - never
