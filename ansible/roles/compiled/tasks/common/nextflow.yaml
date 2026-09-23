@@ -6,7 +6,6 @@
     checksum: "{{ item.checksum }}"
     install_dir: "{{ nextflow_dir }}/{{ item.version_number }}"
     java_module: "{{ item.java_module }}"
-    java_location: "{{ item.java_location }}"
     version_number: "{{ item.version_number }}"
   tags:
     - never
@@ -24,6 +23,19 @@
             url: "{{ item.url }}"
             dest: "{{ install_dir }}/nextflow"
             checksum: "{{ checksum }}"
+            mode: u=rwx,g=rx,o=rx
+
+    - name: Deploy NextFlow cluster configuration and wrapper {{ version_number }}
+      block:
+        - name: Copy NextFlow cluster configuration
+          ansible.builtin.copy:
+            src: nextflow.config
+            dest: "{{ install_dir }}/nextflow.config"
+            mode: u=rw,g=r,o=r
+        - name: Install nf-ilifu wrapper script
+          ansible.builtin.template:
+            src: nf-ilifu.sh
+            dest: "{{ install_dir }}/nf-ilifu"
             mode: u=rwx,g=rx,o=rx
 
     - name: Install NextFlow module {{ version_number }}
