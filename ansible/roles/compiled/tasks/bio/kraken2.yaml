@@ -51,3 +51,89 @@
             src: kraken2.lua
             dest: "{{ kraken2_module_dir }}/{{ version_number }}.lua"
             mode: u=rw,g=r,o=r
+
+# NOTE: this file is included once per Kraken2 version, so the databases are
+# checked once per version too; the stat guard makes repeat passes no-ops.
+- name: Install Kraken2 databases
+  vars:
+    kraken2_db_root: "{{ bio_data_dir }}/kraken2"
+  tags:
+    - never
+    - kraken2-db
+  block:
+    - name: Ensure Kraken2 database root exists
+      ansible.builtin.file:
+        path: "{{ kraken2_db_root }}"
+        state: directory
+        mode: u=rwx,g=rwx,o=rx
+
+    - name: Check which Kraken2 databases are already installed
+      ansible.builtin.stat:
+        path: "{{ kraken2_db_root }}/{{ database.name }}/INSTALLED.ansible"
+      loop: "{{ kraken2_databases }}"
+      loop_control:
+        loop_var: database
+        label: "{{ database.name }}"
+      register: kraken2_db_status
+
+    - name: Install missing Kraken2 database
+      vars:
+        missing_databases: "{{ kraken2_db_status.results | rejectattr('stat.exists') | map(attribute='database') | list }}"
+      block:
+        - name: Create Kraken2 database dir
+          ansible.builtin.file:
+            path: "{{ kraken2_db_root }}/{{ database.name }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+          loop: "{{ missing_databases }}"
+          loop_control:
+            loop_var: database
+            label: "{{ database.name }}"
+
+        - name: Download Kraken2 database
+          ansible.builtin.get_url:
+            url: "{{ database.url }}"
+            dest: "{{ kraken2_db_root }}/{{ database.url | basename }}"
+            checksum: "{{ database.checksum }}"
+            mode: u=rw,g=r,o=r
+            timeout: 60
+            # Stage beside dest, not in remote_tmp (~/.ansible/tmp): home is quota-limited
+            # and the final move is then a same-filesystem rename, not an 80 GB copy
+            tmp_dest: "{{ kraken2_db_root }}"
+          loop: "{{ missing_databases }}"
+          loop_control:
+            loop_var: database
+            label: "{{ database.name }}"
+
+        # NOTE: tar rather than ansible.builtin.unarchive, which decompresses the
+        # archive a second time just to list it — slow at ~80 GB for Standard.
+        - name: Extract Kraken2 database
+          ansible.builtin.command:
+            cmd: >-
+              tar -xzf {{ kraken2_db_root }}/{{ database.url | basename }}
+              --strip-components={{ database.strip_components | default(0) }}
+              --no-same-owner
+              -C {{ kraken2_db_root }}/{{ database.name }}
+          loop: "{{ missing_databases }}"
+          loop_control:
+            loop_var: database
+            label: "{{ database.name }}"
+
+        - name: Mark Kraken2 database as installed
+          ansible.builtin.file:
+            path: "{{ kraken2_db_root }}/{{ database.name }}/INSTALLED.ansible"
+            state: touch
+            mode: u=rw,g=r,o=r
+          loop: "{{ missing_databases }}"
+          loop_control:
+            loop_var: database
+            label: "{{ database.name }}"
+
+        - name: Remove Kraken2 database archive
+          ansible.builtin.file:
+            path: "{{ kraken2_db_root }}/{{ database.url | basename }}"
+            state: absent
+          loop: "{{ missing_databases }}"
+          loop_control:
+            loop_var: database
+            label: "{{ database.name }}"

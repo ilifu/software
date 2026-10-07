@@ -705,6 +705,42 @@
       - version_number: "2.1.3"
         url: "https://github.com/DerrickWood/kraken2/archive/refs/tags/v2.1.3.tar.gz"
         checksum: "sha512:2365cdcff3d955bcb83bb2cd942c9f22757b80ed568b187835cfb9d0516973b652a6fa8c8ff3ebadbd2c78c125046fd74434524281c29e77a09397103a293835"
+      # NOTE: upstream dropped the "v" prefix from tags from 2.17.2 onwards
+      - version_number: "2.17.2"
+        url: "https://github.com/DerrickWood/kraken2/archive/refs/tags/2.17.2.tar.gz"
+        checksum: "sha512:b1a3bc8a1f55991c33bbcc22f5ba8f7bdc46b7428d53a1321be18ccd1150ae0a22269a84a65e37a3c6ddd9c21265b0a49b56b9c113b17aa6115ea1534ec4ba87"
+    # Prebuilt indexes from https://benlangmead.github.io/aws-indexes/k2, installed with
+    # -t kraken2,kraken2-db. md5 checksums are upstream's (<collection>.md5); EuPathDB and
+    # the 16S sets publish none, so their sha256 was computed locally.
+    kraken2_databases:
+      - name: "16S_Greengenes13.5_20200326"
+        url: "https://genome-idx.s3.amazonaws.com/kraken/16S_Greengenes13.5_20200326.tgz"
+        checksum: "sha256:cbf0b477b39a03b4781ee0130fcf9592b97917e88d5bbbfc5e15f1aec0183e9e"
+        strip_components: 1
+      - name: "16S_Silva138_20200326"
+        url: "https://genome-idx.s3.amazonaws.com/kraken/16S_Silva138_20200326.tgz"
+        checksum: "sha256:edc7dcf6e1b73d7c665413bfa3be609b11f651b557e49ea5b857ddf89edc604f"
+        strip_components: 1
+      - name: "16S_Silva132_20200326"
+        url: "https://genome-idx.s3.amazonaws.com/kraken/16S_Silva132_20200326.tgz"
+        checksum: "sha256:c2ac6488fd063c2adf75985d6c824b3fd0553ee28d6ef7e7ac1a975f543226e9"
+        strip_components: 1
+      - name: "16S_RDP11.5_20200326"
+        url: "https://genome-idx.s3.amazonaws.com/kraken/16S_RDP11.5_20200326.tgz"
+        checksum: "sha256:0f6d294be2b14f846d80c60634e7bb7b9cc922490e9ccab368551956813d6dc6"
+        strip_components: 1
+      - name: "viral_20260626"
+        url: "https://genome-idx.s3.amazonaws.com/kraken/k2_viral_20260626.tar.gz"
+        checksum: "md5:2eecc5fe6eef12cb23b524996bfb7d08"
+      - name: "minusb_20260626"
+        url: "https://genome-idx.s3.amazonaws.com/kraken/k2_minusb_20260626.tar.gz"
+        checksum: "md5:ac49723ccb0d1c1c55ab98ca9abf75c1"
+      - name: "eupathdb48_20230407"
+        url: "https://genome-idx.s3.amazonaws.com/kraken/k2_eupathdb48_20230407.tar.gz"
+        checksum: "sha256:ff3eb2b2d71d05182167ac238167885e3dec4b26cd44244fbb061b97718aa9d3"
+      - name: "standard_20260626"
+        url: "https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20260626.tar.gz"
+        checksum: "md5:70477acf5ad91271725d77aadd8ca6b1"
   ansible.builtin.include_tasks:
     file: "kraken2.yaml"
   loop: "{{ versions }}"
