@@ -7,3 +7,4 @@ whatis("Keywords: Kraken2")
 whatis("Description: Kraken2 {{ version_number }}")
 
 prepend_path('PATH', '{{ install_dir }}')
+setenv('KRAKEN2_DB_PATH', '{{ bio_data_dir }}/kraken2')
