@@ -713,9 +713,22 @@
     # -t kraken2,kraken2-db. md5 checksums are upstream's (<collection>.md5); EuPathDB and
     # the 16S sets publish none, so their sha256 was computed locally.
     kraken2_databases:
-      - name: "standard_20260626"
-        url: "https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20260626.tar.gz"
-        checksum: "md5:70477acf5ad91271725d77aadd8ca6b1"
+      - name: "16S_Greengenes13.5_20200326"
+        url: "https://genome-idx.s3.amazonaws.com/kraken/16S_Greengenes13.5_20200326.tgz"
+        checksum: "sha256:cbf0b477b39a03b4781ee0130fcf9592b97917e88d5bbbfc5e15f1aec0183e9e"
+        strip_components: 1
+      - name: "16S_Silva138_20200326"
+        url: "https://genome-idx.s3.amazonaws.com/kraken/16S_Silva138_20200326.tgz"
+        checksum: "sha256:edc7dcf6e1b73d7c665413bfa3be609b11f651b557e49ea5b857ddf89edc604f"
+        strip_components: 1
+      - name: "16S_Silva132_20200326"
+        url: "https://genome-idx.s3.amazonaws.com/kraken/16S_Silva132_20200326.tgz"
+        checksum: "sha256:c2ac6488fd063c2adf75985d6c824b3fd0553ee28d6ef7e7ac1a975f543226e9"
+        strip_components: 1
+      - name: "16S_RDP11.5_20200326"
+        url: "https://genome-idx.s3.amazonaws.com/kraken/16S_RDP11.5_20200326.tgz"
+        checksum: "sha256:0f6d294be2b14f846d80c60634e7bb7b9cc922490e9ccab368551956813d6dc6"
+        strip_components: 1
       - name: "viral_20260626"
         url: "https://genome-idx.s3.amazonaws.com/kraken/k2_viral_20260626.tar.gz"
         checksum: "md5:2eecc5fe6eef12cb23b524996bfb7d08"
@@ -725,22 +738,9 @@
       - name: "eupathdb48_20230407"
         url: "https://genome-idx.s3.amazonaws.com/kraken/k2_eupathdb48_20230407.tar.gz"
         checksum: "sha256:ff3eb2b2d71d05182167ac238167885e3dec4b26cd44244fbb061b97718aa9d3"
-      - name: "16S_Greengenes13.5_20200326"
-        url: "https://genome-idx.s3.amazonaws.com/kraken/16S_Greengenes13.5_20200326.tgz"
-        checksum: "sha256:cbf0b477b39a03b4781ee0130fcf9592b97917e88d5bbbfc5e15f1aec0183e9e"
-        strip_components: 1
-      - name: "16S_RDP11.5_20200326"
-        url: "https://genome-idx.s3.amazonaws.com/kraken/16S_RDP11.5_20200326.tgz"
-        checksum: "sha256:0f6d294be2b14f846d80c60634e7bb7b9cc922490e9ccab368551956813d6dc6"
-        strip_components: 1
-      - name: "16S_Silva132_20200326"
-        url: "https://genome-idx.s3.amazonaws.com/kraken/16S_Silva132_20200326.tgz"
-        checksum: "sha256:c2ac6488fd063c2adf75985d6c824b3fd0553ee28d6ef7e7ac1a975f543226e9"
-        strip_components: 1
-      - name: "16S_Silva138_20200326"
-        url: "https://genome-idx.s3.amazonaws.com/kraken/16S_Silva138_20200326.tgz"
-        checksum: "sha256:edc7dcf6e1b73d7c665413bfa3be609b11f651b557e49ea5b857ddf89edc604f"
-        strip_components: 1
+      - name: "standard_20260626"
+        url: "https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20260626.tar.gz"
+        checksum: "md5:70477acf5ad91271725d77aadd8ca6b1"
   ansible.builtin.include_tasks:
     file: "kraken2.yaml"
   loop: "{{ versions }}"
