@@ -97,6 +97,9 @@
             checksum: "{{ database.checksum }}"
             mode: u=rw,g=r,o=r
             timeout: 60
+            # Stage beside dest, not in remote_tmp (~/.ansible/tmp): home is quota-limited
+            # and the final move is then a same-filesystem rename, not an 80 GB copy
+            tmp_dest: "{{ kraken2_db_root }}"
           loop: "{{ missing_databases }}"
           loop_control:
             loop_var: database
