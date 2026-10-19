@@ -1,0 +1,13 @@
+## ilifu site-wide configuration for SRA Toolkit {{ version_number }}
+#  Managed by Ansible (ilifu/software) - local edits will be overwritten.
+#
+#  Every *.kfg in this directory is loaded before ~/.ncbi/user-settings.mkfg,
+#  so users can still override these with vdb-config. No interactive
+#  `vdb-config -i` step is needed to use the toolkit.
+
+# Do not send usage telemetry to NCBI.
+/libs/kns/send-telemetry = "false"
+
+# Keep no hidden per-user cache: prefetch writes into the current working
+# directory, and fasterq-dump/fastq-dump stream accessions directly.
+/repository/user/cache-disabled = "true"
