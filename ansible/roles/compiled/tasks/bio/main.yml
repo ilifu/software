@@ -430,6 +430,9 @@
       - version_number: "3.0.0"
         checksum: "sha256:a4886d2d067fd5bc1d50bfe6d9d1da777aaba018a5a3b0231d985a09fcee622d"
         url: "https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.tar.gz"
+      - version_number: "3.4.1"
+        checksum: "sha256:b950362c054765a4184af41947f022f040e94e964862017c0ecb0b0273db3596"
+        url: "https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.4.1/sratoolkit.3.4.1-ubuntu64.tar.gz"
   ansible.builtin.include_tasks:
     file: sra_toolkit.yaml
   loop: "{{ versions }}"
