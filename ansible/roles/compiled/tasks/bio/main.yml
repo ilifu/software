@@ -1639,3 +1639,17 @@
   tags:
     - never
     - muscle
+
+- name: Install MEGAHIT
+  vars:
+    versions:
+      - version_number: "1.2.9"
+        url: "https://github.com/voutcn/megahit/releases/download/v1.2.9/MEGAHIT-1.2.9-Linux-x86_64-static.tar.gz"
+        checksum: "sha256:7e5710f62b0743471c5d6938ebc28132dcea2104ccdbeafb4f2ca8dbb47728d3"
+        python_module: "python/3.12.13"
+  ansible.builtin.include_tasks:
+    file: "megahit.yaml"
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - megahit
