@@ -37,7 +37,7 @@
             mode: u=rwx,g=rx,o=rx
         - name: Move unzipped dir to installation location
           ansible.builtin.command: "mv {{ unzip_dir }} {{ install_dir }}"
-    - name: Install SRA Toolkit module {{ version_number }}
+    - name: Install SRA Toolkit module and site config {{ version_number }}
       block:
         - name: Check module dir {{ sra_toolkit_module_dir }}
           ansible.builtin.file:
@@ -48,4 +48,9 @@
           ansible.builtin.template:
             src: sra_toolkit.lua
             dest: "{{ sra_toolkit_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r
+        - name: Install SRA Toolkit site-wide config {{ version_number }}
+          ansible.builtin.template:
+            src: sra_toolkit.kfg
+            dest: "{{ install_dir }}/bin/ncbi/ilifu.kfg"
             mode: u=rw,g=r,o=r
