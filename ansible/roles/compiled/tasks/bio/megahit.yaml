@@ -1,0 +1,53 @@
+---
+- name: Install MEGAHIT {{ item.version_number }}
+  vars:
+    megahit_dir: "{{ bio_dir }}/megahit"
+    megahit_module_dir: "{{ bio_modules }}/megahit"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    checksum: "{{ item.checksum }}"
+    python_module: "{{ item.python_module }}"
+    install_dir: "{{ megahit_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/MEGAHIT-{{ version_number }}-Linux-x86_64-static"
+  tags:
+    - never
+    - megahit{{ item.version_number }}
+  block:
+    - name: Download and install MEGAHIT {{ version_number }}
+      block:
+        - name: Download MEGAHIT {{ version_number }} from {{ url }}
+          ansible.builtin.get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/megahit-{{ version_number }}.tar.gz"
+            checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
+        - name: Ensure MEGAHIT dir exists {{ install_dir }}
+          ansible.builtin.file:
+            path: "{{ install_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Uncompress MEGAHIT to {{ unzip_dir }}
+          ansible.builtin.unarchive:
+            src: "{{ bio_src }}/megahit-{{ version_number }}.tar.gz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        - name: Copy prebuilt MEGAHIT {{ version_number }} to {{ install_dir }}
+          ansible.builtin.copy:
+            src: "{{ unzip_dir }}/"
+            dest: "{{ install_dir }}"
+            remote_src: true
+            force: true
+            mode: preserve
+
+    - name: Install MEGAHIT module {{ version_number }}
+      block:
+        - name: Check module dir {{ megahit_module_dir }}
+          ansible.builtin.file:
+            path: "{{ megahit_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install MEGAHIT module file {{ version_number }}
+          ansible.builtin.template:
+            src: bio/megahit.lua
+            dest: "{{ megahit_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r

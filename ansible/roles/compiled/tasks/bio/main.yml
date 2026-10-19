@@ -1639,3 +1639,32 @@
   tags:
     - never
     - muscle
+
+- name: Install MEGAHIT
+  vars:
+    versions:
+      - version_number: "1.2.9"
+        url: "https://github.com/voutcn/megahit/releases/download/v1.2.9/MEGAHIT-1.2.9-Linux-x86_64-static.tar.gz"
+        checksum: "sha256:7e5710f62b0743471c5d6938ebc28132dcea2104ccdbeafb4f2ca8dbb47728d3"
+        python_module: "python/3.12.13"
+  ansible.builtin.include_tasks:
+    file: "megahit.yaml"
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - megahit
+
+- name: Install pstools
+  vars:
+    versions:
+      # last tag (v1.0, 2020) is 17 commits behind main; pin main's head commit
+      - version_number: "github"
+        commit: "5fda5069f0e6b8eb6399ae7b384f09c5cd470f95"
+        url: "https://github.com/shilpagarg/pstools/archive/5fda5069f0e6b8eb6399ae7b384f09c5cd470f95.tar.gz"
+        checksum: "sha256:8115fa5e1d8b726c7c4688bc9e61bbddc18f438b3ff9200c7813e4daac5d0140"
+  ansible.builtin.include_tasks:
+    file: "pstools.yaml"
+  loop: "{{ versions }}"
+  tags:
+    - never
+    - pstools

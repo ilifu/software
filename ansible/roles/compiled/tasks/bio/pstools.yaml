@@ -1,0 +1,62 @@
+---
+- name: Install pstools {{ item.version_number }}
+  vars:
+    pstools_dir: "{{ bio_dir }}/pstools"
+    pstools_module_dir: "{{ bio_modules }}/pstools"
+    url: "{{ item.url }}"
+    version_number: "{{ item.version_number }}"
+    commit: "{{ item.commit }}"
+    checksum: "{{ item.checksum }}"
+    install_dir: "{{ pstools_dir }}/{{ version_number }}"
+    unzip_dir: "/dev/shm/pstools-{{ commit }}"
+  tags:
+    - never
+    - pstools{{ item.version_number }}
+  block:
+    - name: Download and build pstools {{ version_number }}
+      block:
+        - name: Download pstools {{ version_number }} from {{ url }}
+          ansible.builtin.get_url:
+            url: "{{ url }}"
+            dest: "{{ bio_src }}/pstools-{{ commit }}.tar.gz"
+            checksum: "{{ checksum }}"
+            mode: u=rw,g=r,o=r
+        - name: Ensure pstools dir exists {{ install_dir }}
+          ansible.builtin.file:
+            path: "{{ install_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Uncompress pstools to {{ unzip_dir }}
+          ansible.builtin.unarchive:
+            src: "{{ bio_src }}/pstools-{{ commit }}.tar.gz"
+            dest: "/dev/shm"
+            creates: "{{ unzip_dir }}"
+        # NOTE: upstream's Makefile defaults to a debug build (-O0 -g, with -O2
+        # commented out); override CFLAGS for an optimised binary.
+        - name: Make pstools {{ version_number }}
+          community.general.make:
+            chdir: "{{ unzip_dir }}"
+            params:
+              CFLAGS: "-O2 -fpermissive -Wall"
+          environment:
+            MAKEFLAGS: "-j {{ ansible_facts['processor_vcpus'] }}"
+        - name: Copy pstools {{ version_number }} binary to {{ install_dir }}
+          ansible.builtin.copy:
+            src: "{{ unzip_dir }}/pstools"
+            dest: "{{ install_dir }}/pstools"
+            remote_src: true
+            force: true
+            mode: preserve
+
+    - name: Install pstools module {{ version_number }}
+      block:
+        - name: Check module dir {{ pstools_module_dir }}
+          ansible.builtin.file:
+            path: "{{ pstools_module_dir }}"
+            state: directory
+            mode: u=rwx,g=rwx,o=rx
+        - name: Install pstools module file {{ version_number }}
+          ansible.builtin.template:
+            src: bio/pstools.lua
+            dest: "{{ pstools_module_dir }}/{{ version_number }}.lua"
+            mode: u=rw,g=r,o=r
