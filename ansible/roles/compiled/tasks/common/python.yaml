@@ -10,6 +10,7 @@
     unzipdir: "/dev/shm/Python-{{ version_number }}"
     build_dir: "{{ unzipdir }}/build"
     python_url: "https://www.python.org/ftp/python/{{ version_number }}/Python-{{ version_number }}.tar.xz"
+    python_install_method: compiled
   tags:
     - never
     - python{{ item.version_number }}
