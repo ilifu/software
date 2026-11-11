@@ -1069,6 +1069,23 @@
     - never
     - mamba
 
+# NOTE: Mambaforge was sunset upstream and Miniforge lags mamba releases, so newer
+# versions are bootstrapped with a pinned static micromamba and named by mamba version.
+- name: Install Mamba (micromamba bootstrap)
+  vars:
+    mamba_bootstrap_versions:
+      - version_number: "2.10.0"
+        micromamba_version: "2.10.0-0"
+        micromamba_url: "https://github.com/mamba-org/micromamba-releases/releases/download/2.10.0-0/micromamba-linux-64"
+        micromamba_checksum: "sha256:701f39c06f8e6a670a0e186c8479b9e5c0502a2f0cda6cef65d83bdd2875e8bd"
+        is_default: true
+  ansible.builtin.include_tasks:
+    file: mamba_bootstrap.yaml
+  loop: "{{ mamba_bootstrap_versions }}"
+  tags:
+    - never
+    - mamba
+
 - name: Install LaTeX
   vars:
     versions:

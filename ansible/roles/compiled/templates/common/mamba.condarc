@@ -1,0 +1,11 @@
+channels:
+  - conda-forge
+  - bioconda
+channel_priority: strict
+
+envs_dirs:
+  - ~/.conda/envs
+  - {{ install_dir }}/envs
+
+pkgs_dirs:
+  - ~/.conda/pkgs
