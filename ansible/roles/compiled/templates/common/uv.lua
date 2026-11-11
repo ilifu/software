@@ -34,9 +34,10 @@ Where things live
 
 With no Python requested, uv downloads its default (3.15 as of uv 0.13).
 If uv warns "Failed to hardlink files", your venv is on a different
-filesystem from the cache. This silences it:
+filesystem from the cache. To copy instead and silence it:
 
-    $ export UV_LINK_MODE=copy
+    $ mkdir -p ~/.config/uv
+    $ echo 'link-mode = "copy"' >> ~/.config/uv/uv.toml
 
 Documentation: https://docs.astral.sh/uv/
 ]])
