@@ -7,6 +7,7 @@
     major_minor: "{{ version_number.split('.')[0] }}.{{ version_number.split('.')[1] }}"
     install_dir: "{{ python_dir }}/{{ version_number }}"
     cpython_dir: "{{ python_dir }}/cpython-{{ version_number }}-linux-{{ uv_arch }}-gnu"
+    python_install_method: uv
   tags:
     - never
     - python{{ item.version_number }}
@@ -37,8 +38,10 @@
             state: directory
             mode: u=rwx,g=rwx,o=rx
 
+        # --no-bin: otherwise uv (>= 0.8) also drops python3.X launchers into the
+        # installing admin's ~/.local/bin, pointing into the shared tree.
         - name: Install Python standalone build {{ version_number }}
-          ansible.builtin.command: "{{ uv }} python install {{ version_number }}"
+          ansible.builtin.command: "{{ uv }} python install --no-bin {{ version_number }}"
           args:
             creates: "{{ cpython_dir }}/bin/python"
 
