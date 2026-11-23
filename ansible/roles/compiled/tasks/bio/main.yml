@@ -279,18 +279,17 @@
       - name: "2402_phenotype"
         url: "https://data.monarchinitiative.org/exomiser/data/2402_phenotype.zip"
         checksum: "sha256:48f2730459497b1fcb6b74f57a940eeb580395e9199d48c31a45a7a3672d041a"
-      # TODO: upstream publishes no checksums for the 2609 data release. Download each
-      # zip on the cluster, run sha256sum, and replace the placeholders below — the
-      # exomiserdata tasks fail on these entries until then.
+      # NOTE: upstream publishes no checksums for the 2609 data release; these were
+      # computed with sha256sum on zips downloaded to the cluster (2026-11-23).
       - name: "2609_hg19"
         url: "https://g-879a9f.f5dc97.75bc.dn.glob.us/data/2609_hg19.zip"
-        checksum: "sha256:REPLACE_WITH_SHA256_OF_2609_hg19.zip"
+        checksum: "sha256:02c93cefcded6b4436c474af725c340228121c78564e44a99316886b69f57ce1"
       - name: "2609_hg38"
         url: "https://g-879a9f.f5dc97.75bc.dn.glob.us/data/2609_hg38.zip"
-        checksum: "sha256:REPLACE_WITH_SHA256_OF_2609_hg38.zip"
+        checksum: "sha256:7d4a87bb1f2a0ca5bcff1c8a72c77913d736e3620adc14d561e899ce54a5aadb"
       - name: "2609_phenotype"
         url: "https://g-879a9f.f5dc97.75bc.dn.glob.us/data/2609_phenotype.zip"
-        checksum: "sha256:REPLACE_WITH_SHA256_OF_2609_phenotype.zip"
+        checksum: "sha256:1ef6618ac213fcc91faf99ec9915ef293dcf29974913735a88ed8faaf7c3d297"
   ansible.builtin.include_tasks:
     file: exomiser.yaml
   loop: "{{ exomiser_versions }}"
