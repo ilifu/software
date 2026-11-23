@@ -8,6 +8,7 @@
     version_number: "{{ item.version_number }}"
     checksum: "{{ item.checksum }}"
     install_dir: "{{ exomiser_dir }}/exomiser-cli-{{ version_number }}"
+    java_module: "{{ item.java_module | default('java/openjdk-17.0.2') }}"
   tags:
     - never
     - exomiser{{ item.version_number }}
@@ -42,6 +43,20 @@
             insertafter: "^#exomiser.data-directory=.*"
             regex: "^exomiser.data-directory=.*"
             line: "exomiser.data-directory={{ exomiser_data_dir }}"
+        # Releases that ship pointing at an older data version (and with hg38 commented
+        # out) declare data_version; older entries keep their shipped defaults.
+        - name: "Configure data-version for {{ data_source }}"
+          ansible.builtin.lineinfile:
+            path: "{{ install_dir }}/application.properties"
+            regexp: "^#?exomiser\\.{{ data_source }}\\.data-version=.*"
+            line: "exomiser.{{ data_source }}.data-version={{ item.data_version }}"
+          loop:
+            - hg19
+            - hg38
+            - phenotype
+          loop_control:
+            loop_var: data_source
+          when: item.data_version is defined
 
     - name: Install exomiser module {{ version_number }}
       block:
