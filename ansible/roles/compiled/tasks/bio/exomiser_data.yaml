@@ -1,15 +1,54 @@
 ---
-- name: Download and uncompressed exomiser data
+# Each data release unpacks to a directory named after it (e.g. 2609_hg19/). That
+# directory is the "already installed" marker: once it exists nothing is downloaded,
+# so the zip can be deleted after unpacking instead of being kept alongside the data.
+- name: Install exomiser data
+  vars:
+    data_zip: "{{ exomiser_data_dir }}/{{ the_data.name }}.zip"
+    unpacked_dir: "{{ exomiser_data_dir }}/{{ the_data.name }}"
   tags:
     - exomiserdata
   block:
-    - name: "Download {{ the_data.name }} from {{ the_data.url }} to {{ exomiser_data_dir }}"
-      ansible.builtin.get_url:
-        url: "{{ the_data.url }}"
-        dest: "{{ exomiser_data_dir }}/"
-        checksum: "{{ the_data.checksum }}"
-        mode: u=rw,g=r,o=r
+    - name: "Check whether data is already unpacked at {{ unpacked_dir }}"
+      ansible.builtin.stat:
+        path: "{{ unpacked_dir }}"
+      register: unpacked_dir_stat
 
-    - name: "Uncompress {{ the_data.name }}"
-      ansible.builtin.debug:
-        msg: "Remember to decompressing {{ the_data.name }}"
+    - name: "Download, unpack and clean up {{ the_data.name }}"
+      when: not unpacked_dir_stat.stat.exists
+      block:
+        # NOTE: dest is a file path, not the directory. With a directory get_url
+        # re-downloads on every run; with a file path a zip left behind by a failed
+        # unpack is reused if its checksum matches.
+        - name: "Download {{ the_data.name }} from {{ the_data.url }}"
+          ansible.builtin.get_url:
+            url: "{{ the_data.url }}"
+            dest: "{{ data_zip }}"
+            checksum: "{{ the_data.checksum }}"
+            mode: u=rw,g=r,o=r
+
+        - name: "Unpack {{ the_data.name }}"
+          ansible.builtin.unarchive:
+            src: "{{ data_zip }}"
+            dest: "{{ exomiser_data_dir }}"
+            remote_src: true
+
+        - name: "Remove zip now that data is unpacked {{ data_zip }}"
+          ansible.builtin.file:
+            path: "{{ data_zip }}"
+            state: absent
+      rescue:
+        # A half-unpacked directory would be mistaken for an installed release on the
+        # next run, so remove it. The zip is kept for the retry.
+        - name: "Remove partially unpacked data {{ unpacked_dir }}"
+          ansible.builtin.file:
+            path: "{{ unpacked_dir }}"
+            state: absent
+
+        - name: "Report failed install of {{ the_data.name }}"
+          ansible.builtin.fail:
+            msg: >-
+              Installing {{ the_data.name }} failed, and any partially unpacked
+              directory was removed. Fix the cause and re-run.
+              Failed task: {{ ansible_failed_task.name }}.
+              Error: {{ ansible_failed_result.msg | default('see output above') }}
