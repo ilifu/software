@@ -14,7 +14,7 @@
         path: "{{ unpacked_dir }}"
       register: unpacked_dir_stat
 
-    - name: "Download, unpack and clean up {{ the_data.name }}"
+    - name: "Download and unpack {{ the_data.name }}"
       when: not unpacked_dir_stat.stat.exists
       block:
         # NOTE: dest is a file path, not the directory. With a directory get_url
@@ -32,11 +32,6 @@
             src: "{{ data_zip }}"
             dest: "{{ exomiser_data_dir }}"
             remote_src: true
-
-        - name: "Remove zip now that data is unpacked {{ data_zip }}"
-          ansible.builtin.file:
-            path: "{{ data_zip }}"
-            state: absent
       rescue:
         # A half-unpacked directory would be mistaken for an installed release on the
         # next run, so remove it. The zip is kept for the retry.
@@ -52,3 +47,11 @@
               directory was removed. Fix the cause and re-run.
               Failed task: {{ ansible_failed_task.name }}.
               Error: {{ ansible_failed_result.msg | default('see output above') }}
+
+    # Runs whenever the data is unpacked, not only after a fresh download, so zips
+    # left next to releases that were unpacked by hand are cleaned up too. A failed
+    # unpack never reaches this task, so its zip survives for the retry.
+    - name: "Remove zip now that data is unpacked {{ data_zip }}"
+      ansible.builtin.file:
+        path: "{{ data_zip }}"
+        state: absent
